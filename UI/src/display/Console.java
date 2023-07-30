@@ -1,5 +1,40 @@
 package display;
 
 public class Console {
-    // This class is static
+    public static void printMainMenu() {
+        System.out.println("1. Load simulation from file");
+        System.out.println("2. Show simulation details");
+        System.out.println("3. Run simulation");
+        System.out.println("4. Show full details of past simulation run");
+        System.out.println("5. Exit");
+        System.out.print("Please enter your choice: ");
+    }
+
+    /**
+     * Receives a string of simulation's details, formats it and prints it.
+     */
+    public static void showSimulationDetails(String simDetails) {
+        // TODO: Implement this
+    }
+
+
+    /**
+     * Prints out all past simulation details in short format.
+     * @param simDetails - an array of all the past simulation details.
+     */
+    public static void showShortDetailsOfAllPastSimulations(String... simDetails) {
+        for(String s: simDetails){
+            printSimulationDetailsShort(s);
+        }
+    }
+
+
+    /**
+     * Shows a short representation of a simulation.
+     * Short representation includes: id, name, date.
+     * @param simDetails
+     */
+    public static void printSimulationDetailsShort(String simDetails) {
+        // TODO: Implement this
+    }
 }
