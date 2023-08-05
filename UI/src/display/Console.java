@@ -23,8 +23,9 @@ public class Console {
      * @param simDetails - an array of all the past simulation details.
      */
     public static void showShortDetailsOfAllPastSimulations(String... simDetails) {
-        for(String s: simDetails){
-            printSimulationDetailsShort(s);
+        for(int i = 0; i < simDetails.length; i++){
+            System.out.print("${i}# ");
+            printSimulationDetailsShort(simDetails[i]);
         }
     }
 
