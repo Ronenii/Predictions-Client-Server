@@ -41,4 +41,9 @@ public class Console {
     public static void printSimulationDetailsShort(String simDetails) {
         // TODO: Implement this
     }
+
+    public static void promptUserToInputPathForFile()
+    {
+        System.out.print("Please enter path to the XML world config file: ");
+    }
 }

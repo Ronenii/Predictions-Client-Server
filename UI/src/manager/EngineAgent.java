@@ -3,6 +3,8 @@ package manager;
 import display.Console;
 import manger.WorldManager;
 
+import java.util.Scanner;
+
 /**
  * Responsible for UI communication with the Engine module. Sends data to the Engine, receives results from Engine accordingly,
  * Prints the data out using the Console class.
@@ -33,7 +35,8 @@ public class EngineAgent {
      * prompts the user to input a path to a simulation XML config file and loads it
      * into the system.
      */
-    public void loadSimulationFromFile() {
+    public void loadSimulationFromFile(String Path) {
+
         // TODO: Implement this
     }
 

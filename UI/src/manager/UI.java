@@ -60,7 +60,10 @@ public class UI {
         switch (menuOption)
         {
             case LOAD_PROGRAM:
-                engineAgent.loadSimulationFromFile();
+                Console.promptUserToInputPathForFile();
+                Scanner scanner = new Scanner(System.in);
+                String path = scanner.nextLine();
+                engineAgent.loadSimulationFromFile(path);
                 break;
             case SHOW_SIMULATION_DATA:
                 engineAgent.showCurrentSimulationDetails();
