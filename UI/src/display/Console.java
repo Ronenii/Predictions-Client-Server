@@ -1,5 +1,8 @@
 package display;
 
+/**
+ * A class designated entirely for printing the relevant text of the program.
+ */
 public class Console {
     public static void printMainMenu() {
         System.out.println("1. Load simulation from file");

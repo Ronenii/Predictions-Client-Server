@@ -3,6 +3,10 @@ package manager;
 import display.Console;
 import manger.WorldManager;
 
+/**
+ * Responsible for UI communication with the Engine module. Sends data to the Engine, receives results from Engine accordingly,
+ * Prints the data out using the Console class.
+ */
 public class EngineAgent {
     private WorldManager worldManager;
 
