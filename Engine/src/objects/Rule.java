@@ -45,7 +45,7 @@ public class Rule {
         StringBuilder ruleToString = new StringBuilder("Rule{" +
                 "name='" + name + '\'' +
                 ", activation=" + activation +
-                ", actions=");
+                ", actions=[");
 
         for (Action a : actions
         ) {
@@ -53,6 +53,8 @@ public class Rule {
             ruleToString.append(a);
             if (++counter != actions.size())
                 ruleToString.append(", ");
+            else
+                ruleToString.append(']');
         }
         ruleToString.append('}');
         return ruleToString.toString();

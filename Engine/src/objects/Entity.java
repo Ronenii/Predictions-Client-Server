@@ -45,11 +45,15 @@ public class Entity {
         StringBuilder entityToString = new StringBuilder("Entity{" +
                 "Name='" + name + '\'' +
                 ", Population=" + population +
-                ",Properties=");
+                ",Properties=[");
         for (Property<?> p : properties
         ) {
+            int counter = 0;
             entityToString.append(p);
-            entityToString.append(", ");
+            if (++counter != properties.size())
+                entityToString.append(", ");
+            else
+                entityToString.append(']');
         }
         entityToString.append("}");
         return entityToString.toString();

@@ -1,31 +1,31 @@
 package objects;
 
-import objects.env.Environment;
 import properties.EndingCondition;
+import properties.Property;
 
 import java.util.Set;
 
 public class World {
 
-    private Environment environment;
+    private Set<Property<?>> environmentProperties;
     private Set<Entity> entities;
 
     private Set<Rule> rules;
     private Set<EndingCondition> endingConditions;
 
-    public World(Environment environment, Set<Entity> entities, Set<Rule> rules, Set<EndingCondition> endingConditions) {
-        this.environment = environment;
+    public World(Set<Property<?>> environmentProperties, Set<Entity> entities, Set<Rule> rules, Set<EndingCondition> endingConditions) {
+        this.environmentProperties = environmentProperties;
         this.entities = entities;
         this.rules = rules;
         this.endingConditions = endingConditions;
     }
 
-    public Environment getEnvironment() {
-        return environment;
+    public Set<Property<?>>  getEnvironment() {
+        return environmentProperties;
     }
 
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
+    public void setEnvironment(Set<Property<?>>  environment) {
+        this.environmentProperties = environment;
     }
 
     public Set<Entity> getEntities() {
@@ -55,29 +55,44 @@ public class World {
     @Override
     public String toString() {
         StringBuilder worldToString = new StringBuilder("World{" +
-                "environment=" + environment +
-                ", entities=");
+                "environmentProperties=[");
+        for (Property<?> p : environmentProperties) {
+            int counter = 0;
+            worldToString.append(p);
+            if (++counter != environmentProperties.size())
+                worldToString.append(", ");
+            else
+                worldToString.append(']');
+        }
+
+        worldToString.append(", entities=[");
         for (Entity e : entities) {
             int counter = 0;
             worldToString.append(e);
             if (++counter != entities.size())
                 worldToString.append(", ");
+            else
+                worldToString.append(']');
         }
 
-        worldToString.append(", rules=");
+        worldToString.append(", rules=[");
         for (Rule r : rules) {
             int counter = 0;
             worldToString.append(r);
             if (++counter != rules.size())
                 worldToString.append(", ");
+            else
+                worldToString.append(']');
         }
 
-        worldToString.append(", endingConditions=");
+        worldToString.append(", endingConditions=[");
         for (EndingCondition e : endingConditions) {
             int counter = 0;
             worldToString.append(e);
             if (++counter != endingConditions.size())
                 worldToString.append(", ");
+            else
+                worldToString.append(']');
         }
 
         worldToString.append('}');
