@@ -1,11 +1,11 @@
 package objects;
 
-import properties.Action;
-import properties.Activation;
+import properties.action.ActionType;
+import properties.activition.Activation;
 
 public class Rule {
     private String name;
     private Activation activation;
-    private Action[] actions;
+    private ActionType[] actions;
 
 }

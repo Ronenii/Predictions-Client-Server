@@ -1,6 +1,6 @@
 package objects;
 
-import properties.Property;
+import properties.property.Property;
 
 public class Entity {
     private String name;
