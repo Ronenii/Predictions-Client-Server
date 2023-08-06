@@ -2,15 +2,15 @@ package objects;
 
 import properties.Property;
 
-import java.util.Map;
+import java.util.Set;
 
 public class Entity {
 
     private int population;
     private String name;
-    private Map<Integer, Property<?>> properties;
+    private Set<Property<?>> properties;
 
-    public Entity(int population, String name, Map<Integer, Property<?>> properties) {
+    public Entity(int population, String name, Set<Property<?>> properties) {
         this.population = population;
         this.name = name;
         this.properties = properties;
@@ -32,11 +32,11 @@ public class Entity {
         this.name = name;
     }
 
-    public Map<Integer, Property<?>> getProperties() {
+    public Set<Property<?>> getProperties() {
         return properties;
     }
 
-    public void setProperties(Map<Integer, Property<?>> properties) {
+    public void setProperties(Set<Property<?>> properties) {
         this.properties = properties;
     }
 
@@ -44,13 +44,14 @@ public class Entity {
     public String toString() {
         StringBuilder entityToString = new StringBuilder("Entity{" +
                 "Name='" + name + '\'' +
-                ", Population='" + '\'' +
-                ",Properties='");
-        for (Property<?> p : properties.values()
+                ", Population=" + population +
+                ",Properties=");
+        for (Property<?> p : properties
         ) {
-            entityToString.append(p.toString());
+            entityToString.append(p);
+            entityToString.append(", ");
         }
-        entityToString.append("'}");
+        entityToString.append("}");
         return entityToString.toString();
     }
 }
