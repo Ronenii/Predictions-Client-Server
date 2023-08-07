@@ -1,5 +1,7 @@
-package objects;
+package objects.world;
 
+import objects.entity.Entity;
+import objects.rule.Rule;
 import properties.EndingCondition;
 import properties.Property;
 
@@ -7,11 +9,11 @@ import java.util.Set;
 
 public class World {
 
-    private Set<Property<?>> environmentProperties;
-    private Set<Entity> entities;
+    private final Set<Property<?>> environmentProperties;
+    private final Set<Entity> entities;
 
-    private Set<Rule> rules;
-    private Set<EndingCondition> endingConditions;
+    private final Set<Rule> rules;
+    private final Set<EndingCondition> endingConditions;
 
     public World(Set<Property<?>> environmentProperties, Set<Entity> entities, Set<Rule> rules, Set<EndingCondition> endingConditions) {
         this.environmentProperties = environmentProperties;
@@ -24,32 +26,17 @@ public class World {
         return environmentProperties;
     }
 
-    public void setEnvironment(Set<Property<?>>  environment) {
-        this.environmentProperties = environment;
-    }
 
     public Set<Entity> getEntities() {
         return entities;
-    }
-
-    public void setEntities(Set<Entity> entities) {
-        this.entities = entities;
     }
 
     public Set<Rule> getRules() {
         return rules;
     }
 
-    public void setRules(Set<Rule> rules) {
-        this.rules = rules;
-    }
-
     public Set<EndingCondition> getEndingConditions() {
         return endingConditions;
-    }
-
-    public void setEndingConditions(Set<EndingCondition> endingConditions) {
-        this.endingConditions = endingConditions;
     }
 
     @Override

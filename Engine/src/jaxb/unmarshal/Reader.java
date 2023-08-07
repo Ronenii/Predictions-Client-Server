@@ -1,7 +1,7 @@
 package jaxb.unmarshal;
 
 import jaxb.schema.generated.PRDWorld;
-import objects.World;
+import objects.world.World;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

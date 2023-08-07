@@ -1,6 +1,6 @@
 package manger;
 
-import objects.World;
+import objects.world.World;
 
 public class WorldManager {
    private World world;
