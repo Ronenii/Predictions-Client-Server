@@ -1,7 +1,6 @@
 package manager;
 
 import display.Console;
-import manger.WorldManager;
 
 import java.util.Scanner;
 
@@ -10,25 +9,24 @@ import java.util.Scanner;
  * Prints the data out using the Console class.
  */
 public class EngineAgent {
-    private WorldManager worldManager;
+    private final EngineInterface engine;
+
+    public EngineAgent(EngineInterface engine) {
+        this.engine = engine;
+    }
 
     /**
      * Gets the current simulation details from the engine and prints it.
      */
     private void showSimulationDetails(int simId) {
-        // TODO: Make a getSimulationString function based on id
-        String simDetails = "PLACEHOLDER";
-        Console.showSimulationDetails(simDetails);
+        Console.showSimulationDetails(engine.getSimulationDetailsById(simId));
     }
 
     /**
      * Asks the engine to create a String describing the Current simulation details and returns it.
-     * @return The Current Simulation Details.
      */
     public void showCurrentSimulationDetails() {
-        // TODO: get the currents simulation's ID
-        int currSimId = 0; // PLACEHOLDER
-        showSimulationDetails(currSimId);
+        Console.showSimulationDetails(engine.getCurrentSimulationDetails());
     }
 
     /**
@@ -36,8 +34,7 @@ public class EngineAgent {
      * into the system.
      */
     public void loadSimulationFromFile(String Path) {
-
-        // TODO: Implement this
+        engine.loadSimulationFromFile(Path);
     }
 
 
@@ -45,7 +42,7 @@ public class EngineAgent {
      * Starts a run of the currently loaded simulation.
      */
     public void runSimulation() {
-        // TODO: Implement this
+        engine.runSimulation();
     }
 
 
@@ -55,7 +52,7 @@ public class EngineAgent {
      * Shows the user's chosen simulation details.
      */
     public void showPastSimulations() {
-        Console.showShortDetailsOfAllPastSimulations();
+        Console.showShortDetailsOfAllPastSimulations(engine.getAllSimulationDetailsInShortFormat());
 
         // TODO: Prompt user to choose a past simulation
         // TODO: Validate user choice
