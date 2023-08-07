@@ -1,11 +1,11 @@
 package objects;
 
 import properties.ending.conditions.EndingConditionType;
-import properties.property.Property;
+import properties.property.api.AbstractProperty;
 
 public class World {
    private Entity[] entities;
-   private Property<?>[] enviromentVars;
+   private AbstractProperty<?>[] enviromentVars;
    private EndingConditionType[] endingConditions;
 
 

@@ -1,9 +1,9 @@
 package objects;
 
-import properties.property.Property;
+import properties.property.api.AbstractProperty;
 
 public class Entity {
     private String name;
-    private Property<?>[] properties;
+    private AbstractProperty<?>[] properties;
     private Rule[] rules;
 }
