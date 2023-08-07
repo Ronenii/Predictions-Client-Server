@@ -1,5 +1,5 @@
-package properties;
+package properties.action.api;
 
-public enum Action {
+public enum ActionType {
     INCREASE, DECREASE, CALCULATION, CONDITION, SET, KILL, REPLACE, PROXIMITY
 }
