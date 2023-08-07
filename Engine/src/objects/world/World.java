@@ -2,27 +2,27 @@ package objects.world;
 
 import objects.entity.Entity;
 import objects.rule.Rule;
-import properties.EndingCondition;
-import properties.Property;
+import properties.ending.conditions.EndingCondition;
+import properties.property.api.Property;
 
 import java.util.Set;
 
 public class World {
 
-    private final Set<Property<?>> environmentProperties;
+    private final Set<Property> environmentProperties;
     private final Set<Entity> entities;
 
     private final Set<Rule> rules;
     private final Set<EndingCondition> endingConditions;
 
-    public World(Set<Property<?>> environmentProperties, Set<Entity> entities, Set<Rule> rules, Set<EndingCondition> endingConditions) {
+    public World(Set<Property> environmentProperties, Set<Entity> entities, Set<Rule> rules, Set<EndingCondition> endingConditions) {
         this.environmentProperties = environmentProperties;
         this.entities = entities;
         this.rules = rules;
         this.endingConditions = endingConditions;
     }
 
-    public Set<Property<?>>  getEnvironment() {
+    public Set<Property>  getEnvironment() {
         return environmentProperties;
     }
 
@@ -43,7 +43,7 @@ public class World {
     public String toString() {
         StringBuilder worldToString = new StringBuilder("World{" +
                 "environmentProperties=[");
-        for (Property<?> p : environmentProperties) {
+        for (Property p : environmentProperties) {
             int counter = 0;
             worldToString.append(p);
             if (++counter != environmentProperties.size())

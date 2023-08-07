@@ -1,6 +1,6 @@
 package properties.action.impl.calculation;
 
-import objects.Entity;
+import objects.entity.Entity;
 import properties.action.api.AbstractAction;
 import properties.action.api.ActionType;
 import properties.property.api.Property;

@@ -1,6 +1,6 @@
 package properties.action.api;
 
-import objects.Entity;
+import objects.entity.Entity;
 import properties.property.api.Property;
 
 public abstract class AbstractAction implements Action{

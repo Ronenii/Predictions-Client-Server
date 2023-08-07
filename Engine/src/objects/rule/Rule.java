@@ -1,7 +1,7 @@
 package objects.rule;
 
-import properties.Action;
-import properties.Activation;
+import properties.action.api.Action;
+import properties.activition.Activation;
 
 import java.util.Set;
 
