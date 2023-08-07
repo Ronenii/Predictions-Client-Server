@@ -1,5 +1,8 @@
 package display;
 
+/**
+ * A class designated entirely for printing the relevant text of the program.
+ */
 public class Console {
     public static void printMainMenu() {
         System.out.println("1. Load simulation from file");
@@ -23,8 +26,9 @@ public class Console {
      * @param simDetails - an array of all the past simulation details.
      */
     public static void showShortDetailsOfAllPastSimulations(String... simDetails) {
-        for(String s: simDetails){
-            printSimulationDetailsShort(s);
+        for(int i = 0; i < simDetails.length; i++){
+            System.out.print("${i}# ");
+            printSimulationDetailsShort(simDetails[i]);
         }
     }
 
@@ -36,5 +40,10 @@ public class Console {
      */
     public static void printSimulationDetailsShort(String simDetails) {
         // TODO: Implement this
+    }
+
+    public static void promptUserToInputPathForFile()
+    {
+        System.out.print("Please enter path to the XML world config file: ");
     }
 }

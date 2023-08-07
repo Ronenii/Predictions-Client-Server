@@ -5,6 +5,9 @@ import manager.options.MenuOptions;
 
 import java.util.Scanner;
 
+/**
+ * The class the controls the main program loop. handles getting input from user, sends it to the engineAgent to handle it.
+ */
 public class UI {
     private static boolean exit =false;
     private static EngineAgent engineAgent;
@@ -58,7 +61,10 @@ public class UI {
         switch (menuOption)
         {
             case LOAD_PROGRAM:
-                engineAgent.loadSimulationFromFile();
+                Console.promptUserToInputPathForFile();
+                Scanner scanner = new Scanner(System.in);
+                String path = scanner.nextLine();
+                engineAgent.loadSimulationFromFile(path);
                 break;
             case SHOW_SIMULATION_DATA:
                 engineAgent.showCurrentSimulationDetails();
