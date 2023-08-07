@@ -5,7 +5,7 @@ import properties.property.api.PropertyType;
 
 public class BooleanProperty extends AbstractProperty {
 
-    public BooleanProperty(String name, boolean isRandInit, PropertyType type, boolean value) {
-        super(name, isRandInit, type, value);
+    public BooleanProperty(String name, boolean isRandInit, boolean value) {
+        super(name, isRandInit, PropertyType.BOOLEAN, value);
     }
 }

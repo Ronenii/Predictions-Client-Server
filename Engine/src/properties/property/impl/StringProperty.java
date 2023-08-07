@@ -5,8 +5,8 @@ import properties.property.api.PropertyType;
 
 public class StringProperty extends AbstractProperty {
 
-    public StringProperty(String name, boolean isRandInit, PropertyType type, Object value) {
-        super(name, isRandInit, type, value);
+    public StringProperty(String name, boolean isRandInit, Object value) {
+        super(name, isRandInit, PropertyType.STRING, value);
     }
 
 }

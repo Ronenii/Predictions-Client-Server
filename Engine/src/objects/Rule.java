@@ -1,6 +1,6 @@
 package objects;
 
-import properties.action.ActionType;
+import properties.action.api.ActionType;
 import properties.activition.Activation;
 
 public class Rule {
