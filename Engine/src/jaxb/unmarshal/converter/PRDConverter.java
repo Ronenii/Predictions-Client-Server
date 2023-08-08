@@ -88,10 +88,13 @@ public class PRDConverter {
     private static Property PRDProperty2Property(PRDProperty prdProperty) {
         Property ret = null;
         String name = prdProperty.getPRDName();
+
         double to = prdProperty.getPRDRange().getTo();
+        double from = prdProperty.getPRDRange().getFrom();
+
         boolean isRandomInit = prdProperty.getPRDValue().isRandomInitialize();
         String value = prdProperty.getPRDValue().getInit();
-        double from = prdProperty.getPRDRange().getFrom();
+
 
         switch (PropertyType.valueOf(prdProperty.getType())) {
             case INT:
