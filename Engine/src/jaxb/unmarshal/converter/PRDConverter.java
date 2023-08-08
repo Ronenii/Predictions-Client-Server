@@ -16,9 +16,7 @@ import properties.property.impl.IntProperty;
 import properties.property.impl.StringProperty;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A class used to convert the objects generated from the scheme to objects that will be used in the program.
