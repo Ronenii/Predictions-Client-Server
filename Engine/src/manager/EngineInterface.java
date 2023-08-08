@@ -1,13 +1,13 @@
 package manager;
 
 public interface EngineInterface {
-    public String getCurrentSimulationDetails();
+    String getCurrentSimulationDetails();
 
-    public String getSimulationDetailsById(int simId);
+    String getSimulationDetailsById(int simId);
 
-    public String[] getAllSimulationDetailsInShortFormat();
+    String[] getAllSimulationDetailsInShortFormat();
 
-    public void loadSimulationFromFile(String path);
+    void loadSimulationFromFile(String path);
 
-    public void runSimulation();
+    void runSimulation();
 }

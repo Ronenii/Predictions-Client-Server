@@ -2,7 +2,13 @@ package properties.activition;
 
 public class Activation {
     private int ticks;
-    private float probabilty;
+
+    public Activation(int ticks, double probability) {
+        this.ticks = ticks;
+        this.probability = probability;
+    }
+
+    private double probability;
 
     public int getTicks() {
         return ticks;
@@ -12,11 +18,11 @@ public class Activation {
         this.ticks = ticks;
     }
 
-    public float getProbabilty() {
-        return probabilty;
+    public double getProbability() {
+        return probability;
     }
 
-    public void setProbabilty(float probabilty) {
-        this.probabilty = probabilty;
+    public void setProbability(float probability) {
+        this.probability = probability;
     }
 }

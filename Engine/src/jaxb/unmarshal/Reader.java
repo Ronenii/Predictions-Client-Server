@@ -1,6 +1,7 @@
 package jaxb.unmarshal;
 
 import jaxb.schema.generated.PRDWorld;
+import jaxb.unmarshal.converter.PRDConverter;
 import objects.world.World;
 
 import javax.xml.bind.JAXBContext;
@@ -28,7 +29,7 @@ public class Reader {
         try {
             InputStream inputStream = new FileInputStream(new File(filePath));
             PRDWorld prdWorld = deserializeFrom(inputStream);
-            return Converter.PRDWorld2World(prdWorld);
+            return PRDConverter.PRDWorld2World(prdWorld);
         } catch (FileNotFoundException | JAXBException e) {
             throw new RuntimeException(e);
         }
