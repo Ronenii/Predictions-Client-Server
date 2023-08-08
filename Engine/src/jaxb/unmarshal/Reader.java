@@ -1,7 +1,7 @@
 package jaxb.unmarshal;
 
 import jaxb.schema.generated.PRDWorld;
-import jaxb.unmarshal.converter.impl.PRDConverter;
+import jaxb.unmarshal.converter.PRDConverter;
 import objects.world.World;
 
 import javax.xml.bind.JAXBContext;
