@@ -47,4 +47,15 @@ public class Rule {
         ruleToString.append('}');
         return ruleToString.toString();
     }
+
+    @Override
+    public int hashCode() {
+        return name.length() * getActions().size() * activation.getTicks();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Rule toCompare = (Rule)obj;
+        return toCompare.name.equals(this.name) && toCompare.activation.equals(this.activation) && toCompare.actions.equals(actions);
+    }
 }

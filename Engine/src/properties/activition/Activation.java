@@ -25,4 +25,15 @@ public class Activation {
     public void setProbability(float probability) {
         this.probability = probability;
     }
+
+    @Override
+    public int hashCode() {
+        return ticks * (int)Math.ceil(probability* 100);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Activation toCompare = (Activation) obj;
+        return (toCompare.ticks == this.ticks) && (toCompare.probability == this.probability);
+    }
 }
