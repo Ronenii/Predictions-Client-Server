@@ -15,8 +15,8 @@ import properties.property.impl.DoubleProperty;
 import properties.property.impl.IntProperty;
 import properties.property.impl.StringProperty;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A class used to convert the objects generated from the scheme to objects that will be used in the program.
@@ -25,19 +25,19 @@ public class PRDConverter {
 
     public static World PRDWorld2World(PRDWorld prdWorld) {
 
-        Set<Property> environmentProperties = new HashSet<>();
-        Set<Entity> entities = new HashSet<>();
-        Set<Rule> rules = new HashSet<>();
-        Set<EndingCondition> endingConditions = new HashSet<>();
+        Map<String, Property> environmentProperties = new HashMap<>();
+        Map<String, Entity> entities = new HashMap<>();
+        Map<String, Rule> rules = new HashMap<>();
+        Map<String, EndingCondition> endingConditions = new HashMap<>();
 
         // Iterates over all PRDEnvironmentProperties, converts each property and adds it to 'environmentProperties'
-        prdWorld.getPRDEvironment().getPRDEnvProperty().forEach(p -> environmentProperties.add(PRDEnvProperty2Property(p)));
+        prdWorld.getPRDEvironment().getPRDEnvProperty().forEach(p -> environmentProperties.put(p.getPRDName(), PRDEnvProperty2Property(p)));
 
         // Iterates over all PRDEntities, converts each entity and adds it to 'entities'
-        prdWorld.getPRDEntities().getPRDEntity().forEach(e -> entities.add(PRDEntity2Entity(e)));
+        prdWorld.getPRDEntities().getPRDEntity().forEach(e -> entities.put(e.getName(),PRDEntity2Entity(e)));
 
         // Iterates over all PRDRules, converts each rule and adds it to 'rules'
-        prdWorld.getPRDRules().getPRDRule().forEach(r -> rules.add(PRDRule2Rule(r)));
+        prdWorld.getPRDRules().getPRDRule().forEach(r -> rules.put(r.getName(), PRDRule2Rule(r)));
 
         return new World(environmentProperties, entities, rules, endingConditions);
     }
@@ -126,10 +126,10 @@ public class PRDConverter {
     private static Entity PRDEntity2Entity(PRDEntity prdEntity) {
         String name = prdEntity.getName();
         int population = prdEntity.getPRDPopulation();
-        Set<Property> properties = new HashSet<>();
+        Map<String, Property> properties = new HashMap<>();
 
         // Iterates over all PRDProperties, converts each property and adds it to 'properties'
-        prdEntity.getPRDProperties().getPRDProperty().forEach(c -> properties.add(PRDProperty2Property(c)));
+        prdEntity.getPRDProperties().getPRDProperty().forEach(c -> properties.put(c.getPRDName(), PRDProperty2Property(c)));
 
         return new Entity(population, name, properties);
     }
@@ -143,10 +143,10 @@ public class PRDConverter {
     private static Rule PRDRule2Rule(PRDRule prdRule) {
         String name = prdRule.getName();
         Activation activation = PRDActivation2Activation(prdRule.getPRDActivation());
-        Set<Action> actions = null;
+        Map<String, Action> actions = null;
 
         // Iterates over all prdActions inside the prdRule and convert them to action
-        prdRule.getPRDActions().getPRDAction().forEach(a -> actions.add(PRDAction2Action(a)));
+        prdRule.getPRDActions().getPRDAction().forEach(a -> actions.put(a.getValue(), PRDAction2Action(a)));
 
         return new Rule(name, activation, actions);
     }

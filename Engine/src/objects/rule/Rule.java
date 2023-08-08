@@ -3,14 +3,14 @@ package objects.rule;
 import properties.action.api.Action;
 import properties.activition.Activation;
 
-import java.util.Set;
+import java.util.Map;
 
 public class Rule {
     private final String name;
     private final Activation activation;
-    private final Set<Action> actions;
+    private final Map<String,Action> actions;
 
-    public Rule(String name, Activation activation, Set<Action> actions) {
+    public Rule(String name, Activation activation, Map<String, Action> actions) {
         this.name = name;
         this.activation = activation;
         this.actions = actions;
@@ -24,7 +24,7 @@ public class Rule {
         return activation;
     }
 
-    public Set<Action> getActions() {
+    public Map<String, Action> getActions() {
         return actions;
     }
 
@@ -35,7 +35,7 @@ public class Rule {
                 ", activation=" + activation +
                 ", actions=[");
 
-        for (Action a : actions
+        for (Action a : actions.values()
         ) {
             int counter = 0;
             ruleToString.append(a);
