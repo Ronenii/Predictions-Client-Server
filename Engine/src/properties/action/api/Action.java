@@ -6,9 +6,9 @@ import properties.property.api.Property;
 public interface Action {
     ActionType getType();
 
-    Entity getContextEntity();
+    String getContextEntity();
 
-    Property getProperty();
+    String getProperty();
 
     void Invoke();
 

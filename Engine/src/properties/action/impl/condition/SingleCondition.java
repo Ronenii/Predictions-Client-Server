@@ -1,11 +1,13 @@
 package properties.action.impl.condition;
 
-import objects.Entity;
 import properties.property.api.Property;
 
 public class SingleCondition extends AbstractConditionAction{
-    public SingleCondition(Property property, Entity contextEntity, String operator, String value) {
-        super(property, contextEntity, operator, value);
+    private final String operator;
+
+    public SingleCondition(String property, String contextEntity, Object value, ThenOrElse thenActions, ThenOrElse elseActions, String operator) {
+        super(property, contextEntity, value, thenActions, elseActions);
+        this.operator = operator;
     }
 
     @Override
