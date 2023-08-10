@@ -209,11 +209,18 @@ public class PRDConverter {
         return ret;
     }
 
+    /**
+     * Converts the given PRDAction to multiply or divide calculation action.
+     *
+     * @param prdAction the given PRDAction generated from reading the XML file
+     * @return a CalculationAction representation of the given PRDActivation.
+     */
     private CalculationAction getMulOrDiv(PRDAction prdAction){
         CalculationAction ret = null;
         PRDMultiply mul = prdAction.getPRDMultiply();
         PRDDivide div = prdAction.getPRDDivide();
 
+        // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
         if(mul != null){
             ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), mul.getArg1(), mul.getArg2(), ClaculationType.MULTIPLY);
         } else if (div != null) {
@@ -225,10 +232,17 @@ public class PRDConverter {
         return ret;
     }
 
+    /**
+     * Converts the given PRDAction to single or multiple condition action.
+     *
+     * @param prdAction the given PRDAction generated from reading the XML file
+     * @return an AbstractConditionAction representation of the given PRDActivation.
+     */
     private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction){
         AbstractConditionAction ret = null;
         PRDCondition prdCondition = prdAction.getPRDCondition();
         ThenOrElse thenActions = null, elseActions = null;
+        // Then and else objects are created in this method.
         getAndCreateThenOrElse(prdAction, thenActions, elseActions);
 
         if(prdCondition.getSingularity().equals("single")){
@@ -243,8 +257,18 @@ public class PRDConverter {
         return ret;
     }
 
-    // This method is void because we create two objects.
+    /**
+     * Converts the given PRDAction to Then and Else objects which contain a set of actions to invoke.
+     * According to the XML file, if one of them has no actions to invoke, the object remains null.
+     *
+     * @param prdAction the given PRDAction generated from reading the XML file
+     * @param thenActions empty ThenOrElse object to be created.
+     * @param elseActions empty ThenOrElse object to be created.
+     */
     private void getAndCreateThenOrElse(PRDAction prdAction, ThenOrElse thenActions, ThenOrElse elseActions){
+        // 'getThenOrElseActionSet' creates the Set of Actions for them both.
+        // Because 'PRDThen' and 'PRDElse' are different objects, when we want to create the set for 'Then'
+        // we send null for 'prdElse', same for Else.
         Set<Action> thenActionsSet = getThenOrElseActionSet(prdAction.getPRDThen(), null);
         Set<Action> elseActionsSet = getThenOrElseActionSet(null, prdAction.getPRDElse());
 
@@ -257,6 +281,14 @@ public class PRDConverter {
         }
     }
 
+    /**
+     * Converts the given PRDThen or PRDElse to The set of actions to invoke.
+     * For example: if prdThen equals null, the method creates the set from the prdElse.
+     *
+     * @param prdThen the given PRDThen generated from reading the XML file
+     * @param prdElse the given PRDElse generated from reading the XML file
+     * @return a Set of actions representation of the given PRDThen or PRDElse.
+     */
     private Set<Action> getThenOrElseActionSet(PRDThen prdThen, PRDElse prdElse){
         Set<Action> ret = new HashSet<>();
 
@@ -269,6 +301,15 @@ public class PRDConverter {
         return ret;
     }
 
+    /**
+     * Analyze the value string from the PRDAction, in case the given string represent a function,
+     * the method extract the function name and parameters from the string, execute the function and return
+     * the return value from this function.
+     * Otherwise, the method returns the given string.
+     *
+     * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
+     * @return the value requested object.
+     */
     private Object analyzeAndGetValue(String prdValueStr){
         String functionName = getFucntionName(prdValueStr);
         Object ret = null;
@@ -284,6 +325,7 @@ public class PRDConverter {
             case TICKS:
                 break;
             default:
+                // TODO: maybe try to create a method to convert this string to the object it supposed to be, for example, check if this string is a number and parse it to int.
                 // Value is not a function
                 ret = prdValueStr;
                 break;
@@ -291,6 +333,13 @@ public class PRDConverter {
         return ret;
     }
 
+    /**
+     * Extract the function name from the given value string if a function name exists in the string.
+     * Otherwise, return null.
+     *
+     * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
+     * @return the function name in the given string.
+     */
     private String getFucntionName(String prdValueStr){
         String ret = null;
         int openParenIndex = prdValueStr.indexOf("(");
@@ -302,6 +351,13 @@ public class PRDConverter {
         return ret;
     }
 
+    /**
+     * Extract the function's params from the given value string if the params exist in the string.
+     * Otherwise, return null.
+     *
+     * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
+     * @return the functions params in the given string.
+     */
     private String getFunctionParam(String prdValueStr){
         String ret = null;
         int openParenIndex = prdValueStr.indexOf("(");

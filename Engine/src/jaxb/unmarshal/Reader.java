@@ -26,10 +26,11 @@ public class Reader {
      * @return The world read from the xml file
      */
     public static World readWorldFromXML(String filePath) {
+        PRDConverter prdConverter = new PRDConverter();
         try {
             InputStream inputStream = new FileInputStream(new File(filePath));
             PRDWorld prdWorld = deserializeFrom(inputStream);
-            return PRDConverter.PRDWorld2World(prdWorld);
+            return prdConverter.PRDWorld2World(prdWorld);
         } catch (FileNotFoundException | JAXBException e) {
             throw new RuntimeException(e);
         }
