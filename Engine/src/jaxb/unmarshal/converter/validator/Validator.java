@@ -4,6 +4,7 @@ import jaxb.schema.generated.PRDAction;
 import jaxb.schema.generated.PRDActivation;
 import jaxb.schema.generated.PRDEntity;
 import jaxb.schema.generated.PRDProperty;
+import properties.property.api.Property;
 
 public class Validator {
 
@@ -83,4 +84,6 @@ public class Validator {
     public boolean containsErrors() {
         return errorsList.length() > 0;
     }
+
+
 }

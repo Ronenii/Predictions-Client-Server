@@ -3,6 +3,7 @@ package jaxb.unmarshal.converter;
 import jaxb.schema.generated.*;
 import jaxb.unmarshal.converter.functions.HelperFunctionsType;
 import jaxb.unmarshal.converter.functions.StaticHelperFunctions;
+import jaxb.unmarshal.converter.validator.Validator;
 import objects.entity.Entity;
 import objects.rule.Rule;
 import objects.world.World;
@@ -182,7 +183,6 @@ public class PRDConverter {
     private Action PRDAction2Action(PRDAction prdAction) {
         Action ret = null;
 
-
         // TODO: Continue this
         // TODO: Create getValue generator to check if 'value' calls a function.
         switch (ActionType.valueOf(prdAction.getType())) {
@@ -310,27 +310,74 @@ public class PRDConverter {
      * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
      * @return the value requested object.
      */
-    private Object analyzeAndGetValue(String prdValueStr){
-        String functionName = getFucntionName(prdValueStr);
-        Object ret = null;
+    private Object analyzeAndGetValue(PRDAction prdAction){
+        // check if the value is function -> VV
+        // if not, check if the value is a name of a property -> VV
+        // if not, parse it if this a number or a boolean.
+
+        // after the 3 checks, validate the final object with the action property's type and the action type (increase gets int etc.).
+
+        return null;
+    }
+
+    private Object getObjectIfFunction(PRDAction prdAction){
+        String prdValueStr = prdAction.getValue(), functionName = getFucntionName(prdValueStr);
+        Object ret;
+
         switch (HelperFunctionsType.valueOf(functionName)){
             case ENVIRONMENT:
                 ret = StaticHelperFunctions.environment(getFunctionParam(prdValueStr), environmentProperties);
             case RANDOM:
                 ret = StaticHelperFunctions.random(Integer.parseInt(getFunctionParam(prdValueStr)));
             case EVALUATE:
-                break;
+                ret = null;
             case PERCENT:
-                break;
+                ret = null;
             case TICKS:
-                break;
+                ret = null;
             default:
-                // TODO: maybe try to create a method to convert this string to the object it supposed to be, for example, check if this string is a number and parse it to int.
                 // Value is not a function
-                ret = prdValueStr;
+                ret = null;
                 break;
         }
+
         return ret;
+    }
+
+    private Property getIfProperty(PRDAction prdAction) {
+        String prdValueStr = prdAction.getValue(), entityName = prdAction.getEntity();
+        Entity entity = entities.get(entityName);
+        return entity.getProperties().get(prdValueStr);
+    }
+
+    private Object parseValue(PRDAction prdAction){
+        String prdValueStr = prdAction.getValue();
+        boolean flag = false;
+        Object ret = null;
+
+        try{
+            ret = Integer.parseInt(prdValueStr);
+        }
+        catch (NumberFormatException e){
+            flag = true;
+        }
+        if(flag){
+            ret = getBooleanOrStr(prdValueStr);
+        }
+
+        return ret;
+    }
+
+    private Object getBooleanOrStr(String prdValueStr){
+        Object ret;
+       try {
+           ret = Boolean.valueOf(prdValueStr);
+       }
+       catch (IllegalArgumentException e){
+           ret = prdValueStr;
+       }
+
+       return ret;
     }
 
     /**
