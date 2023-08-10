@@ -6,7 +6,7 @@ import properties.action.api.ActionType;
 import properties.property.api.Property;
 
 public class KillAction extends AbstractAction {
-    public KillAction(Property property, Entity contextEntity) {
+    public KillAction(String property, String contextEntity) {
         super(ActionType.KILL, property, contextEntity);
     }
 

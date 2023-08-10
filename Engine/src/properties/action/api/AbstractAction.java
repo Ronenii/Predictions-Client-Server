@@ -5,10 +5,10 @@ import properties.property.api.Property;
 
 public abstract class AbstractAction implements Action{
     private final ActionType type;
-    private final Property property;
-    private final Entity contextEntity;
+    private final String property;
+    private final String contextEntity;
 
-    public AbstractAction(ActionType type, Property property, Entity contextEntity) {
+    public AbstractAction(ActionType type, String property, String contextEntity) {
         this.type = type;
         this.property = property;
         this.contextEntity = contextEntity;
@@ -20,12 +20,12 @@ public abstract class AbstractAction implements Action{
     }
 
     @Override
-    public Property getProperty() {
+    public String getProperty() {
         return property;
     }
 
     @Override
-    public Entity getContextEntity() {
+    public String getContextEntity() {
         return contextEntity;
     }
 }

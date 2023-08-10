@@ -8,7 +8,7 @@ import properties.property.api.Property;
 public class DecreaseAction extends AbstractAction {
     private String byExpression;
 
-    public DecreaseAction(Property property, Entity contextEntity, String byExpression) {
+    public DecreaseAction(String property, String contextEntity, String byExpression) {
         super(ActionType.DECREASE, property, contextEntity);
         this.byExpression = byExpression;
     }

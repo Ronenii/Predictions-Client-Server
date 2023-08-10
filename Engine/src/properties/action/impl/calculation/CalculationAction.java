@@ -11,7 +11,7 @@ public class CalculationAction extends AbstractAction {
 
     private final ClaculationType type;
 
-    public CalculationAction(Property property, Entity contextEntity, String arg1, String arg2, ClaculationType type1) {
+    public CalculationAction(String property, String contextEntity, String arg1, String arg2, ClaculationType type1) {
         super(ActionType.CALCULATION, property, contextEntity);
         this.arg1 = arg1;
         this.arg2 = arg2;
