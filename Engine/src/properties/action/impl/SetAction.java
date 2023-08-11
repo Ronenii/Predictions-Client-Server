@@ -6,9 +6,9 @@ import properties.action.api.ActionType;
 import properties.property.api.Property;
 
 public class SetAction extends AbstractAction {
-    private final String value;
+    private final Object value;
 
-    public SetAction(Property property, Entity contextEntity, String value) {
+    public SetAction(String property, String contextEntity, Object value) {
         super(ActionType.SET, property, contextEntity);
         this.value = value;
     }

@@ -4,13 +4,14 @@ import properties.action.api.Action;
 import properties.activition.Activation;
 
 import java.util.Map;
+import java.util.Set;
 
 public class Rule {
     private final String name;
     private final Activation activation;
-    private final Map<String,Action> actions;
+    private final Set<Action> actions;
 
-    public Rule(String name, Activation activation, Map<String, Action> actions) {
+    public Rule(String name, Activation activation, Set<Action> actions) {
         this.name = name;
         this.activation = activation;
         this.actions = actions;
@@ -24,7 +25,7 @@ public class Rule {
         return activation;
     }
 
-    public Map<String, Action> getActions() {
+    public Set<Action> getActions() {
         return actions;
     }
 
