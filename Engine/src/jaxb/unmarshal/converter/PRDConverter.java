@@ -1,6 +1,7 @@
 package jaxb.unmarshal.converter;
 
 import jaxb.schema.generated.*;
+import jaxb.unmarshal.converter.expression.converter.ExpressionConverterAndValidator;
 import jaxb.unmarshal.converter.functions.HelperFunctionsType;
 import jaxb.unmarshal.converter.functions.StaticHelperFunctions;
 import jaxb.unmarshal.converter.validator.Validator;
@@ -182,19 +183,20 @@ public class PRDConverter {
      */
     private Action PRDAction2Action(PRDAction prdAction) {
         Action ret = null;
+        ExpressionConverterAndValidator expressionConverterAndValidator = new ExpressionConverterAndValidator(environmentProperties, entities);
 
         try{
             switch (ActionType.valueOf(prdAction.getType())) {
                 case INCREASE:
-                    ret = new IncreaseAction(prdAction.getProperty(),prdAction.getEntity(), analyzeAndGetValue(prdAction, prdAction.getBy()));
+                    ret = new IncreaseAction(prdAction.getProperty(),prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getBy()));
                 case DECREASE:
-                    ret = new DecreaseAction(prdAction.getProperty(),prdAction.getEntity(), analyzeAndGetValue(prdAction, prdAction.getBy()));
+                    ret = new DecreaseAction(prdAction.getProperty(),prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getBy()));
                 case CALCULATION:
-                    ret = getMulOrDiv(prdAction);
+                    ret = getMulOrDiv(prdAction, expressionConverterAndValidator);
                 case CONDITION:
-                    ret = getSingleOrMultiple(prdAction);
+                    ret = getSingleOrMultiple(prdAction, expressionConverterAndValidator);
                 case SET:
-                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), analyzeAndGetValue(prdAction, prdAction.getValue()));
+                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()));
                 case KILL:
                     ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
                 case REPLACE:
@@ -218,16 +220,18 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return a CalculationAction representation of the given PRDActivation.
      */
-    private CalculationAction getMulOrDiv(PRDAction prdAction){
+    private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator){
         CalculationAction ret = null;
         PRDMultiply mul = prdAction.getPRDMultiply();
         PRDDivide div = prdAction.getPRDDivide();
 
         // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
         if(mul != null){
-            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), analyzeAndGetValue(prdAction, mul.getArg1()), analyzeAndGetValue(prdAction, mul.getArg2()), ClaculationType.MULTIPLY);
+            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg1()),
+                    expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg2()), ClaculationType.MULTIPLY);
         } else if (div != null) {
-            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), analyzeAndGetValue(prdAction, div.getArg1()), analyzeAndGetValue(prdAction, div.getArg2()), ClaculationType.DIVIDE);
+            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg1()),
+                    expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg2()), ClaculationType.DIVIDE);
         }
         else {
             // Throw exception.
@@ -241,7 +245,7 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return an AbstractConditionAction representation of the given PRDActivation.
      */
-    private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction){
+    private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator){
         AbstractConditionAction ret = null;
         PRDCondition prdCondition = prdAction.getPRDCondition();
         ThenOrElse thenActions = null, elseActions = null;
@@ -249,9 +253,9 @@ public class PRDConverter {
         getAndCreateThenOrElse(prdAction, thenActions, elseActions);
 
         if(prdCondition.getSingularity().equals("single")){
-            ret = new SingleCondition(prdAction.getProperty(), prdAction.getEntity(), analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getOperator());
+            ret = new SingleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getOperator());
         } else if (prdCondition.getSingularity().equals("multiple")) {
-            ret = new MultipleCondition(prdAction.getProperty(), prdAction.getEntity(), analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getLogical());
+            ret = new MultipleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getLogical());
         }
         else {
             // Throw exception.
@@ -299,221 +303,6 @@ public class PRDConverter {
             prdThen.getPRDAction().forEach(a-> ret.add(PRDAction2Action(a)));
         } else if (prdElse != null) {
             prdElse.getPRDAction().forEach(a-> ret.add(PRDAction2Action(a)));
-        }
-
-        return ret;
-    }
-
-    /**
-     * Analyze the value string from the PRDAction, in case the given string represent a function,
-     * the method extract the function name and parameters from the string, execute the function and return
-     * the return value from this function.
-     * Otherwise, the method returns the given string.
-     *
-     * @param prdAction the given PRDTAction generated from reading the XML file
-     * @param prdValueStr the given value name from the given PRDTAction generated from reading the XML file.
-     * The name sent separately in order to analyze the two arguments of 'Calculation' action too.
-     * @return the value requested object.
-     */
-    private Object analyzeAndGetValue(PRDAction prdAction, String prdValueStr){
-        Object value;
-        value = getObjectIfFunction(prdValueStr);
-        if(value == null){
-            value = getIfProperty(prdAction, prdValueStr);
-        }
-        if(value == null){
-            value = parseValue(prdValueStr);
-        }
-        if(!compareActionValueToGivenPropertyValue(prdAction, value)){
-            // validation error occurred.
-            // Throw exception in order to stop the action creation.
-        }
-
-        return value;
-    }
-
-    private Object getObjectIfFunction(String prdValueStr){
-        String functionName = getFucntionName(prdValueStr);
-        Object ret = null;
-        try{
-            switch (HelperFunctionsType.valueOf(functionName)){
-                case ENVIRONMENT:
-                    ret = StaticHelperFunctions.environment(getFunctionParam(prdValueStr), environmentProperties);
-                case RANDOM:
-                    ret = StaticHelperFunctions.random(Integer.parseInt(getFunctionParam(prdValueStr)));
-                case EVALUATE:
-                    ret = null;
-                case PERCENT:
-                    ret = null;
-                case TICKS:
-                    ret = null;
-            }
-        }
-        catch (Exception e) {
-            // Value is not a function
-            ret = null;
-        }
-
-        return ret;
-    }
-
-    private Property getIfProperty(PRDAction prdAction, String prdValueStr) {
-        String entityName = prdAction.getEntity();
-        Entity entity = entities.get(entityName);
-        return entity.getProperties().get(prdValueStr);
-    }
-
-    private Object parseValue(String prdValueStr){
-        boolean flag = false;
-        Object ret = null;
-
-        try{
-            ret = Integer.parseInt(prdValueStr);
-        }
-        catch (NumberFormatException e){
-            flag = true;
-        }
-        if(flag){
-            ret = getBooleanOrStr(prdValueStr);
-        }
-
-        return ret;
-    }
-
-    private Object getBooleanOrStr(String prdValueStr){
-        Object ret;
-       try {
-           ret = Boolean.valueOf(prdValueStr);
-       }
-       catch (IllegalArgumentException e){
-           ret = prdValueStr;
-       }
-
-       return ret;
-    }
-
-    private boolean compareActionValueToGivenPropertyValue(PRDAction prdAction, Object value){
-        boolean ret = true;
-
-        if (value instanceof Integer) {
-            ret = compareIntegerOrDoubleCase(prdAction);
-        } else if (value instanceof Double) {
-            ret = compareIntegerOrDoubleCase(prdAction);
-        } else if (value instanceof Boolean) {
-            ret = compareBooleanCase(prdAction);
-        } else if (value instanceof String) {
-            ret = compareStringCase(prdAction);
-        } else {
-            // TODO: find a way to add this error to the error list in validator.
-        }
-
-        return ret;
-    }
-
-    private boolean compareIntegerOrDoubleCase(PRDAction prdAction){
-        String actionType = prdAction.getType(), entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
-        Entity entity = entities.get(entityName);
-        ActionType type = ActionType.valueOf(actionType);
-        PropertyType propertyType;
-        boolean ret = true;
-
-        if(type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION && type != ActionType.CONDITION){
-            // TODO: find a way to add this error to the error list in validator.
-            ret = false;
-        }
-
-        propertyType = entity.getProperties().get(propertyName).getType();
-        if ((!propertyType.name().equals("INT")) && (!propertyType.name().equals("DOUBLE"))){
-            // TODO: find a way to add this error to the error list in validator.
-            ret = false;
-        }
-
-        return ret;
-    }
-
-    private boolean compareBooleanCase(PRDAction prdAction){
-        String actionType = prdAction.getType(), entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
-        Entity entity = entities.get(entityName);
-        ActionType type = ActionType.valueOf(actionType);
-        PropertyType propertyType;
-        PRDCondition prdCondition;
-        boolean ret = true;
-
-        if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION){
-            // TODO: find a way to add this error to the error list in validator.
-            ret = false;
-        }
-
-        if(type == ActionType.CONDITION){
-            prdCondition = prdAction.getPRDCondition();
-            if(prdCondition.getSingularity().equals("single") && (prdCondition.getOperator().equals("bt") || prdCondition.getOperator().equals("lt"))){
-                // TODO: find a way to add this error to the error list in validator.
-                ret = false;
-            }
-        }
-
-        propertyType = entity.getProperties().get(propertyName).getType();
-        if ((!propertyType.name().equals("BOOLEAN"))){
-            // TODO: find a way to add this error to the error list in validator.
-            ret = false;
-        }
-
-        return ret;
-    }
-
-    private boolean compareStringCase(PRDAction prdAction){
-        String actionType = prdAction.getType(), entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
-        Entity entity = entities.get(entityName);
-        ActionType type = ActionType.valueOf(actionType);
-        PropertyType propertyType;
-        boolean ret = true;
-
-        if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION){
-            // TODO: find a way to add this error to the error list in validator.
-            ret = false;
-        }
-
-        propertyType = entity.getProperties().get(propertyName).getType();
-        if ((!propertyType.name().equals("STRING"))){
-            // TODO: find a way to add this error to the error list in validator.
-            ret = false;
-        }
-
-        return ret;
-    }
-
-    /**
-     * Extract the function name from the given value string if a function name exists in the string.
-     * Otherwise, return null.
-     *
-     * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
-     * @return the function name in the given string.
-     */
-    private String getFucntionName(String prdValueStr){
-        String ret = null;
-        int openParenIndex = prdValueStr.indexOf("(");
-
-        if (openParenIndex != -1) {
-            ret = prdValueStr.substring(0, openParenIndex);
-        }
-
-        return ret;
-    }
-
-    /**
-     * Extract the function's params from the given value string if the params exist in the string.
-     * Otherwise, return null.
-     *
-     * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
-     * @return the functions params in the given string.
-     */
-    private String getFunctionParam(String prdValueStr){
-        String ret = null;
-        int openParenIndex = prdValueStr.indexOf("(");
-        int closeParenIndex = prdValueStr.indexOf(")");
-
-        if (openParenIndex != -1 && closeParenIndex != -1 && closeParenIndex > openParenIndex) {
-            ret = prdValueStr.substring(openParenIndex + 1, closeParenIndex);
         }
 
         return ret;

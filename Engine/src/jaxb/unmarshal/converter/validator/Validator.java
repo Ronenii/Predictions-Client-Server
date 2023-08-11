@@ -10,6 +10,9 @@ public class Validator {
 
     private StringBuilder errorsList;
 
+    public Validator() {
+        this.errorsList = new StringBuilder();
+    }
 
     private void validatePRDProperty(PRDProperty prdProperty) {
         validatePRDPropertyRange(prdProperty);
