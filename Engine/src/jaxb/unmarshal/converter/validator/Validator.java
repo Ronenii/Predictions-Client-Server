@@ -120,21 +120,7 @@ public class Validator {
 
 
     public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities){
-        validatePRDActionType(prdAction);
         validatePRDActionEntityAndProperty(prdAction, entities);
-    }
-
-    private void validatePRDActionType(PRDAction prdAction){
-        ActionType type = ActionType.valueOf(prdAction.getType());
-
-        if(type != ActionType.INCREASE &&
-        type != ActionType.DECREASE &&
-        type != ActionType.CALCULATION &&
-        type != ActionType.CONDITION &&
-        type != ActionType.KILL &&
-        type != ActionType.SET) {
-            addErrorToList(prdAction.getClass().getSimpleName(), "", "The given action's type doesn't exist.");
-        }
     }
 
     private void validatePRDActionEntityAndProperty(PRDAction prdAction, Map<String, Entity> entities) {
