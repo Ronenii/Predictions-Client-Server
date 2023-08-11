@@ -183,28 +183,31 @@ public class PRDConverter {
     private Action PRDAction2Action(PRDAction prdAction) {
         Action ret = null;
 
-        // TODO: Continue this
-        // TODO: Create getValue generator to check if 'value' calls a function.
-        switch (ActionType.valueOf(prdAction.getType())) {
-            case INCREASE:
-                ret = new IncreaseAction(prdAction.getProperty(),prdAction.getEntity(), prdAction.getBy());
-            case DECREASE:
-                ret = new DecreaseAction(prdAction.getProperty(),prdAction.getEntity(), prdAction.getBy());
-            case CALCULATION:
-                ret = getMulOrDiv(prdAction);
-            case CONDITION:
-                ret = getSingleOrMultiple(prdAction);
-            case SET:
-                ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), analyzeAndGetValue(prdAction.getValue()));
-            case KILL:
-                ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
-            case REPLACE:
-                break;
-            case PROXIMITY:
-                break;
-            default:
-                String err = String.format("\"%s\" is not a valid Action type.", prdAction.getType());
-                throw new IllegalArgumentException(err);
+        try{
+            switch (ActionType.valueOf(prdAction.getType())) {
+                case INCREASE:
+                    ret = new IncreaseAction(prdAction.getProperty(),prdAction.getEntity(), analyzeAndGetValue(prdAction, prdAction.getBy()));
+                case DECREASE:
+                    ret = new DecreaseAction(prdAction.getProperty(),prdAction.getEntity(), analyzeAndGetValue(prdAction, prdAction.getBy()));
+                case CALCULATION:
+                    ret = getMulOrDiv(prdAction);
+                case CONDITION:
+                    ret = getSingleOrMultiple(prdAction);
+                case SET:
+                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), analyzeAndGetValue(prdAction, prdAction.getValue()));
+                case KILL:
+                    ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
+                case REPLACE:
+                    break;
+                case PROXIMITY:
+                    break;
+                default:
+                    String err = String.format("\"%s\" is not a valid Action type.", prdAction.getType());
+                    throw new IllegalArgumentException(err);
+            }
+        }
+        catch (Exception e){
+            // Catch the exception from 'analyzeAndGetValue' in order to stop the current action creation.
         }
         return ret;
     }
@@ -222,9 +225,9 @@ public class PRDConverter {
 
         // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
         if(mul != null){
-            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), mul.getArg1(), mul.getArg2(), ClaculationType.MULTIPLY);
+            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), analyzeAndGetValue(prdAction, mul.getArg1()), analyzeAndGetValue(prdAction, mul.getArg2()), ClaculationType.MULTIPLY);
         } else if (div != null) {
-            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), div.getArg1(), div.getArg2(), ClaculationType.DIVIDE);
+            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), analyzeAndGetValue(prdAction, div.getArg1()), analyzeAndGetValue(prdAction, div.getArg2()), ClaculationType.DIVIDE);
         }
         else {
             // Throw exception.
@@ -246,9 +249,9 @@ public class PRDConverter {
         getAndCreateThenOrElse(prdAction, thenActions, elseActions);
 
         if(prdCondition.getSingularity().equals("single")){
-            ret = new SingleCondition(prdAction.getProperty(), prdAction.getEntity(), prdAction.getValue(), thenActions, elseActions, prdCondition.getOperator());
+            ret = new SingleCondition(prdAction.getProperty(), prdAction.getEntity(), analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getOperator());
         } else if (prdCondition.getSingularity().equals("multiple")) {
-            ret = new MultipleCondition(prdAction.getProperty(), prdAction.getEntity(), prdAction.getValue(), thenActions, elseActions, prdCondition.getLogical());
+            ret = new MultipleCondition(prdAction.getProperty(), prdAction.getEntity(), analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getLogical());
         }
         else {
             // Throw exception.
@@ -307,51 +310,60 @@ public class PRDConverter {
      * the return value from this function.
      * Otherwise, the method returns the given string.
      *
-     * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
+     * @param prdAction the given PRDTAction generated from reading the XML file
+     * @param prdValueStr the given value name from the given PRDTAction generated from reading the XML file.
+     * The name sent separately in order to analyze the two arguments of 'Calculation' action too.
      * @return the value requested object.
      */
-    private Object analyzeAndGetValue(PRDAction prdAction){
-        // check if the value is function -> VV
-        // if not, check if the value is a name of a property -> VV
-        // if not, parse it if this a number or a boolean.
+    private Object analyzeAndGetValue(PRDAction prdAction, String prdValueStr){
+        Object value;
+        value = getObjectIfFunction(prdValueStr);
+        if(value == null){
+            value = getIfProperty(prdAction, prdValueStr);
+        }
+        if(value == null){
+            value = parseValue(prdValueStr);
+        }
+        if(!compareActionValueToGivenPropertyValue(prdAction, value)){
+            // validation error occurred.
+            // Throw exception in order to stop the action creation.
+        }
 
-        // after the 3 checks, validate the final object with the action property's type and the action type (increase gets int etc.).
-
-        return null;
+        return value;
     }
 
-    private Object getObjectIfFunction(PRDAction prdAction){
-        String prdValueStr = prdAction.getValue(), functionName = getFucntionName(prdValueStr);
-        Object ret;
-
-        switch (HelperFunctionsType.valueOf(functionName)){
-            case ENVIRONMENT:
-                ret = StaticHelperFunctions.environment(getFunctionParam(prdValueStr), environmentProperties);
-            case RANDOM:
-                ret = StaticHelperFunctions.random(Integer.parseInt(getFunctionParam(prdValueStr)));
-            case EVALUATE:
-                ret = null;
-            case PERCENT:
-                ret = null;
-            case TICKS:
-                ret = null;
-            default:
-                // Value is not a function
-                ret = null;
-                break;
+    private Object getObjectIfFunction(String prdValueStr){
+        String functionName = getFucntionName(prdValueStr);
+        Object ret = null;
+        try{
+            switch (HelperFunctionsType.valueOf(functionName)){
+                case ENVIRONMENT:
+                    ret = StaticHelperFunctions.environment(getFunctionParam(prdValueStr), environmentProperties);
+                case RANDOM:
+                    ret = StaticHelperFunctions.random(Integer.parseInt(getFunctionParam(prdValueStr)));
+                case EVALUATE:
+                    ret = null;
+                case PERCENT:
+                    ret = null;
+                case TICKS:
+                    ret = null;
+            }
+        }
+        catch (Exception e) {
+            // Value is not a function
+            ret = null;
         }
 
         return ret;
     }
 
-    private Property getIfProperty(PRDAction prdAction) {
-        String prdValueStr = prdAction.getValue(), entityName = prdAction.getEntity();
+    private Property getIfProperty(PRDAction prdAction, String prdValueStr) {
+        String entityName = prdAction.getEntity();
         Entity entity = entities.get(entityName);
         return entity.getProperties().get(prdValueStr);
     }
 
-    private Object parseValue(PRDAction prdAction){
-        String prdValueStr = prdAction.getValue();
+    private Object parseValue(String prdValueStr){
         boolean flag = false;
         Object ret = null;
 
@@ -378,6 +390,96 @@ public class PRDConverter {
        }
 
        return ret;
+    }
+
+    private boolean compareActionValueToGivenPropertyValue(PRDAction prdAction, Object value){
+        boolean ret = true;
+
+        if (value instanceof Integer) {
+            ret = compareIntegerOrDoubleCase(prdAction);
+        } else if (value instanceof Double) {
+            ret = compareIntegerOrDoubleCase(prdAction);
+        } else if (value instanceof Boolean) {
+            ret = compareBooleanCase(prdAction);
+        } else if (value instanceof String) {
+            ret = compareStringCase(prdAction);
+        } else {
+            // TODO: find a way to add this error to the error list in validator.
+        }
+
+        return ret;
+    }
+
+    private boolean compareIntegerOrDoubleCase(PRDAction prdAction){
+        String actionType = prdAction.getType(), entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
+        Entity entity = entities.get(entityName);
+        ActionType type = ActionType.valueOf(actionType);
+        PropertyType propertyType;
+        boolean ret = true;
+
+        if(type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION && type != ActionType.CONDITION){
+            // TODO: find a way to add this error to the error list in validator.
+            ret = false;
+        }
+
+        propertyType = entity.getProperties().get(propertyName).getType();
+        if ((!propertyType.name().equals("INT")) && (!propertyType.name().equals("DOUBLE"))){
+            // TODO: find a way to add this error to the error list in validator.
+            ret = false;
+        }
+
+        return ret;
+    }
+
+    private boolean compareBooleanCase(PRDAction prdAction){
+        String actionType = prdAction.getType(), entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
+        Entity entity = entities.get(entityName);
+        ActionType type = ActionType.valueOf(actionType);
+        PropertyType propertyType;
+        PRDCondition prdCondition;
+        boolean ret = true;
+
+        if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION){
+            // TODO: find a way to add this error to the error list in validator.
+            ret = false;
+        }
+
+        if(type == ActionType.CONDITION){
+            prdCondition = prdAction.getPRDCondition();
+            if(prdCondition.getSingularity().equals("single") && (prdCondition.getOperator().equals("bt") || prdCondition.getOperator().equals("lt"))){
+                // TODO: find a way to add this error to the error list in validator.
+                ret = false;
+            }
+        }
+
+        propertyType = entity.getProperties().get(propertyName).getType();
+        if ((!propertyType.name().equals("BOOLEAN"))){
+            // TODO: find a way to add this error to the error list in validator.
+            ret = false;
+        }
+
+        return ret;
+    }
+
+    private boolean compareStringCase(PRDAction prdAction){
+        String actionType = prdAction.getType(), entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
+        Entity entity = entities.get(entityName);
+        ActionType type = ActionType.valueOf(actionType);
+        PropertyType propertyType;
+        boolean ret = true;
+
+        if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION){
+            // TODO: find a way to add this error to the error list in validator.
+            ret = false;
+        }
+
+        propertyType = entity.getProperties().get(propertyName).getType();
+        if ((!propertyType.name().equals("STRING"))){
+            // TODO: find a way to add this error to the error list in validator.
+            ret = false;
+        }
+
+        return ret;
     }
 
     /**
