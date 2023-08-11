@@ -4,9 +4,9 @@ import jaxb.schema.generated.PRDAction;
 import jaxb.schema.generated.PRDActivation;
 import jaxb.schema.generated.PRDEntity;
 import jaxb.schema.generated.PRDProperty;
-import objects.entity.Entity;
-import properties.action.api.ActionType;
-import properties.property.api.Property;
+import simulation.objects.entity.Entity;
+import simulation.properties.action.api.ActionType;
+import simulation.properties.property.api.Property;
 
 import java.util.Map;
 

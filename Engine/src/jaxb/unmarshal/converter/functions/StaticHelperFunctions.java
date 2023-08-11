@@ -1,11 +1,9 @@
 package jaxb.unmarshal.converter.functions;
 
-import objects.world.World;
-import properties.property.api.Property;
+import simulation.properties.property.api.Property;
 
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * A Static class implements five functions which can be requested as a value for an action object.

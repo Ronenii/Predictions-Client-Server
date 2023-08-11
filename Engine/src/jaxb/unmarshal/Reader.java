@@ -2,7 +2,7 @@ package jaxb.unmarshal;
 
 import jaxb.schema.generated.PRDWorld;
 import jaxb.unmarshal.converter.PRDConverter;
-import objects.world.World;
+import simulation.objects.world.World;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
