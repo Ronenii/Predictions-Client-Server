@@ -28,4 +28,15 @@ public abstract class AbstractAction implements Action{
     public String getContextEntity() {
         return contextEntity;
     }
+
+    @Override
+    public int hashCode() {
+        return property.getName().length() * type.name().length() * contextEntity.getName().length();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Action toCompare = (AbstractAction) obj;
+        return (toCompare.getType().equals(this.type)) && (toCompare.getContextEntity().equals(this.contextEntity)) && (toCompare.getProperty().equals(this.property));
+    }
 }
