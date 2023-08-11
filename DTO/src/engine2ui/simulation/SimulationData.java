@@ -1,18 +1,44 @@
 package engine2ui.simulation;
 
-import engine2ui.simulation.objects.Entity;
-import engine2ui.simulation.properties.EndingCondition;
-import engine2ui.simulation.properties.Rule;
+import engine2ui.simulation.objects.DTOEntity;
+import engine2ui.simulation.properties.DTOEndingCondition;
+import engine2ui.simulation.properties.DTORule;
 
-import java.util.Set;
+import java.util.List;
 
 public class SimulationData {
-    private Set<Entity> entities;
-    private Set<Rule> rules;
-    private Set<EndingCondition> endingConditions;
+    private List<DTOEntity> entities;
+    private List<DTORule> rules;
+    private List<DTOEndingCondition> endingConditions;
 
-    public void addEntity()
+    public SimulationData(List<DTOEntity> entities, List<DTORule> rules, List<DTOEndingCondition> endingConditions) {
+        this.entities = entities;
+        this.rules = rules;
+        this.endingConditions = endingConditions;
+    }
+
+    public void addEntity(DTOEntity entity)
     {
+        entities.add(entity);
+    }
 
+    public void addRule(DTORule rule)
+    {
+        rules.add(rule);
+    }
+
+    public void addRule(String name, boolean ticks, boolean probability, String... actions)
+    {
+        addRule(new DTORule(name, ticks, probability, actions));
+    }
+
+    public void addEndingCondition(DTOEndingCondition endingCondition)
+    {
+        endingConditions.add(endingCondition);
+    }
+
+    public void addEndingCondition(String type, int count)
+    {
+        endingConditions.add(new DTOEndingCondition(type, count));
     }
 }
