@@ -1,9 +1,11 @@
 package engine2ui.simulation.start;
 
+import engine2ui.simulation.genral.HasList;
+
 import java.util.List;
 
-public class StartData {
-    private List<DTOEnvironmentVariable> environmentVariables;
+public class StartData implements HasList {
+    private final List<DTOEnvironmentVariable> environmentVariables;
 
     public StartData(List<DTOEnvironmentVariable> environmentVariables) {
         this.environmentVariables = environmentVariables;

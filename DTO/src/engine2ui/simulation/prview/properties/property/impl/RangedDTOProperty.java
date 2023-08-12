@@ -4,8 +4,8 @@ import engine2ui.simulation.prview.properties.property.api.DTOProperty;
 import engine2ui.simulation.prview.properties.property.api.RangedProperty;
 
 public class RangedDTOProperty extends DTOProperty implements RangedProperty {
-    private double from;
-    private double to;
+    private final double from;
+    private final double to;
 
     public RangedDTOProperty(String name, String type, boolean isRandomInit, double from, double to) {
         super(name, type, isRandomInit);
@@ -15,9 +15,6 @@ public class RangedDTOProperty extends DTOProperty implements RangedProperty {
 
     @Override
     public String toString() {
-        StringBuilder ret = new StringBuilder(super.toString());
-        ret.append(String.format("\tRange: %s-%s\n", from, to));
-
-        return ret.toString();
+        return super.toString() + String.format("\tRange: %s-%s\n", from, to);
     }
 }

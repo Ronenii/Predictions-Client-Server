@@ -1,14 +1,15 @@
 package engine2ui.simulation.prview.objects;
 
+import engine2ui.simulation.genral.HasList;
 import engine2ui.simulation.prview.properties.property.api.DTOProperty;
 import engine2ui.simulation.prview.properties.property.impl.NonRangedDTOProperty;
 import engine2ui.simulation.prview.properties.property.impl.RangedDTOProperty;
 
 import java.util.List;
 
-public class DTOEntity {
-    private String name;
-    private int population;
+public class DTOEntity implements HasList {
+    private final String name;
+    private final int population;
     List<DTOProperty> properties;
 
     public DTOEntity(String name, int population, List<DTOProperty> properties) {
@@ -35,11 +36,7 @@ public class DTOEntity {
         ret.append(String.format("Name: %s\n", name));
         ret.append(String.format("Population: %s\n", population));
         ret.append("Properties: \n");
-        for (int i = 1; i <= properties.size(); i++) {
-            ret.append(String.format("\n\t#%s\n", i));
-            ret.append(properties.get(i - 1));
-            ret.append("\n");
-        }
+        ret.append(formatListToString(properties));
 
         return ret.toString();
     }

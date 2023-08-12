@@ -1,12 +1,14 @@
 package engine2ui.simulation.prview.properties;
 
+import engine2ui.simulation.genral.HasList;
+
 import java.util.List;
 
-public class DTORule {
-    String name;
-    int ticks;
-    double probability;
-    List<String> actions;
+public class DTORule implements HasList {
+    private final String name;
+    private final int ticks;
+    private final double probability;
+    private List<String> actions;
 
     public DTORule(String name, int ticks, double probability, List<String> actions) {
         this.name = name;
@@ -38,11 +40,7 @@ public class DTORule {
         ret.append(String.format("Probability of successful invoke: %s\n", probability * 100.0 ));
         ret.append(String.format("Number of actions: %s\n", actions.size()));
         ret.append("Actions: \n");
-        for(int i = 1; i<= actions.size(); i++){
-            ret.append(String.format("#%s\t ",i));
-            ret.append(actions.get(i-1));
-            ret.append("\n");
-        }
+        ret.append(formatListToString(actions));
 
         return ret.toString();
     }

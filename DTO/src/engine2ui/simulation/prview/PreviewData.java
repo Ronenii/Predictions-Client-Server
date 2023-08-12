@@ -1,5 +1,6 @@
 package engine2ui.simulation.prview;
 
+import engine2ui.simulation.genral.HasList;
 import engine2ui.simulation.prview.objects.DTOEntity;
 import engine2ui.simulation.prview.properties.DTOEndingCondition;
 import engine2ui.simulation.prview.properties.DTORule;
@@ -9,10 +10,10 @@ import java.util.List;
 /**
  * A class that holds the simulation's data required to present in menu option 2.
  */
-public class PreviewData {
-    private List<DTOEntity> entities;
-    private List<DTORule> rules;
-    private List<DTOEndingCondition> endingConditions;
+public class PreviewData implements HasList{
+    private final List<DTOEntity> entities;
+    private final List<DTORule> rules;
+    private final List<DTOEndingCondition> endingConditions;
 
     public PreviewData(List<DTOEntity> entities, List<DTORule> rules, List<DTOEndingCondition> endingConditions) {
         this.entities = entities;
@@ -40,25 +41,13 @@ public class PreviewData {
         endingConditions.add(new DTOEndingCondition(type, count));
     }
 
-
-    @Override
-    public String toString() {
-        StringBuilder ret = new StringBuilder();
-
-        formatListToString(entities, "ENTITIES");
-        formatListToString(rules, "RULES");
-        formatListToString(endingConditions, "ENDING CONDITIONS");
-
-        return ret.toString();
-    }
-
     /**
      * @param list the list we wish to format
-     * @param label the list's type but as a formatted string and not camel case
+     * @param title the list's type but as a formatted string and not camel case
      * @param <T> the list's type.
      * @return the formatted list string as follows:
      *
-     * ### 'LABEL' ###
+     * ### 'TITLE' ###
      *
      * #1
      * list(0).toString()
@@ -68,15 +57,19 @@ public class PreviewData {
      *
      * ...
      */
-    private <T> String formatListToString(List<T> list, String label){
-        StringBuilder ret = new StringBuilder();
+    private <T> String formatListWithTitle(List<T> list, String title){
+        return String.format("### %s ###\n", title.toUpperCase()) + formatListToString(list);
+    }
 
-        ret.append(String.format("### %s ###\n", label.toUpperCase()));
-        for(int i =1; i < list.size(); i++){
-            ret.append(String.format("\n#%s\n",i));
-            ret.append(list.get(i-1));
-        }
 
-        return ret.toString();
+    @Override
+    public String toString() {
+        String ret = "";
+
+        formatListWithTitle(entities, "ENTITIES");
+        formatListWithTitle(rules, "RULES");
+        formatListWithTitle(endingConditions, "ENDING CONDITIONS");
+
+        return ret;
     }
 }

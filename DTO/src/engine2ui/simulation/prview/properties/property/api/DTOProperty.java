@@ -1,9 +1,9 @@
 package engine2ui.simulation.prview.properties.property.api;
 
 abstract public class DTOProperty {
-    private String name;
-    private String type;
-    private boolean isRandomInit;
+    private final String name;
+    private final String type;
+    private final boolean isRandomInit;
 
     public DTOProperty(String name, String type, boolean isRandomInit) {
         this.name = name;
