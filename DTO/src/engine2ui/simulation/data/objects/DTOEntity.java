@@ -1,8 +1,8 @@
-package engine2ui.simulation.objects;
+package engine2ui.simulation.data.objects;
 
-import engine2ui.simulation.properties.property.api.DTOProperty;
-import engine2ui.simulation.properties.property.impl.NonRangedDTOProperty;
-import engine2ui.simulation.properties.property.impl.RangedDTOProperty;
+import engine2ui.simulation.data.properties.property.api.DTOProperty;
+import engine2ui.simulation.data.properties.property.impl.NonRangedDTOProperty;
+import engine2ui.simulation.data.properties.property.impl.RangedDTOProperty;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
-package engine2ui.simulation.properties;
+package engine2ui.simulation.data.properties;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class DTORule {

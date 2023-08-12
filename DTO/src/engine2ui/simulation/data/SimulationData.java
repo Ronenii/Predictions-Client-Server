@@ -1,8 +1,8 @@
-package engine2ui.simulation;
+package engine2ui.simulation.data;
 
-import engine2ui.simulation.objects.DTOEntity;
-import engine2ui.simulation.properties.DTOEndingCondition;
-import engine2ui.simulation.properties.DTORule;
+import engine2ui.simulation.data.objects.DTOEntity;
+import engine2ui.simulation.data.properties.DTOEndingCondition;
+import engine2ui.simulation.data.properties.DTORule;
 
 import java.util.List;
 
