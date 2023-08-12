@@ -5,7 +5,6 @@ import jaxb.schema.generated.PRDActivation;
 import jaxb.schema.generated.PRDEntity;
 import jaxb.schema.generated.PRDProperty;
 import objects.entity.Entity;
-import properties.action.api.ActionType;
 import properties.property.api.Property;
 
 import java.util.Map;
@@ -19,15 +18,17 @@ import java.util.Map;
  * the program after each fix to try and find new errors.
  */
 public class Validator {
+
     private StringBuilder errorsList;
 
+    public Validator() {
+        this.errorsList = new StringBuilder();
+    }
 
-    private void validatePRDProperty(PRDProperty prdProperty, Map<String, Property> properties) {
-        validatePRDPropertyExist(prdProperty, properties);
+    private void validatePRDProperty(PRDProperty prdProperty) {
         validatePRDPropertyRange(prdProperty);
         validatePRDPropertyInitValue(prdProperty);
     }
-  
 
     private void validatePRDPropertyExist(PRDProperty prdProperty, Map<String, Property> properties) {
         String propertyName = prdProperty.getPRDName();
@@ -71,7 +72,8 @@ public class Validator {
         }
     }
 
-    public void validatePRDEntity(PRDEntity prdEntity) {
+    public void validatePRDEntity(PRDEntity prdEntity)
+    {
         validatePRDEntityPopulation(prdEntity);
     }
 
@@ -149,7 +151,6 @@ public class Validator {
         errorsList.append(error);
         errorsList.append("\n");
     }
-
 
     /**
      * @return returns true if the validator found any errors.
