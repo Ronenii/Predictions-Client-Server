@@ -1,4 +1,4 @@
-package engine2ui.simulation.data.properties;
+package engine2ui.simulation.prview.properties;
 
 import java.util.List;
 

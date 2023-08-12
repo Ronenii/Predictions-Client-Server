@@ -1,20 +1,20 @@
-package engine2ui.simulation.data;
+package engine2ui.simulation.prview;
 
-import engine2ui.simulation.data.objects.DTOEntity;
-import engine2ui.simulation.data.properties.DTOEndingCondition;
-import engine2ui.simulation.data.properties.DTORule;
+import engine2ui.simulation.prview.objects.DTOEntity;
+import engine2ui.simulation.prview.properties.DTOEndingCondition;
+import engine2ui.simulation.prview.properties.DTORule;
 
 import java.util.List;
 
 /**
  * A class that holds the simulation's data required to present in menu option 2.
  */
-public class SimulationData {
+public class PreviewData {
     private List<DTOEntity> entities;
     private List<DTORule> rules;
     private List<DTOEndingCondition> endingConditions;
 
-    public SimulationData(List<DTOEntity> entities, List<DTORule> rules, List<DTOEndingCondition> endingConditions) {
+    public PreviewData(List<DTOEntity> entities, List<DTORule> rules, List<DTOEndingCondition> endingConditions) {
         this.entities = entities;
         this.rules = rules;
         this.endingConditions = endingConditions;
