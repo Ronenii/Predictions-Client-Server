@@ -17,16 +17,30 @@ public class DTOEntity {
         this.properties = properties;
     }
 
-    public void addProperty(DTOProperty property)
-    {
+    public void addProperty(DTOProperty property) {
         properties.add(property);
     }
-    public void addRangedProperty(String name, String type, boolean isRandomInit, double from ,double to){
+
+    public void addRangedProperty(String name, String type, boolean isRandomInit, double from, double to) {
         addProperty(new RangedDTOProperty(name, type, isRandomInit, from, to));
     }
 
-    public void addNonRangedProperty(String name, String type, boolean isRandomInit)
-    {
+    public void addNonRangedProperty(String name, String type, boolean isRandomInit) {
         addProperty(new NonRangedDTOProperty(name, type, isRandomInit));
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder ret = new StringBuilder();
+        ret.append(String.format("Name: %s\n", name));
+        ret.append(String.format("Population: %s\n", population));
+        ret.append("Properties: \n");
+        for (int i = 1; i <= properties.size(); i++) {
+            ret.append(String.format("\n\t#%s\n", i));
+            ret.append(properties.get(i - 1));
+            ret.append("\n");
+        }
+
+        return ret.toString();
     }
 }

@@ -12,4 +12,12 @@ public class RangedDTOProperty extends DTOProperty implements RangedProperty {
         this.from = from;
         this.to = to;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder ret = new StringBuilder(super.toString());
+        ret.append(String.format("\tRange: %s-%s\n", from, to));
+
+        return ret.toString();
+    }
 }

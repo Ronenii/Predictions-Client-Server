@@ -10,4 +10,14 @@ abstract public class DTOProperty {
         this.type = type;
         this.isRandomInit = isRandomInit;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder ret = new StringBuilder();
+        ret.append(String.format("\tName: %s\n", name));
+        ret.append(String.format("\tType: %s\n", type));
+        ret.append(String.format("\tRandomly initialized: %s\n", isRandomInit));
+
+        return ret.toString();
+    }
 }
