@@ -10,6 +10,7 @@ import properties.property.api.Property;
 
 import java.util.Map;
 
+
 /**
  * A class designated for validating PRD Objects created from the xml schema.
  * Only validates values provided by the user to the objects.
@@ -118,9 +119,37 @@ public class Validator {
         }
     }
 
-
     public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities){
+        validatePRDActionType(prdAction);
         validatePRDActionEntityAndProperty(prdAction, entities);
+
+    }
+
+    private void validatePRDActionType(PRDAction prdAction){
+        ActionType type = ActionType.valueOf(prdAction.getType());
+
+        if(type != ActionType.INCREASE &&
+                type != ActionType.DECREASE &&
+                type != ActionType.CALCULATION &&
+                type != ActionType.CONDITION &&
+                type != ActionType.KILL &&
+                type != ActionType.SET) {
+            addErrorToList(prdAction.getClass().getSimpleName(), "", "The given action's type doesn't exist.");
+        }
+    }
+
+    private void validatePRDActionEntityAndProperty(PRDAction prdAction, Map<String, Entity> entities) {
+        String entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
+
+        if(!entities.containsKey(entityName)) {
+            addErrorToList(prdAction.getClass().getSimpleName(), "", "The given action's entity doesn't exist.");
+        }
+        else { // Can be done only if the given entity exists.
+            Map<String, Property> properties = entities.get(entityName).getProperties();
+            if(!properties.containsKey(propertyName)) {
+                addErrorToList(prdAction.getClass().getSimpleName(), "", "The given action's entity doesn't possess this given property.");
+            }
+        }
     }
 
     private void validatePRDActionEntityAndProperty(PRDAction prdAction, Map<String, Entity> entities) {
