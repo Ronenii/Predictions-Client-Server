@@ -1,13 +1,11 @@
 package jaxb.unmarshal.converter.validator;
 
-import jaxb.schema.generated.PRDAction;
-import jaxb.schema.generated.PRDActivation;
-import jaxb.schema.generated.PRDEntity;
-import jaxb.schema.generated.PRDProperty;
+import jaxb.schema.generated.*;
 import objects.entity.Entity;
 import properties.action.api.ActionType;
 import properties.property.api.Property;
 
+import java.util.List;
 import java.util.Map;
 
 public class Validator {
@@ -104,6 +102,14 @@ public class Validator {
             if(!properties.containsKey(propertyName)) {
                 addErrorToList(prdAction.getClass().getSimpleName(), "", "The given action's entity doesn't possess this given property.");
             }
+        }
+    }
+
+    public void validatePRDTermination(PRDTermination prdTermination) {
+        List<Object> byTicksOrSec = prdTermination.getPRDByTicksOrPRDBySecond();
+
+        if(byTicksOrSec.isEmpty()){
+            addErrorToList(prdTermination.getClass().getSimpleName(), "", "There are no ending conditions for this simulation.");
         }
     }
 
