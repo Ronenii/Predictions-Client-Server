@@ -1,8 +1,10 @@
 package jaxb.unmarshal.converter;
 
 import jaxb.schema.generated.*;
+import jaxb.unmarshal.converter.expression.converter.ExpressionConverterAndValidator;
 import jaxb.unmarshal.converter.functions.HelperFunctionsType;
 import jaxb.unmarshal.converter.functions.StaticHelperFunctions;
+import jaxb.unmarshal.converter.validator.Validator;
 import objects.entity.Entity;
 import objects.rule.Rule;
 import objects.world.World;
@@ -54,7 +56,7 @@ public class PRDConverter {
         this.environmentProperties = environmentProperties;
 
         // Iterates over all PRDEntities, converts each entity and adds it to 'entities'
-        prdWorld.getPRDEntities().getPRDEntity().forEach(e -> entities.put(e.getName(),PRDEntity2Entity(e)));
+        prdWorld.getPRDEntities().getPRDEntity().forEach(e -> entities.put(e.getName(), PRDEntity2Entity(e)));
         this.entities = entities;
 
         // Iterates over all PRDRules, converts each rule and adds it to 'rules'
@@ -117,22 +119,24 @@ public class PRDConverter {
         String value = prdProperty.getPRDValue().getInit();
 
 
-        switch (PropertyType.valueOf(prdProperty.getType())) {
-            case INT:
-                ret = new IntProperty(name, isRandomInit, Integer.parseInt(value), (int) from, (int) to);
-                break;
-            case DOUBLE:
-                ret = new DoubleProperty(name, isRandomInit, Double.parseDouble(value), from, to);
-                break;
-            case BOOLEAN:
-                ret = new BooleanProperty(name, isRandomInit, Boolean.parseBoolean(value));
-                break;
-            case STRING:
-                ret = new StringProperty(name, isRandomInit, value);
-                break;
-            default:
-                String err = String.format("\"%s\" is not a valid Property type.", prdProperty.getType());
-                throw new IllegalArgumentException(err);
+        try {
+            switch (PropertyType.valueOf(prdProperty.getType())) {
+                case INT:
+                    ret = new IntProperty(name, isRandomInit, Integer.parseInt(value), (int) from, (int) to);
+                    break;
+                case DOUBLE:
+                    ret = new DoubleProperty(name, isRandomInit, Double.parseDouble(value), from, to);
+                    break;
+                case BOOLEAN:
+                    ret = new BooleanProperty(name, isRandomInit, Boolean.parseBoolean(value));
+                    break;
+                case STRING:
+                    ret = new StringProperty(name, isRandomInit, value);
+                    break;
+            }
+        } catch (Exception e) {
+            String err = String.format("\"%s\" is not a valid Property type.", prdProperty.getType());
+            throw new IllegalArgumentException(err);
         }
 
         return ret;
@@ -168,7 +172,9 @@ public class PRDConverter {
         int counter = 0;
 
         // Iterates over all prdActions inside the prdRule and convert them to action
-        prdRule.getPRDActions().getPRDAction().forEach(a -> {actions.add(PRDAction2Action(a));});
+        prdRule.getPRDActions().getPRDAction().forEach(a -> {
+            actions.add(PRDAction2Action(a));
+        });
 
         return new Rule(name, activation, actions);
     }
@@ -181,30 +187,33 @@ public class PRDConverter {
      */
     private Action PRDAction2Action(PRDAction prdAction) {
         Action ret = null;
+        ExpressionConverterAndValidator expressionConverterAndValidator = new ExpressionConverterAndValidator(environmentProperties, entities);
 
 
         // TODO: Continue this
         // TODO: Create getValue generator to check if 'value' calls a function.
-        switch (ActionType.valueOf(prdAction.getType())) {
-            case INCREASE:
-                ret = new IncreaseAction(prdAction.getProperty(),prdAction.getEntity(), prdAction.getBy());
-            case DECREASE:
-                ret = new DecreaseAction(prdAction.getProperty(),prdAction.getEntity(), prdAction.getBy());
-            case CALCULATION:
-                ret = getMulOrDiv(prdAction);
-            case CONDITION:
-                ret = getSingleOrMultiple(prdAction);
-            case SET:
-                ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), analyzeAndGetValue(prdAction.getValue()));
-            case KILL:
-                ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
-            case REPLACE:
-                break;
-            case PROXIMITY:
-                break;
-            default:
-                String err = String.format("\"%s\" is not a valid Action type.", prdAction.getType());
-                throw new IllegalArgumentException(err);
+        try {
+            switch (ActionType.valueOf(prdAction.getType())) {
+                case INCREASE:
+                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), prdAction.getBy());
+                case DECREASE:
+                    ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), prdAction.getBy());
+                case CALCULATION:
+                    ret = getMulOrDiv(prdAction);
+                case CONDITION:
+                    ret = getSingleOrMultiple(prdAction);
+                case SET:
+                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), analyzeAndGetValue(prdAction.getValue()));
+                case KILL:
+                    ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
+                case REPLACE:
+                    break;
+                case PROXIMITY:
+                    break;
+            }
+        } catch (Exception e) {
+            String err = String.format("\"%s\" is not a valid Action type.", prdAction.getType());
+            throw new IllegalArgumentException(err);
         }
         return ret;
     }
@@ -215,16 +224,18 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return a CalculationAction representation of the given PRDActivation.
      */
-    private CalculationAction getMulOrDiv(PRDAction prdAction){
+    private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator){
         CalculationAction ret = null;
         PRDMultiply mul = prdAction.getPRDMultiply();
         PRDDivide div = prdAction.getPRDDivide();
 
         // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
         if(mul != null){
-            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), mul.getArg1(), mul.getArg2(), ClaculationType.MULTIPLY);
+            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg1()),
+                    expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg2()), ClaculationType.MULTIPLY);
         } else if (div != null) {
-            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), div.getArg1(), div.getArg2(), ClaculationType.DIVIDE);
+            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg1()),
+                    expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg2()), ClaculationType.DIVIDE);
         }
         else {
             // Throw exception.
@@ -238,7 +249,7 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return an AbstractConditionAction representation of the given PRDActivation.
      */
-    private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction){
+    private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator){
         AbstractConditionAction ret = null;
         PRDCondition prdCondition = prdAction.getPRDCondition();
         ThenOrElse thenActions = null, elseActions = null;
@@ -246,9 +257,9 @@ public class PRDConverter {
         getAndCreateThenOrElse(prdAction, thenActions, elseActions);
 
         if(prdCondition.getSingularity().equals("single")){
-            ret = new SingleCondition(prdAction.getProperty(), prdAction.getEntity(), prdAction.getValue(), thenActions, elseActions, prdCondition.getOperator());
+            ret = new SingleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getOperator());
         } else if (prdCondition.getSingularity().equals("multiple")) {
-            ret = new MultipleCondition(prdAction.getProperty(), prdAction.getEntity(), prdAction.getValue(), thenActions, elseActions, prdCondition.getLogical());
+            ret = new MultipleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getLogical());
         }
         else {
             // Throw exception.
@@ -310,25 +321,30 @@ public class PRDConverter {
      * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
      * @return the value requested object.
      */
-    private Object analyzeAndGetValue(String prdValueStr){
+    private Object analyzeAndGetValue(String prdValueStr) {
         String functionName = getFucntionName(prdValueStr);
         Object ret = null;
-        switch (HelperFunctionsType.valueOf(functionName)){
-            case ENVIRONMENT:
-                ret = StaticHelperFunctions.environment(getFunctionParam(prdValueStr), environmentProperties);
-            case RANDOM:
-                ret = StaticHelperFunctions.random(Integer.parseInt(getFunctionParam(prdValueStr)));
-            case EVALUATE:
-                break;
-            case PERCENT:
-                break;
-            case TICKS:
-                break;
-            default:
-                // TODO: maybe try to create a method to convert this string to the object it supposed to be, for example, check if this string is a number and parse it to int.
-                // Value is not a function
-                ret = prdValueStr;
-                break;
+        try {
+            switch (HelperFunctionsType.valueOf(functionName)) {
+                case ENVIRONMENT:
+                    ret = StaticHelperFunctions.environment(getFunctionParam(prdValueStr), environmentProperties);
+                case RANDOM:
+                    ret = StaticHelperFunctions.random(Integer.parseInt(getFunctionParam(prdValueStr)));
+                case EVALUATE:
+                    break;
+                case PERCENT:
+                    break;
+                case TICKS:
+                    break;
+                default:
+                    // TODO: maybe try to create a method to convert this string to the object it supposed to be, for example, check if this string is a number and parse it to int.
+                    // Value is not a function
+                    break;
+            }
+        }
+        catch (Exception e)
+        {
+            ret = prdValueStr;
         }
         return ret;
     }
@@ -340,7 +356,7 @@ public class PRDConverter {
      * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
      * @return the function name in the given string.
      */
-    private String getFucntionName(String prdValueStr){
+    private String getFucntionName(String prdValueStr) {
         String ret = null;
         int openParenIndex = prdValueStr.indexOf("(");
 
@@ -358,7 +374,7 @@ public class PRDConverter {
      * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
      * @return the functions params in the given string.
      */
-    private String getFunctionParam(String prdValueStr){
+    private String getFunctionParam(String prdValueStr) {
         String ret = null;
         int openParenIndex = prdValueStr.indexOf("(");
         int closeParenIndex = prdValueStr.indexOf(")");
