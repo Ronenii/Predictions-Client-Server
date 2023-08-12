@@ -34,7 +34,9 @@ public abstract class AbstractProperty implements Property {
     }
 
     @Override
-    public Boolean isRandInit() {return isRandInit;}
+    public Boolean isRandInit() {
+        return isRandInit;
+    }
 
     @Override
     public String toString() {
@@ -44,5 +46,16 @@ public abstract class AbstractProperty implements Property {
                 ", type=" + type +
                 ", value=" + value +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return name.length() * (type.ordinal() + 1) * Boolean.toString(isRandInit).length();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Property toCompare = (Property) obj;
+        return (toCompare.isRandInit() == this.isRandInit) && (toCompare.getName().equals(this.name)) && (toCompare.getType().equals((this.type))) && (toCompare.getValue().equals(this.type));
     }
 }

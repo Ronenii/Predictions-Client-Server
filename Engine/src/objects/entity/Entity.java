@@ -8,7 +8,7 @@ public class Entity {
 
     private final int population;
     private final String name;
-    private final Map<String,Property> properties;
+    private final Map<String, Property> properties;
 
     public Entity(int population, String name, Map<String, Property> properties) {
         this.population = population;
@@ -45,5 +45,17 @@ public class Entity {
         }
         entityToString.append("}");
         return entityToString.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return name.length() * population * properties.size();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Entity toCompare = (Entity) obj;
+
+        return toCompare.getName().equals(this.name) && toCompare.getPopulation() == this.population && toCompare.getProperties().equals(this.properties);
     }
 }

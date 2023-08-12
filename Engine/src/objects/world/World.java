@@ -71,4 +71,15 @@ public class World {
         worldToString.append('}');
         return worldToString.toString();
     }
+
+    @Override
+    public int hashCode() {
+        return environmentProperties.size() * entities.size() * rules.size() * endingConditions.size();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        World toCompare = (World) obj;
+        return (toCompare.endingConditions.equals(this.endingConditions)) && (toCompare.rules.equals(this.rules)) && (toCompare.entities.equals(entities)) && (toCompare.environmentProperties.equals(this.environmentProperties));
+    }
 }
