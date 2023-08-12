@@ -32,12 +32,9 @@ public class DTOEntity implements HasList {
 
     @Override
     public String toString() {
-        StringBuilder ret = new StringBuilder();
-        ret.append(String.format("Name: %s\n", name));
-        ret.append(String.format("Population: %s\n", population));
-        ret.append("Properties: \n");
-        ret.append(formatListToString(properties));
-
-        return ret.toString();
+        return String.format("Name: %s\n", name) +
+                String.format("Population: %s\n", population) +
+                "Properties: \n" +
+                formatListToString(properties);
     }
 }

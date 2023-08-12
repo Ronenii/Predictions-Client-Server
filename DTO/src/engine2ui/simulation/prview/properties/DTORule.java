@@ -34,14 +34,12 @@ public class DTORule implements HasList {
 
     @Override
     public String toString() {
-        StringBuilder ret = new StringBuilder();
-        ret.append(String.format("Name: %s\n", name));
-        ret.append(String.format("Invoke every: %s ticks\n", ticks));
-        ret.append(String.format("Probability of successful invoke: %s\n", probability * 100.0 ));
-        ret.append(String.format("Number of actions: %s\n", actions.size()));
-        ret.append("Actions: \n");
-        ret.append(formatListToString(actions));
 
-        return ret.toString();
+        return String.format("Name: %s\n", name) +
+                String.format("Invoke every: %s ticks\n", ticks) +
+                String.format("Probability of successful invoke: %s\n", probability * 100.0) +
+                String.format("Number of actions: %s\n", actions.size()) +
+                "Actions: \n" +
+                formatListToString(actions);
     }
 }

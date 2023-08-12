@@ -11,10 +11,8 @@ public class DTOEndingCondition {
 
     @Override
     public String toString() {
-        StringBuilder ret = new StringBuilder();
-        ret.append(String.format("Ending by: %s\n", type));
-        ret.append(String.format("%s Limit: %s\n", type, count));
 
-        return ret.toString();
+        return String.format("Ending by: %s\n", type) +
+                String.format("%s Limit: %s\n", type, count);
     }
 }

@@ -1,10 +1,10 @@
 package engine2ui.simulation.start;
 
 public class DTOEnvironmentVariable {
-    private String name;
-    private String type;
-    private double from;
-    private double to;
+    private final String name;
+    private final String type;
+    private final double from;
+    private final double to;
 
     public DTOEnvironmentVariable(String name, String type, double from, double to) {
         this.name = name;

@@ -9,8 +9,8 @@ import java.util.UUID;
  */
 public class ResultData {
 
-    String dateTime;
-    UUID id;
+    private final String dateTime;
+    private final UUID id;
 
     /**
      * A ResultData Object will be generated once a simulation run is complete.
