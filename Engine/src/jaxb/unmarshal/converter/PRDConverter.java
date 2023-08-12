@@ -198,9 +198,9 @@ public class PRDConverter {
                 case DECREASE:
                     ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), prdAction.getBy());
                 case CALCULATION:
-                    ret = getMulOrDiv(prdAction);
+                    ret = getMulOrDiv(prdAction, expressionConverterAndValidator);
                 case CONDITION:
-                    ret = getSingleOrMultiple(prdAction);
+                    ret = getSingleOrMultiple(prdAction, expressionConverterAndValidator);
                 case SET:
                     ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), analyzeAndGetValue(prdAction.getValue()));
                 case KILL:
