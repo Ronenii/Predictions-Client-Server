@@ -78,6 +78,7 @@ public class Validator {
     public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities){
         validatePRDActionType(prdAction);
         validatePRDActionEntityAndProperty(prdAction, entities);
+
     }
 
     private void validatePRDActionType(PRDAction prdAction){
