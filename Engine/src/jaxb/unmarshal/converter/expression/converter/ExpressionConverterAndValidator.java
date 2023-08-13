@@ -2,6 +2,7 @@ package jaxb.unmarshal.converter.expression.converter;
 
 import jaxb.schema.generated.PRDAction;
 import jaxb.schema.generated.PRDCondition;
+import jaxb.unmarshal.converter.api.Validator;
 import jaxb.unmarshal.converter.functions.HelperFunctionsType;
 import jaxb.unmarshal.converter.functions.StaticHelperFunctions;
 import simulation.objects.entity.Entity;
@@ -11,17 +12,14 @@ import simulation.properties.property.api.PropertyType;
 
 import java.util.Map;
 
-public class ExpressionConverterAndValidator {
+public class ExpressionConverterAndValidator extends Validator {
 
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
 
-    private StringBuilder errorsList;
-
     public ExpressionConverterAndValidator(Map<String, Property> environmentProperties, Map<String, Entity> entities) {
         this.environmentProperties = environmentProperties;
         this.entities = entities;
-        this.errorsList = new StringBuilder();
     }
 
     /**
@@ -227,14 +225,18 @@ public class ExpressionConverterAndValidator {
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
-        boolean ret = type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION || type == ActionType.CONDITION;
+        boolean ret =true;
 
-        // TODO: find a way to add this error to the error list in validator.
+        if(type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION && type != ActionType.CONDITION)
+        {
+            addErrorToList(prdAction, prdAction.getValue(), "Action type not allowed");
+            ret = false;
+        }
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("INT")) && (!propertyType.name().equals("DOUBLE"))){
-            // TODO: find a way to add this error to the error list in validator.
-            ret = false;
+            addErrorToList(entity.getProperties().get(propertyName), propertyType.name(), "Property type not allowed");
+            ret= false;
         }
 
         return ret;

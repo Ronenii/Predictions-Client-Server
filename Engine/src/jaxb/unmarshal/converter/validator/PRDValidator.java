@@ -1,6 +1,7 @@
 package jaxb.unmarshal.converter.validator;
 
 import jaxb.schema.generated.*;
+import jaxb.unmarshal.converter.api.Validator;
 import simulation.objects.entity.Entity;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.property.api.Property;
@@ -17,11 +18,11 @@ import java.util.Map;
  * collection to the user. This will allow the user to fix all of his errors at once instead of re-running
  * the program after each fix to try and find new errors.
  */
-public class Validator {
+public class PRDValidator extends Validator {
 
     private StringBuilder errorsList;
 
-    public Validator() {
+    public PRDValidator() {
         this.errorsList = new StringBuilder();
     }
 
@@ -34,7 +35,7 @@ public class Validator {
         String propertyName = prdProperty.getPRDName();
 
         if(properties.containsKey(propertyName)) {
-            addErrorToList(prdProperty.getClass().getSimpleName(), propertyName, "The given property already exists.");
+            addErrorToList(prdProperty, propertyName, "The given property already exists.");
         }
     }
 
@@ -50,11 +51,11 @@ public class Validator {
         double to = prdProperty.getPRDRange().getTo();
 
         if (from < 0 || to < 0) {
-            addErrorToList(prdProperty.getClass().getSimpleName(), prdProperty.getPRDName(), "Range contains negative values.");
+            addErrorToList(prdProperty, prdProperty.getPRDName(), "Range contains negative values.");
         }
 
         if (to <= from) {
-            addErrorToList(prdProperty.getClass().getSimpleName(), prdProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
+            addErrorToList(prdProperty, prdProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
         }
     }
 
@@ -66,9 +67,9 @@ public class Validator {
      */
     private void validatePRDPropertyInitValue(PRDProperty prdProperty) {
         if (!prdProperty.getPRDValue().isRandomInitialize() && prdProperty.getPRDValue().getInit().isEmpty()) {
-            addErrorToList(prdProperty.getClass().getSimpleName(), prdProperty.getPRDName(), "A non random initialized property must contain an init value.");
+            addErrorToList(prdProperty, prdProperty.getPRDName(), "A non random initialized property must contain an init value.");
         } else if (prdProperty.getPRDValue().isRandomInitialize() && !prdProperty.getPRDValue().getInit().isEmpty()) {
-            addErrorToList(prdProperty.getClass().getSimpleName(), prdProperty.getPRDName(), "A random initialized property cannot contain an init value.");
+            addErrorToList(prdProperty, prdProperty.getPRDName(), "A random initialized property cannot contain an init value.");
         }
     }
 
@@ -85,7 +86,7 @@ public class Validator {
         int population = prdEntity.getPRDPopulation();
 
         if (population < 0) {
-            addErrorToList(prdEntity.getClass().getSimpleName(), prdEntity.getName(), "Population cannot be negative.");
+            addErrorToList(prdEntity, prdEntity.getName(), "Population cannot be negative.");
         }
     }
 
@@ -103,7 +104,7 @@ public class Validator {
 
         if (ticks < 0) {
             // TODO: Add where the empty string is, the rule this activation belongs to.
-            addErrorToList(prdActivation.getClass().getSimpleName(), "", "Ticks cannot be negative.");
+            addErrorToList(prdActivation, "", "Ticks cannot be negative.");
         }
     }
 
@@ -116,7 +117,7 @@ public class Validator {
 
         if (probability < 0 || probability > 1) {
             // TODO: Add where the empty string is, the rule this activation belongs to.
-            addErrorToList(prdActivation.getClass().getSimpleName(), "", "Probability must be between 0 & 1.");
+            addErrorToList(prdActivation, "", "Probability must be between 0 & 1.");
         }
     }
 
@@ -134,7 +135,7 @@ public class Validator {
                 type != ActionType.CONDITION &&
                 type != ActionType.KILL &&
                 type != ActionType.SET) {
-            addErrorToList(prdAction.getClass().getSimpleName(), "", "The given action's type doesn't exist.");
+            addErrorToList(prdAction, "", "The given action's type doesn't exist.");
         }
     }
 
@@ -142,12 +143,12 @@ public class Validator {
         String entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
 
         if(!entities.containsKey(entityName)) {
-            addErrorToList(prdAction.getClass().getSimpleName(), "", "The given action's entity doesn't exist.");
+            addErrorToList(prdAction, "", "The given action's entity doesn't exist.");
         }
         else { // Can be done only if the given entity exists.
             Map<String, Property> properties = entities.get(entityName).getProperties();
             if(!properties.containsKey(propertyName)) {
-                addErrorToList(prdAction.getClass().getSimpleName(), "", "The given action's entity doesn't possess this given property.");
+                addErrorToList(prdAction, "", "The given action's entity doesn't possess this given property.");
             }
         }
     }
@@ -156,27 +157,7 @@ public class Validator {
         List<Object> byTicksOrSec = prdTermination.getPRDByTicksOrPRDBySecond();
 
         if(byTicksOrSec.isEmpty()){
-            addErrorToList(prdTermination.getClass().getSimpleName(), "", "There are no ending conditions for this simulation.");
+            addErrorToList(prdTermination, "", "There are no ending conditions for this simulation.");
         }
-    }
-
-    /**
-     * Receives the given parameters, constructs and add the error message to the errorList string.
-     *
-     * @param objectClass the simple name of the class the error occurred in.
-     * @param objectName  the name of the object the error occurred in
-     * @param error       the error that occurred
-     */
-    public void addErrorToList(String objectClass, String objectName, String error) {
-        errorsList.append(String.format("In %s: %s, ", objectClass, objectName));
-        errorsList.append(error);
-        errorsList.append("\n");
-    }
-
-    /**
-     * @return returns true if the validator found any errors.
-     */
-    public boolean containsErrors() {
-        return errorsList.length() > 0;
     }
 }
