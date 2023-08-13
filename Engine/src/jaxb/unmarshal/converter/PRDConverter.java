@@ -134,6 +134,7 @@ public class PRDConverter {
         boolean isRandomInit = prdProperty.getPRDValue().isRandomInitialize();
         String value = prdProperty.getPRDValue().getInit();
 
+
         try {
             switch (PropertyType.valueOf(prdProperty.getType())) {
                 case INT:
@@ -228,15 +229,15 @@ public class PRDConverter {
         try {
             switch (ActionType.valueOf(prdAction.getType())) {
                 case INCREASE:
-                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), prdAction.getBy());
+                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getBy()));
                 case DECREASE:
-                    ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), prdAction.getBy());
+                    ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getBy()));
                 case CALCULATION:
                     ret = getMulOrDiv(prdAction, expressionConverterAndValidator);
                 case CONDITION:
                     ret = getSingleOrMultiple(prdAction, expressionConverterAndValidator);
                 case SET:
-                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), analyzeAndGetValue(prdAction.getValue()));
+                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction,prdAction.getValue()));
                 case KILL:
                     ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
                 case REPLACE:
@@ -257,7 +258,7 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return a CalculationAction representation of the given PRDActivation.
      */
-    private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator) {
+    private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator){
         CalculationAction ret = null;
         PRDMultiply mul = prdAction.getPRDMultiply();
         PRDDivide div = prdAction.getPRDDivide();
