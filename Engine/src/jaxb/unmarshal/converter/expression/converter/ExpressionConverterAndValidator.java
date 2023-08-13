@@ -44,7 +44,7 @@ public class ExpressionConverterAndValidator extends Validator {
         }
         if(!compareActionValueToGivenPropertyValue(prdAction, value)){
             // validation error occurred.
-            // Throw exception in order to stop the action creation.
+            throw new RuntimeException();
         }
 
         return value;
@@ -210,8 +210,6 @@ public class ExpressionConverterAndValidator extends Validator {
             ret = compareBooleanCase(prdAction);
         } else if (value instanceof String) {
             ret = compareStringCase(prdAction);
-        } else {
-            // TODO: find a way to add this error to the error list in validator.
         }
 
         return ret;
@@ -225,7 +223,7 @@ public class ExpressionConverterAndValidator extends Validator {
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
-        boolean ret =true;
+        boolean ret = true;
 
         if(type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION && type != ActionType.CONDITION)
         {
@@ -235,7 +233,7 @@ public class ExpressionConverterAndValidator extends Validator {
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("INT")) && (!propertyType.name().equals("DOUBLE"))){
-            addErrorToList(entity.getProperties().get(propertyName), propertyType.name(), "Property type not allowed");
+            addErrorToList(entity.getProperties().get(propertyName), propertyType.name(), "The property value type doesn't match the action value type");
             ret= false;
         }
 
@@ -251,21 +249,24 @@ public class ExpressionConverterAndValidator extends Validator {
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
         PRDCondition prdCondition;
-        boolean ret = type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION;
+        boolean ret = true;
 
-        // TODO: find a way to add this error to the error list in validator.
+        if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION) {
+            addErrorToList(prdAction, prdAction.getValue(), "Action type not allowed");
+            ret = false;
+        }
 
         if(type == ActionType.CONDITION){
             prdCondition = prdAction.getPRDCondition();
             if(prdCondition.getSingularity().equals("single") && (prdCondition.getOperator().equals("bt") || prdCondition.getOperator().equals("lt"))){
-                // TODO: find a way to add this error to the error list in validator.
+                addErrorToList(prdAction, prdAction.getValue(), "Condition operator type not allowed");
                 ret = false;
             }
         }
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("BOOLEAN"))){
-            // TODO: find a way to add this error to the error list in validator.
+            addErrorToList(prdAction, prdAction.getValue(), "The property value type doesn't match the action value type");
             ret = false;
         }
 
@@ -280,13 +281,16 @@ public class ExpressionConverterAndValidator extends Validator {
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
-        boolean ret = type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION;
+        boolean ret = true;
 
-        // TODO: find a way to add this error to the error list in validator.
+        if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION) {
+            addErrorToList(prdAction, prdAction.getValue(), "Action type not allowed");
+            ret = false;
+        }
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("STRING"))){
-            // TODO: find a way to add this error to the error list in validator.
+            addErrorToList(prdAction, prdAction.getValue(), "The property value type doesn't match the action value type");
             ret = false;
         }
 
