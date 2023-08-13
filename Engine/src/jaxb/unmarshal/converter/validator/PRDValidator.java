@@ -195,8 +195,4 @@ public class PRDValidator extends Validator {
         super.addErrorToList(operatingClass, objectName, error);
         throw new IllegalArgumentException();
     }
-
-    public String getErrorList() {
-        return errorsList.toString();
-    }
 }
