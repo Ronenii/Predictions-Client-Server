@@ -26,27 +26,51 @@ public class PRDValidator extends Validator {
         this.errorsList = new StringBuilder();
     }
 
-    private void validatePRDProperty(PRDProperty prdProperty) {
+    public void validatePRDProperty(PRDProperty prdProperty) throws IllegalArgumentException {
         validatePRDPropertyRange(prdProperty);
         validatePRDPropertyInitValue(prdProperty);
     }
 
-    private void validatePRDPropertyExist(PRDProperty prdProperty, Map<String, Property> properties) {
+    public void validatePRDEnvProperty(PRDEnvProperty prdEnvProperty) throws IllegalArgumentException{
+        validatePRDEnvPropertyRange(prdEnvProperty);
+    }
+
+    /**
+     * Validates the range of prdProperty as follows:
+     * 1) Checks that 'from' and 'to' are >= 0.
+     * 2) Checks that 'from' is <= 'to'.
+     *
+     * @param prdEnvProperty the PRDProperty we are validating
+     */
+    private void validatePRDEnvPropertyRange(PRDEnvProperty prdEnvProperty) throws IllegalArgumentException {
+        double from = prdEnvProperty.getPRDRange().getFrom();
+        double to = prdEnvProperty.getPRDRange().getTo();
+
+        if (from < 0 || to < 0) {
+            addErrorToList(prdEnvProperty, prdEnvProperty.getPRDName(), "Range contains negative values.");
+        }
+
+        if (to <= from) {
+            addErrorToList(prdEnvProperty, prdEnvProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
+        }
+    }
+
+    private void validatePRDPropertyExist(PRDProperty prdProperty, Map<String, Property> properties)throws IllegalArgumentException {
         String propertyName = prdProperty.getPRDName();
 
-        if(properties.containsKey(propertyName)) {
+        if (properties.containsKey(propertyName)) {
             addErrorToList(prdProperty, propertyName, "The given property already exists.");
         }
     }
 
-     /**
+    /**
      * Validates the range of prdProperty as follows:
      * 1) Checks that 'from' and 'to' are >= 0.
      * 2) Checks that 'from' is <= 'to'.
      *
      * @param prdProperty the PRDProperty we are validating
      */
-    private void validatePRDPropertyRange(PRDProperty prdProperty) {
+    private void validatePRDPropertyRange(PRDProperty prdProperty) throws IllegalArgumentException {
         double from = prdProperty.getPRDRange().getFrom();
         double to = prdProperty.getPRDRange().getTo();
 
@@ -65,7 +89,7 @@ public class PRDValidator extends Validator {
      *
      * @param prdProperty the PRDProperty we are validating
      */
-    private void validatePRDPropertyInitValue(PRDProperty prdProperty) {
+    private void validatePRDPropertyInitValue(PRDProperty prdProperty) throws IllegalArgumentException {
         if (!prdProperty.getPRDValue().isRandomInitialize() && prdProperty.getPRDValue().getInit().isEmpty()) {
             addErrorToList(prdProperty, prdProperty.getPRDName(), "A non random initialized property must contain an init value.");
         } else if (prdProperty.getPRDValue().isRandomInitialize() && !prdProperty.getPRDValue().getInit().isEmpty()) {
@@ -73,16 +97,16 @@ public class PRDValidator extends Validator {
         }
     }
 
-    public void validatePRDEntity(PRDEntity prdEntity)
-    {
+    public void validatePRDEntity(PRDEntity prdEntity) throws IllegalArgumentException {
         validatePRDEntityPopulation(prdEntity);
     }
 
     /**
      * Validates that prdEntity's population is >= 0.
+     *
      * @param prdEntity the PRDEntity we are validating
      */
-    private void validatePRDEntityPopulation(PRDEntity prdEntity) {
+    private void validatePRDEntityPopulation(PRDEntity prdEntity) throws IllegalArgumentException {
         int population = prdEntity.getPRDPopulation();
 
         if (population < 0) {
@@ -90,16 +114,17 @@ public class PRDValidator extends Validator {
         }
     }
 
-    public void validatePRDActivation(PRDActivation prdActivation) {
+    public void validatePRDActivation(PRDActivation prdActivation) throws IllegalArgumentException {
         validatePRDActivationTicks(prdActivation);
         validatePRDActivationProbability(prdActivation);
     }
 
     /**
      * Validates that prdActivation's ticks is >= 0.
+     *
      * @param prdActivation the PRDActivation we are validating
      */
-    private void validatePRDActivationTicks(PRDActivation prdActivation) {
+    private void validatePRDActivationTicks(PRDActivation prdActivation) throws IllegalArgumentException {
         int ticks = prdActivation.getTicks();
 
         if (ticks < 0) {
@@ -110,9 +135,10 @@ public class PRDValidator extends Validator {
 
     /**
      * Validates that prdActivation's probability is >= 0 and <= 1.
+     *
      * @param prdActivation the PRDActivation we are validating
      */
-    private void validatePRDActivationProbability(PRDActivation prdActivation) {
+    private void validatePRDActivationProbability(PRDActivation prdActivation) throws IllegalArgumentException {
         double probability = prdActivation.getProbability();
 
         if (probability < 0 || probability > 1) {
@@ -121,15 +147,15 @@ public class PRDValidator extends Validator {
         }
     }
 
-    public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities){
+    public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities) {
         validatePRDActionType(prdAction);
         validatePRDActionEntityAndProperty(prdAction, entities);
     }
 
-    private void validatePRDActionType(PRDAction prdAction){
+    private void validatePRDActionType(PRDAction prdAction) throws IllegalArgumentException {
         ActionType type = ActionType.valueOf(prdAction.getType());
 
-        if(type != ActionType.INCREASE &&
+        if (type != ActionType.INCREASE &&
                 type != ActionType.DECREASE &&
                 type != ActionType.CALCULATION &&
                 type != ActionType.CONDITION &&
@@ -139,25 +165,32 @@ public class PRDValidator extends Validator {
         }
     }
 
-    private void validatePRDActionEntityAndProperty(PRDAction prdAction, Map<String, Entity> entities) {
+    private void validatePRDActionEntityAndProperty(PRDAction prdAction, Map<String, Entity> entities) throws IllegalArgumentException {
         String entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
 
-        if(!entities.containsKey(entityName)) {
+        if (!entities.containsKey(entityName)) {
             addErrorToList(prdAction, "", "The given action's entity doesn't exist.");
-        }
-        else { // Can be done only if the given entity exists.
+        } else { // Can be done only if the given entity exists.
             Map<String, Property> properties = entities.get(entityName).getProperties();
-            if(!properties.containsKey(propertyName)) {
+            if (!properties.containsKey(propertyName)) {
                 addErrorToList(prdAction, "", "The given action's entity doesn't possess this given property.");
             }
         }
     }
 
-    public void validatePRDTermination(PRDTermination prdTermination) {
+    public void validatePRDTermination(PRDTermination prdTermination) throws IllegalArgumentException {
         List<Object> byTicksOrSec = prdTermination.getPRDByTicksOrPRDBySecond();
 
-        if(byTicksOrSec.isEmpty()){
+        if (byTicksOrSec.isEmpty()) {
             addErrorToList(prdTermination, "", "There are no ending conditions for this simulation.");
         }
     }
+
+    @Override
+    public void addErrorToList(Object operatingClass, String objectName, String error) throws IllegalArgumentException{
+        super.addErrorToList(operatingClass, objectName, error);
+        throw new IllegalArgumentException();
+    }
+
+
 }

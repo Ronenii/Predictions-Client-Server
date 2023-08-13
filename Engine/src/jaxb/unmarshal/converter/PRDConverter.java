@@ -4,6 +4,7 @@ import jaxb.schema.generated.*;
 import jaxb.unmarshal.converter.expression.converter.ExpressionConverterAndValidator;
 import jaxb.unmarshal.converter.functions.HelperFunctionsType;
 import jaxb.unmarshal.converter.functions.StaticHelperFunctions;
+import jaxb.unmarshal.converter.validator.PRDValidator;
 import simulation.objects.entity.Entity;
 import simulation.properties.rule.Rule;
 import simulation.objects.world.World;
@@ -42,9 +43,13 @@ public class PRDConverter {
     private Map<String, Property> environmentProperties;
     private Map<String, Entity> entities;
 
-    public World PRDWorld2World(PRDWorld prdWorld) {
+    private final PRDValidator validator;
 
-        World newWorld;
+    public PRDConverter() {
+        validator = new PRDValidator();
+    }
+
+    public World PRDWorld2World(PRDWorld prdWorld) {
         Map<String, Property> environmentProperties = new HashMap<>();
         Map<String, Entity> entities = new HashMap<>();
         Map<String, Rule> rules = new HashMap<>();
@@ -74,6 +79,12 @@ public class PRDConverter {
      * TODO: Right now I hard coded placeholders for thing such as @value & @is_Random_init in the ctors. We need to make this more elegant.
      */
     private Property PRDEnvProperty2Property(PRDEnvProperty prdEnvProperty) {
+        try {
+            validator.validatePRDEnvProperty(prdEnvProperty);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+
         Property ret = null;
         String name = prdEnvProperty.getPRDName();
         double to = prdEnvProperty.getPRDRange().getTo();
@@ -108,6 +119,12 @@ public class PRDConverter {
      * @return a Property representation of prdProperty.
      */
     private Property PRDProperty2Property(PRDProperty prdProperty) {
+        try {
+            validator.validatePRDProperty(prdProperty);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+
         Property ret = null;
         String name = prdProperty.getPRDName();
 
@@ -116,7 +133,6 @@ public class PRDConverter {
 
         boolean isRandomInit = prdProperty.getPRDValue().isRandomInitialize();
         String value = prdProperty.getPRDValue().getInit();
-
 
         try {
             switch (PropertyType.valueOf(prdProperty.getType())) {
@@ -134,8 +150,8 @@ public class PRDConverter {
                     break;
             }
         } catch (Exception e) {
-            String err = String.format("\"%s\" is not a valid Property type.", prdProperty.getType());
-            throw new IllegalArgumentException(err);
+            validator.addErrorToList(prdProperty, prdProperty.getPRDName(), "Invalid property type.");
+            return null;
         }
 
         return ret;
@@ -148,6 +164,12 @@ public class PRDConverter {
      * @return an Entity representation of PRDEntity.
      */
     private Entity PRDEntity2Entity(PRDEntity prdEntity) {
+        try {
+            validator.validatePRDEntity(prdEntity);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+
         String name = prdEntity.getName();
         int population = prdEntity.getPRDPopulation();
         Map<String, Property> properties = new HashMap<>();
@@ -165,6 +187,13 @@ public class PRDConverter {
      * @return a Rule representation of PRDRule.
      */
     private Rule PRDRule2Rule(PRDRule prdRule) {
+        try {
+            prdRule.getPRDActions().getPRDAction().forEach(a -> validator.validatePRDAction(a, entities));
+            validator.validatePRDActivation(prdRule.getPRDActivation());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+
         String name = prdRule.getName();
         Activation activation = PRDActivation2Activation(prdRule.getPRDActivation());
         Set<Action> actions = new HashSet<>();
@@ -185,6 +214,11 @@ public class PRDConverter {
      * @return an Action representation of PRDAction.
      */
     private Action PRDAction2Action(PRDAction prdAction) {
+        try {
+            validator.validatePRDAction(prdAction, entities);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
         Action ret = null;
         ExpressionConverterAndValidator expressionConverterAndValidator = new ExpressionConverterAndValidator(environmentProperties, entities);
 
@@ -211,8 +245,8 @@ public class PRDConverter {
                     break;
             }
         } catch (Exception e) {
-            String err = String.format("\"%s\" is not a valid Action type.", prdAction.getType());
-            throw new IllegalArgumentException(err);
+            validator.addErrorToList(prdAction, prdAction.getValue(), "Illegal action value.");
+            return null;
         }
         return ret;
     }
@@ -223,20 +257,19 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return a CalculationAction representation of the given PRDActivation.
      */
-    private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator){
+    private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator) {
         CalculationAction ret = null;
         PRDMultiply mul = prdAction.getPRDMultiply();
         PRDDivide div = prdAction.getPRDDivide();
 
         // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
-        if(mul != null){
-            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg1()),
+        if (mul != null) {
+            ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg1()),
                     expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg2()), ClaculationType.MULTIPLY);
         } else if (div != null) {
-            ret = new CalculationAction(prdAction.getProperty(),prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg1()),
+            ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg1()),
                     expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg2()), ClaculationType.DIVIDE);
-        }
-        else {
+        } else {
             // Throw exception.
         }
         return ret;
@@ -248,19 +281,18 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return an AbstractConditionAction representation of the given PRDActivation.
      */
-    private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator){
+    private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator) {
         AbstractConditionAction ret = null;
         PRDCondition prdCondition = prdAction.getPRDCondition();
         ThenOrElse thenActions = null, elseActions = null;
         // Then and else objects are created in this method.
         getAndCreateThenOrElse(prdAction, thenActions, elseActions);
 
-        if(prdCondition.getSingularity().equals("single")){
+        if (prdCondition.getSingularity().equals("single")) {
             ret = new SingleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getOperator());
         } else if (prdCondition.getSingularity().equals("multiple")) {
             ret = new MultipleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getLogical());
-        }
-        else {
+        } else {
             // Throw exception.
         }
 
@@ -271,22 +303,22 @@ public class PRDConverter {
      * Converts the given PRDAction to Then and Else objects which contain a set of actions to invoke.
      * According to the XML file, if one of them has no actions to invoke, the object remains null.
      *
-     * @param prdAction the given PRDAction generated from reading the XML file
+     * @param prdAction   the given PRDAction generated from reading the XML file
      * @param thenActions empty ThenOrElse object to be created.
      * @param elseActions empty ThenOrElse object to be created.
      */
-    private void getAndCreateThenOrElse(PRDAction prdAction, ThenOrElse thenActions, ThenOrElse elseActions){
+    private void getAndCreateThenOrElse(PRDAction prdAction, ThenOrElse thenActions, ThenOrElse elseActions) {
         // 'getThenOrElseActionSet' creates the Set of Actions for them both.
         // Because 'PRDThen' and 'PRDElse' are different objects, when we want to create the set for 'Then'
         // we send null for 'prdElse', same for Else.
         Set<Action> thenActionsSet = getThenOrElseActionSet(prdAction.getPRDThen(), null);
         Set<Action> elseActionsSet = getThenOrElseActionSet(null, prdAction.getPRDElse());
 
-        if(!thenActionsSet.isEmpty()){
+        if (!thenActionsSet.isEmpty()) {
             thenActions = new ThenOrElse(thenActionsSet);
         }
 
-        if(!elseActionsSet.isEmpty()){
+        if (!elseActionsSet.isEmpty()) {
             elseActions = new ThenOrElse(elseActionsSet);
         }
     }
@@ -299,13 +331,13 @@ public class PRDConverter {
      * @param prdElse the given PRDElse generated from reading the XML file
      * @return a Set of actions representation of the given PRDThen or PRDElse.
      */
-    private Set<Action> getThenOrElseActionSet(PRDThen prdThen, PRDElse prdElse){
+    private Set<Action> getThenOrElseActionSet(PRDThen prdThen, PRDElse prdElse) {
         Set<Action> ret = new HashSet<>();
 
-        if(prdThen != null){
-            prdThen.getPRDAction().forEach(a-> ret.add(PRDAction2Action(a)));
+        if (prdThen != null) {
+            prdThen.getPRDAction().forEach(a -> ret.add(PRDAction2Action(a)));
         } else if (prdElse != null) {
-            prdElse.getPRDAction().forEach(a-> ret.add(PRDAction2Action(a)));
+            prdElse.getPRDAction().forEach(a -> ret.add(PRDAction2Action(a)));
         }
 
         return ret;
@@ -340,9 +372,7 @@ public class PRDConverter {
                     // Value is not a function
                     break;
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             ret = prdValueStr;
         }
         return ret;
