@@ -31,7 +31,7 @@ public class PRDValidator extends Validator {
         validatePRDPropertyInitValue(prdProperty);
     }
 
-    public void validatePRDEnvProperty(PRDEnvProperty prdEnvProperty) throws IllegalArgumentException{
+    public void validatePRDEnvProperty(PRDEnvProperty prdEnvProperty) throws IllegalArgumentException {
         validatePRDEnvPropertyRange(prdEnvProperty);
     }
 
@@ -47,19 +47,19 @@ public class PRDValidator extends Validator {
         double to = prdEnvProperty.getPRDRange().getTo();
 
         if (from < 0 || to < 0) {
-            addErrorToList(prdEnvProperty, prdEnvProperty.getPRDName(), "Range contains negative values.");
+            addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range contains negative values.");
         }
 
         if (to <= from) {
-            addErrorToList(prdEnvProperty, prdEnvProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
+            addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
         }
     }
 
-    private void validatePRDPropertyExist(PRDProperty prdProperty, Map<String, Property> properties)throws IllegalArgumentException {
+    private void validatePRDPropertyExist(PRDProperty prdProperty, Map<String, Property> properties) throws IllegalArgumentException {
         String propertyName = prdProperty.getPRDName();
 
         if (properties.containsKey(propertyName)) {
-            addErrorToList(prdProperty, propertyName, "The given property already exists.");
+            addErrorToListAndThrowException(prdProperty, propertyName, "The given property already exists.");
         }
     }
 
@@ -75,11 +75,11 @@ public class PRDValidator extends Validator {
         double to = prdProperty.getPRDRange().getTo();
 
         if (from < 0 || to < 0) {
-            addErrorToList(prdProperty, prdProperty.getPRDName(), "Range contains negative values.");
+            addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Range contains negative values.");
         }
 
         if (to <= from) {
-            addErrorToList(prdProperty, prdProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
+            addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
         }
     }
 
@@ -91,9 +91,9 @@ public class PRDValidator extends Validator {
      */
     private void validatePRDPropertyInitValue(PRDProperty prdProperty) throws IllegalArgumentException {
         if (!prdProperty.getPRDValue().isRandomInitialize() && prdProperty.getPRDValue().getInit().isEmpty()) {
-            addErrorToList(prdProperty, prdProperty.getPRDName(), "A non random initialized property must contain an init value.");
+            addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "A non random initialized property must contain an init value.");
         } else if (prdProperty.getPRDValue().isRandomInitialize() && !prdProperty.getPRDValue().getInit().isEmpty()) {
-            addErrorToList(prdProperty, prdProperty.getPRDName(), "A random initialized property cannot contain an init value.");
+            addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "A random initialized property cannot contain an init value.");
         }
     }
 
@@ -110,7 +110,7 @@ public class PRDValidator extends Validator {
         int population = prdEntity.getPRDPopulation();
 
         if (population < 0) {
-            addErrorToList(prdEntity, prdEntity.getName(), "Population cannot be negative.");
+            addErrorToListAndThrowException(prdEntity, prdEntity.getName(), "Population cannot be negative.");
         }
     }
 
@@ -129,7 +129,7 @@ public class PRDValidator extends Validator {
 
         if (ticks < 0) {
             // TODO: Add where the empty string is, the rule this activation belongs to.
-            addErrorToList(prdActivation, "", "Ticks cannot be negative.");
+            addErrorToListAndThrowException(prdActivation, "", "Ticks cannot be negative.");
         }
     }
 
@@ -143,7 +143,7 @@ public class PRDValidator extends Validator {
 
         if (probability < 0 || probability > 1) {
             // TODO: Add where the empty string is, the rule this activation belongs to.
-            addErrorToList(prdActivation, "", "Probability must be between 0 & 1.");
+            addErrorToListAndThrowException(prdActivation, "", "Probability must be between 0 & 1.");
         }
     }
 
@@ -161,7 +161,7 @@ public class PRDValidator extends Validator {
                 type != ActionType.CONDITION &&
                 type != ActionType.KILL &&
                 type != ActionType.SET) {
-            addErrorToList(prdAction, "", "The given action's type doesn't exist.");
+            addErrorToListAndThrowException(prdAction, "", "The given action's type doesn't exist.");
         }
     }
 
@@ -169,11 +169,11 @@ public class PRDValidator extends Validator {
         String entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
 
         if (!entities.containsKey(entityName)) {
-            addErrorToList(prdAction, "", "The given action's entity doesn't exist.");
+            addErrorToListAndThrowException(prdAction, "", "The given action's entity doesn't exist.");
         } else { // Can be done only if the given entity exists.
             Map<String, Property> properties = entities.get(entityName).getProperties();
             if (!properties.containsKey(propertyName)) {
-                addErrorToList(prdAction, "", "The given action's entity doesn't possess this given property.");
+                addErrorToListAndThrowException(prdAction, "", "The given action's entity doesn't possess this given property.");
             }
         }
     }
@@ -182,15 +182,21 @@ public class PRDValidator extends Validator {
         List<Object> byTicksOrSec = prdTermination.getPRDByTicksOrPRDBySecond();
 
         if (byTicksOrSec.isEmpty()) {
-            addErrorToList(prdTermination, "", "There are no ending conditions for this simulation.");
+            addErrorToListAndThrowException(prdTermination, "", "There are no ending conditions for this simulation.");
         }
     }
 
-    @Override
-    public void addErrorToList(Object operatingClass, String objectName, String error) throws IllegalArgumentException{
+    /**
+     * Like the base method 'addErrorToList' but throws an exception as well.
+     *
+     * @throws IllegalArgumentException
+     */
+    public void addErrorToListAndThrowException(Object operatingClass, String objectName, String error) throws IllegalArgumentException {
         super.addErrorToList(operatingClass, objectName, error);
         throw new IllegalArgumentException();
     }
 
-
+    public String getErrorList() {
+        return errorsList.toString();
+    }
 }

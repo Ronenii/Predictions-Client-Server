@@ -66,6 +66,10 @@ public class PRDConverter {
         // Iterates over all PRDRules, converts each rule and adds it to 'rules'
         prdWorld.getPRDRules().getPRDRule().forEach(r -> rules.put(r.getName(), PRDRule2Rule(r)));
 
+        if(validator.containsErrors())
+        {
+            throw new IllegalArgumentException(validator.getErrorList());
+        }
         return new World(environmentProperties, entities, rules, endingConditions);
     }
 
@@ -375,6 +379,7 @@ public class PRDConverter {
             }
         } catch (Exception e) {
             ret = prdValueStr;
+            //TODO: We need to return some null value over here
         }
         return ret;
     }
