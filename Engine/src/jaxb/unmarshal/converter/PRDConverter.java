@@ -4,30 +4,29 @@ import jaxb.schema.generated.*;
 import jaxb.unmarshal.converter.expression.converter.ExpressionConverterAndValidator;
 import jaxb.unmarshal.converter.functions.HelperFunctionsType;
 import jaxb.unmarshal.converter.functions.StaticHelperFunctions;
-import jaxb.unmarshal.converter.validator.Validator;
-import objects.entity.Entity;
-import objects.rule.Rule;
-import objects.world.World;
-import properties.action.api.Action;
-import properties.action.api.ActionType;
-import properties.action.impl.DecreaseAction;
-import properties.action.impl.IncreaseAction;
-import properties.action.impl.KillAction;
-import properties.action.impl.SetAction;
-import properties.action.impl.calculation.CalculationAction;
-import properties.action.impl.calculation.ClaculationType;
-import properties.action.impl.condition.AbstractConditionAction;
-import properties.action.impl.condition.MultipleCondition;
-import properties.action.impl.condition.SingleCondition;
-import properties.action.impl.condition.ThenOrElse;
-import properties.activition.Activation;
-import properties.ending.conditions.EndingCondition;
-import properties.property.api.Property;
-import properties.property.api.PropertyType;
-import properties.property.impl.BooleanProperty;
-import properties.property.impl.DoubleProperty;
-import properties.property.impl.IntProperty;
-import properties.property.impl.StringProperty;
+import simulation.objects.entity.Entity;
+import simulation.properties.rule.Rule;
+import simulation.objects.world.World;
+import simulation.properties.action.api.Action;
+import simulation.properties.action.api.ActionType;
+import simulation.properties.action.impl.DecreaseAction;
+import simulation.properties.action.impl.IncreaseAction;
+import simulation.properties.action.impl.KillAction;
+import simulation.properties.action.impl.SetAction;
+import simulation.properties.action.impl.calculation.CalculationAction;
+import simulation.properties.action.impl.calculation.ClaculationType;
+import simulation.properties.action.impl.condition.AbstractConditionAction;
+import simulation.properties.action.impl.condition.MultipleCondition;
+import simulation.properties.action.impl.condition.SingleCondition;
+import simulation.properties.action.impl.condition.ThenOrElse;
+import simulation.properties.activition.Activation;
+import simulation.properties.ending.conditions.EndingCondition;
+import simulation.properties.property.api.Property;
+import simulation.properties.property.api.PropertyType;
+import simulation.properties.property.impl.BooleanProperty;
+import simulation.properties.property.impl.DoubleProperty;
+import simulation.properties.property.impl.IntProperty;
+import simulation.properties.property.impl.StringProperty;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -199,9 +198,9 @@ public class PRDConverter {
                 case DECREASE:
                     ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), prdAction.getBy());
                 case CALCULATION:
-                    ret = getMulOrDiv(prdAction);
+                    ret = getMulOrDiv(prdAction, expressionConverterAndValidator);
                 case CONDITION:
-                    ret = getSingleOrMultiple(prdAction);
+                    ret = getSingleOrMultiple(prdAction, expressionConverterAndValidator);
                 case SET:
                     ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), analyzeAndGetValue(prdAction.getValue()));
                 case KILL:

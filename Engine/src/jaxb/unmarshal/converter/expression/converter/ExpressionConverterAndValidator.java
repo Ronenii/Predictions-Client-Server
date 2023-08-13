@@ -2,26 +2,24 @@ package jaxb.unmarshal.converter.expression.converter;
 
 import jaxb.schema.generated.PRDAction;
 import jaxb.schema.generated.PRDCondition;
+import jaxb.unmarshal.converter.api.Validator;
 import jaxb.unmarshal.converter.functions.HelperFunctionsType;
 import jaxb.unmarshal.converter.functions.StaticHelperFunctions;
-import objects.entity.Entity;
-import properties.action.api.ActionType;
-import properties.property.api.Property;
-import properties.property.api.PropertyType;
+import simulation.objects.entity.Entity;
+import simulation.properties.action.api.ActionType;
+import simulation.properties.property.api.Property;
+import simulation.properties.property.api.PropertyType;
 
 import java.util.Map;
 
-public class ExpressionConverterAndValidator {
+public class ExpressionConverterAndValidator extends Validator {
 
-    private Map<String, Property> environmentProperties;
-    private Map<String, Entity> entities;
-
-    private StringBuilder errorsList;
+    private final Map<String, Property> environmentProperties;
+    private final Map<String, Entity> entities;
 
     public ExpressionConverterAndValidator(Map<String, Property> environmentProperties, Map<String, Entity> entities) {
         this.environmentProperties = environmentProperties;
         this.entities = entities;
-        this.errorsList = new StringBuilder();
     }
 
     /**
@@ -227,17 +225,18 @@ public class ExpressionConverterAndValidator {
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
-        boolean ret = true;
+        boolean ret =true;
 
-        if(type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION && type != ActionType.CONDITION){
-            // TODO: find a way to add this error to the error list in validator.
+        if(type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION && type != ActionType.CONDITION)
+        {
+            addErrorToList(prdAction, prdAction.getValue(), "Action type not allowed");
             ret = false;
         }
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("INT")) && (!propertyType.name().equals("DOUBLE"))){
-            // TODO: find a way to add this error to the error list in validator.
-            ret = false;
+            addErrorToList(entity.getProperties().get(propertyName), propertyType.name(), "Property type not allowed");
+            ret= false;
         }
 
         return ret;
@@ -252,12 +251,9 @@ public class ExpressionConverterAndValidator {
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
         PRDCondition prdCondition;
-        boolean ret = true;
+        boolean ret = type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION;
 
-        if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION){
-            // TODO: find a way to add this error to the error list in validator.
-            ret = false;
-        }
+        // TODO: find a way to add this error to the error list in validator.
 
         if(type == ActionType.CONDITION){
             prdCondition = prdAction.getPRDCondition();
@@ -284,12 +280,9 @@ public class ExpressionConverterAndValidator {
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
-        boolean ret = true;
+        boolean ret = type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION;
 
-        if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION){
-            // TODO: find a way to add this error to the error list in validator.
-            ret = false;
-        }
+        // TODO: find a way to add this error to the error list in validator.
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("STRING"))){
