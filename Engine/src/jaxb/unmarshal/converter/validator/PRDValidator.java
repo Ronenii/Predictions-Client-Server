@@ -26,12 +26,12 @@ public class PRDValidator extends Validator {
         this.errorsList = new StringBuilder();
     }
 
-    public void validatePRDProperty(PRDProperty prdProperty) throws IllegalArgumentException {
+    public void validatePRDProperty(PRDProperty prdProperty) throws PRDObjectConversionException {
         validatePRDPropertyRange(prdProperty);
         validatePRDPropertyInitValue(prdProperty);
     }
 
-    public void validatePRDEnvProperty(PRDEnvProperty prdEnvProperty) throws IllegalArgumentException {
+    public void validatePRDEnvProperty(PRDEnvProperty prdEnvProperty) throws PRDObjectConversionException {
         validatePRDEnvPropertyRange(prdEnvProperty);
     }
 
@@ -42,7 +42,7 @@ public class PRDValidator extends Validator {
      *
      * @param prdEnvProperty the PRDProperty we are validating
      */
-    private void validatePRDEnvPropertyRange(PRDEnvProperty prdEnvProperty) throws IllegalArgumentException {
+    private void validatePRDEnvPropertyRange(PRDEnvProperty prdEnvProperty) throws PRDObjectConversionException {
         double from = prdEnvProperty.getPRDRange().getFrom();
         double to = prdEnvProperty.getPRDRange().getTo();
 
@@ -55,7 +55,7 @@ public class PRDValidator extends Validator {
         }
     }
 
-    private void validatePRDPropertyExist(PRDProperty prdProperty, Map<String, Property> properties) throws IllegalArgumentException {
+    private void validatePRDPropertyExist(PRDProperty prdProperty, Map<String, Property> properties) throws PRDObjectConversionException {
         String propertyName = prdProperty.getPRDName();
 
         if (properties.containsKey(propertyName)) {
@@ -70,7 +70,7 @@ public class PRDValidator extends Validator {
      *
      * @param prdProperty the PRDProperty we are validating
      */
-    private void validatePRDPropertyRange(PRDProperty prdProperty) throws IllegalArgumentException {
+    private void validatePRDPropertyRange(PRDProperty prdProperty) throws PRDObjectConversionException {
         double from = prdProperty.getPRDRange().getFrom();
         double to = prdProperty.getPRDRange().getTo();
 
@@ -89,7 +89,7 @@ public class PRDValidator extends Validator {
      *
      * @param prdProperty the PRDProperty we are validating
      */
-    private void validatePRDPropertyInitValue(PRDProperty prdProperty) throws IllegalArgumentException {
+    private void validatePRDPropertyInitValue(PRDProperty prdProperty) throws PRDObjectConversionException {
         if (!prdProperty.getPRDValue().isRandomInitialize() && prdProperty.getPRDValue().getInit().isEmpty()) {
             addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "A non random initialized property must contain an init value.");
         } else if (prdProperty.getPRDValue().isRandomInitialize() && !prdProperty.getPRDValue().getInit().isEmpty()) {
@@ -97,7 +97,7 @@ public class PRDValidator extends Validator {
         }
     }
 
-    public void validatePRDEntity(PRDEntity prdEntity) throws IllegalArgumentException {
+    public void validatePRDEntity(PRDEntity prdEntity) throws PRDObjectConversionException {
         validatePRDEntityPopulation(prdEntity);
     }
 
@@ -106,7 +106,7 @@ public class PRDValidator extends Validator {
      *
      * @param prdEntity the PRDEntity we are validating
      */
-    private void validatePRDEntityPopulation(PRDEntity prdEntity) throws IllegalArgumentException {
+    private void validatePRDEntityPopulation(PRDEntity prdEntity) throws PRDObjectConversionException {
         int population = prdEntity.getPRDPopulation();
 
         if (population < 0) {
@@ -114,7 +114,7 @@ public class PRDValidator extends Validator {
         }
     }
 
-    public void validatePRDActivation(PRDActivation prdActivation) throws IllegalArgumentException {
+    public void validatePRDActivation(PRDActivation prdActivation) throws PRDObjectConversionException {
         validatePRDActivationTicks(prdActivation);
         validatePRDActivationProbability(prdActivation);
     }
@@ -124,7 +124,7 @@ public class PRDValidator extends Validator {
      *
      * @param prdActivation the PRDActivation we are validating
      */
-    private void validatePRDActivationTicks(PRDActivation prdActivation) throws IllegalArgumentException {
+    private void validatePRDActivationTicks(PRDActivation prdActivation) throws PRDObjectConversionException {
         int ticks = prdActivation.getTicks();
 
         if (ticks < 0) {
@@ -138,7 +138,7 @@ public class PRDValidator extends Validator {
      *
      * @param prdActivation the PRDActivation we are validating
      */
-    private void validatePRDActivationProbability(PRDActivation prdActivation) throws IllegalArgumentException {
+    private void validatePRDActivationProbability(PRDActivation prdActivation) throws PRDObjectConversionException {
         double probability = prdActivation.getProbability();
 
         if (probability < 0 || probability > 1) {
@@ -147,12 +147,12 @@ public class PRDValidator extends Validator {
         }
     }
 
-    public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities) {
+    public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities) throws PRDObjectConversionException{
         validatePRDConditionAndPRDCalculation(prdAction);
         validatePRDActionEntityAndProperty(prdAction, entities);
     }
 
-    private void validatePRDConditionAndPRDCalculation(PRDAction prdAction){
+    private void validatePRDConditionAndPRDCalculation(PRDAction prdAction) throws  PRDObjectConversionException{
         PRDCondition prdCondition;
 
         if(prdAction.getType().equals("calculation")){
@@ -173,7 +173,7 @@ public class PRDValidator extends Validator {
         }
     }
 
-    private void validatePRDActionEntityAndProperty(PRDAction prdAction, Map<String, Entity> entities) throws IllegalArgumentException {
+    private void validatePRDActionEntityAndProperty(PRDAction prdAction, Map<String, Entity> entities) throws PRDObjectConversionException {
         String entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
 
         if (!entities.containsKey(entityName)) {
@@ -186,7 +186,7 @@ public class PRDValidator extends Validator {
         }
     }
 
-    public void validatePRDTermination(PRDTermination prdTermination) throws IllegalArgumentException {
+    public void validatePRDTermination(PRDTermination prdTermination) throws PRDObjectConversionException {
         List<Object> byTicksOrSec = prdTermination.getPRDByTicksOrPRDBySecond();
 
         if (byTicksOrSec.isEmpty()) {
@@ -197,10 +197,10 @@ public class PRDValidator extends Validator {
     /**
      * Like the base method 'addErrorToList' but throws an exception as well.
      *
-     * @throws IllegalArgumentException
+     * @throws PRDObjectConversionException
      */
-    public void addErrorToListAndThrowException(Object operatingClass, String objectName, String error) throws IllegalArgumentException {
+    public void addErrorToListAndThrowException(Object operatingClass, String objectName, String error) throws PRDObjectConversionException {
         super.addErrorToList(operatingClass, objectName, error);
-        throw new IllegalArgumentException();
+        throw new PRDObjectConversionException();
     }
 }

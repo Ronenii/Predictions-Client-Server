@@ -1,9 +1,11 @@
 package jaxb.unmarshal.converter;
 
 import jaxb.schema.generated.*;
+import jaxb.unmarshal.converter.expression.converter.ExpressionConversionException;
 import jaxb.unmarshal.converter.expression.converter.ExpressionConverterAndValidator;
 import jaxb.unmarshal.converter.functions.HelperFunctionsType;
 import jaxb.unmarshal.converter.functions.StaticHelperFunctions;
+import jaxb.unmarshal.converter.validator.PRDObjectConversionException;
 import jaxb.unmarshal.converter.validator.PRDValidator;
 import simulation.objects.entity.Entity;
 import simulation.properties.ending.conditions.EndingConditionType;
@@ -69,18 +71,19 @@ public class PRDConverter {
 
     /**
      * Extracts all valid environment properties from given PRDWorld.
+     *
      * @param prdWorld the given PRDWorld to extract the EnvProperties from.
      * @return All Successfully converted environment properties
      */
     // Iterates over all PRDEnvironmentProperties i n, converts each property and adds it to 'environmentProperties'
-    private Map<String, Property> getEnvironmentPropertiesFromPRDWorld(PRDWorld prdWorld){
+    private Map<String, Property> getEnvironmentPropertiesFromPRDWorld(PRDWorld prdWorld) {
         Map<String, Property> environmentProperties = new HashMap<>();
         List<PRDEnvProperty> prdEnvProperties = prdWorld.getPRDEvironment().getPRDEnvProperty();
         Property propertyToAdd;
 
-        for(PRDEnvProperty envProperty : prdEnvProperties){
+        for (PRDEnvProperty envProperty : prdEnvProperties) {
             propertyToAdd = PRDEnvProperty2Property(envProperty);
-            if(propertyToAdd != null){
+            if (propertyToAdd != null) {
                 environmentProperties.put(envProperty.getPRDName(), propertyToAdd);
             }
         }
@@ -90,17 +93,18 @@ public class PRDConverter {
 
     /**
      * Extracts all valid entities from given PRDWorld.
+     *
      * @param prdWorld the given PRDWorld to extract the entities from.
      * @return All Successfully converted entities
      */
-    private Map<String, Entity> getEntitiesFromPRDWorld(PRDWorld prdWorld){
+    private Map<String, Entity> getEntitiesFromPRDWorld(PRDWorld prdWorld) {
         Map<String, Entity> entities = new HashMap<>();
         List<PRDEntity> prdEntities = prdWorld.getPRDEntities().getPRDEntity();
         Entity entityToAdd;
 
-        for(PRDEntity prdEntity : prdEntities){
+        for (PRDEntity prdEntity : prdEntities) {
             entityToAdd = PRDEntity2Entity(prdEntity);
-            if(entityToAdd != null){
+            if (entityToAdd != null) {
                 entities.put(prdEntity.getName(), entityToAdd);
             }
         }
@@ -111,17 +115,18 @@ public class PRDConverter {
 
     /**
      * Extracts all valid rule from given PRDWorld.
+     *
      * @param prdWorld the given PRDWorld to extract the rule from.
      * @return All Successfully converted rules
      */
-    private Map<String, Rule> getRulesFromPRDWorld(PRDWorld prdWorld){
+    private Map<String, Rule> getRulesFromPRDWorld(PRDWorld prdWorld) {
         Map<String, Rule> rules = new HashMap<>();
         List<PRDRule> prdRules = prdWorld.getPRDRules().getPRDRule();
         Rule ruleToAdd;
 
-        for(PRDRule prdRule : prdRules){
+        for (PRDRule prdRule : prdRules) {
             ruleToAdd = PRDRule2Rule(prdRule);
-            if(ruleToAdd != null){
+            if (ruleToAdd != null) {
                 rules.put(prdRule.getName(), ruleToAdd);
             }
         }
@@ -131,23 +136,23 @@ public class PRDConverter {
 
     /**
      * Extracts all valid properties from given PRDEntity.
+     *
      * @param prdEntity the given PRDEntity to extract the rule from.
      * @return All Successfully converted properties
      */
-    private Map<String, Property> getPropertiesFromPRDEntity(PRDEntity prdEntity){
+    private Map<String, Property> getPropertiesFromPRDEntity(PRDEntity prdEntity) {
         Map<String, Property> entityProperties = new HashMap<>();
         List<PRDProperty> prdEntityProperties = prdEntity.getPRDProperties().getPRDProperty();
         Property propertyToAdd;
 
-        for(PRDProperty property : prdEntityProperties){
+        for (PRDProperty property : prdEntityProperties) {
             propertyToAdd = PRDProperty2Property(property);
-            if(propertyToAdd != null){
+            if (propertyToAdd != null) {
                 entityProperties.put(property.getPRDName(), propertyToAdd);
             }
         }
 
-        if(validator.containsErrors())
-        {
+        if (validator.containsErrors()) {
             throw new IllegalArgumentException(validator.getErrorList());
         }
         return entityProperties;
@@ -155,16 +160,17 @@ public class PRDConverter {
 
     /**
      * Extracts all valid actions from given prdActions list.
+     *
      * @param prdActions the given PRDAction list to extract the actions from.
      * @return All Successfully converted actions
      */
-    private Set<Action> getActionsFromPRDActionsList(List<PRDAction> prdActions){
+    private Set<Action> getActionsFromPRDActionsList(List<PRDAction> prdActions) {
         Set<Action> actions = new HashSet<>();
         Action actionToAdd;
 
-        for(PRDAction action: prdActions){
+        for (PRDAction action : prdActions) {
             actionToAdd = PRDAction2Action(action);
-            if(actionToAdd != null){
+            if (actionToAdd != null) {
                 actions.add(actionToAdd);
             }
         }
@@ -183,7 +189,7 @@ public class PRDConverter {
     private Property PRDEnvProperty2Property(PRDEnvProperty prdEnvProperty) {
         try {
             validator.validatePRDEnvProperty(prdEnvProperty);
-        } catch (IllegalArgumentException e) {
+        } catch (PRDObjectConversionException e) {
             return null;
         }
 
@@ -223,7 +229,7 @@ public class PRDConverter {
     private Property PRDProperty2Property(PRDProperty prdProperty) {
         try {
             validator.validatePRDProperty(prdProperty);
-        } catch (IllegalArgumentException e) {
+        } catch (PRDObjectConversionException e) {
             return null;
         }
 
@@ -269,7 +275,7 @@ public class PRDConverter {
     private Entity PRDEntity2Entity(PRDEntity prdEntity) {
         try {
             validator.validatePRDEntity(prdEntity);
-        } catch (IllegalArgumentException e) {
+        } catch (PRDObjectConversionException e) {
             return null;
         }
 
@@ -290,9 +296,15 @@ public class PRDConverter {
      */
     private Rule PRDRule2Rule(PRDRule prdRule) {
         try {
-            prdRule.getPRDActions().getPRDAction().forEach(a -> validator.validatePRDAction(a, entitiesRef));
+            prdRule.getPRDActions().getPRDAction().forEach(a -> {
+                try {
+                    validator.validatePRDAction(a, entitiesRef);
+                } catch (PRDObjectConversionException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             validator.validatePRDActivation(prdRule.getPRDActivation());
-        } catch (IllegalArgumentException e) {
+        } catch (PRDObjectConversionException e) {
             return null;
         }
 
@@ -314,7 +326,7 @@ public class PRDConverter {
     private Action PRDAction2Action(PRDAction prdAction) {
         try {
             validator.validatePRDAction(prdAction, entitiesRef);
-        } catch (IllegalArgumentException e) {
+        } catch (PRDObjectConversionException e) {
             return null;
         }
         Action ret = null;
@@ -331,7 +343,7 @@ public class PRDConverter {
                 case CONDITION:
                     ret = getSingleOrMultiple(prdAction, expressionConverterAndValidator);
                 case SET:
-                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction,prdAction.getValue()));
+                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()));
                 case KILL:
                     ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
                 case REPLACE:
@@ -343,9 +355,7 @@ public class PRDConverter {
             validator.addErrorToList(prdAction, prdAction.getValue(), "Illegal action value.");
             return null;
         }
-        // Catch the 'ExpressionConverterAndValidator' exceptions
-        //TODO: Convert to custom exception
-        catch (RuntimeException e){
+        catch (ExpressionConversionException e) {
             ret = null;
         }
         return ret;
@@ -357,20 +367,25 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return a CalculationAction representation of the given PRDActivation.
      */
-    private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator){
+    private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator) {
         CalculationAction ret = null;
         PRDMultiply mul = prdAction.getPRDMultiply();
         PRDDivide div = prdAction.getPRDDivide();
 
         // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
-        if (mul != null) {
-            ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg1()),
-                    expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg2()), ClaculationType.MULTIPLY);
-        } else if (div != null) {
-            ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg1()),
-                    expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg2()), ClaculationType.DIVIDE);
-        } else {
-            //TODO: Throw exception.
+        try {
+            if (mul != null) {
+                ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg1()),
+                        expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg2()), ClaculationType.MULTIPLY);
+            } else if (div != null) {
+                ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg1()),
+                        expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg2()), ClaculationType.DIVIDE);
+            } else {
+                validator.addErrorToList(prdAction, prdAction.getType(), "Calculation action is not Multiply or Divide");
+                throw new ExpressionConversionException();
+            }
+        } catch (ExpressionConversionException e) {
+            validator.addErrorToList(prdAction, prdAction.getType(), expressionConverterAndValidator.getErrorList());
         }
         return ret;
     }
@@ -388,13 +403,19 @@ public class PRDConverter {
         // Then and else objects are created in this method.
         getAndCreateThenOrElse(prdAction, thenActions, elseActions);
 
-        if (prdCondition.getSingularity().equals("single")) {
-            ret = new SingleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getOperator());
-        } else if (prdCondition.getSingularity().equals("multiple")) {
-            ret = new MultipleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getLogical());
-        } else {
-            // Throw exception.
+        try {
+            if (prdCondition.getSingularity().equals("single")) {
+                ret = new SingleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getOperator());
+            } else if (prdCondition.getSingularity().equals("multiple")) {
+                ret = new MultipleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getLogical());
+            } else {
+                validator.addErrorToList(prdAction, prdAction.getType(), "Condition action is not single or multiple.");
+                throw new ExpressionConversionException();
+            }
+        } catch (ExpressionConversionException e) {
+            validator.addErrorToList(prdAction, prdAction.getType(), expressionConverterAndValidator.getErrorList());
         }
+
 
         return ret;
     }
@@ -431,10 +452,10 @@ public class PRDConverter {
      * @param prdElse the given PRDElse generated from reading the XML file
      * @return a Set of actions representation of the given PRDThen or PRDElse.
      */
-    private Set<Action> getThenOrElseActionSet(PRDThen prdThen, PRDElse prdElse){
+    private Set<Action> getThenOrElseActionSet(PRDThen prdThen, PRDElse prdElse) {
         Set<Action> ret = null;
 
-        if(prdThen != null){
+        if (prdThen != null) {
             ret = getActionsFromPRDActionsList(prdThen.getPRDAction());
         } else if (prdElse != null) {
             ret = getActionsFromPRDActionsList(prdElse.getPRDAction());
@@ -458,29 +479,29 @@ public class PRDConverter {
 
     /**
      * Extracts all valid properties from given PRDTermination.
+     *
      * @param prdTermination The given List of termination conditions
      * @return a set of all valid ending conditions
      */
-    private Set<EndingCondition> getEndingConditions(PRDTermination prdTermination){
+    private Set<EndingCondition> getEndingConditions(PRDTermination prdTermination) {
         Set<EndingCondition> endingConditions = new HashSet<>();
 
-        for (Object endingConditionObj : prdTermination.getPRDByTicksOrPRDBySecond()){
-            if(endingConditionObj.getClass() == PRDByTicks.class){
-                endingConditions.add(PRDByTicks2EndingCondition((PRDByTicks)endingConditionObj));
-            }
-            else{
-                endingConditions.add(PRDBySecond2EndingCondition((PRDBySecond)endingConditionObj));
+        for (Object endingConditionObj : prdTermination.getPRDByTicksOrPRDBySecond()) {
+            if (endingConditionObj.getClass() == PRDByTicks.class) {
+                endingConditions.add(PRDByTicks2EndingCondition((PRDByTicks) endingConditionObj));
+            } else {
+                endingConditions.add(PRDBySecond2EndingCondition((PRDBySecond) endingConditionObj));
             }
         }
 
         return endingConditions;
     }
 
-    private EndingCondition PRDByTicks2EndingCondition (PRDByTicks prdByTicks){
+    private EndingCondition PRDByTicks2EndingCondition(PRDByTicks prdByTicks) {
         return new EndingCondition(EndingConditionType.TICKS, prdByTicks.getCount());
     }
 
-    private EndingCondition PRDBySecond2EndingCondition (PRDBySecond prdBySecond){
+    private EndingCondition PRDBySecond2EndingCondition(PRDBySecond prdBySecond) {
         return new EndingCondition(EndingConditionType.TIME, prdBySecond.getCount());
     }
 }

@@ -33,7 +33,7 @@ public class ExpressionConverterAndValidator extends Validator {
      * The name sent separately in order to analyze the two arguments of 'Calculation' action too.
      * @return the value requested object.
      */
-    public Object analyzeAndGetValue(PRDAction prdAction, String prdValueStr){
+    public Object analyzeAndGetValue(PRDAction prdAction, String prdValueStr) throws ExpressionConversionException{
         Object value;
         value = getObjectIfFunction(prdValueStr);
         if(value == null){
@@ -44,7 +44,7 @@ public class ExpressionConverterAndValidator extends Validator {
         }
         if(!compareActionValueToGivenPropertyValue(prdAction, value)){
             // validation error occurred.
-            throw new RuntimeException();
+            throw new ExpressionConversionException();
         }
 
         return value;
