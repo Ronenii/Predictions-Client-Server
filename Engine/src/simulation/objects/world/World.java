@@ -6,6 +6,7 @@ import simulation.properties.ending.conditions.EndingCondition;
 import simulation.properties.property.api.Property;
 
 import java.util.Map;
+import java.util.Set;
 
 public class World {
 
@@ -13,9 +14,9 @@ public class World {
     private final Map<String, Entity> entities;
 
     private final Map<String, Rule> rules;
-    private final Map<String, EndingCondition> endingConditions;
+    private final Set<EndingCondition> endingConditions;
 
-    public World(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<String, EndingCondition> endingConditions) {
+    public World(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Set<EndingCondition> endingConditions) {
         this.environmentProperties = environmentProperties;
         this.entities = entities;
         this.rules = rules;
@@ -58,7 +59,7 @@ public class World {
         }
 
         worldToString.append(", endingConditions=[");
-        for (EndingCondition e : endingConditions.values()) {
+        for (EndingCondition e : endingConditions) {
             int counter = 0;
             worldToString.append(e);
             if (++counter != endingConditions.size())
