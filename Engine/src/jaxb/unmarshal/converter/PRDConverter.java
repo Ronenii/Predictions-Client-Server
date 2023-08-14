@@ -251,7 +251,7 @@ public class PRDConverter {
                 case PROXIMITY:
                     break;
             }
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             validator.addErrorToList(prdAction, prdAction.getValue(), "Illegal action value.");
             return null;
         }
