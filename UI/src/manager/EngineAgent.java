@@ -12,7 +12,7 @@ public class EngineAgent {
     private final EngineInterface engine;
 
     public EngineAgent(EngineInterface engine) {
-        this.engine = engine;
+        this.engine = new WorldManager();
     }
 
     /**

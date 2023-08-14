@@ -22,6 +22,9 @@ public class World {
         this.endingConditions = endingConditions;
     }
 
+    public void invoke(){
+        //TODO : implement.
+    }
 
 
     @Override
