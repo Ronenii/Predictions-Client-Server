@@ -2,8 +2,6 @@ package jaxb.unmarshal.converter;
 
 import jaxb.schema.generated.*;
 import jaxb.unmarshal.converter.expression.converter.ExpressionConverterAndValidator;
-import jaxb.unmarshal.converter.functions.HelperFunctionsType;
-import jaxb.unmarshal.converter.functions.StaticHelperFunctions;
 import simulation.objects.entity.Entity;
 import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.rule.Rule;
@@ -36,7 +34,6 @@ import java.util.*;
  */
 public class PRDConverter {
     // In order to get values from the world object on the run.
-
     private Map<String, Property> environmentProperties;
     private Map<String, Entity> entities;
 
@@ -47,24 +44,26 @@ public class PRDConverter {
         Map<String, Rule> rules;
         Set<EndingCondition> endingConditions;
 
-        // Iterates over all PRDEnvironmentProperties, converts each property and adds it to 'environmentProperties'
-        environmentProperties = getEnvironmentProperties(prdWorld);
+        environmentProperties = getEnvironmentPropertiesFromPRDWorld(prdWorld);
         this.environmentProperties = environmentProperties;
 
-        // Iterates over all PRDEntities, converts each entity and adds it to 'entities'
-        entities = getEntities(prdWorld);
+        entities = getEntitiesFromPRDWorld(prdWorld);
         this.entities = entities;
 
-        // Iterates over all PRDRules, converts each rule and adds it to 'rules'
-        rules = getRules(prdWorld);
+        rules = getRulesFromPRDWorld(prdWorld);
 
-        // Iterates over all PRDByTicks or PRDBySecond, converts each ending condition and adds it to 'endingConditions'
         endingConditions = getEndingConditions(prdWorld.getPRDTermination());
 
         return new World(environmentProperties, entities, rules, endingConditions);
     }
 
-    private Map<String, Property> getEnvironmentProperties(PRDWorld prdWorld){
+    /**
+     * Extracts all valid environment properties from given PRDWorld.
+     * @param prdWorld the given PRDWorld to extract the EnvProperties from.
+     * @return All Successfully converted environment properties
+     */
+    // Iterates over all PRDEnvironmentProperties i n, converts each property and adds it to 'environmentProperties'
+    private Map<String, Property> getEnvironmentPropertiesFromPRDWorld(PRDWorld prdWorld){
         Map<String, Property> environmentProperties = new HashMap<>();
         List<PRDEnvProperty> prdEnvProperties = prdWorld.getPRDEvironment().getPRDEnvProperty();
         Property propertyToAdd;
@@ -79,7 +78,12 @@ public class PRDConverter {
         return environmentProperties;
     }
 
-    private Map<String, Entity> getEntities(PRDWorld prdWorld){
+    /**
+     * Extracts all valid entities from given PRDWorld.
+     * @param prdWorld the given PRDWorld to extract the entities from.
+     * @return All Successfully converted entities
+     */
+    private Map<String, Entity> getEntitiesFromPRDWorld(PRDWorld prdWorld){
         Map<String, Entity> entities = new HashMap<>();
         List<PRDEntity> prdEntities = prdWorld.getPRDEntities().getPRDEntity();
         Entity entityToAdd;
@@ -94,7 +98,13 @@ public class PRDConverter {
         return entities;
     }
 
-    private Map<String, Rule> getRules(PRDWorld prdWorld){
+
+    /**
+     * Extracts all valid rule from given PRDWorld.
+     * @param prdWorld the given PRDWorld to extract the rule from.
+     * @return All Successfully converted rules
+     */
+    private Map<String, Rule> getRulesFromPRDWorld(PRDWorld prdWorld){
         Map<String, Rule> rules = new HashMap<>();
         List<PRDRule> prdRules = prdWorld.getPRDRules().getPRDRule();
         Rule ruleToAdd;
@@ -109,7 +119,12 @@ public class PRDConverter {
         return rules;
     }
 
-    private Map<String, Property> getEntityProperties(PRDEntity prdEntity){
+    /**
+     * Extracts all valid properties from given PRDEntity.
+     * @param prdEntity the given PRDEntity to extract the rule from.
+     * @return All Successfully converted properties
+     */
+    private Map<String, Property> getPropertiesFromPRDEntity(PRDEntity prdEntity){
         Map<String, Property> entityProperties = new HashMap<>();
         List<PRDProperty> prdEntityProperties = prdEntity.getPRDProperties().getPRDProperty();
         Property propertyToAdd;
@@ -124,7 +139,12 @@ public class PRDConverter {
         return entityProperties;
     }
 
-    private Set<Action> getActionsWithGivenList(List<PRDAction> prdActions){
+    /**
+     * Extracts all valid actions from given prdActions list.
+     * @param prdActions the given PRDAction list to extract the actions from.
+     * @return All Successfully converted actions
+     */
+    private Set<Action> getActionsFromPRDActionsList(List<PRDAction> prdActions){
         Set<Action> actions = new HashSet<>();
         Action actionToAdd;
 
@@ -226,7 +246,7 @@ public class PRDConverter {
         Map<String, Property> properties;
 
         // Iterates over all PRDProperties, converts each property and adds it to 'properties'
-        properties = getEntityProperties(prdEntity);
+        properties = getPropertiesFromPRDEntity(prdEntity);
 
         return new Entity(population, name, properties);
     }
@@ -242,8 +262,7 @@ public class PRDConverter {
         Activation activation = PRDActivation2Activation(prdRule.getPRDActivation());
         Set<Action> actions;
 
-        // Iterates over all prdActions inside the prdRule and convert them to action
-        actions = getActionsWithGivenList(prdRule.getPRDActions().getPRDAction());
+        actions = getActionsFromPRDActionsList(prdRule.getPRDActions().getPRDAction());
 
         return new Rule(name, activation, actions);
     }
@@ -370,9 +389,9 @@ public class PRDConverter {
         Set<Action> ret = null;
 
         if(prdThen != null){
-            ret = getActionsWithGivenList(prdThen.getPRDAction());
+            ret = getActionsFromPRDActionsList(prdThen.getPRDAction());
         } else if (prdElse != null) {
-            ret = getActionsWithGivenList(prdElse.getPRDAction());
+            ret = getActionsFromPRDActionsList(prdElse.getPRDAction());
         }
 
         return ret;
@@ -392,6 +411,11 @@ public class PRDConverter {
         return new Activation(ticks, probability);
     }
 
+    /**
+     * Extracts all valid properties from given PRDTermination.
+     * @param prdTermination The given List of termination conditions
+     * @return a set of all valid ending conditions
+     */
     private Set<EndingCondition> getEndingConditions(PRDTermination prdTermination){
         Set<EndingCondition> endingConditions = new HashSet<>();
 
