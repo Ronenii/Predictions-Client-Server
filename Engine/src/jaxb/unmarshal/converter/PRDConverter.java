@@ -207,9 +207,13 @@ public class PRDConverter {
                 case PROXIMITY:
                     break;
             }
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             String err = String.format("\"%s\" is not a valid Action type.", prdAction.getType());
             throw new IllegalArgumentException(err);
+        }
+        // Catch the 'ExpressionConverterAndValidator' exceptions
+        catch (RuntimeException e){
+            ret = null;
         }
         return ret;
     }
