@@ -1,11 +1,9 @@
 package jaxb.unmarshal.converter;
 
 import jaxb.schema.generated.*;
-import jaxb.unmarshal.converter.expression.converter.ExpressionConversionException;
+import jaxb.unmarshal.converter.expression.converter.exception.ExpressionConversionException;
 import jaxb.unmarshal.converter.expression.converter.ExpressionConverterAndValidator;
-import jaxb.unmarshal.converter.functions.HelperFunctionsType;
-import jaxb.unmarshal.converter.functions.StaticHelperFunctions;
-import jaxb.unmarshal.converter.validator.PRDObjectConversionException;
+import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException;
 import jaxb.unmarshal.converter.validator.PRDValidator;
 import simulation.objects.entity.Entity;
 import simulation.properties.ending.conditions.EndingConditionType;
@@ -75,7 +73,6 @@ public class PRDConverter {
      * @param prdWorld the given PRDWorld to extract the EnvProperties from.
      * @return All Successfully converted environment properties
      */
-    // Iterates over all PRDEnvironmentProperties i n, converts each property and adds it to 'environmentProperties'
     private Map<String, Property> getEnvironmentPropertiesFromPRDWorld(PRDWorld prdWorld) {
         Map<String, Property> environmentProperties = new HashMap<>();
         List<PRDEnvProperty> prdEnvProperties = prdWorld.getPRDEvironment().getPRDEnvProperty();
@@ -183,8 +180,6 @@ public class PRDConverter {
      *
      * @param prdEnvProperty the given PRDEnvProperty generated from reading the XML file
      * @return a Property representation of PRDEnvProperty.
-     * <p>
-     * TODO: Right now I hard coded placeholders for thing such as @value & @is_Random_init in the ctors. We need to make this more elegant.
      */
     private Property PRDEnvProperty2Property(PRDEnvProperty prdEnvProperty) {
         try {
@@ -200,16 +195,16 @@ public class PRDConverter {
 
         switch (PropertyType.valueOf(prdEnvProperty.getType())) {
             case INT:
-                ret = new IntProperty(name, false, 0, (int) from, (int) to);
+                ret = new IntProperty(name, (int) from, (int) to);
                 break;
             case DOUBLE:
-                ret = new DoubleProperty(name, false, 0.0, from, to);
+                ret = new DoubleProperty(name, from, to);
                 break;
             case BOOLEAN:
-                ret = new BooleanProperty(name, false, false);
+                ret = new BooleanProperty(name);
                 break;
             case STRING:
-                ret = new StringProperty(name, false, "");
+                ret = new StringProperty(name);
                 break;
             default:
                 String err = String.format("\"%s\" is not a valid Property type.", prdEnvProperty.getType());

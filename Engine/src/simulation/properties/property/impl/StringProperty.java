@@ -9,4 +9,12 @@ public class StringProperty extends AbstractProperty {
         super(name, isRandInit, PropertyType.STRING, value);
     }
 
+    /**
+     * A constructor for Environment properties
+     * @param name the property's name
+     */
+    public StringProperty(String name) {
+        super(name, false, PropertyType.STRING, "");
+    }
+
 }

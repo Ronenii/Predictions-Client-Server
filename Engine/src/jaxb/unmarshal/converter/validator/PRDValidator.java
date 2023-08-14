@@ -2,8 +2,8 @@ package jaxb.unmarshal.converter.validator;
 
 import jaxb.schema.generated.*;
 import jaxb.unmarshal.converter.api.Validator;
+import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException;
 import simulation.objects.entity.Entity;
-import simulation.properties.action.api.ActionType;
 import simulation.properties.property.api.Property;
 
 import java.util.List;

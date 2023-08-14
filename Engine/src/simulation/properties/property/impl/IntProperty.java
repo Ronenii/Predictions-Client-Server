@@ -13,6 +13,17 @@ public class IntProperty extends AbstractProperty implements RangedProperty {
         this.to = to;
     }
 
+    /**
+     * A constructor for Environment properties
+     * @param name the property's name
+     */
+    public IntProperty(String name, int from, int to)
+    {
+        super(name, false, PropertyType.INT, 0);
+        this.from = from;
+        this.to = to;
+    }
+
     public int getFrom() {
         return from;
     }

@@ -13,6 +13,17 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty {
         this.to = to;
     }
 
+    /**
+     * A constructor for Environment properties
+     * @param name the property's name
+     */
+    public DoubleProperty(String name, double from, double to)
+    {
+        super(name, false, PropertyType.DOUBLE, 0.0);
+        this.from = from;
+        this.to = to;
+    }
+
     public double getFrom() {
         return from;
     }
