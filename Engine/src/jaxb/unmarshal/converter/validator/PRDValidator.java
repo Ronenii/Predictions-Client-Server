@@ -148,20 +148,28 @@ public class PRDValidator extends Validator {
     }
 
     public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities) {
-        validatePRDActionType(prdAction);
+        validatePRDConditionAndPRDCalculation(prdAction);
         validatePRDActionEntityAndProperty(prdAction, entities);
     }
 
-    private void validatePRDActionType(PRDAction prdAction) throws IllegalArgumentException {
-        ActionType type = ActionType.valueOf(prdAction.getType());
+    private void validatePRDConditionAndPRDCalculation(PRDAction prdAction){
+        PRDCondition prdCondition;
 
-        if (type != ActionType.INCREASE &&
-                type != ActionType.DECREASE &&
-                type != ActionType.CALCULATION &&
-                type != ActionType.CONDITION &&
-                type != ActionType.KILL &&
-                type != ActionType.SET) {
-            addErrorToListAndThrowException(prdAction, "", "The given action's type doesn't exist.");
+        if(prdAction.getType().equals("calculation")){
+            if(prdAction.getPRDMultiply() == null && prdAction.getPRDDivide() == null){
+                addErrorToListAndThrowException(prdAction, "", "The given calculation type does not contain multiply or divide actions.");
+            }
+        }
+
+        if(prdAction.getType().equals("condition")){
+            prdCondition = prdAction.getPRDCondition();
+            if(prdCondition == null){
+                addErrorToListAndThrowException(prdAction, "", "The given action type is 'condition' and does not contain 'condition' object.");
+            }
+
+            if(!prdCondition.getSingularity().equals("single") && !prdCondition.getSingularity().equals("multiple")){
+                addErrorToListAndThrowException(prdAction, "", "The given condition type does not contain singularity.");
+            }
         }
     }
 

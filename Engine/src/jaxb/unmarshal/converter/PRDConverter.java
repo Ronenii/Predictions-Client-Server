@@ -338,7 +338,7 @@ public class PRDConverter {
      */
     private Set<Action> getThenOrElseActionSet(PRDThen prdThen, PRDElse prdElse) {
         Set<Action> ret = new HashSet<>();
-
+        // TODO: PRDAction2Action can return null, we need to change this from lambda expression.
         if (prdThen != null) {
             prdThen.getPRDAction().forEach(a -> ret.add(PRDAction2Action(a)));
         } else if (prdElse != null) {
