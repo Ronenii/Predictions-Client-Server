@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class PRDValidator extends Validator {
 
-    private StringBuilder errorsList;
+    private final StringBuilder errorsList;
 
     public PRDValidator() {
         this.errorsList = new StringBuilder();
