@@ -212,6 +212,7 @@ public class PRDConverter {
             throw new IllegalArgumentException(err);
         }
         // Catch the 'ExpressionConverterAndValidator' exceptions
+        //TODO: Convert to custom exception
         catch (RuntimeException e){
             ret = null;
         }
