@@ -40,8 +40,8 @@ import java.util.Set;
 public class PRDConverter {
     // In order to get values from the world object on the run.
 
-    private Map<String, Property> environmentProperties;
-    private Map<String, Entity> entities;
+    private Map<String, Property> environmentPropertiesRef;
+    private Map<String, Entity> entitiesRef;
 
     private final PRDValidator validator;
 
@@ -57,11 +57,11 @@ public class PRDConverter {
 
         // Iterates over all PRDEnvironmentProperties, converts each property and adds it to 'environmentProperties'
         prdWorld.getPRDEvironment().getPRDEnvProperty().forEach(p -> environmentProperties.put(p.getPRDName(), PRDEnvProperty2Property(p)));
-        this.environmentProperties = environmentProperties;
+        this.environmentPropertiesRef = environmentProperties;
 
         // Iterates over all PRDEntities, converts each entity and adds it to 'entities'
         prdWorld.getPRDEntities().getPRDEntity().forEach(e -> entities.put(e.getName(), PRDEntity2Entity(e)));
-        this.entities = entities;
+        this.entitiesRef = entities;
 
         // Iterates over all PRDRules, converts each rule and adds it to 'rules'
         prdWorld.getPRDRules().getPRDRule().forEach(r -> rules.put(r.getName(), PRDRule2Rule(r)));
@@ -193,7 +193,7 @@ public class PRDConverter {
      */
     private Rule PRDRule2Rule(PRDRule prdRule) {
         try {
-            prdRule.getPRDActions().getPRDAction().forEach(a -> validator.validatePRDAction(a, entities));
+            prdRule.getPRDActions().getPRDAction().forEach(a -> validator.validatePRDAction(a, entitiesRef));
             validator.validatePRDActivation(prdRule.getPRDActivation());
         } catch (IllegalArgumentException e) {
             return null;
@@ -220,12 +220,12 @@ public class PRDConverter {
      */
     private Action PRDAction2Action(PRDAction prdAction) {
         try {
-            validator.validatePRDAction(prdAction, entities);
+            validator.validatePRDAction(prdAction, entitiesRef);
         } catch (IllegalArgumentException e) {
             return null;
         }
         Action ret = null;
-        ExpressionConverterAndValidator expressionConverterAndValidator = new ExpressionConverterAndValidator(environmentProperties, entities);
+        ExpressionConverterAndValidator expressionConverterAndValidator = new ExpressionConverterAndValidator(environmentPropertiesRef, entitiesRef);
 
 
         // TODO: Continue this
@@ -363,7 +363,7 @@ public class PRDConverter {
         try {
             switch (HelperFunctionsType.valueOf(functionName)) {
                 case ENVIRONMENT:
-                    ret = StaticHelperFunctions.environment(getFunctionParam(prdValueStr), environmentProperties);
+                    ret = StaticHelperFunctions.environment(getFunctionParam(prdValueStr), environmentPropertiesRef);
                 case RANDOM:
                     ret = StaticHelperFunctions.random(Integer.parseInt(getFunctionParam(prdValueStr)));
                 case EVALUATE:
