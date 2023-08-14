@@ -320,9 +320,6 @@ public class PRDConverter {
         Action ret = null;
         ExpressionConverterAndValidator expressionConverterAndValidator = new ExpressionConverterAndValidator(environmentPropertiesRef, entitiesRef);
 
-
-        // TODO: Continue this
-        // TODO: Create getValue generator to check if 'value' calls a function.
         try {
             switch (ActionType.valueOf(prdAction.getType())) {
                 case INCREASE:
@@ -373,7 +370,7 @@ public class PRDConverter {
             ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg1()),
                     expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg2()), ClaculationType.DIVIDE);
         } else {
-            // Throw exception.
+            //TODO: Throw exception.
         }
         return ret;
     }
@@ -441,79 +438,6 @@ public class PRDConverter {
             ret = getActionsFromPRDActionsList(prdThen.getPRDAction());
         } else if (prdElse != null) {
             ret = getActionsFromPRDActionsList(prdElse.getPRDAction());
-        }
-
-        return ret;
-    }
-
-    /**
-     * Analyze the value string from the PRDAction, in case the given string represent a function,
-     * the method extract the function name and parameters from the string, execute the function and return
-     * the return value from this function.
-     * Otherwise, the method returns the given string.
-     *
-     * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
-     * @return the value requested object.
-     */
-    private Object analyzeAndGetValue(String prdValueStr) {
-        String functionName = getFucntionName(prdValueStr);
-        Object ret = null;
-        try {
-            switch (HelperFunctionsType.valueOf(functionName)) {
-                case ENVIRONMENT:
-                    ret = StaticHelperFunctions.environment(getFunctionParam(prdValueStr), environmentPropertiesRef);
-                case RANDOM:
-                    ret = StaticHelperFunctions.random(Integer.parseInt(getFunctionParam(prdValueStr)));
-                case EVALUATE:
-                    break;
-                case PERCENT:
-                    break;
-                case TICKS:
-                    break;
-                default:
-                    // TODO: maybe try to create a method to convert this string to the object it supposed to be, for example, check if this string is a number and parse it to int.
-                    // Value is not a function
-                    break;
-            }
-        } catch (IllegalArgumentException e) {
-            ret = prdValueStr;
-            //TODO: We need to return some null value over here
-        }
-        return ret;
-    }
-
-    /**
-     * Extract the function name from the given value string if a function name exists in the string.
-     * Otherwise, return null.
-     *
-     * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
-     * @return the function name in the given string.
-     */
-    private String getFucntionName(String prdValueStr) {
-        String ret = null;
-        int openParenIndex = prdValueStr.indexOf("(");
-
-        if (openParenIndex != -1) {
-            ret = prdValueStr.substring(0, openParenIndex);
-        }
-
-        return ret;
-    }
-
-    /**
-     * Extract the function's params from the given value string if the params exist in the string.
-     * Otherwise, return null.
-     *
-     * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
-     * @return the functions params in the given string.
-     */
-    private String getFunctionParam(String prdValueStr) {
-        String ret = null;
-        int openParenIndex = prdValueStr.indexOf("(");
-        int closeParenIndex = prdValueStr.indexOf(")");
-
-        if (openParenIndex != -1 && closeParenIndex != -1 && closeParenIndex > openParenIndex) {
-            ret = prdValueStr.substring(openParenIndex + 1, closeParenIndex);
         }
 
         return ret;
