@@ -26,13 +26,23 @@ public class PRDValidator extends Validator {
         this.errorsList = new StringBuilder();
     }
 
-    public void validatePRDProperty(PRDProperty prdProperty) throws PRDObjectConversionException {
+    public void validatePRDProperty(PRDProperty prdProperty, Map<String, Property> entityProperties) throws PRDObjectConversionException {
+        validatePRDPropertyDoesntExist(prdProperty, entityProperties);
         validatePRDPropertyRange(prdProperty);
         validatePRDPropertyInitValue(prdProperty);
     }
 
-    public void validatePRDEnvProperty(PRDEnvProperty prdEnvProperty) throws PRDObjectConversionException {
+    public void validatePRDEnvProperty(PRDEnvProperty prdEnvProperty, Map<String, Property> environmentProperties) throws PRDObjectConversionException {
+        validatePRDEnvironmentPropertyDoesntExist(prdEnvProperty, environmentProperties);
         validatePRDEnvPropertyRange(prdEnvProperty);
+    }
+
+    private void validatePRDEnvironmentPropertyDoesntExist(PRDEnvProperty prdEnvProperty, Map<String, Property> environmentProperties) throws PRDObjectConversionException {
+        String propertyName = prdEnvProperty.getPRDName();
+
+        if (environmentProperties.containsKey(propertyName)) {
+            addErrorToListAndThrowException(prdEnvProperty, propertyName, "The given property already exists.");
+        }
     }
 
     /**
@@ -55,7 +65,7 @@ public class PRDValidator extends Validator {
         }
     }
 
-    private void validatePRDPropertyExist(PRDProperty prdProperty, Map<String, Property> properties) throws PRDObjectConversionException {
+    private void validatePRDPropertyDoesntExist(PRDProperty prdProperty, Map<String, Property> properties) throws PRDObjectConversionException {
         String propertyName = prdProperty.getPRDName();
 
         if (properties.containsKey(propertyName)) {
@@ -97,7 +107,8 @@ public class PRDValidator extends Validator {
         }
     }
 
-    public void validatePRDEntity(PRDEntity prdEntity) throws PRDObjectConversionException {
+    public void validatePRDEntity(PRDEntity prdEntity, Map<String, Entity> entities) throws PRDObjectConversionException {
+        validatePRDEntityDoesntExists(prdEntity, entities);
         validatePRDEntityPopulation(prdEntity);
     }
 
@@ -111,6 +122,12 @@ public class PRDValidator extends Validator {
 
         if (population < 0) {
             addErrorToListAndThrowException(prdEntity, prdEntity.getName(), "Population cannot be negative.");
+        }
+    }
+
+    private void validatePRDEntityDoesntExists(PRDEntity prdEntity, Map<String, Entity> entities) throws PRDObjectConversionException {
+        if (entities.containsKey(prdEntity.getName())) {
+            addErrorToListAndThrowException(prdEntity, prdEntity.getName(), "There is already an entity with this name.");
         }
     }
 
@@ -147,27 +164,27 @@ public class PRDValidator extends Validator {
         }
     }
 
-    public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities) throws PRDObjectConversionException{
+    public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities) throws PRDObjectConversionException {
         validatePRDConditionAndPRDCalculation(prdAction);
         validatePRDActionEntityAndProperty(prdAction, entities);
     }
 
-    private void validatePRDConditionAndPRDCalculation(PRDAction prdAction) throws  PRDObjectConversionException{
+    private void validatePRDConditionAndPRDCalculation(PRDAction prdAction) throws PRDObjectConversionException {
         PRDCondition prdCondition;
 
-        if(prdAction.getType().equals("calculation")){
-            if(prdAction.getPRDMultiply() == null && prdAction.getPRDDivide() == null){
+        if (prdAction.getType().equals("calculation")) {
+            if (prdAction.getPRDMultiply() == null && prdAction.getPRDDivide() == null) {
                 addErrorToListAndThrowException(prdAction, "", "The given calculation type does not contain multiply or divide actions.");
             }
         }
 
-        if(prdAction.getType().equals("condition")){
+        if (prdAction.getType().equals("condition")) {
             prdCondition = prdAction.getPRDCondition();
-            if(prdCondition == null){
+            if (prdCondition == null) {
                 addErrorToListAndThrowException(prdAction, "", "The given action type is 'condition' and does not contain 'condition' object.");
             }
 
-            if(!prdCondition.getSingularity().equals("single") && !prdCondition.getSingularity().equals("multiple")){
+            if (!prdCondition.getSingularity().equals("single") && !prdCondition.getSingularity().equals("multiple")) {
                 addErrorToListAndThrowException(prdAction, "", "The given condition type does not contain singularity.");
             }
         }

@@ -79,7 +79,7 @@ public class PRDConverter {
         Property propertyToAdd;
 
         for (PRDEnvProperty envProperty : prdEnvProperties) {
-            propertyToAdd = PRDEnvProperty2Property(envProperty);
+            propertyToAdd = PRDEnvProperty2Property(envProperty, environmentProperties);
             if (propertyToAdd != null) {
                 environmentProperties.put(envProperty.getPRDName(), propertyToAdd);
             }
@@ -143,7 +143,7 @@ public class PRDConverter {
         Property propertyToAdd;
 
         for (PRDProperty property : prdEntityProperties) {
-            propertyToAdd = PRDProperty2Property(property);
+            propertyToAdd = PRDProperty2Property(property, entityProperties);
             if (propertyToAdd != null) {
                 entityProperties.put(property.getPRDName(), propertyToAdd);
             }
@@ -181,9 +181,9 @@ public class PRDConverter {
      * @param prdEnvProperty the given PRDEnvProperty generated from reading the XML file
      * @return a Property representation of PRDEnvProperty.
      */
-    private Property PRDEnvProperty2Property(PRDEnvProperty prdEnvProperty) {
+    private Property PRDEnvProperty2Property(PRDEnvProperty prdEnvProperty, Map<String, Property> environmentProperties) {
         try {
-            validator.validatePRDEnvProperty(prdEnvProperty);
+            validator.validatePRDEnvProperty(prdEnvProperty, environmentProperties);
         } catch (PRDObjectConversionException e) {
             return null;
         }
@@ -221,9 +221,9 @@ public class PRDConverter {
      * @param prdProperty the given prdProperty generated from reading the XML file
      * @return a Property representation of prdProperty.
      */
-    private Property PRDProperty2Property(PRDProperty prdProperty) {
+    private Property PRDProperty2Property(PRDProperty prdProperty, Map<String, Property> entityProperties) {
         try {
-            validator.validatePRDProperty(prdProperty);
+            validator.validatePRDProperty(prdProperty, entityProperties);
         } catch (PRDObjectConversionException e) {
             return null;
         }
@@ -269,7 +269,7 @@ public class PRDConverter {
      */
     private Entity PRDEntity2Entity(PRDEntity prdEntity) {
         try {
-            validator.validatePRDEntity(prdEntity);
+            validator.validatePRDEntity(prdEntity, entitiesRef);
         } catch (PRDObjectConversionException e) {
             return null;
         }
