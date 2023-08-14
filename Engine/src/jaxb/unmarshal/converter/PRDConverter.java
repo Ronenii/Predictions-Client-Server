@@ -50,6 +50,8 @@ public class PRDConverter {
     }
 
     public World PRDWorld2World(PRDWorld prdWorld) {
+
+        World newWorld;
         Map<String, Property> environmentProperties = new HashMap<>();
         Map<String, Entity> entities = new HashMap<>();
         Map<String, Rule> rules = new HashMap<>();
@@ -252,6 +254,11 @@ public class PRDConverter {
         } catch (Exception e) {
             validator.addErrorToList(prdAction, prdAction.getValue(), "Illegal action value.");
             return null;
+        }
+        // Catch the 'ExpressionConverterAndValidator' exceptions
+        //TODO: Convert to custom exception
+        catch (RuntimeException e){
+            ret = null;
         }
         return ret;
     }
