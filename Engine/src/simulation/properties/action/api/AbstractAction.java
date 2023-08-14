@@ -28,7 +28,7 @@ public abstract class AbstractAction implements Action{
 
     @Override
     public int hashCode() {
-        return property.getName().length() * type.name().length() * contextEntity.getName().length();
+        return property.length() * type.name().length() * contextEntity.length();
     }
 
     @Override
