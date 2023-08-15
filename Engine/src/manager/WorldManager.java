@@ -9,37 +9,39 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class WorldManager implements EngineInterface{
-   private World world;
-   private Map<UUID, ResultData> pastSimulations;
+public class WorldManager implements EngineInterface {
+    private World world;
+    private Map<UUID, ResultData> pastSimulations;
 
-   public WorldManager() {
-      world = null;
-      pastSimulations = new HashMap<>();
-   }
+    public WorldManager() {
+        world = null;
+        pastSimulations = new HashMap<>();
+    }
 
-   @Override
-   public String getCurrentSimulationDetails() {
-      return null;
-   }
+    @Override
+    public String getCurrentSimulationDetails() {
+        return null;
+    }
 
-   @Override
-   public String getSimulationDetailsById(int simId) {
-      return null;
-   }
+    @Override
+    public String getSimulationDetailsById(int simId) {
+        return null;
+    }
 
-   @Override
-   public String[] getAllSimulationDetailsInShortFormat() {
-      return new String[0];
-   }
+    @Override
+    public String[] getAllSimulationDetailsInShortFormat() {
+        return new String[0];
+    }
 
-   @Override
-   public void loadSimulationFromFile(String path) {
-      this.world = Reader.readWorldFromXML(path);
-   }
+    @Override
+    public void loadSimulationFromFile(String path) {
+        if (Reader.isValidPath(path)) {
+            this.world = Reader.readWorldFromXML(path);
+        }
+    }
 
-   @Override
-   public void runSimulation() {
+    @Override
+    public void runSimulation() {
 
-   }
+    }
 }

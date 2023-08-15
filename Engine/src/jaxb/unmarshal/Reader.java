@@ -49,4 +49,14 @@ public class Reader {
         return (PRDWorld) u.unmarshal(in);
     }
 
+    /**
+     * @param path a path to a world configuration xml file.
+     * @return true if the file exists and that is an .xml file, false otherwise.
+     */
+    public static boolean isValidPath(String path) {
+        File filePath = new File(path);
+
+        return filePath.exists() && path.endsWith(".xml");
+    }
+
 }
