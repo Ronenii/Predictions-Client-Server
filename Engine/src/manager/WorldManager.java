@@ -26,7 +26,7 @@ import java.util.*;
 
 public class WorldManager implements EngineInterface {
     private World world;
-    private Map<UUID, ResultData> pastSimulations;
+    private Map<String, ResultData> pastSimulations;
 
     public WorldManager() {
         world = null;

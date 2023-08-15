@@ -14,6 +14,7 @@ import validator.ui.exceptions.OutOfRangeException;
 import validator.ui.validator.InputValidator;
 
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Responsible for UI communication with the Engine module. Sends data to the Engine, receives results from Engine accordingly,

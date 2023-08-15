@@ -77,7 +77,7 @@ public class Console {
         System.out.println(message);
     }
 
-    public static void promptUserToInputPathForFile()
+    public static void promptUserToInputPathForFile(){}
     //TODO: Implement this after we have the structure of a simulation's result data
     public static void printResultData(ResultData resultData)
     {

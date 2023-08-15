@@ -187,10 +187,10 @@ public class PRDConverter {
 
         try {
             switch (PropertyType.valueOf(prdEnvProperty.getType().toUpperCase())) {
-                case DECIMAL:
+                case INT:
                     ret = new IntProperty(name, (int) from, (int) to);
                     break;
-                case FLOAT:
+                case DOUBLE:
                     ret = new DoubleProperty(name, from, to);
                     break;
                 case BOOLEAN:
@@ -234,10 +234,10 @@ public class PRDConverter {
 
         try {
             switch (PropertyType.valueOf(prdProperty.getType())) {
-                case DECIMAL:
+                case INT:
                     ret = new IntProperty(name, isRandomInit, Integer.parseInt(value), (int) from, (int) to);
                     break;
-                case FLOAT:
+                case DOUBLE:
                     ret = new DoubleProperty(name, isRandomInit, Double.parseDouble(value), from, to);
                     break;
                 case BOOLEAN:
