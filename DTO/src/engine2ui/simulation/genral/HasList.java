@@ -18,7 +18,7 @@ public interface HasList {
     default <T> String formatListToString(List<T> list){
         StringBuilder ret = new StringBuilder();
 
-        for(int i =1; i < list.size(); i++){
+        for(int i =1; i <= list.size(); i++){
             ret.append(String.format("\n#%s\n",i));
             ret.append(list.get(i-1));
         }
