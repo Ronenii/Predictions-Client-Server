@@ -1,6 +1,9 @@
 package manager;
 
 import display.Console;
+import engine2ui.simulation.result.ResultData;
+
+import java.util.Scanner;
 
 /**
  * Responsible for UI communication with the Engine module. Sends data to the Engine, receives results from Engine accordingly,
@@ -50,10 +53,20 @@ public class EngineAgent {
      * Shows the user's chosen simulation details.
      */
     public void showPastSimulations() {
-        Console.showShortDetailsOfAllPastSimulations(engine.getPastSimulationResultData());
+        ResultData[] pastSimulationsResultData = engine.getPastSimulationResultData();
+        Console.showShortDetailsOfAllPastSimulations(pastSimulationsResultData);
 
-        // TODO: Prompt user to choose a past simulation
-        // TODO: Validate user choice
-        // TODO: If valid, show user past simulation details
+        System.out.println("Choose the no. of a past run you would like to view: ");
+
+        //TODO: PLACEHOLDER INPUT GETTER FROM USER
+        Scanner scanner = new Scanner(System.in);
+        int userInput = Integer.parseInt(scanner.nextLine());
+
+        if(userInput >= 1 && userInput <= pastSimulationsResultData.length)
+        {
+            Console.printResultData(pastSimulationsResultData[userInput -1]);
+        }
+
+        //TODO: PLACEHOLDER INPUT GETTER FROM USER
     }
 }

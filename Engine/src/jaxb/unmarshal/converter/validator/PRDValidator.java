@@ -57,7 +57,7 @@ public class PRDValidator extends Validator {
         double from = prdEnvProperty.getPRDRange().getFrom();
         double to = prdEnvProperty.getPRDRange().getTo();
 
-        if (from < 0 || to < 0) {
+        if (from < 0.0 || to < 0.0) {
             addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range contains negative values.");
         }
 

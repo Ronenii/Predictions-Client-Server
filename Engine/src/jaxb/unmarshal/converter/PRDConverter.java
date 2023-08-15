@@ -190,6 +190,7 @@ public class PRDConverter {
         double to = prdEnvProperty.getPRDRange().getTo();
         double from = prdEnvProperty.getPRDRange().getFrom();
 
+        //TODO: Change Enums to be like the given property types in the SML file
         switch (PropertyType.valueOf(prdEnvProperty.getType())) {
             case INT:
                 ret = new IntProperty(name, (int) from, (int) to);

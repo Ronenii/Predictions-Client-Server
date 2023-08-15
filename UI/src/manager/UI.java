@@ -55,6 +55,8 @@ public class UI {
     /**
      * Gets the user's menu input and handles it accordingly.
      * Handles incorrect user input.
+     *
+     * C:\Users\Ronen Gelmanovich\IdeaProjects\Predictions\WorldConfigFiles\ex1-cigarets.xml
      */
     public void handleUserMenuChoice()
     {
