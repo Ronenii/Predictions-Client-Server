@@ -42,6 +42,8 @@ public class EngineAgent {
      * Starts a run of the currently loaded simulation.
      */
     public void runSimulation() {
+
+
         engine.runSimulation();
     }
 

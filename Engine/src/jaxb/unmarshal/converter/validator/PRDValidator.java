@@ -21,12 +21,6 @@ import java.util.Map;
  */
 public class PRDValidator extends Validator {
 
-    private final StringBuilder errorsList;
-
-    public PRDValidator() {
-        this.errorsList = new StringBuilder();
-    }
-
     public void validatePRDProperty(PRDProperty prdProperty, Map<String, Property> entityProperties) throws PRDObjectConversionException {
         validatePRDPropertyDoesntExist(prdProperty, entityProperties);
         validatePRDPropertyRange(prdProperty);
