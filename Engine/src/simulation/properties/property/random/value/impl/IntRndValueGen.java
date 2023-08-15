@@ -14,6 +14,6 @@ public class IntRndValueGen extends AbstractNumericRndValueGen<Integer> {
      */
     @Override
     public Integer generateRandomValue() {
-        return random.nextInt(from - to + 1) + from;
+        return random.nextInt(to - from + 1) + from;
     }
 }

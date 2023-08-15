@@ -241,11 +241,10 @@ public class PRDConverter {
         String value = prdProperty.getPRDValue().getInit();
         PropertyType type = PropertyType.valueOf(prdProperty.getType().toUpperCase());
 
-        // TODO: from some reason the big c'tor of IntProperty throws an exception before the creation. fuck that shit.
         try {
             switch (type) {
                 case DECIMAL:
-                    ret = new IntProperty(name, isRandomInit, parseOrRandomValue(type,value, isRandomInit, from, to), (int)from.doubleValue(), (int)to.doubleValue());
+                    ret = new IntProperty(name, isRandomInit, parseOrRandomValue(type,value, isRandomInit, from, to) ,(int)from.doubleValue() , (int)to.doubleValue());
                     break;
                 case FLOAT:
                     ret = new DoubleProperty(name, isRandomInit,parseOrRandomValue(type,value, isRandomInit, from, to), from, to);
