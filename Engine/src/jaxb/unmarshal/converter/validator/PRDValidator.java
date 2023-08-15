@@ -48,15 +48,18 @@ public class PRDValidator extends Validator {
      * @param prdEnvProperty the PRDProperty we are validating
      */
     private void validatePRDEnvPropertyRange(PRDEnvProperty prdEnvProperty) throws PRDObjectConversionException {
-        double from = prdEnvProperty.getPRDRange().getFrom();
-        double to = prdEnvProperty.getPRDRange().getTo();
+        if(prdEnvProperty.getType().equals("decimal") || prdEnvProperty.getType().equals("float"))
+        {
+            double from = prdEnvProperty.getPRDRange().getFrom();
+            double to = prdEnvProperty.getPRDRange().getTo();
 
-        if (from < 0.0 || to < 0.0) {
-            addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range contains negative values.");
-        }
+            if (from < 0.0 || to < 0.0) {
+                addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range contains negative values.");
+            }
 
-        if (to <= from) {
-            addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
+            if (to <= from) {
+                addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
+            }
         }
     }
 
@@ -99,7 +102,7 @@ public class PRDValidator extends Validator {
             addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "A non random initialized property must contain an init value.");
 
             // TODO: We need to validate that when we access isRandomInitialize() and getInit() that they are not null
-        } else if (prdProperty.getPRDValue().isRandomInitialize() && !prdProperty.getPRDValue().getInit().isEmpty()) {
+        } else if (prdProperty.getPRDValue().isRandomInitialize() && prdProperty.getPRDValue().getInit() != null) {
             addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "A random initialized property cannot contain an init value.");
         }
     }

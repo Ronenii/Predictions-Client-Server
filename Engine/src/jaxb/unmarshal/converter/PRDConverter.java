@@ -1,10 +1,14 @@
 package jaxb.unmarshal.converter;
 
 import jaxb.schema.generated.*;
+import jaxb.unmarshal.converter.expression.converter.InvalidBooleanValueException;
+import jaxb.unmarshal.converter.expression.converter.InvalidStringValueException;
+import jaxb.unmarshal.converter.expression.converter.ValueOutOfRangeException;
 import jaxb.unmarshal.converter.expression.converter.exception.ExpressionConversionException;
 import jaxb.unmarshal.converter.expression.converter.ExpressionConverterAndValidator;
 import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException;
 import jaxb.unmarshal.converter.validator.PRDValidator;
+import jaxb.unmarshal.converter.value.initializer.ValueInitializer;
 import simulation.objects.entity.Entity;
 import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.rule.Rule;
@@ -187,10 +191,10 @@ public class PRDConverter {
 
         try {
             switch (PropertyType.valueOf(prdEnvProperty.getType().toUpperCase())) {
-                case INT:
+                case DECIMAL:
                     ret = new IntProperty(name, (int) from, (int) to);
                     break;
-                case DOUBLE:
+                case FLOAT:
                     ret = new DoubleProperty(name, from, to);
                     break;
                 case BOOLEAN:
@@ -225,35 +229,69 @@ public class PRDConverter {
         Property ret = null;
         String name = prdProperty.getPRDName();
 
-        double to = prdProperty.getPRDRange().getTo();
-        double from = prdProperty.getPRDRange().getFrom();
+        Double to = null;
+        Double from = null;
+
+        if(prdProperty.getType().equals("decimal") || prdProperty.getType().equals("float")){
+            to = prdProperty.getPRDRange().getTo();
+            from = prdProperty.getPRDRange().getFrom();
+        }
 
         boolean isRandomInit = prdProperty.getPRDValue().isRandomInitialize();
         String value = prdProperty.getPRDValue().getInit();
+        PropertyType type = PropertyType.valueOf(prdProperty.getType().toUpperCase());
 
-
+        // TODO: from some reason the big c'tor of IntProperty throws an exception before the creation. fuck that shit.
         try {
-            switch (PropertyType.valueOf(prdProperty.getType())) {
-                case INT:
-                    ret = new IntProperty(name, isRandomInit, Integer.parseInt(value), (int) from, (int) to);
+            switch (type) {
+                case DECIMAL:
+                    ret = new IntProperty(name, isRandomInit, parseOrRandomValue(type,value, isRandomInit, from, to), (int)from.doubleValue(), (int)to.doubleValue());
                     break;
-                case DOUBLE:
-                    ret = new DoubleProperty(name, isRandomInit, Double.parseDouble(value), from, to);
+                case FLOAT:
+                    ret = new DoubleProperty(name, isRandomInit,parseOrRandomValue(type,value, isRandomInit, from, to), from, to);
                     break;
                 case BOOLEAN:
-                    ret = new BooleanProperty(name, isRandomInit, Boolean.parseBoolean(value));
+                    ret = new BooleanProperty(name, isRandomInit,parseOrRandomValue(type,value, isRandomInit, from, to));
                     break;
                 case STRING:
-                    ret = new StringProperty(name, isRandomInit, value);
+                    ret = new StringProperty(name, isRandomInit,parseOrRandomValue(type,value, isRandomInit, from, to));
                     break;
             }
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             validator.addErrorToList(prdProperty, prdProperty.getPRDName(), "Invalid property type.");
-            return null;
+        } catch (InvalidBooleanValueException e) {
+            validator.addErrorToList(prdProperty, prdProperty.getPRDName(), "Invalid value type, value is not boolean.");
+        } catch (InvalidStringValueException e) {
+            validator.addErrorToList(prdProperty, prdProperty.getPRDName(), "Invalid value type, value is not composed of the pattern characters.");
+        } catch (ValueOutOfRangeException e) {
+            validator.addErrorToList(prdProperty, prdProperty.getPRDName(), "Invalid value type, the number is out of the given range.");
         }
 
         return ret;
     }
+
+    private Object parseOrRandomValue(PropertyType type, String value, boolean isRandomInit, Double from, Double to) throws ValueOutOfRangeException, InvalidBooleanValueException, InvalidStringValueException {
+        Object ret = null;
+
+        switch (type) {
+            case DECIMAL:
+                ret = ValueInitializer.integerInitial(value, isRandomInit, (int)from.doubleValue(), (int)to.doubleValue());
+                break;
+            case FLOAT:
+                ret = ValueInitializer.doubleInitial(value, isRandomInit, from, to);
+                break;
+            case BOOLEAN:
+                ret = ValueInitializer.booleanInitial(value, isRandomInit);
+                break;
+            case STRING:
+                ret = ValueInitializer.stringInitial(value, isRandomInit);
+                break;
+        }
+
+        return ret;
+    }
+
 
     /**
      * Converts the given PRDEntity to Entity

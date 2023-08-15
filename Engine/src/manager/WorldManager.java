@@ -8,7 +8,6 @@ import simulation.objects.world.World;
 import ui2engine.simulation.func1.DTOFirstFunction;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
-import simulation.properties.property.impl.BooleanProperty;
 import simulation.properties.property.impl.DoubleProperty;
 import simulation.properties.property.impl.IntProperty;
 import simulation.properties.property.random.value.api.RandomValueGenerator;
@@ -21,7 +20,6 @@ import ui2engine.simulation.func3.user.input.EnvPropertyUserInput;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.sql.ResultSet;
 import java.util.*;
 
 public class WorldManager implements EngineInterface {
@@ -115,12 +113,12 @@ public class WorldManager implements EngineInterface {
         Object ret = null;
 
         switch (envProperty.getType()){
-            case INT:
+            case DECIMAL:
                 IntProperty intProperty = (IntProperty)envProperty;
                 RandomValueGenerator<Integer> randomIntValueGenerator = new IntRndValueGen(intProperty.getFrom(), intProperty.getTo());
                 ret = randomIntValueGenerator.generateRandomValue();
                 break;
-            case DOUBLE:
+            case FLOAT:
                 DoubleProperty doubleProperty = (DoubleProperty)envProperty;
                 RandomValueGenerator<Double> randomDoubleValueGenerator = new DoubleRndValueGen(doubleProperty.getFrom(), doubleProperty.getTo());
                 ret = randomDoubleValueGenerator.generateRandomValue();
@@ -164,11 +162,11 @@ public class WorldManager implements EngineInterface {
         String name = valueFromTheMap.getName(), type = valueFromTheMap.getType().toString().toLowerCase();
         Double from = null, to = null;
 
-        if(valueFromTheMap.getType() == PropertyType.DOUBLE){
+        if(valueFromTheMap.getType() == PropertyType.FLOAT){
             DoubleProperty doubleProperty = (DoubleProperty)valueFromTheMap;
             from = doubleProperty.getFrom();
             to = doubleProperty.getTo();
-        } else if (valueFromTheMap.getType() == PropertyType.INT) {
+        } else if (valueFromTheMap.getType() == PropertyType.DECIMAL) {
             IntProperty intProperty = (IntProperty)valueFromTheMap;
             from = (double)intProperty.getFrom();
             to = (double)intProperty.getTo();
