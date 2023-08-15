@@ -3,10 +3,10 @@ package engine2ui.simulation.start;
 public class DTOEnvironmentVariable {
     private final String name;
     private final String type;
-    private final double from;
-    private final double to;
+    private final Double from;
+    private final Double to;
 
-    public DTOEnvironmentVariable(String name, String type, double from, double to) {
+    public DTOEnvironmentVariable(String name, String type, Double from, Double to) {
         this.name = name;
         this.type = type;
         this.from = from;
@@ -22,11 +22,11 @@ public class DTOEnvironmentVariable {
     }
 
     public double getFrom() {
-        return from;
+        return from.doubleValue();
     }
 
     public double getTo() {
-        return to;
+        return to.doubleValue();
     }
 
     @Override
