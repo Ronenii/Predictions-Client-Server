@@ -35,8 +35,7 @@ public class InputValidator {
     public void validateStringValue(String value) throws IllegalStringValueException{
         String pattern = "^[A-Za-z0-9().\\-_,?! ]+$";
         if(!value.matches(pattern)){
-            String message = "The string: " + value + "does not match the requested pattern.";
-            throw new IllegalStringValueException(message);
+            throw new IllegalStringValueException(value);
         }
     }
 
