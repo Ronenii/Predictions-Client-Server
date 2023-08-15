@@ -322,16 +322,22 @@ public class PRDConverter {
             switch (ActionType.valueOf(prdAction.getType())) {
                 case INCREASE:
                     ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getBy()));
+                    break;
                 case DECREASE:
                     ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getBy()));
+                    break;
                 case CALCULATION:
                     ret = getMulOrDiv(prdAction, expressionConverterAndValidator);
+                    break;
                 case CONDITION:
                     ret = getSingleOrMultiple(prdAction, expressionConverterAndValidator);
+                    break;
                 case SET:
                     ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()));
+                    break;
                 case KILL:
                     ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
+                    break;
                 case REPLACE:
                     break;
                 case PROXIMITY:
