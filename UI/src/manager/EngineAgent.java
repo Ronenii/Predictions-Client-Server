@@ -1,6 +1,8 @@
 package manager;
 
 import display.Console;
+import engine2ui.simulation.result.ResultData;
+import ui2engine.simulation.func1.DTOFirstFunction;
 
 import java.util.Scanner;
 
@@ -11,7 +13,7 @@ import java.util.Scanner;
 public class EngineAgent {
     private final EngineInterface engine;
 
-    public EngineAgent(EngineInterface engine) {
+    public EngineAgent() {
         this.engine = new WorldManager();
     }
 
@@ -33,8 +35,12 @@ public class EngineAgent {
      * prompts the user to input a path to a simulation XML config file and loads it
      * into the system.
      */
-    public void loadSimulationFromFile(String Path) {
-        engine.loadSimulationFromFile(Path);
+    public void loadSimulationFromFile() {
+        System.out.print("Please enter path to the XML world config file: ");
+        Scanner scanner = new Scanner(System.in);
+        String path = scanner.nextLine();
+
+        engine.loadSimulationFromFile(new DTOFirstFunction(path));
     }
 
 
@@ -54,10 +60,20 @@ public class EngineAgent {
      * Shows the user's chosen simulation details.
      */
     public void showPastSimulations() {
-        Console.showShortDetailsOfAllPastSimulations(engine.getAllSimulationDetailsInShortFormat());
+        ResultData[] pastSimulationsResultData = engine.getPastSimulationResultData();
+        Console.showShortDetailsOfAllPastSimulations(pastSimulationsResultData);
 
-        // TODO: Prompt user to choose a past simulation
-        // TODO: Validate user choice
-        // TODO: If valid, show user past simulation details
+        System.out.print("\nChoose the no. of a past run you would like to view: ");
+
+        //TODO: PLACEHOLDER INPUT GETTER FROM USER
+        Scanner scanner = new Scanner(System.in);
+        int userInput = Integer.parseInt(scanner.nextLine());
+
+        if(userInput >= 1 && userInput <= pastSimulationsResultData.length)
+        {
+            Console.printResultData(pastSimulationsResultData[userInput -1]);
+        }
+
+        //TODO: PLACEHOLDER INPUT GETTER FROM USER
     }
 }

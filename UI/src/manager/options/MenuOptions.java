@@ -5,5 +5,5 @@ public enum MenuOptions {
     SHOW_SIMULATION_DATA,
     RUN_SIMULATION,
     SHOW_PAST_SIMULATIONS,
-    EXIT
+    EXIT;
 }
