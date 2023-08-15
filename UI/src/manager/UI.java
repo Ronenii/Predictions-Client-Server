@@ -1,5 +1,6 @@
 package manager;
 
+import com.sun.xml.internal.ws.util.ReadAllStream;
 import display.Console;
 import manager.options.MenuOptions;
 
@@ -21,11 +22,15 @@ public class UI {
      */
     public static void runProgram()
     {
+        EngineAgent eng = new EngineAgent();
+
         while(!exit)
         {
             Console.printMainMenu();
+
+
             try {
-                handleUserMenuChoice();
+                //handleUserMenuChoice();
             }
             catch (Exception e)
             {

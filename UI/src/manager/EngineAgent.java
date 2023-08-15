@@ -2,8 +2,6 @@ package manager;
 
 import display.Console;
 
-import java.util.Scanner;
-
 /**
  * Responsible for UI communication with the Engine module. Sends data to the Engine, receives results from Engine accordingly,
  * Prints the data out using the Console class.
@@ -11,7 +9,7 @@ import java.util.Scanner;
 public class EngineAgent {
     private final EngineInterface engine;
 
-    public EngineAgent(EngineInterface engine) {
+    public EngineAgent() {
         this.engine = new WorldManager();
     }
 
@@ -52,7 +50,7 @@ public class EngineAgent {
      * Shows the user's chosen simulation details.
      */
     public void showPastSimulations() {
-        Console.showShortDetailsOfAllPastSimulations(engine.getAllSimulationDetailsInShortFormat());
+        Console.showShortDetailsOfAllPastSimulations(engine.getPastSimulationResultData());
 
         // TODO: Prompt user to choose a past simulation
         // TODO: Validate user choice

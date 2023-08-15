@@ -4,14 +4,12 @@ import engine2ui.simulation.result.ResultData;
 import jaxb.unmarshal.Reader;
 import simulation.objects.world.World;
 
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class WorldManager implements EngineInterface {
     private World world;
-    private Map<UUID, ResultData> pastSimulations;
+    private final Map<String, ResultData> pastSimulations;
 
     public WorldManager() {
         world = null;
@@ -29,8 +27,16 @@ public class WorldManager implements EngineInterface {
     }
 
     @Override
-    public String[] getAllSimulationDetailsInShortFormat() {
-        return new String[0];
+    public ResultData[] getPastSimulationResultData() {
+        return pastSimulations.values().toArray(new ResultData[0]);
+    }
+
+    private void addResultData(ResultData resultData){
+        pastSimulations.put(resultData.getId(), resultData);
+    }
+
+    private ResultData getResultDataById(String id){
+        return pastSimulations.get(id);
     }
 
     @Override
