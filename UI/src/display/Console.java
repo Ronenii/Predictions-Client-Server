@@ -12,6 +12,7 @@ import java.util.UUID;
  */
 public class Console {
     public static void printMainMenu() {
+        printTitle("MAIN MENU");
         System.out.println("1. Load simulation from file");
         System.out.println("2. Show simulation details");
         System.out.println("3. Run simulation");
@@ -41,7 +42,7 @@ public class Console {
             return r1.getDateTime().compareTo(r2.getDateTime());
         });
 
-        printTitle("previous simulation runs");
+        printTitle("PREVIOUS SIMULATION RUNS");
         System.out.println();
         System.out.printf("%-22s%-22s%-22s\n", "no.", "ID", "Date & Time");
         int counter = 1;

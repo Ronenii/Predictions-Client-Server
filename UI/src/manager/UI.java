@@ -10,27 +10,23 @@ import java.util.Scanner;
  * The class the controls the main program loop. handles getting input from user, sends it to the engineAgent to handle it.
  */
 public class UI {
-    private static boolean exit =false;
-    private static EngineAgent engineAgent;
+    private boolean exit =false;
+    private EngineAgent engineAgent;
 
-    public static void main(String[] args) {
-        runProgram();
-    }
 
     /**
      * The main program loop. All exceptions are handled here.
      */
-    public static void runProgram()
+    public void runProgram()
     {
-        EngineAgent eng = new EngineAgent();
+        engineAgent = new EngineAgent();
 
         while(!exit)
         {
             Console.printMainMenu();
 
-
             try {
-                //handleUserMenuChoice();
+                handleUserMenuChoice();
             }
             catch (Exception e)
             {
@@ -46,11 +42,12 @@ public class UI {
      *
      * @return the menu item chosen by the user
      */
-    public static MenuOptions getMenuInput()
+    public MenuOptions getMenuInput()
     {
         MenuOptions userInput;
         Scanner scanner = new Scanner(System.in);
-        userInput = MenuOptions.valueOf(scanner.nextLine());
+
+        userInput = MenuOptions.values()[Integer.parseInt(scanner.nextLine()) - 1];
 
         return userInput;
     }
@@ -59,7 +56,7 @@ public class UI {
      * Gets the user's menu input and handles it accordingly.
      * Handles incorrect user input.
      */
-    public static void handleUserMenuChoice()
+    public void handleUserMenuChoice()
     {
         MenuOptions menuOption = getMenuInput();
 
