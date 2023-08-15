@@ -34,8 +34,12 @@ public class EngineAgent {
      * prompts the user to input a path to a simulation XML config file and loads it
      * into the system.
      */
-    public void loadSimulationFromFile(String Path) {
-        engine.loadSimulationFromFile(Path);
+    public void loadSimulationFromFile() {
+        System.out.print("Please enter path to the XML world config file: ");
+        Scanner scanner = new Scanner(System.in);
+        String path = scanner.nextLine();
+
+        engine.loadSimulationFromFile(path);
     }
 
 

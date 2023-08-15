@@ -71,10 +71,6 @@ public class Console {
         // TODO: Implement this
     }
 
-    public static void promptUserToInputPathForFile() {
-        System.out.print("Please enter path to the XML world config file: ");
-    }
-
     //TODO: Implement this after we have the structure of a simulation's result data
     public static void printResultData(ResultData resultData)
     {
