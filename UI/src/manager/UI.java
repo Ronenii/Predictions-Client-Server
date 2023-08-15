@@ -30,7 +30,7 @@ public class UI {
             }
             catch (Exception e)
             {
-
+                System.out.println(e.getMessage());
             }
         }
 
@@ -55,8 +55,6 @@ public class UI {
     /**
      * Gets the user's menu input and handles it accordingly.
      * Handles incorrect user input.
-     *
-     * C:\Users\Ronen Gelmanovich\IdeaProjects\Predictions\WorldConfigFiles\ex1-cigarets.xml
      */
     public void handleUserMenuChoice()
     {
@@ -65,6 +63,7 @@ public class UI {
         switch (menuOption)
         {
             case LOAD_PROGRAM:
+                // C:\Users\Ronen Gelmanovich\IdeaProjects\Predictions\WorldConfigFiles\ex1-cigarets.xml
                 engineAgent.loadSimulationFromFile();
                 break;
             case SHOW_SIMULATION_DATA:

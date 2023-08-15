@@ -97,6 +97,8 @@ public class PRDValidator extends Validator {
     private void validatePRDPropertyInitValue(PRDProperty prdProperty) throws PRDObjectConversionException {
         if (!prdProperty.getPRDValue().isRandomInitialize() && prdProperty.getPRDValue().getInit().isEmpty()) {
             addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "A non random initialized property must contain an init value.");
+
+            // TODO: We need to validate that when we access isRandomInitialize() and getInit() that they are not null
         } else if (prdProperty.getPRDValue().isRandomInitialize() && !prdProperty.getPRDValue().getInit().isEmpty()) {
             addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "A random initialized property cannot contain an init value.");
         }

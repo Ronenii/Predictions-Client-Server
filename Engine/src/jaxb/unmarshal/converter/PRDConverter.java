@@ -47,19 +47,26 @@ public class PRDConverter {
 
     public PRDConverter() {
         validator = new PRDValidator();
+        environmentProperties = new HashMap<>();
+        entities = new HashMap<>();
+        rules = new HashMap<>();
     }
 
     public World PRDWorld2World(PRDWorld prdWorld) {
 
         Set<EndingCondition> endingConditions;
 
-        environmentProperties = getEnvironmentPropertiesFromPRDWorld(prdWorld);
+        getEnvironmentPropertiesFromPRDWorld(prdWorld);
 
-        entities = getEntitiesFromPRDWorld(prdWorld);
+        getEntitiesFromPRDWorld(prdWorld);
 
-        rules = getRulesFromPRDWorld(prdWorld);
+        getRulesFromPRDWorld(prdWorld);
 
         endingConditions = getEndingConditions(prdWorld.getPRDTermination());
+
+        if (validator.containsErrors()) {
+            throw new IllegalArgumentException(validator.getErrorList());
+        }
 
         return new World(environmentProperties, entities, rules, endingConditions);
     }
@@ -70,19 +77,16 @@ public class PRDConverter {
      * @param prdWorld the given PRDWorld to extract the EnvProperties from.
      * @return All Successfully converted environment properties
      */
-    private Map<String, Property> getEnvironmentPropertiesFromPRDWorld(PRDWorld prdWorld) {
-        Map<String, Property> environmentProperties = new HashMap<>();
+    private void getEnvironmentPropertiesFromPRDWorld(PRDWorld prdWorld) {
         List<PRDEnvProperty> prdEnvProperties = prdWorld.getPRDEvironment().getPRDEnvProperty();
         Property propertyToAdd;
 
         for (PRDEnvProperty envProperty : prdEnvProperties) {
-            propertyToAdd = PRDEnvProperty2Property(envProperty, environmentProperties);
+            propertyToAdd = PRDEnvProperty2Property(envProperty);
             if (propertyToAdd != null) {
                 environmentProperties.put(envProperty.getPRDName(), propertyToAdd);
             }
         }
-
-        return environmentProperties;
     }
 
     /**
@@ -91,8 +95,7 @@ public class PRDConverter {
      * @param prdWorld the given PRDWorld to extract the entities from.
      * @return All Successfully converted entities
      */
-    private Map<String, Entity> getEntitiesFromPRDWorld(PRDWorld prdWorld) {
-        Map<String, Entity> entities = new HashMap<>();
+    private void getEntitiesFromPRDWorld(PRDWorld prdWorld) {
         List<PRDEntity> prdEntities = prdWorld.getPRDEntities().getPRDEntity();
         Entity entityToAdd;
 
@@ -102,8 +105,6 @@ public class PRDConverter {
                 entities.put(prdEntity.getName(), entityToAdd);
             }
         }
-
-        return entities;
     }
 
 
@@ -113,8 +114,7 @@ public class PRDConverter {
      * @param prdWorld the given PRDWorld to extract the rule from.
      * @return All Successfully converted rules
      */
-    private Map<String, Rule> getRulesFromPRDWorld(PRDWorld prdWorld) {
-        Map<String, Rule> rules = new HashMap<>();
+    private void getRulesFromPRDWorld(PRDWorld prdWorld) {
         List<PRDRule> prdRules = prdWorld.getPRDRules().getPRDRule();
         Rule ruleToAdd;
 
@@ -124,8 +124,6 @@ public class PRDConverter {
                 rules.put(prdRule.getName(), ruleToAdd);
             }
         }
-
-        return rules;
     }
 
     /**
@@ -146,9 +144,6 @@ public class PRDConverter {
             }
         }
 
-        if (validator.containsErrors()) {
-            throw new IllegalArgumentException(validator.getErrorList());
-        }
         return entityProperties;
     }
 
@@ -178,7 +173,7 @@ public class PRDConverter {
      * @param prdEnvProperty the given PRDEnvProperty generated from reading the XML file
      * @return a Property representation of PRDEnvProperty.
      */
-    private Property PRDEnvProperty2Property(PRDEnvProperty prdEnvProperty, Map<String, Property> environmentProperties) {
+    private Property PRDEnvProperty2Property(PRDEnvProperty prdEnvProperty) {
         try {
             validator.validatePRDEnvProperty(prdEnvProperty, environmentProperties);
         } catch (PRDObjectConversionException e) {
@@ -190,23 +185,26 @@ public class PRDConverter {
         double to = prdEnvProperty.getPRDRange().getTo();
         double from = prdEnvProperty.getPRDRange().getFrom();
 
-        //TODO: Change Enums to be like the given property types in the SML file
-        switch (PropertyType.valueOf(prdEnvProperty.getType())) {
-            case INT:
-                ret = new IntProperty(name, (int) from, (int) to);
-                break;
-            case DOUBLE:
-                ret = new DoubleProperty(name, from, to);
-                break;
-            case BOOLEAN:
-                ret = new BooleanProperty(name);
-                break;
-            case STRING:
-                ret = new StringProperty(name);
-                break;
-            default:
-                String err = String.format("\"%s\" is not a valid Property type.", prdEnvProperty.getType());
-                throw new IllegalArgumentException(err);
+        try {
+            //TODO: Change Enums to be like the given property types in the SML file
+            switch (PropertyType.valueOf(prdEnvProperty.getType())) {
+                case INT:
+                    ret = new IntProperty(name, (int) from, (int) to);
+                    break;
+                case DOUBLE:
+                    ret = new DoubleProperty(name, from, to);
+                    break;
+                case BOOLEAN:
+                    ret = new BooleanProperty(name);
+                    break;
+                case STRING:
+                    ret = new StringProperty(name);
+                    break;
+            }
+        }catch(IllegalArgumentException e)
+        {
+            validator.addErrorToList(prdEnvProperty, prdEnvProperty.getPRDName(), String.format("%s is not a valid property type", prdEnvProperty.getType()));
+            return null;
         }
 
         return ret;
@@ -291,7 +289,7 @@ public class PRDConverter {
         try {
             validator.validatePRDRule(prdRule, entities, rules);
         } catch (PRDObjectConversionException e) {
-            return  null;
+            return null;
         }
 
         String name = prdRule.getName();
@@ -485,7 +483,7 @@ public class PRDConverter {
         try {
             validator.validatePRDTermination(prdTermination);
         } catch (PRDObjectConversionException e) {
-            return  null;
+            return null;
         }
 
         Set<EndingCondition> endingConditions = new HashSet<>();
