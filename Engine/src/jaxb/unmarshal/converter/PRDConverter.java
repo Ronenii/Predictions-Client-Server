@@ -186,12 +186,11 @@ public class PRDConverter {
         double from = prdEnvProperty.getPRDRange().getFrom();
 
         try {
-            //TODO: Change Enums to be like the given property types in the SML file
-            switch (PropertyType.valueOf(prdEnvProperty.getType())) {
-                case INT:
+            switch (PropertyType.valueOf(prdEnvProperty.getType().toUpperCase())) {
+                case DECIMAL:
                     ret = new IntProperty(name, (int) from, (int) to);
                     break;
-                case DOUBLE:
+                case FLOAT:
                     ret = new DoubleProperty(name, from, to);
                     break;
                 case BOOLEAN:
@@ -235,10 +234,10 @@ public class PRDConverter {
 
         try {
             switch (PropertyType.valueOf(prdProperty.getType())) {
-                case INT:
+                case DECIMAL:
                     ret = new IntProperty(name, isRandomInit, Integer.parseInt(value), (int) from, (int) to);
                     break;
-                case DOUBLE:
+                case FLOAT:
                     ret = new DoubleProperty(name, isRandomInit, Double.parseDouble(value), from, to);
                     break;
                 case BOOLEAN:

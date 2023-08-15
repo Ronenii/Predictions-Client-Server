@@ -8,7 +8,7 @@ public class IntProperty extends AbstractProperty implements RangedProperty {
     private int to;
 
     public IntProperty(String name, boolean isRandInit, Object value, int from, int to) {
-        super(name, isRandInit, PropertyType.INT, value);
+        super(name, isRandInit, PropertyType.DECIMAL, value);
         this.from = from;
         this.to = to;
     }
@@ -19,7 +19,7 @@ public class IntProperty extends AbstractProperty implements RangedProperty {
      */
     public IntProperty(String name, int from, int to)
     {
-        super(name, false, PropertyType.INT, 0);
+        super(name, false, PropertyType.DECIMAL, 0);
         this.from = from;
         this.to = to;
     }
