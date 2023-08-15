@@ -201,8 +201,7 @@ public class PRDConverter {
                     ret = new StringProperty(name);
                     break;
             }
-        }catch(IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             validator.addErrorToList(prdEnvProperty, prdEnvProperty.getPRDName(), String.format("%s is not a valid property type", prdEnvProperty.getType()));
             return null;
         }
