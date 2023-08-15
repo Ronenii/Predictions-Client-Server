@@ -5,6 +5,7 @@ import jaxb.unmarshal.converter.api.Validator;
 import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException;
 import simulation.objects.entity.Entity;
 import simulation.properties.property.api.Property;
+import simulation.properties.rule.Rule;
 
 import java.util.List;
 import java.util.Map;
@@ -131,9 +132,29 @@ public class PRDValidator extends Validator {
         }
     }
 
-    public void validatePRDActivation(PRDActivation prdActivation) throws PRDObjectConversionException {
-        validatePRDActivationTicks(prdActivation);
-        validatePRDActivationProbability(prdActivation);
+    public void validatePRDActivation(PRDActivation prdActivation, PRDRule prdRule) throws PRDObjectConversionException {
+        validatePRDActivationTicks(prdActivation, prdRule);
+        validatePRDActivationProbability(prdActivation, prdRule);
+    }
+
+    public void validatePRDRule(PRDRule prdRule, Map<String, Entity> entities, Map<String, Rule> rules) throws PRDObjectConversionException {
+        validateRuleDoesntExist(prdRule, rules);
+        validateAllRuleActions(prdRule, entities);
+        validatePRDActivation(prdRule.getPRDActivation(), prdRule);
+    }
+
+    private void validateAllRuleActions(PRDRule prdRule, Map<String, Entity> entities) throws PRDObjectConversionException {
+        for (PRDAction a : prdRule.getPRDActions().getPRDAction()
+        ) {
+            validatePRDAction(a, entities);
+        }
+    }
+
+    private void validateRuleDoesntExist(PRDRule prdRule, Map<String, Rule> rules) throws PRDObjectConversionException {
+        if(rules.containsKey(prdRule.getName()))
+        {
+            addErrorToListAndThrowException(prdRule, prdRule.getName(), "There is already a rule with this name");
+        }
     }
 
     /**
@@ -141,12 +162,11 @@ public class PRDValidator extends Validator {
      *
      * @param prdActivation the PRDActivation we are validating
      */
-    private void validatePRDActivationTicks(PRDActivation prdActivation) throws PRDObjectConversionException {
+    private void validatePRDActivationTicks(PRDActivation prdActivation, PRDRule prdRule) throws PRDObjectConversionException {
         int ticks = prdActivation.getTicks();
 
         if (ticks < 0) {
-            // TODO: Add where the empty string is, the rule this activation belongs to.
-            addErrorToListAndThrowException(prdActivation, "", "Ticks cannot be negative.");
+            addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Ticks cannot be negative.");
         }
     }
 
@@ -155,12 +175,11 @@ public class PRDValidator extends Validator {
      *
      * @param prdActivation the PRDActivation we are validating
      */
-    private void validatePRDActivationProbability(PRDActivation prdActivation) throws PRDObjectConversionException {
+    private void validatePRDActivationProbability(PRDActivation prdActivation, PRDRule prdRule) throws PRDObjectConversionException {
         double probability = prdActivation.getProbability();
 
         if (probability < 0 || probability > 1) {
-            // TODO: Add where the empty string is, the rule this activation belongs to.
-            addErrorToListAndThrowException(prdActivation, "", "Probability must be between 0 & 1.");
+            addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Probability must be between 0 & 1.");
         }
     }
 

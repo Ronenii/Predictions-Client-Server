@@ -38,8 +38,10 @@ import java.util.*;
 public class PRDConverter {
     // In order to get values from the world object on the run.
 
-    private Map<String, Property> environmentPropertiesRef;
-    private Map<String, Entity> entitiesRef;
+    private Map<String, Property> environmentProperties;
+    private Map<String, Entity> entities;
+
+    private Map<String, Rule> rules;
 
     private final PRDValidator validator;
 
@@ -49,16 +51,11 @@ public class PRDConverter {
 
     public World PRDWorld2World(PRDWorld prdWorld) {
 
-        Map<String, Property> environmentProperties;
-        Map<String, Entity> entities;
-        Map<String, Rule> rules;
         Set<EndingCondition> endingConditions;
 
         environmentProperties = getEnvironmentPropertiesFromPRDWorld(prdWorld);
-        this.environmentPropertiesRef = environmentProperties;
 
         entities = getEntitiesFromPRDWorld(prdWorld);
-        this.entitiesRef = entities;
 
         rules = getRulesFromPRDWorld(prdWorld);
 
@@ -269,7 +266,7 @@ public class PRDConverter {
      */
     private Entity PRDEntity2Entity(PRDEntity prdEntity) {
         try {
-            validator.validatePRDEntity(prdEntity, entitiesRef);
+            validator.validatePRDEntity(prdEntity, entities);
         } catch (PRDObjectConversionException e) {
             return null;
         }
@@ -291,20 +288,13 @@ public class PRDConverter {
      */
     private Rule PRDRule2Rule(PRDRule prdRule) {
         try {
-            prdRule.getPRDActions().getPRDAction().forEach(a -> {
-                try {
-                    validator.validatePRDAction(a, entitiesRef);
-                } catch (PRDObjectConversionException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            validator.validatePRDActivation(prdRule.getPRDActivation());
+            validator.validatePRDRule(prdRule, entities, rules);
         } catch (PRDObjectConversionException e) {
-            return null;
+            return  null;
         }
 
         String name = prdRule.getName();
-        Activation activation = PRDActivation2Activation(prdRule.getPRDActivation());
+        Activation activation = PRDActivation2Activation(prdRule.getPRDActivation(), prdRule);
         Set<Action> actions;
 
         actions = getActionsFromPRDActionsList(prdRule.getPRDActions().getPRDAction());
@@ -320,12 +310,13 @@ public class PRDConverter {
      */
     private Action PRDAction2Action(PRDAction prdAction) {
         try {
-            validator.validatePRDAction(prdAction, entitiesRef);
+            validator.validatePRDAction(prdAction, entities);
         } catch (PRDObjectConversionException e) {
             return null;
         }
+
         Action ret = null;
-        ExpressionConverterAndValidator expressionConverterAndValidator = new ExpressionConverterAndValidator(environmentPropertiesRef, entitiesRef);
+        ExpressionConverterAndValidator expressionConverterAndValidator = new ExpressionConverterAndValidator(environmentProperties, entities);
 
         try {
             switch (ActionType.valueOf(prdAction.getType())) {
@@ -349,8 +340,7 @@ public class PRDConverter {
         } catch (IllegalArgumentException e) {
             validator.addErrorToList(prdAction, prdAction.getValue(), "Illegal action value.");
             return null;
-        }
-        catch (ExpressionConversionException e) {
+        } catch (ExpressionConversionException e) {
             ret = null;
         }
         return ret;
@@ -465,7 +455,13 @@ public class PRDConverter {
      * @param prdActivation the given PRDAction generated from reading the XML file
      * @return an Activation representation of PRDActivation.
      */
-    private Activation PRDActivation2Activation(PRDActivation prdActivation) {
+    private Activation PRDActivation2Activation(PRDActivation prdActivation, PRDRule prdRule) {
+        try {
+            validator.validatePRDActivation(prdActivation, prdRule);
+        } catch (PRDObjectConversionException e) {
+            return null;
+        }
+
         int ticks = prdActivation.getTicks();
         double probability = prdActivation.getProbability();
 
@@ -479,6 +475,12 @@ public class PRDConverter {
      * @return a set of all valid ending conditions
      */
     private Set<EndingCondition> getEndingConditions(PRDTermination prdTermination) {
+        try {
+            validator.validatePRDTermination(prdTermination);
+        } catch (PRDObjectConversionException e) {
+            return  null;
+        }
+
         Set<EndingCondition> endingConditions = new HashSet<>();
 
         for (Object endingConditionObj : prdTermination.getPRDByTicksOrPRDBySecond()) {
