@@ -1,5 +1,7 @@
 package display;
 
+import engine2ui.simulation.start.DTOEnvironmentVariable;
+
 /**
  * A class designated entirely for printing the relevant text of the program.
  */
@@ -42,8 +44,38 @@ public class Console {
         // TODO: Implement this
     }
 
+    public static void printGivenMessage(String message){
+        System.out.println(message);
+    }
+
     public static void promptUserToInputPathForFile()
     {
         System.out.print("Please enter path to the XML world config file: ");
+    }
+
+    public static void showThirdFuncFirstMessage(){
+        System.out.println("For each environment value in the simulation, please choose if you want to initialize the value manually or randomly.");
+        System.out.println("If you want to initialize the value manually, please enter your value.");
+        System.out.println("If you want to initialize the value randomly, please press enter.");
+    }
+
+    public static void showEnvPropertyDet(DTOEnvironmentVariable dtoEnvironmentVariable){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("'").append(dtoEnvironmentVariable.getName()).append("':\n");
+        stringBuilder.append("Type: ").append(dtoEnvironmentVariable.getType()).append("\n");
+        if (dtoEnvironmentVariable.getType().equals("int")){
+            stringBuilder.append("Value range: from ")
+                    .append((int)dtoEnvironmentVariable.getFrom())
+                    .append(" to ").append((int)dtoEnvironmentVariable.getTo())
+                    .append("\n");
+        } else if (dtoEnvironmentVariable.getType().equals("double")){
+            stringBuilder.append("Value range: from ")
+                    .append(dtoEnvironmentVariable.getFrom())
+                    .append(" to ").append(dtoEnvironmentVariable.getTo())
+                    .append("\n");
+        }
+
+        stringBuilder.append("========================");
+        System.out.println(stringBuilder.toString());
     }
 }

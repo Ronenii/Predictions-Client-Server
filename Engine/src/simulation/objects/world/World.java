@@ -27,6 +27,21 @@ public class World {
         //TODO : implement.
     }
 
+    public Map<String, Property> getEnvironmentProperties() {
+        return environmentProperties;
+    }
+
+    public Map<String, Entity> getEntities() {
+        return entities;
+    }
+
+    public Map<String, Rule> getRules() {
+        return rules;
+    }
+
+    public Set<EndingCondition> getEndingConditions() {
+        return endingConditions;
+    }
 
     @Override
     public String toString() {

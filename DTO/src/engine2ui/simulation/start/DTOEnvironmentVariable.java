@@ -13,6 +13,22 @@ public class DTOEnvironmentVariable {
         this.to = to;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public double getFrom() {
+        return from;
+    }
+
+    public double getTo() {
+        return to;
+    }
+
     @Override
     public String toString() {
         return String.format("Name: %s\n", name) +

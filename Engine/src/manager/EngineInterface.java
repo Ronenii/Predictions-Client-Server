@@ -1,5 +1,8 @@
 package manager;
 
+import engine2ui.simulation.start.StartData;
+import ui2engine.simulation.func3.DTOThirdFunction;
+
 public interface EngineInterface {
     String getCurrentSimulationDetails();
 
@@ -9,5 +12,7 @@ public interface EngineInterface {
 
     void loadSimulationFromFile(String path);
 
-    void runSimulation();
+    void runSimulation(DTOThirdFunction dtoThirdFunction);
+
+    StartData getSimulationStartData();
 }
