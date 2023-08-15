@@ -1,5 +1,6 @@
-package validator.ui.exceptions.validator;
+package validator.ui.validator;
 
+import validator.ui.exceptions.IllegalBooleanValueException;
 import validator.ui.exceptions.IllegalStringValueException;
 import validator.ui.exceptions.OutOfRangeException;
 
@@ -22,6 +23,12 @@ public class InputValidator {
     public void isDoubleInRange(double value, double from, double to) throws OutOfRangeException {
         if(value < from || value > to){
             throw new OutOfRangeException();
+        }
+    }
+
+    public void validateBoolean(String value) throws IllegalBooleanValueException{
+        if(!value.equals("true") && !value.equals("false")){
+            throw new IllegalBooleanValueException();
         }
     }
 

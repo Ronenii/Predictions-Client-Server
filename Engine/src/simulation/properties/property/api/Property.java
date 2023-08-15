@@ -17,5 +17,9 @@ public interface Property {
 
     void updateValue(Object value);
 
+    void updateValueAndIsRandomInit(Object value, boolean isRandomInit);
+
+
+
 
 }
