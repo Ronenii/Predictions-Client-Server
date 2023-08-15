@@ -144,10 +144,13 @@ public class ExpressionConverterAndValidator extends Validator {
      */
     private Object getBooleanOrStr(String prdValueStr){
         Object ret;
-        try {
-            ret = Boolean.valueOf(prdValueStr);
+        String prdValueToLower = prdValueStr.toLowerCase();
+        if(prdValueToLower.equals("true")){
+            ret = true;
+        } else if (prdValueToLower.equals("false")) {
+            ret = false;
         }
-        catch (IllegalArgumentException e){
+        else {
             ret = prdValueStr;
         }
 
