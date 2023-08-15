@@ -1,10 +1,22 @@
 package manager;
 
+import engine2ui.simulation.result.ResultData;
 import jaxb.unmarshal.Reader;
 import simulation.objects.world.World;
 
+import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public class WorldManager implements EngineInterface{
    private World world;
+   private Map<UUID, ResultData> pastSimulations;
+
+   public WorldManager() {
+      world = null;
+      pastSimulations = new HashMap<>();
+   }
 
    @Override
    public String getCurrentSimulationDetails() {
