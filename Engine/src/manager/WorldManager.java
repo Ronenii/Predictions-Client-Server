@@ -3,6 +3,7 @@ package manager;
 import engine2ui.simulation.result.ResultData;
 import jaxb.unmarshal.Reader;
 import simulation.objects.world.World;
+import ui2engine.simulation.func1.DTOFirstFunction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,9 +52,9 @@ public class WorldManager implements EngineInterface {
     }
 
     @Override
-    public void loadSimulationFromFile(String path) {
-        if (Reader.isValidPath(path)) {
-            this.world = Reader.readWorldFromXML(path);
+    public void loadSimulationFromFile(DTOFirstFunction dto) {
+        if (Reader.isValidPath(dto.getPath())) {
+            this.world = Reader.readWorldFromXML(dto.getPath());
         }
     }
 

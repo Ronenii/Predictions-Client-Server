@@ -2,6 +2,7 @@ package manager;
 
 import display.Console;
 import engine2ui.simulation.result.ResultData;
+import ui2engine.simulation.func1.DTOFirstFunction;
 
 import java.util.Scanner;
 
@@ -39,7 +40,7 @@ public class EngineAgent {
         Scanner scanner = new Scanner(System.in);
         String path = scanner.nextLine();
 
-        engine.loadSimulationFromFile(path);
+        engine.loadSimulationFromFile(new DTOFirstFunction(path));
     }
 
 
