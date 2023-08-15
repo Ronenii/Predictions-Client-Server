@@ -61,7 +61,7 @@ public class EngineAgent {
         ResultData[] pastSimulationsResultData = engine.getPastSimulationResultData();
         Console.showShortDetailsOfAllPastSimulations(pastSimulationsResultData);
 
-        System.out.println("Choose the no. of a past run you would like to view: ");
+        System.out.print("\nChoose the no. of a past run you would like to view: ");
 
         //TODO: PLACEHOLDER INPUT GETTER FROM USER
         Scanner scanner = new Scanner(System.in);
