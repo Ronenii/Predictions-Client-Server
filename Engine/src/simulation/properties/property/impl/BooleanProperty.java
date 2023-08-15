@@ -8,4 +8,14 @@ public class BooleanProperty extends AbstractProperty {
     public BooleanProperty(String name, boolean isRandInit, boolean value) {
         super(name, isRandInit, PropertyType.BOOLEAN, value);
     }
+
+
+    /**
+     * A constructor for Environment properties
+     * @param name the property's name
+     */
+    public BooleanProperty(String name)
+    {
+        super(name, false, PropertyType.BOOLEAN, false);
+    }
 }

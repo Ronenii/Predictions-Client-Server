@@ -3,6 +3,7 @@ package jaxb.unmarshal.converter.expression.converter;
 import jaxb.schema.generated.PRDAction;
 import jaxb.schema.generated.PRDCondition;
 import jaxb.unmarshal.converter.api.Validator;
+import jaxb.unmarshal.converter.expression.converter.exception.ExpressionConversionException;
 import jaxb.unmarshal.converter.functions.HelperFunctionsType;
 import jaxb.unmarshal.converter.functions.StaticHelperFunctions;
 import simulation.objects.entity.Entity;
@@ -33,7 +34,7 @@ public class ExpressionConverterAndValidator extends Validator {
      * The name sent separately in order to analyze the two arguments of 'Calculation' action too.
      * @return the value requested object.
      */
-    public Object analyzeAndGetValue(PRDAction prdAction, String prdValueStr){
+    public Object analyzeAndGetValue(PRDAction prdAction, String prdValueStr) throws ExpressionConversionException {
         Object value;
         value = getObjectIfFunction(prdValueStr);
         if(value == null){
@@ -44,7 +45,7 @@ public class ExpressionConverterAndValidator extends Validator {
         }
         if(!compareActionValueToGivenPropertyValue(prdAction, value)){
             // validation error occurred.
-            throw new RuntimeException();
+            throw new ExpressionConversionException();
         }
 
         return value;
