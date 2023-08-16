@@ -1,9 +1,9 @@
 package jaxb.unmarshal.converter;
 
 import jaxb.schema.generated.*;
-import jaxb.unmarshal.converter.expression.converter.InvalidBooleanValueException;
-import jaxb.unmarshal.converter.expression.converter.InvalidStringValueException;
-import jaxb.unmarshal.converter.expression.converter.ValueOutOfRangeException;
+import jaxb.unmarshal.converter.expression.converter.exception.InvalidBooleanValueException;
+import jaxb.unmarshal.converter.expression.converter.exception.InvalidStringValueException;
+import jaxb.unmarshal.converter.expression.converter.exception.ValueOutOfRangeException;
 import jaxb.unmarshal.converter.expression.converter.exception.ExpressionConversionException;
 import jaxb.unmarshal.converter.expression.converter.ExpressionConverterAndValidator;
 import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException;
@@ -353,7 +353,7 @@ public class PRDConverter {
                     ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), meow);
                     break;
                 case DECREASE:
-                    ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getBy()));
+                    ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, prdAction.getBy()));
                     break;
                 case CALCULATION:
                     ret = getMulOrDiv(prdAction, expressionConverterAndValidator);
@@ -426,9 +426,9 @@ public class PRDConverter {
 
         try {
             if (prdCondition.getSingularity().equals("single")) {
-                ret = new SingleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, prdAction.getValue()), thenActions, elseActions, prdCondition.getOperator());
+                ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(null, prdCondition, prdCondition.getValue()), thenActions, elseActions, prdCondition.getOperator());
             } else if (prdCondition.getSingularity().equals("multiple")) {
-                ret = new MultipleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getLogical());
+                ret = getMultipleConditionObject(prdCondition,expressionConverterAndValidator,thenActions,elseActions);
             } else {
                 throw new ExpressionConversionException();
             }
@@ -440,31 +440,32 @@ public class PRDConverter {
         return ret;
     }
 
-    private MultipleCondition getMultipleConditionObject(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator, ThenOrElse thenActions, ThenOrElse elseActions){
-        PRDCondition prdCondition = prdAction.getPRDCondition();
+    private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ExpressionConverterAndValidator expressionConverterAndValidator, ThenOrElse thenActions, ThenOrElse elseActions){
         List<PRDCondition> prdSubConditions = prdCondition.getPRDCondition();
         List<AbstractConditionAction> objectSubConditions = new ArrayList<>();
         AbstractConditionAction conditionToAdd;
 
         for(PRDCondition prdSubCondition : prdSubConditions){
-            conditionToAdd = getSingleOrMultiple()
+            conditionToAdd = getAbstractConditionToBuildMultiple(prdSubCondition,expressionConverterAndValidator);
+            objectSubConditions.add(conditionToAdd);
         }
+
+        return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(),prdCondition.getValue(), thenActions, elseActions, prdCondition.getLogical(), objectSubConditions);
     }
 
     private AbstractConditionAction getAbstractConditionToBuildMultiple(PRDCondition prdCondition, ExpressionConverterAndValidator expressionConverterAndValidator){
         AbstractConditionAction ret = null;
 
-        // TODO continue this.
         try {
             if (prdCondition.getSingularity().equals("single")) {
                 ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(null, prdCondition, prdCondition.getValue()), null, null, prdCondition.getOperator());
             } else if (prdCondition.getSingularity().equals("multiple")) {
-                ret = new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdCondition.getValue()), null, null, prdCondition.getLogical());
+                ret = getMultipleConditionObject(prdCondition, expressionConverterAndValidator,null,null);
             } else {
                 throw new ExpressionConversionException();
             }
         } catch (ExpressionConversionException e) {
-            validator.addErrorToList(prdCondition, "PRDCondition", "Condition action is not single or multiple.");
+            validator.addErrorToList(prdCondition, "", "Condition action is not single or multiple.");
         }
 
         return ret;

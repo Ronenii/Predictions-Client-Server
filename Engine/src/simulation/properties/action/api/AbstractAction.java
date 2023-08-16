@@ -27,11 +27,6 @@ public abstract class AbstractAction implements Action{
     }
 
     @Override
-    public int hashCode() {
-        return property.length() * type.name().length() * contextEntity.length();
-    }
-
-    @Override
     public boolean equals(Object obj) {
         Action toCompare = (AbstractAction) obj;
         return (toCompare.getType().equals(this.type)) && (toCompare.getContextEntity().equals(this.contextEntity)) && (toCompare.getProperty().equals(this.property));

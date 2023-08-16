@@ -191,31 +191,47 @@ public class PRDValidator extends Validator {
     }
 
     public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities) throws PRDObjectConversionException {
-        validatePRDConditionAndPRDCalculation(prdAction);
+        validatePRDCalculation(prdAction);
+        if (prdAction.getType().equals("condition")){
+            validatePRDCondition(prdAction.getPRDCondition(), prdAction.getPRDThen(), false);
+        }
         validatePRDActionEntityAndProperty(prdAction, entities);
     }
 
-    private void validatePRDConditionAndPRDCalculation(PRDAction prdAction) throws PRDObjectConversionException {
-        PRDCondition prdCondition;
-
+    private void validatePRDCalculation(PRDAction prdAction) throws PRDObjectConversionException {
         if (prdAction.getType().equals("calculation")) {
             if (prdAction.getPRDMultiply() == null && prdAction.getPRDDivide() == null) {
                 addErrorToListAndThrowException(prdAction, "", "The given calculation type does not contain multiply or divide actions.");
             }
         }
+    }
 
-        if (prdAction.getType().equals("condition")) {
-            prdCondition = prdAction.getPRDCondition();
-            if (prdCondition == null) {
-                addErrorToListAndThrowException(prdAction, "", "The given action type is 'condition' and does not contain 'condition' object.");
+
+    private void validatePRDCondition(PRDCondition prdCondition, PRDThen prdThen, boolean isSubCondition) throws PRDObjectConversionException {
+
+        if (prdCondition == null) {
+            addErrorToListAndThrowException("PRDCondition", "", "The given action type is 'condition' and does not contain 'condition' object.");
+        }
+
+        if(prdCondition.getLogical() == null && prdCondition.getOperator() == null) {
+            addErrorToListAndThrowException(prdCondition, "", "The given condition type does not contain logical/operator.");
+        }
+
+        if (!prdCondition.getSingularity().equals("single") && !prdCondition.getSingularity().equals("multiple")) {
+            addErrorToListAndThrowException(prdCondition, "", "The given condition type does not contain singularity.");
+        }
+
+        if(!isSubCondition && prdThen == null){
+            addErrorToListAndThrowException(prdCondition, "", "The given condition type does not 'then' actions.");
+        }
+
+        if(prdCondition.getSingularity().equals("multiple")){
+            if (prdCondition.getPRDCondition().size() != 2) {
+                addErrorToListAndThrowException(prdCondition, "", "The given multiple condition does not contain 2 sub conditions.");
             }
 
-            if (!prdCondition.getSingularity().equals("single") && !prdCondition.getSingularity().equals("multiple")) {
-                addErrorToListAndThrowException(prdAction, "", "The given condition type does not contain singularity.");
-            }
-
-            if(prdAction.getPRDThen() == null){
-                addErrorToListAndThrowException(prdAction, "", "The given condition type does not 'then' actions.");
+            for(PRDCondition subPRDCondition : prdCondition.getPRDCondition()) {
+                validatePRDCondition(subPRDCondition, null, true);
             }
         }
     }

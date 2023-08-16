@@ -24,13 +24,14 @@ public class ExpressionConverterAndValidator extends Validator {
     }
 
     /**
-     * Analyze the value string from the PRDAction, in case the given string represent a function, a property or just a regular value.
+     * Analyze the value string from the PRDAction or PRDCondition (in multiple cases) in case the given string represent a function, a property or just a regular value.
      * The method also checks whether the object matches the property's value type and the action's type.
      * if yes, the method return the requested object
      * Otherwise, an exception thrown in order to stop this action object creation.
      *
-     * @param prdAction the given PRDTAction generated from reading the XML file
+     * @param prdAction the given PRDTAction generated from reading the XML file, if the purpose is to create the value from the prdCondition, this param will set to null
      * @param prdValueStr the given value name from the given PRDTAction generated from reading the XML file.
+     * @param prdCondition the given PRDCondition generated from reading the XML file, if the purpose is to create the value from the prdAction, this param will set to null
      * The name sent separately in order to analyze the two arguments of 'Calculation' action too.
      * @return the value requested object.
      */
