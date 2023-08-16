@@ -61,23 +61,25 @@ public class ExpressionConverterAndValidator extends Validator {
     private Object getObjectIfFunction(String prdValueStr){
         String functionName = getFucntionName(prdValueStr);
         Object ret = null;
-        try{
-            switch (HelperFunctionsType.valueOf(functionName)){
-                case ENVIRONMENT:
-                    ret = StaticHelperFunctions.environment(getFunctionParam(prdValueStr), environmentProperties);
-                case RANDOM:
-                    ret = StaticHelperFunctions.random(Integer.parseInt(getFunctionParam(prdValueStr)));
-                case EVALUATE:
-                    ret = null;
-                case PERCENT:
-                    ret = null;
-                case TICKS:
-                    ret = null;
+        if(functionName != null){
+            try{
+                switch (HelperFunctionsType.valueOf(functionName)){
+                    case ENVIRONMENT:
+                        ret = StaticHelperFunctions.environment(getFunctionParam(prdValueStr), environmentProperties);
+                    case RANDOM:
+                        ret = StaticHelperFunctions.random(Integer.parseInt(getFunctionParam(prdValueStr)));
+                    case EVALUATE:
+                        ret = null;
+                    case PERCENT:
+                        ret = null;
+                    case TICKS:
+                        ret = null;
+                }
             }
-        }
-        catch (Exception e) {
-            // Value is not a function
-            ret = null;
+            catch (Exception e) {
+                // Value is not a function
+                ret = null;
+            }
         }
 
         return ret;
@@ -91,10 +93,17 @@ public class ExpressionConverterAndValidator extends Validator {
      * @param prdValueStr the PRDAction value string.
      * @return the requested property if exists.
      */
-    private Property getIfProperty(PRDAction prdAction, String prdValueStr) {
+    private Object getIfProperty(PRDAction prdAction, String prdValueStr) {
         String entityName = prdAction.getEntity();
         Entity entity = entities.get(entityName);
-        return entity.getProperties().get(prdValueStr);
+        Property property = entity.getProperties().get(prdValueStr);
+        Object ret = null;
+
+        if(property != null){
+            ret = property.getValue();
+        }
+
+        return ret;
     }
 
     /**
@@ -223,7 +232,7 @@ public class ExpressionConverterAndValidator extends Validator {
      * 'compareActionValueToGivenPropertyValue' helper for integer or double actions/properties.
      */
     private boolean compareIntegerOrDoubleCase(PRDAction prdAction){
-        String actionType = prdAction.getType(), entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
+        String actionType = prdAction.getType().toUpperCase(), entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
@@ -236,7 +245,7 @@ public class ExpressionConverterAndValidator extends Validator {
         }
 
         propertyType = entity.getProperties().get(propertyName).getType();
-        if ((!propertyType.name().equals("INT")) && (!propertyType.name().equals("DOUBLE"))){
+        if ((!propertyType.name().equals("DECIMAL")) && (!propertyType.name().equals("FLOAT"))){
             addErrorToList(entity.getProperties().get(propertyName), propertyType.name(), "The property value type doesn't match the action value type");
             ret= false;
         }

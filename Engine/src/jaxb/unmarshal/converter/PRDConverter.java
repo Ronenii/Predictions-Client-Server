@@ -343,17 +343,11 @@ public class PRDConverter {
      * @return an Action representation of PRDAction.
      */
     private Action PRDAction2Action(PRDAction prdAction) {
-        try {
-            validator.validatePRDAction(prdAction, entities);
-        } catch (PRDObjectConversionException e) {
-            return null;
-        }
-
         Action ret = null;
         ExpressionConverterAndValidator expressionConverterAndValidator = new ExpressionConverterAndValidator(environmentProperties, entities);
 
         try {
-            switch (ActionType.valueOf(prdAction.getType())) {
+            switch (ActionType.valueOf(prdAction.getType().toUpperCase())) {
                 case INCREASE:
                     ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getBy()));
                     break;
@@ -496,14 +490,16 @@ public class PRDConverter {
      * @return an Activation representation of PRDActivation.
      */
     private Activation PRDActivation2Activation(PRDActivation prdActivation, PRDRule prdRule) {
-        try {
-            validator.validatePRDActivation(prdActivation, prdRule);
-        } catch (PRDObjectConversionException e) {
-            return null;
+        Integer ticks = prdActivation.getTicks();
+        Double probability = prdActivation.getProbability();
+
+        if(ticks == null){
+            ticks = 1;
         }
 
-        int ticks = prdActivation.getTicks();
-        double probability = prdActivation.getProbability();
+        if (probability == null){
+            probability = 1.0;
+        }
 
         return new Activation(ticks, probability);
     }

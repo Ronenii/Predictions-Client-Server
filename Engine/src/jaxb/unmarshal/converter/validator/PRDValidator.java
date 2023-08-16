@@ -101,7 +101,7 @@ public class PRDValidator extends Validator {
         if (!prdProperty.getPRDValue().isRandomInitialize() && prdProperty.getPRDValue().getInit().isEmpty()) {
             addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "A non random initialized property must contain an init value.");
 
-            // TODO: We need to validate that when we access isRandomInitialize() and getInit() that they are not null
+
         } else if (prdProperty.getPRDValue().isRandomInitialize() && prdProperty.getPRDValue().getInit() != null) {
             addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "A random initialized property cannot contain an init value.");
         }
@@ -162,10 +162,12 @@ public class PRDValidator extends Validator {
      * @param prdActivation the PRDActivation we are validating
      */
     private void validatePRDActivationTicks(PRDActivation prdActivation, PRDRule prdRule) throws PRDObjectConversionException {
-        int ticks = prdActivation.getTicks();
+        Integer ticks = prdActivation.getTicks();
 
-        if (ticks < 0) {
-            addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Ticks cannot be negative.");
+        if(ticks != null){
+            if (ticks < 0) {
+                addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Ticks cannot be negative.");
+            }
         }
     }
 
@@ -175,10 +177,12 @@ public class PRDValidator extends Validator {
      * @param prdActivation the PRDActivation we are validating
      */
     private void validatePRDActivationProbability(PRDActivation prdActivation, PRDRule prdRule) throws PRDObjectConversionException {
-        double probability = prdActivation.getProbability();
+        Double probability = prdActivation.getProbability();
 
-        if (probability < 0 || probability > 1) {
-            addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Probability must be between 0 & 1.");
+        if(probability != null){
+            if (probability < 0 || probability > 1) {
+                addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Probability must be between 0 & 1.");
+            }
         }
     }
 
