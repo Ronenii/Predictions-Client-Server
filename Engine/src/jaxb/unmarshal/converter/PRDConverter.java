@@ -349,7 +349,8 @@ public class PRDConverter {
         try {
             switch (ActionType.valueOf(prdAction.getType().toUpperCase())) {
                 case INCREASE:
-                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getBy()));
+                    Object meow = expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, prdAction.getBy());
+                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), meow);
                     break;
                 case DECREASE:
                     ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getBy()));
@@ -361,7 +362,7 @@ public class PRDConverter {
                     ret = getSingleOrMultiple(prdAction, expressionConverterAndValidator);
                     break;
                 case SET:
-                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()));
+                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, prdAction.getValue()));
                     break;
                 case KILL:
                     ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
@@ -394,11 +395,11 @@ public class PRDConverter {
         // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
         try {
             if (mul != null) {
-                ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg1()),
-                        expressionConverterAndValidator.analyzeAndGetValue(prdAction, mul.getArg2()), ClaculationType.MULTIPLY);
+                ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, mul.getArg1()),
+                        expressionConverterAndValidator.analyzeAndGetValue(prdAction,null, mul.getArg2()), ClaculationType.MULTIPLY);
             } else if (div != null) {
-                ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg1()),
-                        expressionConverterAndValidator.analyzeAndGetValue(prdAction, div.getArg2()), ClaculationType.DIVIDE);
+                ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, div.getArg1()),
+                        expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, div.getArg2()), ClaculationType.DIVIDE);
             } else {
                 validator.addErrorToList(prdAction, prdAction.getType(), "Calculation action is not Multiply or Divide");
                 throw new ExpressionConversionException();
@@ -418,23 +419,53 @@ public class PRDConverter {
     private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator) {
         AbstractConditionAction ret = null;
         PRDCondition prdCondition = prdAction.getPRDCondition();
-        ThenOrElse thenActions = null, elseActions = null;
+        ThenOrElse thenActions, elseActions;
         // Then and else objects are created in this method.
-        getAndCreateThenOrElse(prdAction, thenActions, elseActions);
+        thenActions = getAndCreateThenOrElse(prdAction,true);
+        elseActions = getAndCreateThenOrElse(prdAction,false);
 
         try {
             if (prdCondition.getSingularity().equals("single")) {
-                ret = new SingleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getOperator());
+                ret = new SingleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, prdAction.getValue()), thenActions, elseActions, prdCondition.getOperator());
             } else if (prdCondition.getSingularity().equals("multiple")) {
                 ret = new MultipleCondition(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdAction.getValue()), thenActions, elseActions, prdCondition.getLogical());
             } else {
-                validator.addErrorToList(prdAction, prdAction.getType(), "Condition action is not single or multiple.");
                 throw new ExpressionConversionException();
             }
         } catch (ExpressionConversionException e) {
-            validator.addErrorToList(prdAction, prdAction.getType(), expressionConverterAndValidator.getErrorList());
+            validator.addErrorToList(prdAction, prdAction.getType(), "Condition action is not single or multiple.");
         }
 
+
+        return ret;
+    }
+
+    private MultipleCondition getMultipleConditionObject(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator, ThenOrElse thenActions, ThenOrElse elseActions){
+        PRDCondition prdCondition = prdAction.getPRDCondition();
+        List<PRDCondition> prdSubConditions = prdCondition.getPRDCondition();
+        List<AbstractConditionAction> objectSubConditions = new ArrayList<>();
+        AbstractConditionAction conditionToAdd;
+
+        for(PRDCondition prdSubCondition : prdSubConditions){
+            conditionToAdd = getSingleOrMultiple()
+        }
+    }
+
+    private AbstractConditionAction getAbstractConditionToBuildMultiple(PRDCondition prdCondition, ExpressionConverterAndValidator expressionConverterAndValidator){
+        AbstractConditionAction ret = null;
+
+        // TODO continue this.
+        try {
+            if (prdCondition.getSingularity().equals("single")) {
+                ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(null, prdCondition, prdCondition.getValue()), null, null, prdCondition.getOperator());
+            } else if (prdCondition.getSingularity().equals("multiple")) {
+                ret = new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, prdCondition.getValue()), null, null, prdCondition.getLogical());
+            } else {
+                throw new ExpressionConversionException();
+            }
+        } catch (ExpressionConversionException e) {
+            validator.addErrorToList(prdCondition, "PRDCondition", "Condition action is not single or multiple.");
+        }
 
         return ret;
     }
@@ -444,23 +475,27 @@ public class PRDConverter {
      * According to the XML file, if one of them has no actions to invoke, the object remains null.
      *
      * @param prdAction   the given PRDAction generated from reading the XML file
-     * @param thenActions empty ThenOrElse object to be created.
-     * @param elseActions empty ThenOrElse object to be created.
+     * @param thenOrElse  if true, the method creates an object from prdThen, otherwise from prdElse
      */
-    private void getAndCreateThenOrElse(PRDAction prdAction, ThenOrElse thenActions, ThenOrElse elseActions) {
+    private ThenOrElse getAndCreateThenOrElse(PRDAction prdAction, boolean thenOrElse) {
         // 'getThenOrElseActionSet' creates the Set of Actions for them both.
         // Because 'PRDThen' and 'PRDElse' are different objects, when we want to create the set for 'Then'
         // we send null for 'prdElse', same for Else.
-        Set<Action> thenActionsSet = getThenOrElseActionSet(prdAction.getPRDThen(), null);
-        Set<Action> elseActionsSet = getThenOrElseActionSet(null, prdAction.getPRDElse());
+        ThenOrElse ret = null;
 
-        if (!thenActionsSet.isEmpty()) {
-            thenActions = new ThenOrElse(thenActionsSet);
+        if(thenOrElse){
+            Set<Action> thenActionsSet = getThenOrElseActionSet(prdAction.getPRDThen(), null);
+            if (thenActionsSet != null) {
+                ret = new ThenOrElse(thenActionsSet);
+            }
         }
-
-        if (!elseActionsSet.isEmpty()) {
-            elseActions = new ThenOrElse(elseActionsSet);
+        else {
+            Set<Action> elseActionsSet = getThenOrElseActionSet(null, prdAction.getPRDElse());
+            if (elseActionsSet != null) {
+                ret = new ThenOrElse(elseActionsSet);
+            }
         }
+       return ret;
     }
 
     /**
@@ -490,8 +525,13 @@ public class PRDConverter {
      * @return an Activation representation of PRDActivation.
      */
     private Activation PRDActivation2Activation(PRDActivation prdActivation, PRDRule prdRule) {
-        Integer ticks = prdActivation.getTicks();
-        Double probability = prdActivation.getProbability();
+        Integer ticks = null;
+        Double probability = null;
+
+        if(prdActivation != null){
+            ticks = prdActivation.getTicks();
+            probability = prdActivation.getProbability();
+        }
 
         if(ticks == null){
             ticks = 1;

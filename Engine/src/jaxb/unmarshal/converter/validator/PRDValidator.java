@@ -162,11 +162,13 @@ public class PRDValidator extends Validator {
      * @param prdActivation the PRDActivation we are validating
      */
     private void validatePRDActivationTicks(PRDActivation prdActivation, PRDRule prdRule) throws PRDObjectConversionException {
-        Integer ticks = prdActivation.getTicks();
+        if(prdActivation != null){
+            Integer ticks = prdActivation.getTicks();
 
-        if(ticks != null){
-            if (ticks < 0) {
-                addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Ticks cannot be negative.");
+            if(ticks != null){
+                if (ticks < 0) {
+                    addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Ticks cannot be negative.");
+                }
             }
         }
     }
@@ -177,11 +179,13 @@ public class PRDValidator extends Validator {
      * @param prdActivation the PRDActivation we are validating
      */
     private void validatePRDActivationProbability(PRDActivation prdActivation, PRDRule prdRule) throws PRDObjectConversionException {
-        Double probability = prdActivation.getProbability();
+        if(prdActivation != null){
+            Double probability = prdActivation.getProbability();
 
-        if(probability != null){
-            if (probability < 0 || probability > 1) {
-                addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Probability must be between 0 & 1.");
+            if(probability != null){
+                if (probability < 0 || probability > 1) {
+                    addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Probability must be between 0 & 1.");
+                }
             }
         }
     }
@@ -209,17 +213,29 @@ public class PRDValidator extends Validator {
             if (!prdCondition.getSingularity().equals("single") && !prdCondition.getSingularity().equals("multiple")) {
                 addErrorToListAndThrowException(prdAction, "", "The given condition type does not contain singularity.");
             }
+
+            if(prdAction.getPRDThen() == null){
+                addErrorToListAndThrowException(prdAction, "", "The given condition type does not 'then' actions.");
+            }
         }
     }
 
     private void validatePRDActionEntityAndProperty(PRDAction prdAction, Map<String, Entity> entities) throws PRDObjectConversionException {
         String entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
+        boolean multipleFlag = true;
 
         if (!entities.containsKey(entityName)) {
             addErrorToListAndThrowException(prdAction, "", "The given action's entity doesn't exist.");
         } else { // Can be done only if the given entity exists.
             Map<String, Property> properties = entities.get(entityName).getProperties();
-            if (!properties.containsKey(propertyName)) {
+            if(prdAction.getType().equals("condition") && prdAction.getPRDCondition().getSingularity().equals("single")){
+                propertyName = prdAction.getPRDCondition().getProperty();
+            }
+            else {
+                multipleFlag = false;
+            }
+
+            if (multipleFlag && !properties.containsKey(propertyName)) {
                 addErrorToListAndThrowException(prdAction, "", "The given action's entity doesn't possess this given property.");
             }
         }

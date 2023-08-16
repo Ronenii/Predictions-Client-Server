@@ -34,16 +34,16 @@ public class ExpressionConverterAndValidator extends Validator {
      * The name sent separately in order to analyze the two arguments of 'Calculation' action too.
      * @return the value requested object.
      */
-    public Object analyzeAndGetValue(PRDAction prdAction, String prdValueStr) throws ExpressionConversionException {
+    public Object analyzeAndGetValue(PRDAction prdAction, PRDCondition prdCondition, String prdValueStr) throws ExpressionConversionException {
         Object value;
         value = getObjectIfFunction(prdValueStr);
         if(value == null){
-            value = getIfProperty(prdAction, prdValueStr);
+            value = getIfProperty(prdAction, prdCondition, prdValueStr);
         }
         if(value == null){
             value = parseValue(prdValueStr);
         }
-        if(!compareActionValueToGivenPropertyValue(prdAction, value)){
+        if(!compareActionValueToGivenPropertyValue(prdAction, prdCondition, value)){
             // validation error occurred.
             throw new ExpressionConversionException();
         }
@@ -63,17 +63,22 @@ public class ExpressionConverterAndValidator extends Validator {
         Object ret = null;
         if(functionName != null){
             try{
-                switch (HelperFunctionsType.valueOf(functionName)){
+                switch (HelperFunctionsType.valueOf(functionName.toUpperCase())){
                     case ENVIRONMENT:
                         ret = StaticHelperFunctions.environment(getFunctionParam(prdValueStr), environmentProperties);
+                        break;
                     case RANDOM:
                         ret = StaticHelperFunctions.random(Integer.parseInt(getFunctionParam(prdValueStr)));
+                        break;
                     case EVALUATE:
                         ret = null;
+                        break;
                     case PERCENT:
                         ret = null;
+                        break;
                     case TICKS:
                         ret = null;
+                        break;
                 }
             }
             catch (Exception e) {
@@ -93,8 +98,16 @@ public class ExpressionConverterAndValidator extends Validator {
      * @param prdValueStr the PRDAction value string.
      * @return the requested property if exists.
      */
-    private Object getIfProperty(PRDAction prdAction, String prdValueStr) {
-        String entityName = prdAction.getEntity();
+    private Object getIfProperty(PRDAction prdAction, PRDCondition prdCondition, String prdValueStr) {
+        String entityName;
+
+        if(prdCondition == null){
+            entityName = prdAction.getEntity();
+        }
+        else {
+            entityName = prdCondition.getEntity();
+        }
+
         Entity entity = entities.get(entityName);
         Property property = entity.getProperties().get(prdValueStr);
         Object ret = null;
@@ -212,17 +225,17 @@ public class ExpressionConverterAndValidator extends Validator {
      * @param value the action value object.
      * @return true if the object complete the checks successfully, otherwise return false.
      */
-    private boolean compareActionValueToGivenPropertyValue(PRDAction prdAction, Object value){
+    private boolean compareActionValueToGivenPropertyValue(PRDAction prdAction, PRDCondition prdCondition, Object value){
         boolean ret = true;
 
         if (value instanceof Integer) {
-            ret = compareIntegerOrDoubleCase(prdAction);
+            ret = compareIntegerOrDoubleCase(prdAction, prdCondition);
         } else if (value instanceof Double) {
-            ret = compareIntegerOrDoubleCase(prdAction);
+            ret = compareIntegerOrDoubleCase(prdAction, prdCondition);
         } else if (value instanceof Boolean) {
-            ret = compareBooleanCase(prdAction);
+            ret = compareBooleanCase(prdAction, prdCondition);
         } else if (value instanceof String) {
-            ret = compareStringCase(prdAction);
+            ret = compareStringCase(prdAction, prdCondition);
         }
 
         return ret;
@@ -231,8 +244,20 @@ public class ExpressionConverterAndValidator extends Validator {
     /**
      * 'compareActionValueToGivenPropertyValue' helper for integer or double actions/properties.
      */
-    private boolean compareIntegerOrDoubleCase(PRDAction prdAction){
-        String actionType = prdAction.getType().toUpperCase(), entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
+    private boolean compareIntegerOrDoubleCase(PRDAction prdAction, PRDCondition prdCondition){
+        String actionType, entityName, propertyName;
+
+        if(prdCondition == null){
+            actionType = prdAction.getType().toUpperCase();
+            entityName = prdAction.getEntity();
+            propertyName = prdAction.getProperty();
+        }
+        else {
+            actionType = ActionType.CONDITION.toString();
+            entityName = prdCondition.getEntity();
+            propertyName = prdCondition.getProperty();
+        }
+
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
@@ -256,12 +281,23 @@ public class ExpressionConverterAndValidator extends Validator {
     /**
      * 'compareActionValueToGivenPropertyValue' helper for boolean actions/properties.
      */
-    private boolean compareBooleanCase(PRDAction prdAction){
-        String actionType = prdAction.getType(), entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
+    private boolean compareBooleanCase(PRDAction prdAction, PRDCondition prdCondition){
+        String actionType, entityName, propertyName;
+
+        if(prdCondition == null){
+            actionType = prdAction.getType().toUpperCase();
+            entityName = prdAction.getEntity();
+            propertyName = prdAction.getProperty();
+        }
+        else {
+            actionType = ActionType.CONDITION.toString();
+            entityName = prdCondition.getEntity();
+            propertyName = prdCondition.getProperty();
+        }
+
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
-        PRDCondition prdCondition;
         boolean ret = true;
 
         if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION) {
@@ -270,7 +306,6 @@ public class ExpressionConverterAndValidator extends Validator {
         }
 
         if(type == ActionType.CONDITION){
-            prdCondition = prdAction.getPRDCondition();
             if(prdCondition.getSingularity().equals("single") && (prdCondition.getOperator().equals("bt") || prdCondition.getOperator().equals("lt"))){
                 addErrorToList(prdAction, prdAction.getValue(), "Condition operator type not allowed");
                 ret = false;
@@ -289,8 +324,20 @@ public class ExpressionConverterAndValidator extends Validator {
     /**
      * 'compareActionValueToGivenPropertyValue' helper for String actions/properties.
      */
-    private boolean compareStringCase(PRDAction prdAction){
-        String actionType = prdAction.getType(), entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
+    private boolean compareStringCase(PRDAction prdAction, PRDCondition prdCondition){
+        String actionType, entityName, propertyName;
+
+        if(prdCondition == null){
+            actionType = prdAction.getType().toUpperCase();
+            entityName = prdAction.getEntity();
+            propertyName = prdAction.getProperty();
+        }
+        else {
+            actionType = ActionType.CONDITION.toString();
+            entityName = prdCondition.getEntity();
+            propertyName = prdCondition.getProperty();
+        }
+
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
