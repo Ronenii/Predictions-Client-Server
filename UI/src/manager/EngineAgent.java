@@ -14,6 +14,7 @@ import engine2ui.simulation.result.ResultData;
 import ui2engine.simulation.func1.DTOFirstFunction;
 
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Responsible for UI communication with the Engine module. Sends data to the Engine, receives results from Engine accordingly,
