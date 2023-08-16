@@ -1,9 +1,9 @@
 package engine2ui.simulation.prview;
 
-import engine2ui.simulation.genral.HasList;
-import engine2ui.simulation.prview.objects.DTOEntity;
-import engine2ui.simulation.prview.properties.DTOEndingCondition;
-import engine2ui.simulation.prview.properties.DTORule;
+import engine2ui.simulation.genral.api.HasList;
+import engine2ui.simulation.genral.impl.objects.DTOEntity;
+import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
+import engine2ui.simulation.genral.impl.properties.DTORule;
 
 import java.util.List;
 

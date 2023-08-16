@@ -1,4 +1,4 @@
-package engine2ui.simulation.prview.properties;
+package engine2ui.simulation.genral.impl.properties;
 
 public class DTOEndingCondition {
     private final String type;

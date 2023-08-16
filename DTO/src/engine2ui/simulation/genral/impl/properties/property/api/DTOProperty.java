@@ -1,4 +1,4 @@
-package engine2ui.simulation.prview.properties.property.api;
+package engine2ui.simulation.genral.impl.properties.property.api;
 
 abstract public class DTOProperty {
     private final String name;

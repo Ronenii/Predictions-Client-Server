@@ -1,6 +1,6 @@
 package engine2ui.simulation.start;
 
-import engine2ui.simulation.genral.HasList;
+import engine2ui.simulation.genral.api.HasList;
 
 import java.util.List;
 
