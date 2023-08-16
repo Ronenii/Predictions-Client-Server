@@ -34,6 +34,12 @@ public abstract class AbstractProperty implements Property {
     }
 
     @Override
+    public void updateValueAndIsRandomInit(Object value, boolean isRandomInit) {
+        this.value = value;
+        this.isRandInit = isRandomInit;
+    }
+
+    @Override
     public Boolean isRandInit() {
         return isRandInit;
     }

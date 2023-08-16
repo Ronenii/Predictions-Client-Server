@@ -1,5 +1,8 @@
 package manager;
 
+import engine2ui.simulation.start.StartData;
+import ui2engine.simulation.func3.DTOThirdFunction;
+
 import engine2ui.simulation.result.ResultData;
 import ui2engine.simulation.func1.DTOFirstFunction;
 
@@ -12,5 +15,7 @@ public interface EngineInterface {
 
     void loadSimulationFromFile(DTOFirstFunction dto);
 
-    void runSimulation();
+    void runSimulation(DTOThirdFunction dtoThirdFunction);
+
+    StartData getSimulationStartData();
 }

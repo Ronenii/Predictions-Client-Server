@@ -11,6 +11,10 @@ public class StartData implements HasList {
         this.environmentVariables = environmentVariables;
     }
 
+    public List<DTOEnvironmentVariable> getEnvironmentVariables() {
+        return environmentVariables;
+    }
+
     public void addEnvironmentVariable(DTOEnvironmentVariable environmentVariable) {
         environmentVariables.add(environmentVariable);
     }
