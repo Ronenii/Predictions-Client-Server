@@ -1,11 +1,12 @@
 package manager;
 
 import display.Console;
+import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.start.StartData;
 import input.Input;
+import manager.options.ResultDisplayOptions;
 import ui2engine.simulation.func3.DTOThirdFunction;
-import ui2engine.simulation.func3.user.input.EnvPropertyUserInput;
 import validator.ui.exceptions.IllegalBooleanValueException;
 import validator.ui.exceptions.IllegalStringValueException;
 import validator.ui.exceptions.OutOfRangeException;
@@ -70,20 +71,19 @@ public class EngineAgent {
      * @param startData The DTO object from the engine that contains information about the environment properties.
      * @return a DTOThirdFunction object to send to the engine.
      */
-    private DTOThirdFunction createDTOThirdFunctionObject(StartData startData){
+    private DTOThirdFunction createDTOThirdFunctionObject(StartData startData) {
         List<DTOEnvironmentVariable> environmentVariables = startData.getEnvironmentVariables();
         DTOThirdFunction ret = new DTOThirdFunction();
         Object valueToSend;
         String input;
 
         Console.showThirdFuncFirstMessage();
-        for(DTOEnvironmentVariable dtoEnvironmentVariable : environmentVariables){
+        for (DTOEnvironmentVariable dtoEnvironmentVariable : environmentVariables) {
             Console.showEnvPropertyDet(dtoEnvironmentVariable);
             input = Input.getInput();
-            if (input.equals("\n")){
-                ret.updateEnvPropertyUserInputs(dtoEnvironmentVariable.getName(),getIsRandomInit(null), null);
-            }
-            else {
+            if (input.equals("\n")) {
+                ret.updateEnvPropertyUserInputs(dtoEnvironmentVariable.getName(), getIsRandomInit(null), null);
+            } else {
                 valueToSend = tryToParse(input, dtoEnvironmentVariable);
                 ret.updateEnvPropertyUserInputs(dtoEnvironmentVariable.getName(), getIsRandomInit(valueToSend), valueToSend);
             }
@@ -95,10 +95,10 @@ public class EngineAgent {
     /**
      * Return true if the value is null, that's how the engine would know to random a value for a specific environment property.
      */
-    private boolean getIsRandomInit(Object value){
+    private boolean getIsRandomInit(Object value) {
         boolean ret = false;
 
-        if(value == null){
+        if (value == null) {
             ret = true;
         }
 
@@ -109,26 +109,26 @@ public class EngineAgent {
      * Try to parse the input value from the user and check if the input is valid for the given environment property.
      * If the input value is not valid, the user will try to enter new value.
      *
-     * @param value the user input.
+     * @param value                  the user input.
      * @param dtoEnvironmentVariable a DTO object represent an environment property.
      * @return the given value parsed.
      */
-    private Object tryToParse(String value, DTOEnvironmentVariable dtoEnvironmentVariable){
+    private Object tryToParse(String value, DTOEnvironmentVariable dtoEnvironmentVariable) {
         InputValidator inputValidator = new InputValidator();
         boolean valueIsNotValid = true;
         Object ret = null;
 
         while (valueIsNotValid) {
             // If after an error the user decide to random initialize the value.
-            if(value.equals("\n")) {
+            if (value.equals("\n")) {
                 break;
             }
 
-            try{
-                switch (dtoEnvironmentVariable.getType()){
+            try {
+                switch (dtoEnvironmentVariable.getType()) {
                     case "int":
                         int integerValue = Integer.parseInt(value);
-                        inputValidator.isIntegerInRange(integerValue, (int)dtoEnvironmentVariable.getFrom(), (int)dtoEnvironmentVariable.getTo());
+                        inputValidator.isIntegerInRange(integerValue, (int) dtoEnvironmentVariable.getFrom(), (int) dtoEnvironmentVariable.getTo());
                         ret = integerValue;
                         break;
                     case "double":
@@ -152,15 +152,14 @@ public class EngineAgent {
                 Console.printGivenMessage(e.getMessage());
             } catch (OutOfRangeException e) {
                 Console.printGivenMessage("The number is out of the property range! Please try again.");
-            } catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 Console.printGivenMessage("The number type doesn't match the property's value type! Please try again.");
             } catch (IllegalBooleanValueException e) {
                 Console.printGivenMessage("Thr property's value type is boolean! Please try again.");
-            }
-            finally { // If an error occurred, the user will enter a new input.
-              if(valueIsNotValid){
-                  value = Input.getInput();
-              }
+            } finally { // If an error occurred, the user will enter a new input.
+                if (valueIsNotValid) {
+                    value = Input.getInput();
+                }
             }
         }
 
@@ -173,21 +172,53 @@ public class EngineAgent {
      * Prompts the user to choose a simulation he wants to see the full details of (Based on ID).
      * Shows the user's chosen simulation details.
      */
-    public void showPastSimulations() {
+    public void MenuOption4() {
         ResultData[] pastSimulationsResultData = engine.getPastSimulationResultData();
         Console.showShortDetailsOfAllPastSimulations(pastSimulationsResultData);
 
-        System.out.print("\nChoose the no. of a past run you would like to view: ");
-
-        //TODO: PLACEHOLDER INPUT GETTER FROM USER
-        Scanner scanner = new Scanner(System.in);
-        int userInput = Integer.parseInt(scanner.nextLine());
-
-        if(userInput >= 1 && userInput <= pastSimulationsResultData.length)
-        {
-            Console.printResultData(pastSimulationsResultData[userInput -1]);
+        // Break out if there is no sim data to display.
+        if (pastSimulationsResultData.length == 0) {
+            return;
         }
 
-        //TODO: PLACEHOLDER INPUT GETTER FROM USER
+        // If there is only one simulation, there is no need to ask the user what simulation
+        // he wants to display.
+        else if (pastSimulationsResultData.length == 1) {
+            Console.printResultData(pastSimulationsResultData[0]);
+        }
+
+        // Get user input for the simulation run he wants to display.
+        // Get user input on how he wants to display it.
+        // Display the user chosen simulation run, in the way he chose it.
+        else {
+            int simResultNumber = Input.getIntInputForListedItem("Choose the simulation you wish to display",pastSimulationsResultData.length);
+            chooseHowToDisplayResult((pastSimulationsResultData[simResultNumber - 1]));
+        }
+    }
+
+    private void chooseHowToDisplayResult(ResultData resultData) {
+        Console.printResultDisplayOptionsMenu();
+        int input = Input.getIntInputForListedItem("Choose you display preference", ResultDisplayOptions.values().length);
+        ResultDisplayOptions resultDisplayOption = ResultDisplayOptions.values()[input-1];
+
+        switch (resultDisplayOption){
+            case QUANTITY:
+                Console.printEntityPopulations(resultData.getEntities());
+                break;
+            case HISTOGRAM:
+                getEntityAndPrintPropertyHistogram(resultData.getEntities());
+                break;
+        }
+    }
+
+    private void getEntityAndPrintPropertyHistogram(DTOEntity[] entities)
+    {
+        Console.printEntityNames(entities);
+        int entityNumber = Input.getIntInputForListedItem("Choose the entity you wish to display", entities.length);
+
+        Console.printEntityProperties(entities[entityNumber-1]);
+        int propertyNumber = Input.getIntInputForListedItem("Choose the property you wish to see a histogram of", entities[entityNumber-1].getProperties().length);
+
+        // TODO: find out how to display a histogram of a property.
     }
 }

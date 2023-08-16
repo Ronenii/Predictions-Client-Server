@@ -1,6 +1,5 @@
 package manager;
 
-import com.sun.xml.internal.ws.util.ReadAllStream;
 import display.Console;
 import manager.options.MenuOptions;
 
@@ -74,7 +73,7 @@ public class UI {
                 engineAgent.runSimulation();
                 break;
             case SHOW_PAST_SIMULATIONS:
-                engineAgent.showPastSimulations();
+                engineAgent.MenuOption4();
                 break;
             case EXIT:
                 exit = true;

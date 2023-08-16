@@ -34,6 +34,23 @@ public class DTOEntity {
 //        addProperty(new NonRangedDTOProperty(name, type, isRandomInit));
 //    }
 
+
+    public String getName() {
+        return name;
+    }
+
+    public int getStartingPopulation() {
+        return startingPopulation;
+    }
+
+    public int getEndingPopulation() {
+        return endingPopulation;
+    }
+
+    public DTOProperty[] getProperties() {
+        return properties;
+    }
+
     @Override
     public String toString() {
         return String.format("Name: %s\n", name) +

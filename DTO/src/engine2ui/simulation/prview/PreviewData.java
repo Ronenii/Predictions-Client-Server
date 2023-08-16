@@ -1,6 +1,5 @@
 package engine2ui.simulation.prview;
 
-import engine2ui.simulation.genral.api.HasList;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
 import engine2ui.simulation.genral.impl.properties.DTORule;
@@ -10,7 +9,7 @@ import java.util.List;
 /**
  * A class that holds the simulation's data required to present in menu option 2.
  */
-public class PreviewData implements HasList{
+public class PreviewData{
     private final List<DTOEntity> entities;
     private final List<DTORule> rules;
     private final List<DTOEndingCondition> endingConditions;
@@ -39,37 +38,5 @@ public class PreviewData implements HasList{
 
     public void addEndingCondition(String type, int count) {
         endingConditions.add(new DTOEndingCondition(type, count));
-    }
-
-    /**
-     * @param list the list we wish to format
-     * @param title the list's type but as a formatted string and not camel case
-     * @param <T> the list's type.
-     * @return the formatted list string as follows:
-     *
-     * ### 'TITLE' ###
-     *
-     * #1
-     * list(0).toString()
-     *
-     * #2
-     * list(1).toString()
-     *
-     * ...
-     */
-    private <T> String formatListWithTitle(List<T> list, String title){
-        return String.format("### %s ###\n", title.toUpperCase()) + formatListToString(list);
-    }
-
-
-    @Override
-    public String toString() {
-        String ret = "";
-
-        formatListWithTitle(entities, "ENTITIES");
-        formatListWithTitle(rules, "RULES");
-        formatListWithTitle(endingConditions, "ENDING CONDITIONS");
-
-        return ret;
     }
 }

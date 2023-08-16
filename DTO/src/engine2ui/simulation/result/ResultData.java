@@ -85,6 +85,10 @@ public class ResultData {
         return dtf.format(dateTime);
     }
 
+    public DTOEntity[] getEntities() {
+        return entities;
+    }
+
     public String getId() {
         return id;
     }
