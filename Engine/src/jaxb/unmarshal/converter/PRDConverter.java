@@ -10,6 +10,7 @@ import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException
 import jaxb.unmarshal.converter.validator.PRDValidator;
 import jaxb.unmarshal.converter.value.initializer.ValueInitializer;
 import simulation.objects.entity.Entity;
+import simulation.properties.action.impl.condition.*;
 import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.rule.Rule;
 import simulation.objects.world.World;
@@ -21,10 +22,6 @@ import simulation.properties.action.impl.KillAction;
 import simulation.properties.action.impl.SetAction;
 import simulation.properties.action.impl.calculation.CalculationAction;
 import simulation.properties.action.impl.calculation.ClaculationType;
-import simulation.properties.action.impl.condition.AbstractConditionAction;
-import simulation.properties.action.impl.condition.MultipleCondition;
-import simulation.properties.action.impl.condition.SingleCondition;
-import simulation.properties.action.impl.condition.ThenOrElse;
 import simulation.properties.activition.Activation;
 import simulation.properties.ending.conditions.EndingCondition;
 import simulation.properties.property.api.Property;
@@ -421,7 +418,7 @@ public class PRDConverter {
         thenActions = getAndCreateThenOrElse(prdAction,true);
         elseActions = getAndCreateThenOrElse(prdAction,false);
         if (prdCondition.getSingularity().equals("single")) {
-            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, prdCondition.getOperator(), prdCondition.getValue());
+            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getOperator()), prdCondition.getValue());
         } else if (prdCondition.getSingularity().equals("multiple")) {
             ret = getMultipleConditionObject(prdCondition,thenActions,elseActions);
         }
@@ -452,7 +449,7 @@ public class PRDConverter {
         AbstractConditionAction ret = null;
 
         if (prdCondition.getSingularity().equals("single")) {
-            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), null, null, prdCondition.getOperator(), prdCondition.getValue());
+            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), null, null, ConditionOperator.tryParse(prdCondition.getOperator()), prdCondition.getValue());
         } else if (prdCondition.getSingularity().equals("multiple")) {
             ret = getMultipleConditionObject(prdCondition, null, null);
         }
