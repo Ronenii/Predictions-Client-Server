@@ -9,6 +9,9 @@ import simulation.properties.property.random.value.impl.DoubleRndValueGen;
 import simulation.properties.property.random.value.impl.IntRndValueGen;
 import simulation.properties.property.random.value.impl.StringRndValueGen;
 
+/**
+ * This class parse strings values or generate random values (according to the 'isRandomInit' flag) for the properties values.
+ */
 public class ValueInitializer {
 
     public static int integerInitial(String value, boolean isRandomInit, int from, int to) throws ValueOutOfRangeException {

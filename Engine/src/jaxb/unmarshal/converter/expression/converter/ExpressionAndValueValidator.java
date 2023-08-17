@@ -23,6 +23,14 @@ public class ExpressionAndValueValidator extends Validator {
         this.entities = entities;
     }
 
+    /**
+     * Analyze the value string from the PRDProperty.
+     * The method checks whether the object matches the property's value type.
+     * If not, return false
+     *
+     * @param prdProperty the given PRDProperty generated from reading the XML file
+     * @return return true if the value match the property type, otherwise return false.
+     */
     public boolean isPRDPropertyValueMatchItsType(PRDProperty prdProperty){
         String prdPropertyValue = prdProperty.getPRDValue().getInit(), prdPropertyType = prdProperty.getType().toUpperCase(), givenValueType;
         boolean ret = true;
@@ -39,15 +47,13 @@ public class ExpressionAndValueValidator extends Validator {
 
     /**
      * Analyze the value string from the PRDAction or PRDCondition in case the given string represent a function, a property or just a regular value.
-     * The method also checks whether the object matches the property's value type and the action's type.
-     * if yes, the method return the requested object
-     * Otherwise, an exception thrown in order to stop this action object creation.
+     * The method checks whether the object matches the property's value type and the action's type.
+     * If not, an exception thrown in order to stop this action object creation.
      *
      * @param prdAction the given PRDTAction generated from reading the XML file, if the purpose is to create the value from the prdCondition, this param will set to null
      * @param prdValueStr the given value name from the given PRDTAction generated from reading the XML file.
      * @param prdCondition the given PRDCondition generated from reading the XML file, if the purpose is to create the value from the prdAction, this param will set to null
-     * The name sent separately in order to analyze the two arguments of 'Calculation' action too.
-     * @return the value requested object.
+     * The name sent separately in order to analyze the two arguments of 'Calculation' action too..
      */
     public void isPRDActionValueMatchItsPropertyType(PRDAction prdAction, PRDCondition prdCondition, String prdValueStr) throws ExpressionConversionException {
         String valueType;
@@ -69,7 +75,7 @@ public class ExpressionAndValueValidator extends Validator {
      * If the value is not a function name, the return value will be null.
      *
      * @param prdValueStr the PRDAction value string.
-     * @return the return value from the function if exists.
+     * @return the return value type from the function if exists.
      */
     private String getObjectTypeIfFunction(String prdValueStr, PRDAction prdAction, PRDCondition prdCondition){
         String functionName = getFucntionName(prdValueStr);
@@ -123,7 +129,7 @@ public class ExpressionAndValueValidator extends Validator {
      *
      * @param prdAction the given PRDTAction generated from reading the XML file
      * @param prdValueStr the PRDAction value string.
-     * @return the requested property if exists.
+     * @return the requested property value type
      */
     private String getTypeIfProperty(PRDAction prdAction, PRDCondition prdCondition, String prdValueStr) {
         String entityName;
@@ -148,7 +154,7 @@ public class ExpressionAndValueValidator extends Validator {
 
     /**
      * If 'analyzeAndGetValue' enter this method, the given value from the XML is not a function or a property.
-     * This method parse the string to one of the following types: Integer, Double, Boolean or String.
+     * This method parse the string to one of the following types: Integer, Double, Boolean or String ant return the result type.
      *
      * @param prdValueStr the PRDAction value string.
      * @return the given value string parse into one of the four types.

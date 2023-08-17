@@ -32,6 +32,11 @@ public class ActionValueInitializer {
         this.entities = entities;
     }
 
+    /**
+     * Receive a list of rule's actions and initial each action's value by using the context value from the XML file.
+     *
+     * @param actions a list of specific rule's actions
+     */
     public void initializeValues(List<Action> actions){
         UpdateObject updateObject;
         Property property;
@@ -53,6 +58,9 @@ public class ActionValueInitializer {
         }
     }
 
+    /**
+     * Handling the value initialize of a single condition object, including the then/else actions.
+     */
     private void setSingleCase(SingleCondition condition){
         UpdateObject updateObject;
         Property property;
@@ -70,6 +78,9 @@ public class ActionValueInitializer {
         condition.updateValue(updateObject);
     }
 
+    /**
+     * Handling the value initialize of a multiple condition object, including the then/else actions.
+     */
     private void setMultipleCase(MultipleCondition condition) {
         List<AbstractConditionAction> subConditions = condition.getSubConditions();
         ThenOrElse thenActions = condition.getThenActions(), elseActions = condition.getElseActions();
@@ -91,6 +102,9 @@ public class ActionValueInitializer {
         }
     }
 
+    /**
+     * Handling the value initialize of a calculation condition object.
+     */
     private void setCalculationCase(CalculationAction action) {
         String obj1 = (String)action.getArg1(), obj2 = (String)action.getArg2();
         Property property = entities.get(action.getContextEntity()).getProperties().get(action.getProperty());
@@ -118,7 +132,7 @@ public class ActionValueInitializer {
     }
 
     /**
-     * Check if the PRDAction value is a function name and return the value type of the given function.
+     * Check if the valueStr value is a function name and return the value type of the given function.
      * If the value is not a function name, the return value will be null.
      *
      * @param valueStr the PRDAction value string.
@@ -189,7 +203,7 @@ public class ActionValueInitializer {
     }
 
     /**
-     * Check if the PRDAction value is a property name and return the property value object.
+     * Check if the valueStr value is a property name and return the property value object.
      * If the value is not a property name, the return value will be null.
      *
      * @param valueStr the PRDAction value string.
@@ -207,6 +221,9 @@ public class ActionValueInitializer {
         return ret;
     }
 
+    /**
+     * Parse 'valueStr' according to the property type.
+     */
     private Object parseValue(String valueStr, PropertyType type){
         Object ret = null;
 

@@ -270,6 +270,10 @@ public class PRDConverter {
         return ret;
     }
 
+
+    /**
+     * Parse the property value or generates a random value according to the 'isRandomInit' flag.
+     */
     private Object parseOrRandomValue(PropertyType type, String value, boolean isRandomInit, Double from, Double to) throws ValueOutOfRangeException, InvalidBooleanValueException, InvalidStringValueException {
         Object ret = null;
 
@@ -425,6 +429,9 @@ public class PRDConverter {
         return ret;
     }
 
+    /**
+     * Build the multiple condition object and its sub condition objects.
+     */
     private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ThenOrElse thenActions, ThenOrElse elseActions){
         List<PRDCondition> prdSubConditions = prdCondition.getPRDCondition();
         List<AbstractConditionAction> objectSubConditions = new ArrayList<>();
@@ -438,6 +445,9 @@ public class PRDConverter {
         return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, prdCondition.getLogical(), objectSubConditions, null);
     }
 
+    /**
+     * 'getMultipleConditionObject' helper, build any kind of the condition objects.
+     */
     private AbstractConditionAction getAbstractConditionToBuildMultiple(PRDCondition prdCondition){
         AbstractConditionAction ret = null;
 
