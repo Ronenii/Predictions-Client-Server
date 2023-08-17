@@ -2,22 +2,31 @@ package simulation.objects.entity;
 
 import simulation.properties.property.api.Property;
 
+import java.util.List;
 import java.util.Map;
 
 public class Entity {
 
-    private final int population;
+    private final int startingPopulation;
+    private int currentPopulation;
     private final String name;
     private final Map<String, Property> properties;
 
-    public Entity(int population, String name, Map<String, Property> properties) {
-        this.population = population;
+    private List<EntityInstance> entityInstances;
+
+    public Entity(int startingPopulation, String name, Map<String, Property> properties) {
+        this.startingPopulation = startingPopulation;
         this.name = name;
         this.properties = properties;
+        this.currentPopulation = startingPopulation;
+
+        for (int i = 0; i < this.startingPopulation; i++) {
+            entityInstances.add(new EntityInstance(properties.values().toArray(new Property[0])));
+        }
     }
 
-    public int getPopulation() {
-        return population;
+    public int getStartingPopulation() {
+        return startingPopulation;
     }
 
     public String getName() {
@@ -32,7 +41,7 @@ public class Entity {
     public String toString() {
         StringBuilder entityToString = new StringBuilder("Entity{" +
                 "Name='" + name + '\'' +
-                ", Population=" + population +
+                ", Population=" + startingPopulation +
                 ",Properties=[");
         for (Property p : properties.values()
         ) {
@@ -47,15 +56,23 @@ public class Entity {
         return entityToString.toString();
     }
 
+    public int getCurrentPopulation() {
+        return currentPopulation;
+    }
+
+    public void setCurrentPopulation(int currentPopulation) {
+        this.currentPopulation = currentPopulation;
+    }
+
     @Override
     public int hashCode() {
-        return name.length() * population * properties.size();
+        return name.length() * startingPopulation * properties.size();
     }
 
     @Override
     public boolean equals(Object obj) {
         Entity toCompare = (Entity) obj;
 
-        return toCompare.getName().equals(this.name) && toCompare.getPopulation() == this.population && toCompare.getProperties().equals(this.properties);
+        return toCompare.getName().equals(this.name) && toCompare.getStartingPopulation() == this.startingPopulation && toCompare.getProperties().equals(this.properties);
     }
 }
