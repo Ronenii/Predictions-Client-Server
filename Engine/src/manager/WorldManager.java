@@ -81,7 +81,7 @@ public class WorldManager implements EngineInterface {
         fetchSimulationActionsValues();
 
         // run the simulation.
-        this.world.invoke();
+       // this.world.invoke();
         // TODO : add the simulation result data to 'pastSimulations' and return to the UI these results.
     }
 

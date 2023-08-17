@@ -75,9 +75,15 @@ public class EngineAgent {
         DTOThirdFunction ret = new DTOThirdFunction();
         Object valueToSend;
         String input;
-        //TODO: add in the console, print the range.
-        Console.showThirdFuncFirstMessage();
+        //TODO: add validation, check if the user enter a number and check if the number is in the range.
+
         for (DTOEnvironmentVariable dtoEnvironmentVariable : environmentVariables) {
+            if(dtoEnvironmentVariable.getType().equals("decimal") || dtoEnvironmentVariable.getType().equals("float")){
+                Console.showThirdFuncFirstMessage(dtoEnvironmentVariable.getFrom(),dtoEnvironmentVariable.getTo(), true);
+            }
+            else {
+                Console.showThirdFuncFirstMessage(dtoEnvironmentVariable.getFrom(),dtoEnvironmentVariable.getTo(), false);
+            }
             Console.showEnvPropertyDet(dtoEnvironmentVariable);
             input = Input.getInput();
             if (input.equals("\n")) {
