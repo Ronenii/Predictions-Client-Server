@@ -401,9 +401,9 @@ public class PRDConverter {
 
         // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
         if (mul != null) {
-            ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), mul.getArg1(), mul.getArg2(), ClaculationType.MULTIPLY, null);
+            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), mul.getArg1(), mul.getArg2(), ClaculationType.MULTIPLY, null);
         } else if (div != null) {
-            ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), div.getArg1(), div.getArg2(), ClaculationType.DIVIDE, null);
+            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), div.getArg1(), div.getArg2(), ClaculationType.DIVIDE, null);
         } else {
             validator.addErrorToList(prdAction, prdAction.getType(), "Calculation action is not Multiply or Divide");
         }
