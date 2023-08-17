@@ -173,8 +173,8 @@ public class Console {
      */
     private static void printEntityDetails(DTOEntity entity) {
         System.out.printf("%s\n", entity.getName().toUpperCase());
-        System.out.printf("%s starting population: %s\n",entity.getName(), entity.getStartingPopulation());
-        System.out.printf("%s population when simulation ended: %s\n", entity.getName(),entity.getEndingPopulation());
+        System.out.printf("%s starting population: %s\n", entity.getName(), entity.getStartingPopulation());
+        System.out.printf("%s population when simulation ended: %s\n", entity.getName(), entity.getEndingPopulation());
     }
 
     /**
@@ -194,7 +194,7 @@ public class Console {
         printTitle(String.format("%s'S PROPERTIES", entity.getName().toUpperCase()));
         DTOProperty[] properties = entity.getProperties();
         for (int i = 1; i <= properties.length; i++) {
-            System.out.printf("#%s %s-%s\n", i, properties[i - 1].getName(), properties[i - 1].getType());
+            System.out.printf("# %s %s: %s\n", i, properties[i - 1].getType().toUpperCase(), properties[i - 1].getName());
         }
     }
 }
