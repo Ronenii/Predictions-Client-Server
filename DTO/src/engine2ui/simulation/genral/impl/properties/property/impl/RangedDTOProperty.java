@@ -1,7 +1,7 @@
-package engine2ui.simulation.prview.properties.property.impl;
+package engine2ui.simulation.genral.impl.properties.property.impl;
 
-import engine2ui.simulation.prview.properties.property.api.DTOProperty;
-import engine2ui.simulation.prview.properties.property.api.RangedProperty;
+import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
+import engine2ui.simulation.genral.impl.properties.property.api.RangedProperty;
 
 public class RangedDTOProperty extends DTOProperty implements RangedProperty {
     private final double from;

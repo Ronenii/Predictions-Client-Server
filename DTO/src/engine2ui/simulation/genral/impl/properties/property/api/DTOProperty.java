@@ -1,4 +1,4 @@
-package engine2ui.simulation.prview.properties.property.api;
+package engine2ui.simulation.genral.impl.properties.property.api;
 
 abstract public class DTOProperty {
     private final String name;
@@ -9,6 +9,14 @@ abstract public class DTOProperty {
         this.name = name;
         this.type = type;
         this.isRandomInit = isRandomInit;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getType() {
+        return type;
     }
 
     @Override
