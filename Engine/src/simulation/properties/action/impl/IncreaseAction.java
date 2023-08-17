@@ -21,6 +21,11 @@ public class IncreaseAction extends AbstractAction {
     }
 
     @Override
+    public Object getValue() {
+        return value;
+    }
+
+    @Override
     public void Invoke(EntityInstance entityInstance) {
         Property toIncrease = entityInstance.getPropertyByName(getContextProperty());
         switch (toIncrease.getType())

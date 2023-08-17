@@ -19,6 +19,11 @@ public class SetAction extends AbstractAction {
         OneObjectUpdate oneObjectUpdate = (OneObjectUpdate)updateObject;
         value = oneObjectUpdate.getObjectForUpdate();
     }
+
+    @Override
+    public Object getValue() {
+        return value;
+    }
     @Override
     public void Invoke(EntityInstance entityInstance) {
         Property toSet = entityInstance.getPropertyByName(getContextProperty());

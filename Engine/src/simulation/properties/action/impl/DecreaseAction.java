@@ -21,6 +21,11 @@ public class DecreaseAction extends AbstractAction {
     }
 
     @Override
+    public Object getValue() {
+        return value;
+    }
+
+    @Override
     public void Invoke(EntityInstance entityInstance) {
         Property toDecrease = entityInstance.getPropertyByName(getContextProperty());
         switch (toDecrease.getType())

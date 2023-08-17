@@ -31,6 +31,11 @@ public abstract class AbstractConditionAction extends AbstractAction {
         return elseActions;
     }
 
+    @Override
+    public Object getValue() {
+        return value;
+    }
+
     public void updateValue(Object value){
         this.value = value;
     }

@@ -35,6 +35,11 @@ public class CalculationAction extends AbstractAction {
     }
 
     @Override
+    public Object getValue() {
+        return null;
+    }
+
+    @Override
     public void Invoke(EntityInstance entityInstance) {
         Property toSet = entityInstance.getPropertyByName(getContextProperty());
 

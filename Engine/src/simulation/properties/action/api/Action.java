@@ -14,6 +14,8 @@ public interface Action {
 
     String getContextValue();
 
+    Object getValue();
+
     void Invoke(EntityInstance entityInstance);
 
 }
