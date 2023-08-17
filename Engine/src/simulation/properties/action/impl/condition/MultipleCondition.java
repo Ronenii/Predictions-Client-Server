@@ -14,6 +14,14 @@ public class MultipleCondition extends AbstractConditionAction{
         this.subConditions = conditions;
     }
 
+    public String getLogical() {
+        return logical;
+    }
+
+    public List<AbstractConditionAction> getSubConditions() {
+        return subConditions;
+    }
+
     @Override
     public void Invoke() {
 

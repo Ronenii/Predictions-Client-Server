@@ -1,5 +1,7 @@
 package simulation.properties.action.impl;
 
+import manager.value.update.object.api.UpdateObject;
+import manager.value.update.object.impl.OneObjectUpdate;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 
@@ -10,10 +12,11 @@ public class SetAction extends AbstractAction {
         super(ActionType.SET, property, contextEntity, contextValue);
     }
 
-    public void updateValue(Object value){
-        this.value = value;
+    @Override
+    public void updateValue(UpdateObject updateObject) {
+        OneObjectUpdate oneObjectUpdate = (OneObjectUpdate)updateObject;
+        value = oneObjectUpdate.getObjectForUpdate();
     }
-
     @Override
     public void Invoke() {
         // TODO: implementation.

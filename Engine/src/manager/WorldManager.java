@@ -4,7 +4,9 @@ import engine2ui.simulation.result.ResultData;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.start.StartData;
 import jaxb.unmarshal.Reader;
+import manager.value.initializer.ActionValueInitializer;
 import simulation.objects.world.World;
+import simulation.properties.rule.Rule;
 import ui2engine.simulation.func1.DTOFirstFunction;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
@@ -76,6 +78,9 @@ public class WorldManager implements EngineInterface {
     public void runSimulation(DTOThirdFunction dtoThirdFunction) {
         // fetch the user data input into the simulation's environment properties.
         fetchDTOThirdFunctionObject(dtoThirdFunction);
+        // fetch the actions values from context value to the requested value..
+        fetchSimulationActionsValues();
+
         // run the simulation.
         this.world.invoke();
         // TODO : add the simulation result data to 'pastSimulations' and return to the UI these results.
@@ -135,6 +140,13 @@ public class WorldManager implements EngineInterface {
 
         return ret;
     }
+
+    private void fetchSimulationActionsValues() {
+        ActionValueInitializer actionValueInitializer = new ActionValueInitializer(world.getEnvironmentProperties(), world.getEntities());
+
+        world.getRules().forEach((key,value) -> actionValueInitializer.initializeValues(value.getActions()));
+    }
+
 
     /**
      * Create and return the DTO start data which contains information about the simulation's environment variables.

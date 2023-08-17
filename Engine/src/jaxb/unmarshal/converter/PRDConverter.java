@@ -157,8 +157,8 @@ public class PRDConverter {
      * @param prdActions the given PRDAction list to extract the actions from.
      * @return All Successfully converted actions
      */
-    private Set<Action> getActionsFromPRDActionsList(List<PRDAction> prdActions) {
-        Set<Action> actions = new HashSet<>();
+    private List<Action> getActionsFromPRDActionsList(List<PRDAction> prdActions) {
+        List<Action> actions = new ArrayList<>();
         Action actionToAdd;
 
         for (PRDAction action : prdActions) {
@@ -331,7 +331,7 @@ public class PRDConverter {
 
         String name = prdRule.getName();
         Activation activation = PRDActivation2Activation(prdRule.getPRDActivation(), prdRule);
-        Set<Action> actions;
+        List<Action> actions;
 
         actions = getActionsFromPRDActionsList(prdRule.getPRDActions().getPRDAction());
 
@@ -463,13 +463,13 @@ public class PRDConverter {
         ThenOrElse ret = null;
 
         if(thenOrElse){
-            Set<Action> thenActionsSet = getThenOrElseActionSet(prdAction.getPRDThen(), null);
+            List<Action> thenActionsSet = getThenOrElseActionSet(prdAction.getPRDThen(), null);
             if (thenActionsSet != null) {
                 ret = new ThenOrElse(thenActionsSet);
             }
         }
         else {
-            Set<Action> elseActionsSet = getThenOrElseActionSet(null, prdAction.getPRDElse());
+            List<Action> elseActionsSet = getThenOrElseActionSet(null, prdAction.getPRDElse());
             if (elseActionsSet != null) {
                 ret = new ThenOrElse(elseActionsSet);
             }
@@ -485,8 +485,8 @@ public class PRDConverter {
      * @param prdElse the given PRDElse generated from reading the XML file
      * @return a Set of actions representation of the given PRDThen or PRDElse.
      */
-    private Set<Action> getThenOrElseActionSet(PRDThen prdThen, PRDElse prdElse) {
-        Set<Action> ret = null;
+    private List<Action> getThenOrElseActionSet(PRDThen prdThen, PRDElse prdElse) {
+        List<Action> ret = null;
 
         if (prdThen != null) {
             ret = getActionsFromPRDActionsList(prdThen.getPRDAction());

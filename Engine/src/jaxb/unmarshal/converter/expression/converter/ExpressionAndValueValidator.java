@@ -5,7 +5,7 @@ import jaxb.schema.generated.PRDCondition;
 import jaxb.schema.generated.PRDProperty;
 import jaxb.unmarshal.converter.api.Validator;
 import jaxb.unmarshal.converter.expression.converter.exception.ExpressionConversionException;
-import jaxb.unmarshal.converter.functions.HelperFunctionsType;
+import manager.value.functions.HelperFunctionsType;
 import simulation.objects.entity.Entity;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.property.api.Property;
@@ -65,7 +65,7 @@ public class ExpressionAndValueValidator extends Validator {
     }
 
     /**
-     * Check if the PRDAction value is a function name and return the value from the given function.
+     * Check if the PRDAction value is a function name and return the value type of the given function.
      * If the value is not a function name, the return value will be null.
      *
      * @param prdValueStr the PRDAction value string.
@@ -118,7 +118,7 @@ public class ExpressionAndValueValidator extends Validator {
     }
 
     /**
-     * Check if the PRDAction value is a property name and return the property object.
+     * Check if the PRDAction value is a property name and return the property value type.
      * If the value is not a property name, the return value will be null.
      *
      * @param prdAction the given PRDTAction generated from reading the XML file
