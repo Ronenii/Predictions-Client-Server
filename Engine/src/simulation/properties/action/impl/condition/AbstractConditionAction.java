@@ -1,18 +1,37 @@
 package simulation.properties.action.impl.condition;
 
+import manager.value.update.object.api.UpdateObject;
+import manager.value.update.object.impl.OneObjectUpdate;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 
 
 public abstract class AbstractConditionAction extends AbstractAction {
-    private final Object value;
+    private Object value;
     private final ThenOrElse thenActions;
     private final ThenOrElse elseActions;
 
-    public AbstractConditionAction(String property, String contextEntity, Object value, ThenOrElse thenActions, ThenOrElse elseActions) {
-        super(ActionType.CONDITION, property, contextEntity);
-        this.value = value;
+    public AbstractConditionAction(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, String contextValue) {
+        super(ActionType.CONDITION, property, contextEntity, contextValue);
         this.thenActions = thenActions;
         this.elseActions = elseActions;
+    }
+
+    @Override
+    public void updateValue(UpdateObject updateObject) {
+        OneObjectUpdate oneObjectUpdate = (OneObjectUpdate)updateObject;
+        value = oneObjectUpdate.getObjectForUpdate();
+    }
+
+    public ThenOrElse getThenActions() {
+        return thenActions;
+    }
+
+    public ThenOrElse getElseActions() {
+        return elseActions;
+    }
+
+    public void updateValue(Object value){
+        this.value = value;
     }
 }

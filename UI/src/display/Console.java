@@ -3,10 +3,9 @@ package display;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
-
 import engine2ui.simulation.result.ResultData;
-
 import java.util.Arrays;
+
 
 /**
  * A class designated entirely for printing the relevant text of the program.
@@ -77,7 +76,7 @@ public class Console {
         // TODO: Implement this
     }
 
-    public static void printGivenMessage(String message) {
+    public static void printGivenMessage(String message){
         System.out.println(message);
     }
 

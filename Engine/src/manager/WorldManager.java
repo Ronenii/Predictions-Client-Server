@@ -4,10 +4,11 @@ import engine2ui.simulation.result.ResultData;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.start.StartData;
 import jaxb.unmarshal.Reader;
+import manager.value.initializer.ActionValueInitializer;
 import simulation.objects.world.World;
+import ui2engine.simulation.func1.DTOFirstFunction;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
-import simulation.properties.property.impl.BooleanProperty;
 import simulation.properties.property.impl.DoubleProperty;
 import simulation.properties.property.impl.IntProperty;
 import simulation.properties.property.random.value.api.RandomValueGenerator;
@@ -17,11 +18,9 @@ import simulation.properties.property.random.value.impl.IntRndValueGen;
 import simulation.properties.property.random.value.impl.StringRndValueGen;
 import ui2engine.simulation.func3.DTOThirdFunction;
 import ui2engine.simulation.func3.user.input.EnvPropertyUserInput;
-import ui2engine.simulation.func1.DTOFirstFunction;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.sql.ResultSet;
+
 import java.util.*;
 
 public class WorldManager implements EngineInterface {
@@ -78,6 +77,9 @@ public class WorldManager implements EngineInterface {
     public void runSimulation(DTOThirdFunction dtoThirdFunction) {
         // fetch the user data input into the simulation's environment properties.
         fetchDTOThirdFunctionObject(dtoThirdFunction);
+        // fetch the actions values from context value to the requested value..
+        fetchSimulationActionsValues();
+
         // run the simulation.
         this.world.invoke();
         // TODO : add the simulation result data to 'pastSimulations' and return to the UI these results.
@@ -115,12 +117,12 @@ public class WorldManager implements EngineInterface {
         Object ret = null;
 
         switch (envProperty.getType()){
-            case INT:
+            case DECIMAL:
                 IntProperty intProperty = (IntProperty)envProperty;
                 RandomValueGenerator<Integer> randomIntValueGenerator = new IntRndValueGen(intProperty.getFrom(), intProperty.getTo());
                 ret = randomIntValueGenerator.generateRandomValue();
                 break;
-            case DOUBLE:
+            case FLOAT:
                 DoubleProperty doubleProperty = (DoubleProperty)envProperty;
                 RandomValueGenerator<Double> randomDoubleValueGenerator = new DoubleRndValueGen(doubleProperty.getFrom(), doubleProperty.getTo());
                 ret = randomDoubleValueGenerator.generateRandomValue();
@@ -137,6 +139,13 @@ public class WorldManager implements EngineInterface {
 
         return ret;
     }
+
+    private void fetchSimulationActionsValues() {
+        ActionValueInitializer actionValueInitializer = new ActionValueInitializer(world.getEnvironmentProperties(), world.getEntities());
+
+        world.getRules().forEach((key,value) -> actionValueInitializer.initializeValues(value.getActions()));
+    }
+
 
     /**
      * Create and return the DTO start data which contains information about the simulation's environment variables.
@@ -164,11 +173,11 @@ public class WorldManager implements EngineInterface {
         String name = valueFromTheMap.getName(), type = valueFromTheMap.getType().toString().toLowerCase();
         Double from = null, to = null;
 
-        if(valueFromTheMap.getType() == PropertyType.DOUBLE){
+        if(valueFromTheMap.getType() == PropertyType.FLOAT){
             DoubleProperty doubleProperty = (DoubleProperty)valueFromTheMap;
             from = doubleProperty.getFrom();
             to = doubleProperty.getTo();
-        } else if (valueFromTheMap.getType() == PropertyType.INT) {
+        } else if (valueFromTheMap.getType() == PropertyType.DECIMAL) {
             IntProperty intProperty = (IntProperty)valueFromTheMap;
             from = (double)intProperty.getFrom();
             to = (double)intProperty.getTo();

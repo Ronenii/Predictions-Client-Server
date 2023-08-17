@@ -2,6 +2,8 @@ package manager;
 
 import display.Console;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
+import engine2ui.simulation.result.ResultData;
+import ui2engine.simulation.func1.DTOFirstFunction;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.start.StartData;
 import input.Input;
@@ -11,9 +13,6 @@ import validator.ui.exceptions.IllegalBooleanValueException;
 import validator.ui.exceptions.IllegalStringValueException;
 import validator.ui.exceptions.OutOfRangeException;
 import validator.ui.validator.InputValidator;
-import engine2ui.simulation.result.ResultData;
-import ui2engine.simulation.func1.DTOFirstFunction;
-
 import java.util.List;
 import java.util.Scanner;
 
@@ -76,7 +75,7 @@ public class EngineAgent {
         DTOThirdFunction ret = new DTOThirdFunction();
         Object valueToSend;
         String input;
-
+        //TODO: add in the console, print the range.
         Console.showThirdFuncFirstMessage();
         for (DTOEnvironmentVariable dtoEnvironmentVariable : environmentVariables) {
             Console.showEnvPropertyDet(dtoEnvironmentVariable);
@@ -109,7 +108,7 @@ public class EngineAgent {
      * Try to parse the input value from the user and check if the input is valid for the given environment property.
      * If the input value is not valid, the user will try to enter new value.
      *
-     * @param value                  the user input.
+     * @param value the user input.
      * @param dtoEnvironmentVariable a DTO object represent an environment property.
      * @return the given value parsed.
      */

@@ -5,10 +5,9 @@ import simulation.properties.property.api.PropertyType;
 
 public class BooleanProperty extends AbstractProperty {
 
-    public BooleanProperty(String name, boolean isRandInit, boolean value) {
+    public BooleanProperty(String name, boolean isRandInit, Object value) {
         super(name, isRandInit, PropertyType.BOOLEAN, value);
     }
-
 
     /**
      * A constructor for Environment properties
@@ -16,6 +15,11 @@ public class BooleanProperty extends AbstractProperty {
      */
     public BooleanProperty(String name)
     {
-        super(name, false, PropertyType.BOOLEAN, false);
+        super(name, false, PropertyType.BOOLEAN, null);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }

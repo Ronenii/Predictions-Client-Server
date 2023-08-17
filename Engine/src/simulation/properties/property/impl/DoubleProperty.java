@@ -8,7 +8,7 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty {
     private double to;
 
     public DoubleProperty(String name, boolean isRandInit, Object value, double from, double to) {
-        super(name, isRandInit, PropertyType.DOUBLE, value);
+        super(name, isRandInit, PropertyType.FLOAT, value);
         this.from = from;
         this.to = to;
     }
@@ -19,10 +19,11 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty {
      */
     public DoubleProperty(String name, double from, double to)
     {
-        super(name, false, PropertyType.DOUBLE, 0.0);
+        super(name, false, PropertyType.FLOAT, null);
         this.from = from;
         this.to = to;
     }
+
 
     public double getFrom() {
         return from;

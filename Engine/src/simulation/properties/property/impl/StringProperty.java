@@ -14,7 +14,7 @@ public class StringProperty extends AbstractProperty {
      * @param name the property's name
      */
     public StringProperty(String name) {
-        super(name, false, PropertyType.STRING, "");
+        super(name, false, PropertyType.STRING, null);
     }
 
 }

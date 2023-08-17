@@ -4,11 +4,13 @@ public abstract class AbstractAction implements Action{
     private final ActionType type;
     private final String property;
     private final String contextEntity;
+    private final String contextValue;
 
-    public AbstractAction(ActionType type, String property, String contextEntity) {
+    public AbstractAction(ActionType type, String property, String contextEntity, String contextValue) {
         this.type = type;
         this.property = property;
         this.contextEntity = contextEntity;
+        this.contextValue = contextValue;
     }
 
     @Override
@@ -27,8 +29,8 @@ public abstract class AbstractAction implements Action{
     }
 
     @Override
-    public int hashCode() {
-        return property.length() * type.name().length() * contextEntity.length();
+    public String getContextValue() {
+        return this.contextValue;
     }
 
     @Override

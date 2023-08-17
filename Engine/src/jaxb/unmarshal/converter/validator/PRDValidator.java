@@ -2,6 +2,8 @@ package jaxb.unmarshal.converter.validator;
 
 import jaxb.schema.generated.*;
 import jaxb.unmarshal.converter.api.Validator;
+import jaxb.unmarshal.converter.expression.converter.ExpressionAndValueValidator;
+import jaxb.unmarshal.converter.expression.converter.exception.ExpressionConversionException;
 import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException;
 import simulation.objects.entity.Entity;
 import simulation.properties.property.api.Property;
@@ -25,6 +27,15 @@ public class PRDValidator extends Validator {
         validatePRDPropertyDoesntExist(prdProperty, entityProperties);
         validatePRDPropertyRange(prdProperty);
         validatePRDPropertyInitValue(prdProperty);
+        validatePRDPropertyValue(prdProperty);
+    }
+
+    private void validatePRDPropertyValue(PRDProperty prdProperty) throws PRDObjectConversionException {
+        ExpressionAndValueValidator expressionAndValueValidator = new ExpressionAndValueValidator(null, null);
+
+        if(!expressionAndValueValidator.isPRDPropertyValueMatchItsType(prdProperty)) {
+            addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "The given property's value doesn't match the property type.");
+        }
     }
 
     public void validatePRDEnvProperty(PRDEnvProperty prdEnvProperty, Map<String, Property> environmentProperties) throws PRDObjectConversionException {
@@ -48,15 +59,18 @@ public class PRDValidator extends Validator {
      * @param prdEnvProperty the PRDProperty we are validating
      */
     private void validatePRDEnvPropertyRange(PRDEnvProperty prdEnvProperty) throws PRDObjectConversionException {
-        double from = prdEnvProperty.getPRDRange().getFrom();
-        double to = prdEnvProperty.getPRDRange().getTo();
+        if(prdEnvProperty.getType().equals("decimal") || prdEnvProperty.getType().equals("float"))
+        {
+            double from = prdEnvProperty.getPRDRange().getFrom();
+            double to = prdEnvProperty.getPRDRange().getTo();
 
-        if (from < 0.0 || to < 0.0) {
-            addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range contains negative values.");
-        }
+            if (from < 0.0 || to < 0.0) {
+                addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range contains negative values.");
+            }
 
-        if (to <= from) {
-            addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
+            if (to <= from) {
+                addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
+            }
         }
     }
 
@@ -97,7 +111,9 @@ public class PRDValidator extends Validator {
     private void validatePRDPropertyInitValue(PRDProperty prdProperty) throws PRDObjectConversionException {
         if (!prdProperty.getPRDValue().isRandomInitialize() && prdProperty.getPRDValue().getInit().isEmpty()) {
             addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "A non random initialized property must contain an init value.");
-        } else if (prdProperty.getPRDValue().isRandomInitialize() && !prdProperty.getPRDValue().getInit().isEmpty()) {
+
+
+        } else if (prdProperty.getPRDValue().isRandomInitialize() && prdProperty.getPRDValue().getInit() != null) {
             addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "A random initialized property cannot contain an init value.");
         }
     }
@@ -131,16 +147,16 @@ public class PRDValidator extends Validator {
         validatePRDActivationProbability(prdActivation, prdRule);
     }
 
-    public void validatePRDRule(PRDRule prdRule, Map<String, Entity> entities, Map<String, Rule> rules) throws PRDObjectConversionException {
+    public void validatePRDRule(PRDRule prdRule, Map<String, Entity> entities, Map<String, Rule> rules, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
         validateRuleDoesntExist(prdRule, rules);
-        validateAllRuleActions(prdRule, entities);
+        validateAllRuleActions(prdRule, entities, expressionAndValueValidator);
         validatePRDActivation(prdRule.getPRDActivation(), prdRule);
     }
 
-    private void validateAllRuleActions(PRDRule prdRule, Map<String, Entity> entities) throws PRDObjectConversionException {
+    private void validateAllRuleActions(PRDRule prdRule, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
         for (PRDAction a : prdRule.getPRDActions().getPRDAction()
         ) {
-            validatePRDAction(a, entities);
+            validatePRDAction(a, entities, expressionAndValueValidator);
         }
     }
 
@@ -157,10 +173,14 @@ public class PRDValidator extends Validator {
      * @param prdActivation the PRDActivation we are validating
      */
     private void validatePRDActivationTicks(PRDActivation prdActivation, PRDRule prdRule) throws PRDObjectConversionException {
-        int ticks = prdActivation.getTicks();
+        if(prdActivation != null){
+            Integer ticks = prdActivation.getTicks();
 
-        if (ticks < 0) {
-            addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Ticks cannot be negative.");
+            if(ticks != null){
+                if (ticks < 0) {
+                    addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Ticks cannot be negative.");
+                }
+            }
         }
     }
 
@@ -170,47 +190,107 @@ public class PRDValidator extends Validator {
      * @param prdActivation the PRDActivation we are validating
      */
     private void validatePRDActivationProbability(PRDActivation prdActivation, PRDRule prdRule) throws PRDObjectConversionException {
-        double probability = prdActivation.getProbability();
+        if(prdActivation != null){
+            Double probability = prdActivation.getProbability();
 
-        if (probability < 0 || probability > 1) {
-            addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Probability must be between 0 & 1.");
+            if(probability != null){
+                if (probability < 0 || probability > 1) {
+                    addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Probability must be between 0 & 1.");
+                }
+            }
         }
     }
 
-    public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities) throws PRDObjectConversionException {
-        validatePRDConditionAndPRDCalculation(prdAction);
+    public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
+        validatePRDCalculation(prdAction);
+        if (prdAction.getType().equals("condition")){
+            validatePRDCondition(prdAction.getPRDCondition(), prdAction.getPRDThen(), false, expressionAndValueValidator);
+        }
+        else {
+            validatePRDActionValue(prdAction, expressionAndValueValidator);
+        }
         validatePRDActionEntityAndProperty(prdAction, entities);
     }
 
-    private void validatePRDConditionAndPRDCalculation(PRDAction prdAction) throws PRDObjectConversionException {
-        PRDCondition prdCondition;
+    private void validatePRDActionValue(PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
+        try{
+            if(prdAction.getType().equals("increase") || prdAction.getType().equals("decrease")){
+                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction,null, prdAction.getBy());
+            }
+            else {
+                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction,null, prdAction.getValue());
+            }
+        } catch (ExpressionConversionException e) {
+            addErrorToListAndThrowException(prdAction, "", expressionAndValueValidator.getErrorList());
+        }
+    }
 
+    private void validatePRDConditionValue(PRDCondition prdCondition , ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
+        try{
+            expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(null,prdCondition, prdCondition.getValue());
+        } catch (ExpressionConversionException e) {
+            addErrorToListAndThrowException(prdCondition, "", expressionAndValueValidator.getErrorList());
+        }
+    }
+
+    private void validatePRDCalculation(PRDAction prdAction) throws PRDObjectConversionException {
         if (prdAction.getType().equals("calculation")) {
             if (prdAction.getPRDMultiply() == null && prdAction.getPRDDivide() == null) {
                 addErrorToListAndThrowException(prdAction, "", "The given calculation type does not contain multiply or divide actions.");
             }
         }
+    }
 
-        if (prdAction.getType().equals("condition")) {
-            prdCondition = prdAction.getPRDCondition();
-            if (prdCondition == null) {
-                addErrorToListAndThrowException(prdAction, "", "The given action type is 'condition' and does not contain 'condition' object.");
+
+    private void validatePRDCondition(PRDCondition prdCondition, PRDThen prdThen, boolean isSubCondition, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
+
+        if (prdCondition == null) {
+            addErrorToListAndThrowException("PRDCondition", "", "The given action type is 'condition' and does not contain 'condition' object.");
+        }
+
+        if(prdCondition.getSingularity().equals("single")){
+            validatePRDConditionValue(prdCondition, expressionAndValueValidator);
+        }
+
+        if(prdCondition.getLogical() == null && prdCondition.getOperator() == null) {
+            addErrorToListAndThrowException(prdCondition, "", "The given condition type does not contain logical/operator.");
+        }
+
+        if (!prdCondition.getSingularity().equals("single") && !prdCondition.getSingularity().equals("multiple")) {
+            addErrorToListAndThrowException(prdCondition, "", "The given condition type does not contain singularity.");
+        }
+
+        if(!isSubCondition && prdThen == null){
+            addErrorToListAndThrowException(prdCondition, "", "The given condition type does not 'then' actions.");
+        }
+
+        if(prdCondition.getSingularity().equals("multiple")){
+            if (prdCondition.getPRDCondition().size() != 2) {
+                addErrorToListAndThrowException(prdCondition, "", "The given multiple condition does not contain 2 sub conditions.");
             }
 
-            if (!prdCondition.getSingularity().equals("single") && !prdCondition.getSingularity().equals("multiple")) {
-                addErrorToListAndThrowException(prdAction, "", "The given condition type does not contain singularity.");
+            for(PRDCondition subPRDCondition : prdCondition.getPRDCondition()) {
+                validatePRDCondition(subPRDCondition, null, true, expressionAndValueValidator);
             }
         }
     }
 
     private void validatePRDActionEntityAndProperty(PRDAction prdAction, Map<String, Entity> entities) throws PRDObjectConversionException {
         String entityName = prdAction.getEntity(), propertyName = prdAction.getProperty();
+        boolean multipleFlag = true;
 
         if (!entities.containsKey(entityName)) {
             addErrorToListAndThrowException(prdAction, "", "The given action's entity doesn't exist.");
         } else { // Can be done only if the given entity exists.
             Map<String, Property> properties = entities.get(entityName).getProperties();
-            if (!properties.containsKey(propertyName)) {
+            if(prdAction.getType().equals("condition") && prdAction.getPRDCondition().getSingularity().equals("single")){
+                propertyName = prdAction.getPRDCondition().getProperty();
+            }
+            else {
+                multipleFlag = false;
+            }
+
+            if (multipleFlag && !properties.containsKey(propertyName)) {
                 addErrorToListAndThrowException(prdAction, "", "The given action's entity doesn't possess this given property.");
             }
         }

@@ -3,14 +3,15 @@ package simulation.properties.rule;
 import simulation.properties.action.api.Action;
 import simulation.properties.activition.Activation;
 
+import java.util.List;
 import java.util.Set;
 
 public class Rule {
     private final String name;
     private final Activation activation;
-    private final Set<Action> actions;
+    private final List<Action> actions;
 
-    public Rule(String name, Activation activation, Set<Action> actions) {
+    public Rule(String name, Activation activation, List<Action> actions) {
         this.name = name;
         this.activation = activation;
         this.actions = actions;
@@ -24,7 +25,7 @@ public class Rule {
         return activation;
     }
 
-    public Set<Action> getActions() {
+    public List<Action> getActions() {
         return actions;
     }
 

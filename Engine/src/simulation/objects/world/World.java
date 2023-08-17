@@ -12,7 +12,6 @@ public class World {
 
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
-
     private final Map<String, Rule> rules;
     private final Set<EndingCondition> endingConditions;
 
