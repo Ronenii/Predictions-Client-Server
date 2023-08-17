@@ -4,6 +4,7 @@ import simulation.properties.action.api.Action;
 import simulation.properties.activition.Activation;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class Rule {
@@ -56,7 +57,14 @@ public class Rule {
 
     @Override
     public boolean equals(Object obj) {
-        Rule toCompare = (Rule)obj;
+        Rule toCompare = (Rule) obj;
         return toCompare.name.equals(this.name) && toCompare.activation.equals(this.activation) && toCompare.actions.equals(actions);
+    }
+
+    public boolean willInvoke() {
+        Random r = new Random();
+        double value = r.nextDouble();
+
+        return value <= activation.getProbability();
     }
 }

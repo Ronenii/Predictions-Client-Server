@@ -2,8 +2,10 @@ package simulation.properties.action.impl;
 
 import manager.value.update.object.api.UpdateObject;
 import manager.value.update.object.impl.OneObjectUpdate;
+import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
+import simulation.properties.property.api.Property;
 
 public class SetAction extends AbstractAction {
     private Object value;
@@ -18,7 +20,8 @@ public class SetAction extends AbstractAction {
         value = oneObjectUpdate.getObjectForUpdate();
     }
     @Override
-    public void Invoke() {
-        // TODO: implementation.
+    public void Invoke(EntityInstance entityInstance) {
+        Property toSet = entityInstance.getPropertyByName(getContextProperty());
+        toSet.setValue(value);
     }
 }

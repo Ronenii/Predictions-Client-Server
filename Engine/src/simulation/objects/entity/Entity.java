@@ -2,6 +2,7 @@ package simulation.objects.entity;
 
 import simulation.properties.property.api.Property;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class Entity {
         this.currentPopulation = startingPopulation;
 
         for (int i = 0; i < this.startingPopulation; i++) {
-            entityInstances.add(new EntityInstance(properties.values().toArray(new Property[0])));
+            entityInstances.add(new EntityInstance(new HashMap<>(properties)));
         }
     }
 

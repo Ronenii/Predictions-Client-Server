@@ -1,7 +1,5 @@
 package manager.value.initializer;
 
-import jaxb.schema.generated.PRDAction;
-import jaxb.schema.generated.PRDCondition;
 import manager.value.functions.HelperFunctionsType;
 import manager.value.functions.StaticHelperFunctions;
 import manager.value.update.object.api.UpdateObject;
@@ -9,7 +7,6 @@ import manager.value.update.object.impl.OneObjectUpdate;
 import manager.value.update.object.impl.TwoObjectUpdate;
 import simulation.objects.entity.Entity;
 import simulation.properties.action.api.Action;
-import simulation.properties.action.api.ActionType;
 import simulation.properties.action.impl.KillAction;
 import simulation.properties.action.impl.calculation.CalculationAction;
 import simulation.properties.action.impl.condition.AbstractConditionAction;
@@ -50,7 +47,7 @@ public class ActionValueInitializer {
                 } else if (action.getClass() == SingleCondition.class) {
                     setSingleCase((SingleCondition)action);
                 } else {
-                    property = entities.get(action.getContextEntity()).getProperties().get(action.getProperty());
+                    property = entities.get(action.getContextEntity()).getProperties().get(action.getContextProperty());
                     updateObject = new OneObjectUpdate(convertContextValue(action.getContextValue(),property.getType(),action.getContextEntity()));
                     action.updateValue(updateObject);
                 }
@@ -73,7 +70,7 @@ public class ActionValueInitializer {
             initializeValues(elseActions.getActionsToInvoke());
         }
 
-        property = entities.get(condition.getContextEntity()).getProperties().get(condition.getProperty());
+        property = entities.get(condition.getContextEntity()).getProperties().get(condition.getContextProperty());
         updateObject = new OneObjectUpdate(convertContextValue(condition.getContextValue(),property.getType(),condition.getContextEntity()));
         condition.updateValue(updateObject);
     }
@@ -107,7 +104,7 @@ public class ActionValueInitializer {
      */
     private void setCalculationCase(CalculationAction action) {
         String obj1 = (String)action.getArg1(), obj2 = (String)action.getArg2();
-        Property property = entities.get(action.getContextEntity()).getProperties().get(action.getProperty());
+        Property property = entities.get(action.getContextEntity()).getProperties().get(action.getContextProperty());
         UpdateObject updateObject;
         Object arg1, arg2;
 

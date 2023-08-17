@@ -1,18 +1,19 @@
 package simulation.properties.action.api;
 
 import manager.value.update.object.api.UpdateObject;
+import simulation.objects.entity.EntityInstance;
 
 public interface Action {
     ActionType getType();
 
     String getContextEntity();
 
-    String getProperty();
+    String getContextProperty();
 
     void updateValue(UpdateObject updateObject);
 
     String getContextValue();
 
-    void Invoke();
+    void Invoke(EntityInstance entityInstance);
 
 }

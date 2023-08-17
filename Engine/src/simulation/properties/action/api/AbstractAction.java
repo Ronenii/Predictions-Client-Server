@@ -2,13 +2,13 @@ package simulation.properties.action.api;
 
 public abstract class AbstractAction implements Action{
     private final ActionType type;
-    private final String property;
+    private final String contextProperty;
     private final String contextEntity;
     private final String contextValue;
 
     public AbstractAction(ActionType type, String property, String contextEntity, String contextValue) {
         this.type = type;
-        this.property = property;
+        this.contextProperty = property;
         this.contextEntity = contextEntity;
         this.contextValue = contextValue;
     }
@@ -19,8 +19,8 @@ public abstract class AbstractAction implements Action{
     }
 
     @Override
-    public String getProperty() {
-        return property;
+    public String getContextProperty() {
+        return contextProperty;
     }
 
     @Override
@@ -36,6 +36,6 @@ public abstract class AbstractAction implements Action{
     @Override
     public boolean equals(Object obj) {
         Action toCompare = (AbstractAction) obj;
-        return (toCompare.getType().equals(this.type)) && (toCompare.getContextEntity().equals(this.contextEntity)) && (toCompare.getProperty().equals(this.property));
+        return (toCompare.getType().equals(this.type)) && (toCompare.getContextEntity().equals(this.contextEntity)) && (toCompare.getContextProperty().equals(this.contextProperty));
     }
 }

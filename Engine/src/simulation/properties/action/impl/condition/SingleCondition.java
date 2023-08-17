@@ -1,5 +1,7 @@
 package simulation.properties.action.impl.condition;
 
+import simulation.objects.entity.EntityInstance;
+
 public class SingleCondition extends AbstractConditionAction{
     private final String operator;
 
@@ -9,7 +11,7 @@ public class SingleCondition extends AbstractConditionAction{
     }
 
     @Override
-    public void Invoke() {
+    public void Invoke(EntityInstance entityInstance) {
 
     }
 }

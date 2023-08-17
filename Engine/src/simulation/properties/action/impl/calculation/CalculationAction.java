@@ -2,8 +2,10 @@ package simulation.properties.action.impl.calculation;
 
 import manager.value.update.object.api.UpdateObject;
 import manager.value.update.object.impl.TwoObjectUpdate;
+import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
+import simulation.properties.property.api.Property;
 
 public class CalculationAction extends AbstractAction {
     private Object arg1;
@@ -33,7 +35,37 @@ public class CalculationAction extends AbstractAction {
     }
 
     @Override
-    public void Invoke() {
-        // TODO: implementation.
+    public void Invoke(EntityInstance entityInstance) {
+        Property toSet = entityInstance.getPropertyByName(getContextProperty());
+
+        switch (type){
+            case MULTIPLY:
+                multiplyAndSetPropertyValue(toSet);
+                break;
+            case DIVIDE:
+                divideAndSetPropertyValue(toSet);
+                break;
+        }
+    }
+
+    private void multiplyAndSetPropertyValue(Property toSet){
+        switch (toSet.getType()){
+            case DECIMAL:
+                toSet.setValue((int)arg1 * (int)arg2);
+                break;
+            case FLOAT:
+                toSet.setValue((double)arg1 * (double)arg2);
+                break;
+        }
+    }
+    private void divideAndSetPropertyValue(Property toSet){
+        switch (toSet.getType()){
+            case DECIMAL:
+                toSet.setValue((int)arg1 / (int)arg2);
+                break;
+            case FLOAT:
+                toSet.setValue((double)arg1 / (double)arg2);
+                break;
+        }
     }
 }

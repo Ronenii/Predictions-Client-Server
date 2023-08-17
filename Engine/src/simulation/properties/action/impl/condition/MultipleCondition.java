@@ -1,6 +1,8 @@
 package simulation.properties.action.impl.condition;
 
 
+import simulation.objects.entity.EntityInstance;
+
 import java.util.List;
 
 public class MultipleCondition extends AbstractConditionAction{
@@ -23,7 +25,7 @@ public class MultipleCondition extends AbstractConditionAction{
     }
 
     @Override
-    public void Invoke() {
+    public void Invoke(EntityInstance entityInstance) {
 
     }
 }
