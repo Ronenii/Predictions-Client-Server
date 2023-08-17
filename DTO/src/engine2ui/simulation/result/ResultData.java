@@ -67,7 +67,7 @@ public class ResultData {
         childProperties.add(new RangedDTOProperty("lung-cancer-progress", "decimal", false, 0, 100));
         childProperties.add(new RangedDTOProperty("age", "decimal", false, 0, 14));
         childProperties.add(new NonRangedDTOProperty("eating-sugar","boolean", true));
-        entities[1] = new DTOEntity("Child", 50, 45, childProperties.toArray(new DTOProperty[0]));
+        entities[2] = new DTOEntity("Child", 50, 45, childProperties.toArray(new DTOProperty[0]));
 
 
         id = IdGenerator.generateID();

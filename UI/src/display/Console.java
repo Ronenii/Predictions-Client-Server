@@ -160,7 +160,7 @@ public class Console {
         }
 
         System.out.printf("\nTotal population when simulation started: %s\n", totalStartingPopulation);
-        System.out.printf("\nTotal population when simulation ended: %s\n", totalEndingPopulation);
+        System.out.printf("Total population when simulation ended: %s\n", totalEndingPopulation);
     }
 
     /**
@@ -173,8 +173,8 @@ public class Console {
      */
     private static void printEntityDetails(DTOEntity entity) {
         System.out.printf("%s\n", entity.getName().toUpperCase());
-        System.out.printf("%s starting population: %s\n", entity.getStartingPopulation());
-        System.out.printf("%s population when simulation ended: %s\n", entity.getEndingPopulation());
+        System.out.printf("%s starting population: %s\n",entity.getName(), entity.getStartingPopulation());
+        System.out.printf("%s population when simulation ended: %s\n", entity.getName(),entity.getEndingPopulation());
     }
 
     /**
