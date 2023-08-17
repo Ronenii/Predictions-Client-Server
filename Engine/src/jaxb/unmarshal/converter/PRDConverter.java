@@ -186,13 +186,17 @@ public class PRDConverter {
 
         Property ret = null;
         String name = prdEnvProperty.getPRDName();
-        double to = prdEnvProperty.getPRDRange().getTo();
-        double from = prdEnvProperty.getPRDRange().getFrom();
+        Double to = null, from = null;
+
+        if(prdEnvProperty.getType().equals("decimal") || prdEnvProperty.getType().equals("float")){
+            to = prdEnvProperty.getPRDRange().getTo();
+            from = prdEnvProperty.getPRDRange().getFrom();
+        }
 
         try {
             switch (PropertyType.valueOf(prdEnvProperty.getType().toUpperCase())) {
                 case DECIMAL:
-                    ret = new IntProperty(name, (int) from, (int) to);
+                    ret = new IntProperty(name, (int) from.doubleValue(), (int) to.doubleValue());
                     break;
                 case FLOAT:
                     ret = new DoubleProperty(name, from, to);

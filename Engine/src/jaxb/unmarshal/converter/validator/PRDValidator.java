@@ -90,15 +90,17 @@ public class PRDValidator extends Validator {
      * @param prdProperty the PRDProperty we are validating
      */
     private void validatePRDPropertyRange(PRDProperty prdProperty) throws PRDObjectConversionException {
-        double from = prdProperty.getPRDRange().getFrom();
-        double to = prdProperty.getPRDRange().getTo();
+        if(prdProperty.getType().equals("decimal") || prdProperty.getType().equals("float")){
+            double from = prdProperty.getPRDRange().getFrom();
+            double to = prdProperty.getPRDRange().getTo();
 
-        if (from < 0 || to < 0) {
-            addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Range contains negative values.");
-        }
+            if (from < 0 || to < 0) {
+                addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Range contains negative values.");
+            }
 
-        if (to <= from) {
-            addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
+            if (to <= from) {
+                addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
+            }
         }
     }
 
@@ -206,6 +208,7 @@ public class PRDValidator extends Validator {
         if (prdAction.getType().equals("condition")){
             validatePRDCondition(prdAction.getPRDCondition(), prdAction.getPRDThen(), false, expressionAndValueValidator);
         }
+        // TODO: add validate for calculation.
         else {
             validatePRDActionValue(prdAction, expressionAndValueValidator);
         }
@@ -265,7 +268,7 @@ public class PRDValidator extends Validator {
         }
 
         if(prdCondition.getSingularity().equals("multiple")){
-            if (prdCondition.getPRDCondition().size() != 2) {
+            if (prdCondition.getPRDCondition().size() < 2) {
                 addErrorToListAndThrowException(prdCondition, "", "The given multiple condition does not contain 2 sub conditions.");
             }
 
