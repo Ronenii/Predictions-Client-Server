@@ -7,6 +7,8 @@ public interface Action {
 
     String getProperty();
 
+    String getContextValue();
+
     void Invoke();
 
 }

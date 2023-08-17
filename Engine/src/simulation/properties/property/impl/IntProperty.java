@@ -19,10 +19,11 @@ public class IntProperty extends AbstractProperty implements RangedProperty {
      */
     public IntProperty(String name, int from, int to)
     {
-        super(name, false, PropertyType.DECIMAL, 0);
+        super(name, false, PropertyType.DECIMAL, null);
         this.from = from;
         this.to = to;
     }
+
 
     public int getFrom() {
         return from;

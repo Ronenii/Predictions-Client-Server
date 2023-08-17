@@ -19,10 +19,11 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty {
      */
     public DoubleProperty(String name, double from, double to)
     {
-        super(name, false, PropertyType.FLOAT, 0.0);
+        super(name, false, PropertyType.FLOAT, null);
         this.from = from;
         this.to = to;
     }
+
 
     public double getFrom() {
         return from;

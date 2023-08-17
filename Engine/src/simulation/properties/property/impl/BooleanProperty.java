@@ -9,13 +9,17 @@ public class BooleanProperty extends AbstractProperty {
         super(name, isRandInit, PropertyType.BOOLEAN, value);
     }
 
-
     /**
      * A constructor for Environment properties
      * @param name the property's name
      */
     public BooleanProperty(String name)
     {
-        super(name, false, PropertyType.BOOLEAN, false);
+        super(name, false, PropertyType.BOOLEAN, null);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }

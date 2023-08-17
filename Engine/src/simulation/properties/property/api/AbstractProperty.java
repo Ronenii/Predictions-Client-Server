@@ -1,10 +1,11 @@
 package simulation.properties.property.api;
 
 public abstract class AbstractProperty implements Property {
-    private String name;
+    private final String name;
     private boolean isRandInit;
-    private PropertyType type;
+    private final PropertyType type;
     private Object value;
+
 
     public AbstractProperty(String name, boolean isRandInit, PropertyType type, Object value) {
         this.name = name;
@@ -24,13 +25,18 @@ public abstract class AbstractProperty implements Property {
     }
 
     @Override
+    public Boolean isRandInit() {
+        return isRandInit;
+    }
+
+    @Override
     public Object getValue() {
         return value;
     }
 
     @Override
     public void updateValue(Object value) {
-        this.value = value;
+        this.value = (boolean)value;
     }
 
     @Override
@@ -40,17 +46,11 @@ public abstract class AbstractProperty implements Property {
     }
 
     @Override
-    public Boolean isRandInit() {
-        return isRandInit;
-    }
-
-    @Override
     public String toString() {
         return "Property{" +
                 "name='" + name + '\'' +
                 ", isRandInit=" + isRandInit +
                 ", type=" + type +
-                ", value=" + value +
                 '}';
     }
 
@@ -62,6 +62,6 @@ public abstract class AbstractProperty implements Property {
     @Override
     public boolean equals(Object obj) {
         Property toCompare = (Property) obj;
-        return (toCompare.isRandInit() == this.isRandInit) && (toCompare.getName().equals(this.name)) && (toCompare.getType().equals((this.type))) && (toCompare.getValue().equals(this.type));
+        return (toCompare.isRandInit() == this.isRandInit) && (toCompare.getName().equals(this.name)) && (toCompare.getType().equals((this.type))) && (toCompare.getValue().equals(this.value));
     }
 }

@@ -8,8 +8,8 @@ public class MultipleCondition extends AbstractConditionAction{
 
     private final List<AbstractConditionAction> subConditions;
 
-    public MultipleCondition(String property, String contextEntity, Object value, ThenOrElse thenActions, ThenOrElse elseActions, String logical, List<AbstractConditionAction> conditions) {
-        super(property, contextEntity, value, thenActions, elseActions);
+    public MultipleCondition(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, String logical, List<AbstractConditionAction> conditions, String contextValue) {
+        super(property, contextEntity, thenActions, elseActions, contextValue);
         this.logical = logical;
         this.subConditions = conditions;
     }

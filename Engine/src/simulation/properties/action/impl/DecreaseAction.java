@@ -6,8 +6,11 @@ import simulation.properties.action.api.ActionType;
 public class DecreaseAction extends AbstractAction {
     private Object byExpression;
 
-    public DecreaseAction(String property, String contextEntity, Object byExpression) {
-        super(ActionType.DECREASE, property, contextEntity);
+    public DecreaseAction(String property, String contextEntity, String contextValue) {
+        super(ActionType.DECREASE, property, contextEntity, contextValue);
+    }
+
+    public void updateValue(Object byExpression){
         this.byExpression = byExpression;
     }
 

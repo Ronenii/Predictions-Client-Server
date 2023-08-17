@@ -2,6 +2,8 @@ package jaxb.unmarshal.converter.validator;
 
 import jaxb.schema.generated.*;
 import jaxb.unmarshal.converter.api.Validator;
+import jaxb.unmarshal.converter.expression.converter.ExpressionAndValueValidator;
+import jaxb.unmarshal.converter.expression.converter.exception.ExpressionConversionException;
 import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException;
 import simulation.objects.entity.Entity;
 import simulation.properties.property.api.Property;
@@ -25,6 +27,15 @@ public class PRDValidator extends Validator {
         validatePRDPropertyDoesntExist(prdProperty, entityProperties);
         validatePRDPropertyRange(prdProperty);
         validatePRDPropertyInitValue(prdProperty);
+        validatePRDPropertyValue(prdProperty);
+    }
+
+    private void validatePRDPropertyValue(PRDProperty prdProperty) throws PRDObjectConversionException {
+        ExpressionAndValueValidator expressionAndValueValidator = new ExpressionAndValueValidator(null, null);
+
+        if(!expressionAndValueValidator.isPRDPropertyValueMatchItsType(prdProperty)) {
+            addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "The given property's value doesn't match the property type.");
+        }
     }
 
     public void validatePRDEnvProperty(PRDEnvProperty prdEnvProperty, Map<String, Property> environmentProperties) throws PRDObjectConversionException {
@@ -136,16 +147,16 @@ public class PRDValidator extends Validator {
         validatePRDActivationProbability(prdActivation, prdRule);
     }
 
-    public void validatePRDRule(PRDRule prdRule, Map<String, Entity> entities, Map<String, Rule> rules) throws PRDObjectConversionException {
+    public void validatePRDRule(PRDRule prdRule, Map<String, Entity> entities, Map<String, Rule> rules, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
         validateRuleDoesntExist(prdRule, rules);
-        validateAllRuleActions(prdRule, entities);
+        validateAllRuleActions(prdRule, entities, expressionAndValueValidator);
         validatePRDActivation(prdRule.getPRDActivation(), prdRule);
     }
 
-    private void validateAllRuleActions(PRDRule prdRule, Map<String, Entity> entities) throws PRDObjectConversionException {
+    private void validateAllRuleActions(PRDRule prdRule, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
         for (PRDAction a : prdRule.getPRDActions().getPRDAction()
         ) {
-            validatePRDAction(a, entities);
+            validatePRDAction(a, entities, expressionAndValueValidator);
         }
     }
 
@@ -190,12 +201,36 @@ public class PRDValidator extends Validator {
         }
     }
 
-    public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities) throws PRDObjectConversionException {
+    public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
         validatePRDCalculation(prdAction);
         if (prdAction.getType().equals("condition")){
-            validatePRDCondition(prdAction.getPRDCondition(), prdAction.getPRDThen(), false);
+            validatePRDCondition(prdAction.getPRDCondition(), prdAction.getPRDThen(), false, expressionAndValueValidator);
+        }
+        else {
+            validatePRDActionValue(prdAction, expressionAndValueValidator);
         }
         validatePRDActionEntityAndProperty(prdAction, entities);
+    }
+
+    private void validatePRDActionValue(PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
+        try{
+            if(prdAction.getType().equals("increase") || prdAction.getType().equals("decrease")){
+                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction,null, prdAction.getBy());
+            }
+            else {
+                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction,null, prdAction.getValue());
+            }
+        } catch (ExpressionConversionException e) {
+            addErrorToListAndThrowException(prdAction, "", expressionAndValueValidator.getErrorList());
+        }
+    }
+
+    private void validatePRDConditionValue(PRDCondition prdCondition , ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
+        try{
+            expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(null,prdCondition, prdCondition.getValue());
+        } catch (ExpressionConversionException e) {
+            addErrorToListAndThrowException(prdCondition, "", expressionAndValueValidator.getErrorList());
+        }
     }
 
     private void validatePRDCalculation(PRDAction prdAction) throws PRDObjectConversionException {
@@ -207,10 +242,14 @@ public class PRDValidator extends Validator {
     }
 
 
-    private void validatePRDCondition(PRDCondition prdCondition, PRDThen prdThen, boolean isSubCondition) throws PRDObjectConversionException {
+    private void validatePRDCondition(PRDCondition prdCondition, PRDThen prdThen, boolean isSubCondition, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
 
         if (prdCondition == null) {
             addErrorToListAndThrowException("PRDCondition", "", "The given action type is 'condition' and does not contain 'condition' object.");
+        }
+
+        if(prdCondition.getSingularity().equals("single")){
+            validatePRDConditionValue(prdCondition, expressionAndValueValidator);
         }
 
         if(prdCondition.getLogical() == null && prdCondition.getOperator() == null) {
@@ -231,7 +270,7 @@ public class PRDValidator extends Validator {
             }
 
             for(PRDCondition subPRDCondition : prdCondition.getPRDCondition()) {
-                validatePRDCondition(subPRDCondition, null, true);
+                validatePRDCondition(subPRDCondition, null, true, expressionAndValueValidator);
             }
         }
     }

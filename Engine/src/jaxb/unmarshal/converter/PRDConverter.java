@@ -5,7 +5,7 @@ import jaxb.unmarshal.converter.expression.converter.exception.InvalidBooleanVal
 import jaxb.unmarshal.converter.expression.converter.exception.InvalidStringValueException;
 import jaxb.unmarshal.converter.expression.converter.exception.ValueOutOfRangeException;
 import jaxb.unmarshal.converter.expression.converter.exception.ExpressionConversionException;
-import jaxb.unmarshal.converter.expression.converter.ExpressionConverterAndValidator;
+import jaxb.unmarshal.converter.expression.converter.ExpressionAndValueValidator;
 import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException;
 import jaxb.unmarshal.converter.validator.PRDValidator;
 import jaxb.unmarshal.converter.value.initializer.ValueInitializer;
@@ -321,8 +321,10 @@ public class PRDConverter {
      * @return a Rule representation of PRDRule.
      */
     private Rule PRDRule2Rule(PRDRule prdRule) {
+        ExpressionAndValueValidator expressionAndValueValidator = new ExpressionAndValueValidator(environmentProperties,entities);
+
         try {
-            validator.validatePRDRule(prdRule, entities, rules);
+            validator.validatePRDRule(prdRule, entities, rules, expressionAndValueValidator);
         } catch (PRDObjectConversionException e) {
             return null;
         }
@@ -344,28 +346,26 @@ public class PRDConverter {
      */
     private Action PRDAction2Action(PRDAction prdAction) {
         Action ret = null;
-        ExpressionConverterAndValidator expressionConverterAndValidator = new ExpressionConverterAndValidator(environmentProperties, entities);
 
         try {
             switch (ActionType.valueOf(prdAction.getType().toUpperCase())) {
                 case INCREASE:
-                    Object meow = expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, prdAction.getBy());
-                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), meow);
+                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), prdAction.getBy());
                     break;
                 case DECREASE:
-                    ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, prdAction.getBy()));
+                    ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), prdAction.getBy());
                     break;
                 case CALCULATION:
-                    ret = getMulOrDiv(prdAction, expressionConverterAndValidator);
+                    ret = getMulOrDiv(prdAction);
                     break;
                 case CONDITION:
-                    ret = getSingleOrMultiple(prdAction, expressionConverterAndValidator);
+                    ret = getSingleOrMultiple(prdAction);
                     break;
                 case SET:
-                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, prdAction.getValue()));
+                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), prdAction.getValue());
                     break;
                 case KILL:
-                    ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
+                    ret = new KillAction(prdAction.getProperty(), prdAction.getEntity(), null);
                     break;
                 case REPLACE:
                     break;
@@ -375,9 +375,8 @@ public class PRDConverter {
         } catch (IllegalArgumentException e) {
             validator.addErrorToList(prdAction, prdAction.getValue(), "Illegal action value.");
             return null;
-        } catch (ExpressionConversionException e) {
-            ret = null;
         }
+
         return ret;
     }
 
@@ -387,26 +386,20 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return a CalculationAction representation of the given PRDActivation.
      */
-    private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator) {
+    private CalculationAction getMulOrDiv(PRDAction prdAction) {
         CalculationAction ret = null;
         PRDMultiply mul = prdAction.getPRDMultiply();
         PRDDivide div = prdAction.getPRDDivide();
 
         // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
-        try {
-            if (mul != null) {
-                ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, mul.getArg1()),
-                        expressionConverterAndValidator.analyzeAndGetValue(prdAction,null, mul.getArg2()), ClaculationType.MULTIPLY);
-            } else if (div != null) {
-                ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, div.getArg1()),
-                        expressionConverterAndValidator.analyzeAndGetValue(prdAction, null, div.getArg2()), ClaculationType.DIVIDE);
-            } else {
-                validator.addErrorToList(prdAction, prdAction.getType(), "Calculation action is not Multiply or Divide");
-                throw new ExpressionConversionException();
-            }
-        } catch (ExpressionConversionException e) {
-            validator.addErrorToList(prdAction, prdAction.getType(), expressionConverterAndValidator.getErrorList());
+        if (mul != null) {
+            ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), mul.getArg1(), mul.getArg2(), ClaculationType.MULTIPLY, null);
+        } else if (div != null) {
+            ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), div.getArg1(), div.getArg2(), ClaculationType.DIVIDE, null);
+        } else {
+            validator.addErrorToList(prdAction, prdAction.getType(), "Calculation action is not Multiply or Divide");
         }
+
         return ret;
     }
 
@@ -416,58 +409,43 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return an AbstractConditionAction representation of the given PRDActivation.
      */
-    private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction, ExpressionConverterAndValidator expressionConverterAndValidator) {
+    private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction) {
         AbstractConditionAction ret = null;
         PRDCondition prdCondition = prdAction.getPRDCondition();
         ThenOrElse thenActions, elseActions;
         // Then and else objects are created in this method.
         thenActions = getAndCreateThenOrElse(prdAction,true);
         elseActions = getAndCreateThenOrElse(prdAction,false);
-
-        try {
-            if (prdCondition.getSingularity().equals("single")) {
-                ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(null, prdCondition, prdCondition.getValue()), thenActions, elseActions, prdCondition.getOperator());
-            } else if (prdCondition.getSingularity().equals("multiple")) {
-                ret = getMultipleConditionObject(prdCondition,expressionConverterAndValidator,thenActions,elseActions);
-            } else {
-                throw new ExpressionConversionException();
-            }
-        } catch (ExpressionConversionException e) {
-            validator.addErrorToList(prdAction, prdAction.getType(), "Condition action is not single or multiple.");
+        if (prdCondition.getSingularity().equals("single")) {
+            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, prdCondition.getOperator(), prdCondition.getValue());
+        } else if (prdCondition.getSingularity().equals("multiple")) {
+            ret = getMultipleConditionObject(prdCondition,thenActions,elseActions);
         }
-
 
         return ret;
     }
 
-    private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ExpressionConverterAndValidator expressionConverterAndValidator, ThenOrElse thenActions, ThenOrElse elseActions){
+    private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ThenOrElse thenActions, ThenOrElse elseActions){
         List<PRDCondition> prdSubConditions = prdCondition.getPRDCondition();
         List<AbstractConditionAction> objectSubConditions = new ArrayList<>();
         AbstractConditionAction conditionToAdd;
 
         for(PRDCondition prdSubCondition : prdSubConditions){
-            conditionToAdd = getAbstractConditionToBuildMultiple(prdSubCondition,expressionConverterAndValidator);
+            conditionToAdd = getAbstractConditionToBuildMultiple(prdSubCondition);
             objectSubConditions.add(conditionToAdd);
         }
 
-        return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(),prdCondition.getValue(), thenActions, elseActions, prdCondition.getLogical(), objectSubConditions);
+        return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, prdCondition.getLogical(), objectSubConditions, null);
     }
 
-    private AbstractConditionAction getAbstractConditionToBuildMultiple(PRDCondition prdCondition, ExpressionConverterAndValidator expressionConverterAndValidator){
+    private AbstractConditionAction getAbstractConditionToBuildMultiple(PRDCondition prdCondition){
         AbstractConditionAction ret = null;
 
-        try {
-            if (prdCondition.getSingularity().equals("single")) {
-                ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), expressionConverterAndValidator.analyzeAndGetValue(null, prdCondition, prdCondition.getValue()), null, null, prdCondition.getOperator());
-            } else if (prdCondition.getSingularity().equals("multiple")) {
-                ret = getMultipleConditionObject(prdCondition, expressionConverterAndValidator,null,null);
-            } else {
-                throw new ExpressionConversionException();
-            }
-        } catch (ExpressionConversionException e) {
-            validator.addErrorToList(prdCondition, "", "Condition action is not single or multiple.");
+        if (prdCondition.getSingularity().equals("single")) {
+            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), null, null, prdCondition.getOperator(), prdCondition.getValue());
+        } else if (prdCondition.getSingularity().equals("multiple")) {
+            ret = getMultipleConditionObject(prdCondition, null, null);
         }
-
         return ret;
     }
 

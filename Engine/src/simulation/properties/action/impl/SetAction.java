@@ -4,10 +4,13 @@ import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 
 public class SetAction extends AbstractAction {
-    private final Object value;
+    private Object value;
 
-    public SetAction(String property, String contextEntity, Object value) {
-        super(ActionType.SET, property, contextEntity);
+    public SetAction(String property, String contextEntity, String contextValue) {
+        super(ActionType.SET, property, contextEntity, contextValue);
+    }
+
+    public void updateValue(Object value){
         this.value = value;
     }
 
