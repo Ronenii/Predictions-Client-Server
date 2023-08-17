@@ -10,10 +10,12 @@ import manager.value.update.object.impl.TwoObjectUpdate;
 import simulation.objects.entity.Entity;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.ActionType;
+import simulation.properties.action.impl.KillAction;
 import simulation.properties.action.impl.calculation.CalculationAction;
 import simulation.properties.action.impl.condition.AbstractConditionAction;
 import simulation.properties.action.impl.condition.MultipleCondition;
 import simulation.properties.action.impl.condition.SingleCondition;
+import simulation.properties.action.impl.condition.ThenOrElse;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
 
@@ -35,28 +37,53 @@ public class ActionValueInitializer {
         Property property;
 
         for (Action action : actions){
-            if(action.getClass() == MultipleCondition.class){
-                setMultipleCase((MultipleCondition)action);
-            } else if (action.getClass() == CalculationAction.class) {
-                setCalculationCase((CalculationAction)action);
-            } else {
-                property = entities.get(action.getContextEntity()).getProperties().get(action.getProperty());
-                updateObject = new OneObjectUpdate(convertContextValue(action.getContextValue(),property.getType(),action.getContextEntity()));
-                action.updateValue(updateObject);
+            if(action.getClass() != KillAction.class){
+                if(action.getClass() == MultipleCondition.class){
+                    setMultipleCase((MultipleCondition)action);
+                } else if (action.getClass() == CalculationAction.class) {
+                    setCalculationCase((CalculationAction)action);
+                } else if (action.getClass() == SingleCondition.class) {
+                    setSingleCase((SingleCondition)action);
+                } else {
+                    property = entities.get(action.getContextEntity()).getProperties().get(action.getProperty());
+                    updateObject = new OneObjectUpdate(convertContextValue(action.getContextValue(),property.getType(),action.getContextEntity()));
+                    action.updateValue(updateObject);
+                }
             }
         }
     }
 
-    private void setMultipleCase(MultipleCondition condition) {
-        List<AbstractConditionAction> subConditions = condition.getSubConditions();
+    private void setSingleCase(SingleCondition condition){
         UpdateObject updateObject;
         Property property;
+        ThenOrElse thenActions = condition.getThenActions(), elseActions = condition.getElseActions();
+
+        if (thenActions != null){
+            initializeValues(thenActions.getActionsToInvoke());
+        }
+        if (elseActions != null) {
+            initializeValues(elseActions.getActionsToInvoke());
+        }
+
+        property = entities.get(condition.getContextEntity()).getProperties().get(condition.getProperty());
+        updateObject = new OneObjectUpdate(convertContextValue(condition.getContextValue(),property.getType(),condition.getContextEntity()));
+        condition.updateValue(updateObject);
+    }
+
+    private void setMultipleCase(MultipleCondition condition) {
+        List<AbstractConditionAction> subConditions = condition.getSubConditions();
+        ThenOrElse thenActions = condition.getThenActions(), elseActions = condition.getElseActions();
+
+        if (thenActions != null){
+            initializeValues(thenActions.getActionsToInvoke());
+        }
+        if (elseActions != null) {
+            initializeValues(elseActions.getActionsToInvoke());
+        }
 
         for (AbstractConditionAction subCondition : subConditions){
             if(subCondition.getClass() == SingleCondition.class) {
-                property = entities.get(condition.getContextEntity()).getProperties().get(condition.getProperty());
-                updateObject = new OneObjectUpdate(convertContextValue(condition.getContextValue(),property.getType(),condition.getContextEntity()));
-                condition.updateValue(updateObject);
+                setSingleCase((SingleCondition)subCondition);
             }
             else {
                 setMultipleCase((MultipleCondition)subCondition);

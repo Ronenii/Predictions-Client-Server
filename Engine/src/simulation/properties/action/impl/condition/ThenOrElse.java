@@ -14,6 +14,10 @@ public class ThenOrElse {
         this.actionsToInvoke = actionsToInvoke;
     }
 
+    public List<Action> getActionsToInvoke() {
+        return actionsToInvoke;
+    }
+
     public void invoke(){
         // TODO: implement.
     }

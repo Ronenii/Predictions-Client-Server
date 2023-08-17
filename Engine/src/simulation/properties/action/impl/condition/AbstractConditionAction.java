@@ -23,6 +23,14 @@ public abstract class AbstractConditionAction extends AbstractAction {
         value = oneObjectUpdate.getObjectForUpdate();
     }
 
+    public ThenOrElse getThenActions() {
+        return thenActions;
+    }
+
+    public ThenOrElse getElseActions() {
+        return elseActions;
+    }
+
     public void updateValue(Object value){
         this.value = value;
     }
