@@ -15,26 +15,6 @@ public class DTOEntity {
         this.properties = properties;
     }
 
-    public DTOEntity(String name, int StartingPopulation, DTOProperty[] properties) {
-        this.name = name;
-        this.startingPopulation = StartingPopulation;
-        this.endingPopulation = 0;
-        this.properties = properties;
-    }
-
-//    public void addProperty(DTOProperty property) {
-//        properties.add(property);
-//    }
-//
-//    public void addRangedProperty(String name, String type, boolean isRandomInit, double from, double to) {
-//        addProperty(new RangedDTOProperty(name, type, isRandomInit, from, to));
-//    }
-//
-//    public void addNonRangedProperty(String name, String type, boolean isRandomInit) {
-//        addProperty(new NonRangedDTOProperty(name, type, isRandomInit));
-//    }
-
-
     public String getName() {
         return name;
     }
