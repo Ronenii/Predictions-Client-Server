@@ -13,10 +13,16 @@ import simulation.properties.property.api.PropertyType;
 
 import java.util.Map;
 
-public class ExpressionAndValueValidator extends Validator {
+public class ExpressionAndValueValidator {
 
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
+
+    private String errorMessage;
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 
     public ExpressionAndValueValidator(Map<String, Property> environmentProperties, Map<String, Entity> entities) {
         this.environmentProperties = environmentProperties;
@@ -57,17 +63,15 @@ public class ExpressionAndValueValidator extends Validator {
      */
     public void isPRDActionValueMatchItsPropertyType(PRDAction prdAction, PRDCondition prdCondition, String prdValueStr) throws ExpressionConversionException {
         String valueType;
-        valueType = getObjectTypeIfFunction(prdValueStr, prdAction, prdCondition);
+        valueType = getObjectTypeIfFunction(prdValueStr);
         if(valueType == null){
             valueType = getTypeIfProperty(prdAction, prdCondition, prdValueStr);
         }
         if(valueType == null){
             valueType = parseValueType(prdValueStr);
         }
-        if(valueType == null || !compareActionValueToGivenPropertyValue(prdAction, prdCondition, valueType)){
-            // validation error occurred.
-            throw new ExpressionConversionException();
-        }
+
+        compareActionValueToGivenPropertyValue(prdAction, prdCondition, valueType);
     }
 
     /**
@@ -77,7 +81,7 @@ public class ExpressionAndValueValidator extends Validator {
      * @param prdValueStr the PRDAction value string.
      * @return the return value type from the function if exists.
      */
-    private String getObjectTypeIfFunction(String prdValueStr, PRDAction prdAction, PRDCondition prdCondition){
+    private String getObjectTypeIfFunction(String prdValueStr) throws ExpressionConversionException {
         String functionName = getFucntionName(prdValueStr);
         String ret = null;
         if(functionName != null){
@@ -109,14 +113,8 @@ public class ExpressionAndValueValidator extends Validator {
                 }
             }
             catch (Exception e) {
-                // Value is not a function
-                if(prdAction != null){
-                    addErrorToList(prdAction, prdAction.getValue(), "The value function's param doesn't match to the function.");
-                }
-                else {
-                    addErrorToList(prdCondition, prdCondition.getValue(), "The value function's param doesn't match to the function.");
-                }
-                ret = null;
+                errorMessage = "The value function's param doesn't match to the function.";
+                throw new ExpressionConversionException();
             }
         }
 
@@ -260,13 +258,12 @@ public class ExpressionAndValueValidator extends Validator {
      * @param valueType the action value object.
      * @return true if the object complete the checks successfully, otherwise return false.
      */
-    private boolean compareActionValueToGivenPropertyValue(PRDAction prdAction, PRDCondition prdCondition, String valueType){
-        boolean ret = true;
+    private void compareActionValueToGivenPropertyValue(PRDAction prdAction, PRDCondition prdCondition, String valueType) throws ExpressionConversionException {
         PropertyType type = PropertyType.valueOf(valueType);
 
         if(type == PropertyType.DECIMAL || type == PropertyType.FLOAT){
             if(prdAction != null){
-                ret = compareIntegerOrDoubleCaseForAction(prdAction);
+                compareIntegerOrDoubleCaseForAction(prdAction);
             }
             else {
                 compareIntegerOrDoubleCaseForCondition(prdCondition);
@@ -276,90 +273,82 @@ public class ExpressionAndValueValidator extends Validator {
             switch (PropertyType.valueOf(valueType)){
                 case BOOLEAN:
                     if(prdAction != null){
-                        ret = compareBooleanCaseForAction(prdAction);
+                        compareBooleanCaseForAction(prdAction);
                     }
                     else {
-                        ret = compareBooleanCaseForCondition(prdCondition);
+                        compareBooleanCaseForCondition(prdCondition);
                     }
 
                     break;
                 case STRING:
                     if (prdAction != null){
-                        ret = compareStringCaseForAction(prdAction);
+                        compareStringCaseForAction(prdAction);
                     }
                     else {
-                        ret = compareStringCaseForCondition(prdCondition);
+                        compareStringCaseForCondition(prdCondition);
                     }
                     break;
             }
         }
-        return ret;
     }
 
     /**
      * 'compareActionValueToGivenPropertyValue' helper for integer or double actions/properties.
      */
-    private boolean compareIntegerOrDoubleCaseForAction(PRDAction prdAction){
+    private void compareIntegerOrDoubleCaseForAction(PRDAction prdAction) throws ExpressionConversionException {
         String actionType, entityName, propertyName;
 
         actionType = prdAction.getType().toUpperCase();
         entityName = prdAction.getEntity();
-        propertyName = prdAction.getProperty();
+        if (actionType.equals("CALCULATION")){
+            propertyName = prdAction.getResultProp();
+        }
+        else {
+            propertyName = prdAction.getProperty();
+        }
 
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
-        boolean ret = true;
 
-        if(type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION && type != ActionType.CONDITION)
+        if(type == ActionType.KILL)
         {
-            addErrorToList(prdAction, prdAction.getValue(), "Action type not allowed");
-            ret = false;
+            errorMessage = "Action type not allowed";
+            throw new ExpressionConversionException();
         }
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("DECIMAL")) && (!propertyType.name().equals("FLOAT"))){
-            addErrorToList(entity.getProperties().get(propertyName), propertyType.name(), "The property value type doesn't match the action value type");
-            ret= false;
+            errorMessage = "The property value type doesn't match the action value type";
+            throw new ExpressionConversionException();
         }
-
-        return ret;
     }
+
 
     /**
      * 'compareActionValueToGivenPropertyValue' helper for integer or double actions/properties.
      */
-    private boolean compareIntegerOrDoubleCaseForCondition(PRDCondition prdCondition){
-        String actionType, entityName, propertyName;
+    private void compareIntegerOrDoubleCaseForCondition(PRDCondition prdCondition) throws ExpressionConversionException {
+        String entityName, propertyName;
 
-        actionType = ActionType.CONDITION.toString();
         entityName = prdCondition.getEntity();
         propertyName = prdCondition.getProperty();
 
         Entity entity = entities.get(entityName);
-        ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
-        boolean ret = true;
-
-        if(type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION && type != ActionType.CONDITION)
-        {
-            addErrorToList(prdCondition, prdCondition.getValue(), "Action type not allowed");
-            ret = false;
-        }
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("DECIMAL")) && (!propertyType.name().equals("FLOAT"))){
-            addErrorToList(entity.getProperties().get(propertyName), propertyType.name(), "The property value type doesn't match the action value type");
-            ret= false;
+            errorMessage = "The property value type doesn't match the action value type";
+            throw new ExpressionConversionException();
         }
 
-        return ret;
     }
 
     /**
      * 'compareActionValueToGivenPropertyValue' helper for boolean actions/properties.
      */
-    private boolean compareBooleanCaseForAction(PRDAction prdAction){
+    private void compareBooleanCaseForAction(PRDAction prdAction) throws ExpressionConversionException {
         String actionType, entityName, propertyName;
 
         actionType = prdAction.getType().toUpperCase();
@@ -369,71 +358,57 @@ public class ExpressionAndValueValidator extends Validator {
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
-        boolean ret = true;
 
         if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION) {
-            addErrorToList(prdAction, prdAction.getValue(), "Action type not allowed");
-            ret = false;
+            errorMessage = "Action type not allowed";
+            throw new ExpressionConversionException();
         }
 
         if(type == ActionType.CONDITION){
             PRDCondition prdCondition = prdAction.getPRDCondition();
             if(prdCondition.getSingularity().equals("single") && (prdCondition.getOperator().equals("bt") || prdCondition.getOperator().equals("lt"))){
-                addErrorToList(prdAction, prdAction.getValue(), "Condition operator type not allowed");
-                ret = false;
+                errorMessage =  "Condition operator type not allowed";
+                throw new ExpressionConversionException();
             }
         }
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("BOOLEAN"))){
-            addErrorToList(prdAction, prdAction.getValue(), "The property value type doesn't match the action value type");
-            ret = false;
+            errorMessage = "The property value type doesn't match the action value type";
+            throw new ExpressionConversionException();
         }
-
-        return ret;
     }
 
     /**
      * 'compareActionValueToGivenPropertyValue' helper for boolean actions/properties.
      */
-    private boolean compareBooleanCaseForCondition(PRDCondition prdCondition){
-        String actionType, entityName, propertyName;
+    private void compareBooleanCaseForCondition(PRDCondition prdCondition) throws ExpressionConversionException {
+        String entityName, propertyName;
 
-        actionType = ActionType.CONDITION.toString();
         entityName = prdCondition.getEntity();
         propertyName = prdCondition.getProperty();
 
         Entity entity = entities.get(entityName);
-        ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
-        boolean ret = true;
 
-        if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION) {
-            addErrorToList(prdCondition, prdCondition.getValue(), "Action type not allowed");
-            ret = false;
+        if(prdCondition.getSingularity().equals("single") && (prdCondition.getOperator().equals("bt") || prdCondition.getOperator().equals("lt"))){
+            errorMessage = "Condition operator type not allowed";
+            throw new ExpressionConversionException();
         }
 
-        if(type == ActionType.CONDITION){
-            if(prdCondition.getSingularity().equals("single") && (prdCondition.getOperator().equals("bt") || prdCondition.getOperator().equals("lt"))){
-                addErrorToList(prdCondition, prdCondition.getValue(), "Condition operator type not allowed");
-                ret = false;
-            }
-        }
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("BOOLEAN"))){
-            addErrorToList(prdCondition, prdCondition.getValue(), "The property value type doesn't match the action value type");
-            ret = false;
+            errorMessage = "The property value type doesn't match the action value type";
+            throw new ExpressionConversionException();
         }
-
-        return ret;
     }
 
 
     /**
      * 'compareActionValueToGivenPropertyValue' helper for String actions/properties.
      */
-    private boolean compareStringCaseForAction(PRDAction prdAction){
+    private void compareStringCaseForAction(PRDAction prdAction) throws ExpressionConversionException {
         String actionType, entityName, propertyName;
 
         actionType = prdAction.getType().toUpperCase();
@@ -443,48 +418,36 @@ public class ExpressionAndValueValidator extends Validator {
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
-        boolean ret = true;
 
         if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION) {
-            addErrorToList(prdAction, prdAction.getValue(), "Action type not allowed");
-            ret = false;
+            errorMessage = "Action type not allowed";
+            throw new ExpressionConversionException();
         }
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("STRING"))){
-            addErrorToList(prdAction, prdAction.getValue(), "The property value type doesn't match the action value type");
-            ret = false;
+            errorMessage = "The property value type doesn't match the action value type";
+            throw new ExpressionConversionException();
         }
-
-        return ret;
     }
 
     /**
      * 'compareActionValueToGivenPropertyValue' helper for String actions/properties.
      */
-    private boolean compareStringCaseForCondition(PRDCondition prdCondition){
-        String actionType, entityName, propertyName;
+    private void compareStringCaseForCondition(PRDCondition prdCondition) throws ExpressionConversionException {
+        String entityName, propertyName;
 
-        actionType = ActionType.CONDITION.toString();
         entityName = prdCondition.getEntity();
         propertyName = prdCondition.getProperty();
 
         Entity entity = entities.get(entityName);
-        ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
-        boolean ret = true;
-
-        if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION) {
-            addErrorToList(prdCondition, prdCondition.getValue(), "Action type not allowed");
-            ret = false;
-        }
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("STRING"))){
-            addErrorToList(prdCondition, prdCondition.getValue(), "The property value type doesn't match the action value type");
-            ret = false;
+            errorMessage = "The property value type doesn't match the action value type";
+            throw new ExpressionConversionException();
         }
 
-        return ret;
     }
 }

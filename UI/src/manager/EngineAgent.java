@@ -2,6 +2,7 @@ package manager;
 
 import display.Console;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
+import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.result.ResultData;
 import ui2engine.simulation.func1.DTOFirstFunction;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
@@ -49,8 +50,15 @@ public class EngineAgent {
         System.out.print("Please enter path to the XML world config file: ");
         Scanner scanner = new Scanner(System.in);
         String path = scanner.nextLine();
+        DTOLoadSucceed dtoLoadSucceed;
 
-        engine.loadSimulationFromFile(new DTOFirstFunction(path));
+        dtoLoadSucceed = engine.loadSimulationFromFile(new DTOFirstFunction(path));
+        if (dtoLoadSucceed.isSucceed()){
+            Console.printGivenMessage("The simulation creation has completed successfully");
+        }
+        else {
+            Console.printGivenMessage("The simulation creation has failed");
+        }
     }
 
 

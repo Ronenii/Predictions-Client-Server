@@ -64,11 +64,19 @@ public class PRDConverter {
 
         getEntitiesFromPRDWorld(prdWorld);
 
+        // check if the entities and environment variable convert succeed.
+        if (validator.containsErrors()) {
+            validator.addEntitiesAndEnvPropCreationErrorMessage();
+            throw new IllegalArgumentException(validator.getErrorList());
+        }
+
         getRulesFromPRDWorld(prdWorld);
 
         endingConditions = getEndingConditions(prdWorld.getPRDTermination());
 
+        // check if the rules and ending condition convert succeed.
         if (validator.containsErrors()) {
+            validator.addRulesAndEndingConditionsCreationErrorMessage();
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
@@ -186,13 +194,17 @@ public class PRDConverter {
 
         Property ret = null;
         String name = prdEnvProperty.getPRDName();
-        double to = prdEnvProperty.getPRDRange().getTo();
-        double from = prdEnvProperty.getPRDRange().getFrom();
+        Double to = null, from = null;
+
+        if(prdEnvProperty.getType().equals("decimal") || prdEnvProperty.getType().equals("float")){
+            to = prdEnvProperty.getPRDRange().getTo();
+            from = prdEnvProperty.getPRDRange().getFrom();
+        }
 
         try {
             switch (PropertyType.valueOf(prdEnvProperty.getType().toUpperCase())) {
                 case DECIMAL:
-                    ret = new IntProperty(name, (int) from, (int) to);
+                    ret = new IntProperty(name, (int) from.doubleValue(), (int) to.doubleValue());
                     break;
                 case FLOAT:
                     ret = new DoubleProperty(name, from, to);
@@ -397,9 +409,9 @@ public class PRDConverter {
 
         // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
         if (mul != null) {
-            ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), mul.getArg1(), mul.getArg2(), ClaculationType.MULTIPLY, null);
+            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), mul.getArg1(), mul.getArg2(), ClaculationType.MULTIPLY, null);
         } else if (div != null) {
-            ret = new CalculationAction(prdAction.getProperty(), prdAction.getEntity(), div.getArg1(), div.getArg2(), ClaculationType.DIVIDE, null);
+            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), div.getArg1(), div.getArg2(), ClaculationType.DIVIDE, null);
         } else {
             validator.addErrorToList(prdAction, prdAction.getType(), "Calculation action is not Multiply or Divide");
         }
