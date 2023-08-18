@@ -64,10 +64,16 @@ public class PRDConverter {
 
         getEntitiesFromPRDWorld(prdWorld);
 
+        // check if the entities and environment variable convert succeed.
+        if (validator.containsErrors()) {
+            throw new IllegalArgumentException(validator.getErrorList());
+        }
+
         getRulesFromPRDWorld(prdWorld);
 
         endingConditions = getEndingConditions(prdWorld.getPRDTermination());
 
+        // check if the rules and ending condition convert succeed.
         if (validator.containsErrors()) {
             throw new IllegalArgumentException(validator.getErrorList());
         }

@@ -65,6 +65,7 @@ public class UI {
                 // C:\Users\Ronen Gelmanovich\IdeaProjects\Predictions\WorldConfigFiles\ex1-cigarets.xml
                 // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\ex1-cigarets.xml
                 // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\master-ex1.xml
+                // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\ex1-error-2.xml
                 engineAgent.loadSimulationFromFile();
                 break;
             case SHOW_SIMULATION_DATA:

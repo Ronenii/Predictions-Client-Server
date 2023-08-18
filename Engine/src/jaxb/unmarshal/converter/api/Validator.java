@@ -25,6 +25,12 @@ abstract public class Validator {
         errorsList.append("\n");
     }
 
+    public void addActionErrorToList(String ruleName, String actionName, int actionNumber, String error) {
+        errorsList.append(String.format("In rule: %s, action number %d, type: %s, ", ruleName, actionNumber, actionName));
+        errorsList.append(error);
+        errorsList.append("\n");
+    }
+
     /**
      * @return returns true if the validator found any errors.
      */
