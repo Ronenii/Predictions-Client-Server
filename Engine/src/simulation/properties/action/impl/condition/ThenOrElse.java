@@ -20,6 +20,9 @@ public class ThenOrElse {
     }
 
     public void invoke(EntityInstance entityInstance){
-        // TODO: implement.
+        for (Action a: actionsToInvoke
+             ) {
+            a.Invoke(entityInstance);
+        }
     }
 }

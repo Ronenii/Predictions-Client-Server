@@ -27,6 +27,10 @@ public class SetAction extends AbstractAction {
     @Override
     public void Invoke(EntityInstance entityInstance) {
         Property toSet = entityInstance.getPropertyByName(getContextProperty());
+        if(toSet == null){
+            return;
+        }
+
         toSet.setValue(value);
     }
 }

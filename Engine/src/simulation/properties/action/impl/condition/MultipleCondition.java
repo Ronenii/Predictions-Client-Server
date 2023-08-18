@@ -24,8 +24,13 @@ public class MultipleCondition extends AbstractConditionAction{
         return subConditions;
     }
 
+
+    //TODO: Adjust to calculate the result of multiple single conditions
     @Override
     public void Invoke(EntityInstance entityInstance) {
-
+        for (AbstractConditionAction a: subConditions
+             ) {
+            a.Invoke(entityInstance);
+        }
     }
 }

@@ -14,9 +14,14 @@ public class SingleCondition extends AbstractConditionAction{
     @Override
     public void Invoke(EntityInstance entityInstance) {
         Property toCompare = entityInstance.getPropertyByName(getContextProperty());
+
+        if(toCompare == null){
+            return;
+        }
+
         switch (operator){
             case EQUALS:
-                if(toCompare.getValue() == getContextValue())
+                if(toCompare.getValue() == getValue())
                 {
                     getThenActions().invoke(entityInstance);
                 }
@@ -27,7 +32,7 @@ public class SingleCondition extends AbstractConditionAction{
                 }
                 break;
             case NOT_EQUALS:
-                if(toCompare.getValue() != getContextValue())
+                if(toCompare.getValue() != getValue())
                 {
                     getThenActions().invoke(entityInstance);
                 }
@@ -38,7 +43,7 @@ public class SingleCondition extends AbstractConditionAction{
                 }
                 break;
             case BIGGER_THAN:
-                if((double)toCompare.getValue() > Double.parseDouble(getContextValue()))
+                if((double)toCompare.getValue() > (double)getValue())
                 {
                     getThenActions().invoke(entityInstance);
                 }
@@ -49,7 +54,7 @@ public class SingleCondition extends AbstractConditionAction{
                 }
                 break;
             case LESSER_THAN:
-                if((double)toCompare.getValue() < Double.parseDouble(getContextValue()))
+                if((double)toCompare.getValue() < (double)getValue())
                 {
                     getThenActions().invoke(entityInstance);
                 }

@@ -28,6 +28,11 @@ public class IncreaseAction extends AbstractAction {
     @Override
     public void Invoke(EntityInstance entityInstance) {
         Property toIncrease = entityInstance.getPropertyByName(getContextProperty());
+
+        if(toIncrease == null){
+            return;
+        }
+
         switch (toIncrease.getType())
         {
             case DECIMAL:

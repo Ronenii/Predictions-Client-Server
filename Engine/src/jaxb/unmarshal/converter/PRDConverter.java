@@ -4,7 +4,6 @@ import jaxb.schema.generated.*;
 import jaxb.unmarshal.converter.expression.converter.exception.InvalidBooleanValueException;
 import jaxb.unmarshal.converter.expression.converter.exception.InvalidStringValueException;
 import jaxb.unmarshal.converter.expression.converter.exception.ValueOutOfRangeException;
-import jaxb.unmarshal.converter.expression.converter.exception.ExpressionConversionException;
 import jaxb.unmarshal.converter.expression.converter.ExpressionAndValueValidator;
 import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException;
 import jaxb.unmarshal.converter.validator.PRDValidator;
@@ -21,7 +20,7 @@ import simulation.properties.action.impl.IncreaseAction;
 import simulation.properties.action.impl.KillAction;
 import simulation.properties.action.impl.SetAction;
 import simulation.properties.action.impl.calculation.CalculationAction;
-import simulation.properties.action.impl.calculation.ClaculationType;
+import simulation.properties.action.impl.calculation.CalculationType;
 import simulation.properties.activition.Activation;
 import simulation.properties.ending.conditions.EndingCondition;
 import simulation.properties.property.api.Property;
@@ -406,9 +405,9 @@ public class PRDConverter {
 
         // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
         if (mul != null) {
-            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), mul.getArg1(), mul.getArg2(), ClaculationType.MULTIPLY, null);
+            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), mul.getArg1(), mul.getArg2(), CalculationType.MULTIPLY, null);
         } else if (div != null) {
-            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), div.getArg1(), div.getArg2(), ClaculationType.DIVIDE, null);
+            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), div.getArg1(), div.getArg2(), CalculationType.DIVIDE, null);
         } else {
             validator.addErrorToList(prdAction, prdAction.getType(), "Calculation action is not Multiply or Divide");
         }

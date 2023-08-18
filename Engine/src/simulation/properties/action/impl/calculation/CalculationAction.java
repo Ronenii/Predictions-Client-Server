@@ -10,9 +10,9 @@ import simulation.properties.property.api.Property;
 public class CalculationAction extends AbstractAction {
     private Object arg1;
     private Object arg2;
-    private final ClaculationType type;
+    private final CalculationType type;
 
-    public CalculationAction(String property, String contextEntity, Object arg1, Object arg2, ClaculationType type1, String contextValue) {
+    public CalculationAction(String property, String contextEntity, Object arg1, Object arg2, CalculationType type1, String contextValue) {
         super(ActionType.CALCULATION, property, contextEntity, contextValue);
         this.arg1 = arg1;
         this.arg2 = arg2;
@@ -42,6 +42,10 @@ public class CalculationAction extends AbstractAction {
     @Override
     public void Invoke(EntityInstance entityInstance) {
         Property toSet = entityInstance.getPropertyByName(getContextProperty());
+
+        if(toSet == null){
+            return;
+        }
 
         switch (type){
             case MULTIPLY:

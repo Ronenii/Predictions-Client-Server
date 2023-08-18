@@ -6,7 +6,6 @@ import java.util.Map;
 
 public class EntityInstance {
     private final Map<String, Property> propertyValues;
-
     private boolean isAlive;
 
     public EntityInstance(Map<String, Property>  properties)
@@ -21,5 +20,9 @@ public class EntityInstance {
 
     public void kill(){
         isAlive = false;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
     }
 }
