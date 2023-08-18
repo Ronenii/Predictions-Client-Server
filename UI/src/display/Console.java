@@ -95,29 +95,18 @@ public class Console {
         System.out.println("2. Histogram of property");
     }
 
-    public static void showThirdFuncFirstMessage() {
-        System.out.println("For each environment value in the simulation, please choose if you want to initialize the value manually or randomly.");
-        System.out.println("If you want to initialize the value manually, please enter your value.");
-        System.out.println("If you want to initialize the value randomly, please press enter.");
+    public static void showThirdFuncFirstMessage(Double from, Double to, boolean isHasRage) {
+        System.out.print("\nInput the value of the environment variable ");
+        if(isHasRage){
+            System.out.printf("from: %.2f to: %.2f\n",from,to);
+        }
+        System.out.println("Or press enter for random value");
     }
 
     public static void showEnvPropertyDet(DTOEnvironmentVariable dtoEnvironmentVariable) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("'").append(dtoEnvironmentVariable.getName()).append("':\n");
-        stringBuilder.append("Type: ").append(dtoEnvironmentVariable.getType()).append("\n");
-        if (dtoEnvironmentVariable.getType().equals("int")) {
-            stringBuilder.append("Value range: from ")
-                    .append((int) dtoEnvironmentVariable.getFrom())
-                    .append(" to ").append((int) dtoEnvironmentVariable.getTo())
-                    .append("\n");
-        } else if (dtoEnvironmentVariable.getType().equals("double")) {
-            stringBuilder.append("Value range: from ")
-                    .append(dtoEnvironmentVariable.getFrom())
-                    .append(" to ").append(dtoEnvironmentVariable.getTo())
-                    .append("\n");
-        }
-
-        stringBuilder.append("========================");
+        stringBuilder.append("----------------\n").append("Environment variable name: ").append("'").append(dtoEnvironmentVariable.getName()).append("'\n");
+        stringBuilder.append("Type: ").append(dtoEnvironmentVariable.getType());
         System.out.println(stringBuilder.toString());
     }
 

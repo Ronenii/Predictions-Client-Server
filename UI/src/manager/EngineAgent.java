@@ -2,6 +2,7 @@ package manager;
 
 import display.Console;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
+import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.result.ResultData;
 import ui2engine.simulation.func1.DTOFirstFunction;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
@@ -49,8 +50,15 @@ public class EngineAgent {
         System.out.print("Please enter path to the XML world config file: ");
         Scanner scanner = new Scanner(System.in);
         String path = scanner.nextLine();
+        DTOLoadSucceed dtoLoadSucceed;
 
-        engine.loadSimulationFromFile(new DTOFirstFunction(path));
+        dtoLoadSucceed = engine.loadSimulationFromFile(new DTOFirstFunction(path));
+        if (dtoLoadSucceed.isSucceed()){
+            Console.printGivenMessage("The simulation creation has completed successfully");
+        }
+        else {
+            Console.printGivenMessage("The simulation creation has failed");
+        }
     }
 
 
@@ -75,9 +83,15 @@ public class EngineAgent {
         DTOThirdFunction ret = new DTOThirdFunction();
         Object valueToSend;
         String input;
-        //TODO: add in the console, print the range.
-        Console.showThirdFuncFirstMessage();
+        //TODO: add validation, check if the user enter a number and check if the number is in the range.
+
         for (DTOEnvironmentVariable dtoEnvironmentVariable : environmentVariables) {
+            if(dtoEnvironmentVariable.getType().equals("decimal") || dtoEnvironmentVariable.getType().equals("float")){
+                Console.showThirdFuncFirstMessage(dtoEnvironmentVariable.getFrom(),dtoEnvironmentVariable.getTo(), true);
+            }
+            else {
+                Console.showThirdFuncFirstMessage(dtoEnvironmentVariable.getFrom(),dtoEnvironmentVariable.getTo(), false);
+            }
             Console.showEnvPropertyDet(dtoEnvironmentVariable);
             input = Input.getInput();
             if (input.equals("\n")) {

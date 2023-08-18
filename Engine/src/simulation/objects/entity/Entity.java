@@ -2,6 +2,7 @@ package simulation.objects.entity;
 
 import simulation.properties.property.api.Property;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +21,10 @@ public class Entity {
         this.name = name;
         this.properties = properties;
         this.currentPopulation = startingPopulation;
+        this.entityInstances = new ArrayList<>();
 
         for (int i = 0; i < this.startingPopulation; i++) {
-            entityInstances.add(new EntityInstance(new HashMap<>(properties)));
+            entityInstances.add(new EntityInstance(properties.values().toArray(new Property[0])));
         }
     }
 
