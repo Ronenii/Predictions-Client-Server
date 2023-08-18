@@ -66,6 +66,7 @@ public class PRDConverter {
 
         // check if the entities and environment variable convert succeed.
         if (validator.containsErrors()) {
+            validator.addEntitiesAndEnvPropCreationErrorMessage();
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
@@ -75,6 +76,7 @@ public class PRDConverter {
 
         // check if the rules and ending condition convert succeed.
         if (validator.containsErrors()) {
+            validator.addRulesAndEndingConditionsCreationErrorMessage();
             throw new IllegalArgumentException(validator.getErrorList());
         }
 

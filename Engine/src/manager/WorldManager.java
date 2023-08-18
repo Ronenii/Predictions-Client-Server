@@ -1,5 +1,6 @@
 package manager;
 
+import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.result.ResultData;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.start.StartData;
@@ -67,10 +68,17 @@ public class WorldManager implements EngineInterface {
     }
 
     @Override
-    public void loadSimulationFromFile(DTOFirstFunction dto) {
+    public DTOLoadSucceed loadSimulationFromFile(DTOFirstFunction dto) {
+        DTOLoadSucceed dtoLoadSucceed = new DTOLoadSucceed(false);
+
         if (Reader.isValidPath(dto.getPath())) {
             this.world = Reader.readWorldFromXML(dto.getPath());
+            if(this.world != null) {
+                dtoLoadSucceed = new DTOLoadSucceed(true);
+            }
         }
+
+        return dtoLoadSucceed;
     }
 
     @Override

@@ -31,6 +31,16 @@ abstract public class Validator {
         errorsList.append("\n");
     }
 
+    public void addEntitiesAndEnvPropCreationErrorMessage() {
+        errorsList.append("Due to the errors provided, the simulation's environment variables and/or entities were not created and the conversion process stopped.\n")
+                .append("Please fix the provided XML file where the errors occurred and reload the file to ensure proper creation of the simulation.\n");
+    }
+
+    public void addRulesAndEndingConditionsCreationErrorMessage() {
+        errorsList.append("Due to the errors provided, the simulation's rules and/or ending conditions were not created and the conversion process stopped.\n")
+                .append("Please fix the provided XML file where the errors occurred and reload the file to ensure proper creation of the simulation.\n");
+    }
+
     /**
      * @return returns true if the validator found any errors.
      */

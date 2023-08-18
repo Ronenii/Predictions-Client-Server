@@ -96,10 +96,6 @@ public class PRDValidator extends Validator {
             double from = prdProperty.getPRDRange().getFrom();
             double to = prdProperty.getPRDRange().getTo();
 
-            if (from < 0 || to < 0) {
-                addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Range contains negative values.");
-            }
-
             if (to <= from) {
                 addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
             }
@@ -346,8 +342,7 @@ public class PRDValidator extends Validator {
     }
 
     private void validatePRDConditionEntityAndProperty(PRDCondition prdCondition, Map<String, Entity> entities, String ruleName) throws PRDObjectConversionException {
-        String entityName = prdCondition.getEntity(), propertyName = null;
-        boolean multipleFlag = true;
+        String entityName = prdCondition.getEntity(), propertyName;
 
         if(prdCondition.getSingularity().equals("single")){
             if (!entities.containsKey(entityName)) {
