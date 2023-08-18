@@ -48,6 +48,11 @@ public class PRDValidator extends Validator {
     private void validatePRDEnvironmentPropertyDoesntExist(PRDEnvProperty prdEnvProperty, Map<String, Property> environmentProperties) throws PRDObjectConversionException {
         String propertyName = prdEnvProperty.getPRDName();
 
+        if(propertyName == null){
+            addErrorToListAndThrowException(prdEnvProperty, "Environment variable without name", "Property must have a name.");
+        }
+
+
         if (environmentProperties.containsKey(propertyName)) {
             addErrorToListAndThrowException(prdEnvProperty, propertyName, "The given property already exists.");
         }
@@ -78,6 +83,11 @@ public class PRDValidator extends Validator {
 
     private void validatePRDPropertyDoesntExist(PRDProperty prdProperty, Map<String, Property> properties) throws PRDObjectConversionException {
         String propertyName = prdProperty.getPRDName();
+
+        if(propertyName == null){
+            addErrorToListAndThrowException(prdProperty, "Property without name", "Property must have a name.");
+        }
+
 
         if (properties.containsKey(propertyName)) {
             addErrorToListAndThrowException(prdProperty, propertyName, "The given property already exists.");
@@ -163,6 +173,10 @@ public class PRDValidator extends Validator {
     }
 
     private void validateRuleDoesntExist(PRDRule prdRule, Map<String, Rule> rules) throws PRDObjectConversionException {
+        if(prdRule.getName() == null){
+            addErrorToListAndThrowException(prdRule, "Rule without name", "Property must have a name.");
+        }
+
         if(rules.containsKey(prdRule.getName()))
         {
             addErrorToListAndThrowException(prdRule, prdRule.getName(), "There is already a rule with this name");
