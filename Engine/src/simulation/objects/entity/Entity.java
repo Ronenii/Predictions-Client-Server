@@ -13,8 +13,7 @@ public class Entity {
     private int currentPopulation;
     private final String name;
     private final Map<String, Property> properties;
-
-    private List<EntityInstance> entityInstances;
+    private final List<EntityInstance> entityInstances;
 
     public Entity(int startingPopulation, String name, Map<String, Property> properties) {
         this.startingPopulation = startingPopulation;
@@ -24,7 +23,7 @@ public class Entity {
         this.entityInstances = new ArrayList<>();
 
         for (int i = 0; i < this.startingPopulation; i++) {
-            entityInstances.add(new EntityInstance(properties.values().toArray(new Property[0])));
+            entityInstances.add(new EntityInstance(new HashMap<>(properties)));
         }
     }
 
