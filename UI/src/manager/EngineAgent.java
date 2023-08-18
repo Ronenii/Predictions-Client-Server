@@ -3,6 +3,7 @@ package manager;
 import display.Console;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
+import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.result.ResultData;
 import ui2engine.simulation.func1.DTOFirstFunction;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
@@ -39,7 +40,10 @@ public class EngineAgent {
      * Asks the engine to create a String describing the Current simulation details and returns it.
      */
     public void showCurrentSimulationDetails() {
-        Console.showSimulationDetails(engine.getCurrentSimulationDetails());
+        PreviewData previewData = engine.getCurrentSimulationDetails();
+        // TODO: unpack the data and print it.
+
+        //Console.showSimulationDetails(engine.getCurrentSimulationDetails());
     }
 
     /**
