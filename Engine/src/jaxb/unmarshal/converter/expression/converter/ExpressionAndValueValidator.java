@@ -304,14 +304,19 @@ public class ExpressionAndValueValidator extends Validator {
 
         actionType = prdAction.getType().toUpperCase();
         entityName = prdAction.getEntity();
-        propertyName = prdAction.getProperty();
+        if (actionType.equals("CALCULATION")){
+            propertyName = prdAction.getResultProp();
+        }
+        else {
+            propertyName = prdAction.getProperty();
+        }
 
         Entity entity = entities.get(entityName);
         ActionType type = ActionType.valueOf(actionType);
         PropertyType propertyType;
         boolean ret = true;
 
-        if(type != ActionType.INCREASE && type != ActionType.DECREASE && type != ActionType.CALCULATION && type != ActionType.CONDITION)
+        if(type == ActionType.KILL)
         {
             addErrorToList(prdAction, prdAction.getValue(), "Action type not allowed");
             ret = false;
@@ -325,6 +330,7 @@ public class ExpressionAndValueValidator extends Validator {
 
         return ret;
     }
+
 
     /**
      * 'compareActionValueToGivenPropertyValue' helper for integer or double actions/properties.
