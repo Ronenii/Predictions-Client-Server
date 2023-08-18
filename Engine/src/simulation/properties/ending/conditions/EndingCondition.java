@@ -4,6 +4,10 @@ public class EndingCondition {
     private EndingConditionType type;
     private int count;
 
+    public static final int BY_TICKS = 0;
+    public static final int BY_SECONDS = 0;
+
+
     public EndingCondition(EndingConditionType type, int count) {
         this.type = type;
         this.count = count;

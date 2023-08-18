@@ -185,7 +185,7 @@ public class EngineAgent {
      * Prompts the user to choose a simulation he wants to see the full details of (Based on ID).
      * Shows the user's chosen simulation details.
      */
-    public void MenuOption4() {
+    public void ShowPastSimulationResults() {
         ResultData[] pastSimulationsResultData = engine.getPastSimulationResultData();
         Console.showShortDetailsOfAllPastSimulations(pastSimulationsResultData);
 
