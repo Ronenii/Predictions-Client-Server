@@ -2,14 +2,17 @@ package simulation.properties.action.impl.condition;
 
 import manager.value.update.object.api.UpdateObject;
 import manager.value.update.object.impl.OneObjectUpdate;
+import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 
 
 public abstract class AbstractConditionAction extends AbstractAction {
-    private Object value;
-    private final ThenOrElse thenActions;
-    private final ThenOrElse elseActions;
+    protected Object value;
+
+    protected boolean isTrue;
+    protected final ThenOrElse thenActions;
+    protected final ThenOrElse elseActions;
 
     public AbstractConditionAction(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, String contextValue) {
         super(ActionType.CONDITION, property, contextEntity, contextValue);
@@ -34,6 +37,28 @@ public abstract class AbstractConditionAction extends AbstractAction {
     @Override
     public Object getValue() {
         return value;
+    }
+
+    /**
+     * Invokes all "thenActions" on the given entity instance.
+     * If this is activated then this condition must be true.
+     * @param entityInstance The given entity to invoke all "thenActions" upon.
+     */
+    protected void invokeThenActions(EntityInstance entityInstance){
+        thenActions.invoke(entityInstance);
+        isTrue = true;
+    }
+
+    /**
+     * Invokes all "elseActions" on the given entity instance.
+     * If this is activated then this condition must be true.
+     * @param entityInstance The given entity to invoke all "elseActions" upon.
+     */
+    protected void invokeElseActions(EntityInstance entityInstance){
+        if(!elseActions.getActionsToInvoke().isEmpty()) {
+            elseActions.invoke(entityInstance);
+        }
+        isTrue = false;
     }
 
     public void updateValue(Object value){

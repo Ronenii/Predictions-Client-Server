@@ -25,6 +25,11 @@ public class IncreaseAction extends AbstractAction {
         return value;
     }
 
+    /**
+     * Increases the value of a property based on the property's type.
+     * Increases actions can only take place on decimal or floats.
+     * @param entityInstance The given entity to increase the value of the action's property.
+     */
     @Override
     public void Invoke(EntityInstance entityInstance) {
         Property toIncrease = entityInstance.getPropertyByName(getContextProperty());

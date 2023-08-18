@@ -25,6 +25,11 @@ public class DecreaseAction extends AbstractAction {
         return value;
     }
 
+    /**
+     * Decreases the value of a property based on the property's type.
+     * Decrease actions can only take place on decimal or floats.
+     * @param entityInstance The given entity to decrease the value of the action's property from.
+     */
     @Override
     public void Invoke(EntityInstance entityInstance) {
         Property toDecrease = entityInstance.getPropertyByName(getContextProperty());

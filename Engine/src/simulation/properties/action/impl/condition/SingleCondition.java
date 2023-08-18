@@ -3,7 +3,7 @@ package simulation.properties.action.impl.condition;
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.property.api.Property;
 
-public class SingleCondition extends AbstractConditionAction{
+public class SingleCondition extends AbstractConditionAction {
     private final ConditionOperator operator;
 
     public SingleCondition(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, ConditionOperator operator, String contextValue) {
@@ -15,55 +15,41 @@ public class SingleCondition extends AbstractConditionAction{
     public void Invoke(EntityInstance entityInstance) {
         Property toCompare = entityInstance.getPropertyByName(getContextProperty());
 
-        if(toCompare == null){
+        if (toCompare == null) {
             return;
         }
 
-        switch (operator){
+        switch (operator) {
             case EQUALS:
-                if(toCompare.getValue() == getValue())
-                {
-                    getThenActions().invoke(entityInstance);
-                }
-                else {
-                    if(!getElseActions().getActionsToInvoke().isEmpty()){
-                        getElseActions().invoke(entityInstance);
-                    }
+                if (toCompare.getValue() == getValue()) {
+                    invokeThenActions(entityInstance);
+                } else {
+                    invokeElseActions(entityInstance);
                 }
                 break;
             case NOT_EQUALS:
-                if(toCompare.getValue() != getValue())
-                {
-                    getThenActions().invoke(entityInstance);
-                }
-                else {
-                    if(!getElseActions().getActionsToInvoke().isEmpty()){
-                        getElseActions().invoke(entityInstance);
-                    }
+                if (toCompare.getValue() != getValue()) {
+                    invokeThenActions(entityInstance);
+                } else {
+                    invokeElseActions(entityInstance);
                 }
                 break;
             case BIGGER_THAN:
-                if((double)toCompare.getValue() > (double)getValue())
-                {
-                    getThenActions().invoke(entityInstance);
-                }
-                else {
-                    if(!getElseActions().getActionsToInvoke().isEmpty()){
-                        getElseActions().invoke(entityInstance);
-                    }
+                if ((double) toCompare.getValue() > (double) getValue()) {
+                    invokeThenActions(entityInstance);
+                } else {
+                    invokeElseActions(entityInstance);
                 }
                 break;
             case LESSER_THAN:
-                if((double)toCompare.getValue() < (double)getValue())
-                {
-                    getThenActions().invoke(entityInstance);
-                }
-                else {
-                    if(!getElseActions().getActionsToInvoke().isEmpty()){
-                        getElseActions().invoke(entityInstance);
-                    }
+                if ((double) toCompare.getValue() < (double) getValue()) {
+                    invokeThenActions(entityInstance);
+                } else {
+                    invokeElseActions(entityInstance);
                 }
                 break;
         }
     }
+
+
 }
