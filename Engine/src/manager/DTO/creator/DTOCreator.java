@@ -10,6 +10,7 @@ import engine2ui.simulation.prview.PreviewData;
 import simulation.objects.entity.Entity;
 import simulation.properties.action.api.Action;
 import simulation.properties.ending.conditions.EndingCondition;
+import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
 import simulation.properties.property.impl.DoubleProperty;
@@ -19,11 +20,10 @@ import simulation.properties.rule.Rule;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class DTOCreator {
 
-    public PreviewData createSimulationPreviewDataObject(Map<String, Entity> entities, Map<String, Rule> rules, Set<EndingCondition> endingConditions) {
+    public PreviewData createSimulationPreviewDataObject(Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions) {
         List<DTOEntity> entitiesList;
         List<DTORule> rulesList;
         List<DTOEndingCondition> endingConditionsList;
@@ -85,10 +85,10 @@ public class DTOCreator {
         return new DTORule(rule.getName(),rule.getActivation().getTicks(),rule.getActivation().getProbability(), actionsNamesArray);
     }
 
-    private List<DTOEndingCondition> getDTOEndingConditionsList(Set<EndingCondition> endingConditions) {
+    private List<DTOEndingCondition> getDTOEndingConditionsList(Map<EndingConditionType, EndingCondition> endingConditions) {
         List<DTOEndingCondition> endingConditionsList = new ArrayList<>();
 
-        endingConditions.forEach((value)->endingConditionsList.add(getDTOEndingCondition(value)));
+        endingConditions.forEach((key,value)->endingConditionsList.add(getDTOEndingCondition(value)));
         return endingConditionsList;
     }
 
