@@ -34,46 +34,12 @@ public class ResultData {
         this.entities = entities;
     }
 
-    // TODO: This is for debugging
-    public ResultData(String dateTime, DTOEntity [] entities)
-    {
-        id = IdGenerator.generateID();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy | HH:mm:ss");
-        this.dateTime = LocalDateTime.parse(dateTime, dtf);
-        this.entities = entities;
+    /**
+     * Clears all IDs generated in the ID generator of the result data.
+     */
+    public static void clearIds(){
+        IdGenerator.clearIds();
     }
-
-//    // TODO: This is for debugging
-//    public ResultData(String dateTime)
-//    {
-//        entities = new DTOEntity[3];
-//
-//        // SMOKER
-//        List<DTOProperty> smokerProperties = new ArrayList<>();
-//        smokerProperties.add(new RangedDTOProperty("lung-cancer-progress", "decimal",false, 0, 100));
-//        smokerProperties.add(new RangedDTOProperty("age", "decimal",false, 15, 50));
-//        smokerProperties.add(new RangedDTOProperty("cigarets-per-month", "decimal",true, 0, 500));
-//        entities[0] = new DTOEntity("Smoker",100, 15,smokerProperties.toArray(new DTOProperty[0]));
-//
-//        // NON SMOKER
-//        List<DTOProperty> nonSmokerProperties = new ArrayList<>();
-//        nonSmokerProperties.add(new RangedDTOProperty("lung-cancer-progress", "decimal",false, 0, 100));
-//        nonSmokerProperties.add(new RangedDTOProperty("age","decimal", false, 15, 50 ));
-//        nonSmokerProperties.add(new NonRangedDTOProperty("is-working-out", "boolean",true));
-//        entities[1] = new DTOEntity("Non Smoker", 100, 41, nonSmokerProperties.toArray(new DTOProperty[0]));
-//
-//        // CHILD
-//        List<DTOProperty> childProperties = new ArrayList<>();
-//        childProperties.add(new RangedDTOProperty("lung-cancer-progress", "decimal", false, 0, 100));
-//        childProperties.add(new RangedDTOProperty("age", "decimal", false, 0, 14));
-//        childProperties.add(new NonRangedDTOProperty("eating-sugar","boolean", true));
-//        entities[2] = new DTOEntity("Child", 50, 45, childProperties.toArray(new DTOProperty[0]));
-//
-//
-//        id = IdGenerator.generateID();
-//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy | HH:mm:ss");
-//        this.dateTime = LocalDateTime.parse(dateTime, dtf);
-//    }
 
     public LocalDateTime getDateTime() {
         return dateTime;

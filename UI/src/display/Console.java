@@ -34,7 +34,7 @@ public class Console {
      * Receives a string of simulation's details, formats it and prints it.
      */
     public static void showSimulationDetails(PreviewData previewData) {
-        printTitle("THE SIMULATION DETAILS");
+        printTitle("SIMULATION DETAILS");
         printEntitiesDetails(previewData.getEntities());
         printRulesDetails(previewData.getRules());
         printEndingConditions(previewData.getEndingConditions());
@@ -50,7 +50,7 @@ public class Console {
     public static void showShortDetailsOfAllPastSimulations(ResultData[] pastSimulationsData) {
 
         if (pastSimulationsData.length == 0) {
-            System.out.println("No past simulations to display.\n");
+            System.out.println("No past simulations to display.");
             return;
         }
         // Sort the Result data by date time
@@ -223,9 +223,9 @@ public class Console {
             printEntityDetails(entities[i - 1]);
         }
 
-        System.out.printf("\nTotal population when simulation started: %s\n",totalStartingPopulation);
-        System.out.printf("Total population when simulation ended: %s\n",totalEndingPopulation);
-}
+        System.out.printf("\nTotal population when simulation started: %s\n", totalStartingPopulation);
+        System.out.printf("Total population when simulation ended: %s\n", totalEndingPopulation);
+    }
 
     /**
      * Prints out the given entity's details in the following format:
@@ -287,7 +287,8 @@ public class Console {
                 } else {
                     System.out.printf("\tProperty's range: from %.2f to %.2f\n\n", rangedDTOProperty.getFrom(), rangedDTOProperty.getTo());
                 }
-
+            } else {
+                println();
             }
         }
     }
@@ -339,7 +340,7 @@ public class Console {
     public static void printSimulationResultInfo(ResultInfo resultInfo) {
         System.out.println("\nSimulation run has completed.");
         System.out.printf("Simulation run id: %s\n", resultInfo.getId());
-        System.out.printf("The simulation run terminated after %s %s.\n",resultInfo.getEndingCondition().getCount(), resultInfo.getEndingCondition().getType().toLowerCase());
+        System.out.printf("The simulation run terminated after %s %s.\n", resultInfo.getEndingCondition().getCount(), resultInfo.getEndingCondition().getType().toLowerCase());
 
     }
 }

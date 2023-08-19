@@ -105,6 +105,14 @@ public class WorldManager implements EngineInterface {
         return new ResultInfo(result.getId(), dtoEndingCondition);
     }
 
+    /**
+     * Clears all data of past simulations and all generated IDs.
+     */
+    public void resetEngine(){
+        pastSimulations.clear();
+        ResultData.clearIds();
+    }
+
 
     /**
      * Get the third function's DTO object, extract the user input from this object and update the simulation's environment variables.

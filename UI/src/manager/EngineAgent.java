@@ -36,7 +36,10 @@ public class EngineAgent {
     /**
      * Gets the current simulation details from the engine and prints it.
      */
-    public void showCurrentSimulationDetails() {
+    public void showCurrentSimulationDetails() throws SimulationNotLoadedException {
+        if(!engine.getIsSimulationLoaded()){
+            throw new SimulationNotLoadedException("There is no simulation loaded in the system.");
+        }
         Console.showSimulationDetails(engine.getCurrentSimulationDetails());
     }
 
@@ -48,11 +51,15 @@ public class EngineAgent {
         System.out.print("Please enter path to the XML world config file: ");
         Scanner scanner = new Scanner(System.in);
         String path = scanner.nextLine();
-        DTOLoadSucceed dtoLoadSucceed;
 
-        dtoLoadSucceed = engine.loadSimulationFromFile(new DTOFirstFunction(path));
+        DTOLoadSucceed dtoLoadSucceed = engine.loadSimulationFromFile(new DTOFirstFunction(path));
+
+        // If we succeeded in creating the simulation we want to reset the engine.
+        // If a simulation was loaded beforehand and the creation failed we don't want
+        // to delete past data until a new simulation is loaded successfully.
         if (dtoLoadSucceed.isSucceed()) {
             Console.println("The simulation creation has completed successfully");
+            engine.resetEngine();
         } else {
             Console.println("The simulation creation has failed");
         }
@@ -175,7 +182,7 @@ public class EngineAgent {
      * Prompts the user to choose a simulation he wants to see the full details of (Based on ID).
      * Shows the user's chosen simulation details.
      */
-    public void ShowPastSimulationResults() {
+    public void showPastSimulationResults() {
         ResultData[] pastSimulationsResultData = engine.getPastSimulationResultData();
         Console.showShortDetailsOfAllPastSimulations(pastSimulationsResultData);
 

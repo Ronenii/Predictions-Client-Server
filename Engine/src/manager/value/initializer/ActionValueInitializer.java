@@ -103,7 +103,7 @@ public class ActionValueInitializer {
      * Handling the value initialize of a calculation condition object.
      */
     private void setCalculationCase(CalculationAction action) {
-        String obj1 = (String)action.getArg1(), obj2 = (String)action.getArg2();
+        String obj1 = action.getArg1().toString(), obj2 = action.getArg2().toString();
         Property property = entities.get(action.getContextEntity()).getProperties().get(action.getContextProperty());
         UpdateObject updateObject;
         Object arg1, arg2;

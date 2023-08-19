@@ -34,4 +34,8 @@ public class IdGenerator {
     private static boolean isUniqueId(String id){
         return !generatedIds.contains(id);
     }
+
+    public static void clearIds(){
+        generatedIds.clear();
+    }
 }

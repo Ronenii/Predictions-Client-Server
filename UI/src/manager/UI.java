@@ -73,7 +73,7 @@ public class UI {
                 engineAgent.runSimulation();
                 break;
             case SHOW_PAST_SIMULATIONS:
-                engineAgent.ShowPastSimulationResults();
+                engineAgent.showPastSimulationResults();
                 break;
             case EXIT:
                 exit = true;
