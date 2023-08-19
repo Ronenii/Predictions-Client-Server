@@ -127,6 +127,8 @@ public class World {
     }
 
     public void resetWorld(){
+        ticks = 0;
+        this.timePassed = -1;
         for (Entity e: entities.values()
              ) {
             e.resetPopulation();

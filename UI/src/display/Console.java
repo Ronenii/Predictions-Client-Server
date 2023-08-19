@@ -219,7 +219,7 @@ public class Console {
         for (int i = 1; i <= entities.length; i++) {
             totalStartingPopulation += entities[i - 1].getStartingPopulation();
             totalEndingPopulation += entities[i - 1].getEndingPopulation();
-            System.out.printf("\n#%s\n", i);
+            System.out.printf("\n#%s", i);
             printEntityDetails(entities[i - 1]);
         }
 
