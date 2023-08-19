@@ -6,6 +6,7 @@ import engine2ui.simulation.genral.impl.properties.DTORule;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 import engine2ui.simulation.genral.impl.properties.property.impl.RangedDTOProperty;
 import engine2ui.simulation.prview.PreviewData;
+import engine2ui.simulation.result.ResultInfo;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.result.ResultData;
 
@@ -286,5 +287,13 @@ public class Console {
             System.out.printf("Limit: %d\n", dtoEndingCondition.getCount());
             counter++;
         }
+    }
+
+    public static void printSimulationResultInfo(ResultInfo resultInfo) {
+        System.out.println("\nSimulation run has completed.");
+        System.out.printf("Simulation run id: %s\n", resultInfo.getId());
+        System.out.println("The simulation run terminate condition:");
+        System.out.printf("\tCondition type: %s\n", resultInfo.getEndingCondition().getType());
+        System.out.printf("\tCondition count: %s\n", resultInfo.getEndingCondition().getCount());
     }
 }

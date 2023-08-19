@@ -17,4 +17,9 @@ public class StringProperty extends AbstractProperty {
         super(name, false, PropertyType.STRING, null);
     }
 
+    @Override
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
 }

@@ -24,6 +24,20 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty {
         this.to = to;
     }
 
+    @Override
+    public void setValue(Object value) {
+        double givenValue = (double)value;
+
+        if(givenValue < from){
+            this.value = from;
+        } else if (givenValue > to) {
+            this.value = to;
+        }
+        else {
+            this.value = value;
+        }
+    }
+
 
     public double getFrom() {
         return from;

@@ -19,6 +19,11 @@ public class BooleanProperty extends AbstractProperty {
     }
 
     @Override
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
     }

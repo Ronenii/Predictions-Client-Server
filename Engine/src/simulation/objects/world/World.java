@@ -15,7 +15,7 @@ public class World {
     private final Map<String, Entity> entities;
     private final Map<String, Rule> rules;
     private final Map<EndingConditionType, EndingCondition> endingConditions;
-
+    private EndingCondition terminateCondition;
     private int ticks;
     private long timePassed;
     private long startingTime;
@@ -47,6 +47,10 @@ public class World {
 
     public Map<EndingConditionType, EndingCondition> getEndingConditions() {
         return endingConditions;
+    }
+
+    public EndingCondition getTerminateCondition() {
+        return terminateCondition;
     }
 
     @Override
@@ -137,23 +141,33 @@ public class World {
      * @return If the simulation has met the required amount of ticks to stop it.
      */
     private boolean isEndingByTicksMet() {
+        boolean ret = false;
+
         if (endingConditions.containsKey(EndingConditionType.TICKS)) {
-            return ++ticks >= endingConditions.get(EndingConditionType.TICKS).getCount();
+            if (++ticks >= endingConditions.get(EndingConditionType.TICKS).getCount()){
+                terminateCondition = endingConditions.get(EndingConditionType.TICKS);
+                ret = true;
+            }
         }
 
-        return false;
+        return ret;
     }
 
     /**
      * @return If the simulation has met the required amount of seconds to stop it.
      */
     private boolean isEndingBySecondsMet() {
+        boolean ret = false;
+
         if (endingConditions.containsKey(EndingConditionType.TIME)) {
             timePassed = (System.currentTimeMillis() - startingTime) / 1000;
-            return timePassed >= endingConditions.get(EndingConditionType.TIME).getCount();
+            if(timePassed >= endingConditions.get(EndingConditionType.TIME).getCount()){
+                terminateCondition = endingConditions.get(EndingConditionType.TIME);
+                ret = true;
+            }
         }
 
-        return false;
+        return ret;
     }
 
     @Override

@@ -1,14 +1,17 @@
 package manager;
 
+import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.result.ResultData;
+import engine2ui.simulation.result.ResultInfo;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.start.StartData;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import manager.value.initializer.ActionValueInitializer;
 import simulation.objects.world.World;
+import simulation.properties.ending.conditions.EndingCondition;
 import ui2engine.simulation.func1.DTOFirstFunction;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
@@ -94,7 +97,7 @@ public class WorldManager implements EngineInterface {
     }
 
     @Override
-    public void runSimulation(DTOThirdFunction dtoThirdFunction) {
+    public ResultInfo runSimulation(DTOThirdFunction dtoThirdFunction) {
         // Resets all entities in this world
         world.resetWorld();
 
@@ -107,6 +110,10 @@ public class WorldManager implements EngineInterface {
         // run the simulation.
         ResultData result = this.world.runSimulation();
         this.pastSimulations.put(result.getId(), result);
+
+        // Sent to the UI the termination cause.
+        DTOEndingCondition dtoEndingCondition = new DTOEndingCondition(world.getTerminateCondition().getType().toString(), world.getTerminateCondition().getCount());
+        return new ResultInfo(result.getId(), dtoEndingCondition);
     }
 
 

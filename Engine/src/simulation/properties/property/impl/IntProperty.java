@@ -24,6 +24,19 @@ public class IntProperty extends AbstractProperty implements RangedProperty {
         this.to = to;
     }
 
+    @Override
+    public void setValue(Object value) {
+        int givenValue = (int)value;
+
+        if(givenValue < from){
+            this.value = from;
+        } else if (givenValue > to) {
+            this.value = to;
+        }
+        else {
+            this.value = value;
+        }
+    }
 
     public int getFrom() {
         return from;

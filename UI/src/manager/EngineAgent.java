@@ -5,6 +5,7 @@ import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.result.ResultData;
+import engine2ui.simulation.result.ResultInfo;
 import manager.exception.SimulationNotLoadedException;
 import ui2engine.simulation.func1.DTOFirstFunction;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
@@ -70,7 +71,8 @@ public class EngineAgent {
         StartData startData = engine.getSimulationStartData();
         DTOThirdFunction dtoThirdFunction = createDTOThirdFunctionObject(startData);
 
-        engine.runSimulation(dtoThirdFunction);
+        ResultInfo resultInfo = engine.runSimulation(dtoThirdFunction);
+        Console.printSimulationResultInfo(resultInfo);
     }
 
     /**

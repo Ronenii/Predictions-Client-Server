@@ -4,7 +4,7 @@ public abstract class AbstractProperty implements Property {
     private final String name;
     private boolean isRandInit;
     private final PropertyType type;
-    private Object value;
+    protected Object value;
 
 
     public AbstractProperty(String name, boolean isRandInit, PropertyType type, Object value) {
@@ -32,16 +32,6 @@ public abstract class AbstractProperty implements Property {
     @Override
     public Object getValue() {
         return value;
-    }
-
-    @Override
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
-    @Override
-    public void updateValue(Object value) {
-        this.value = (boolean)value;
     }
 
     @Override
