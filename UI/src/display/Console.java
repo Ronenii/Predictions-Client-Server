@@ -195,7 +195,7 @@ public class Console {
     }
 
     private static void printEntitiesDetails(List<DTOEntity> entities) {
-        printTitle("ENTITIES:");
+        printTitle("ENTITIES");
 
         for (DTOEntity dtoEntity : entities) {
             System.out.printf("\nName : %s\n", dtoEntity.getName());
@@ -226,7 +226,7 @@ public class Console {
     }
 
     private static void printRulesDetails(List<DTORule> rules) {
-        printTitle("RULES:");
+        printTitle("RULES");
 
         for (DTORule dtoRule : rules) {
             System.out.printf("\nName : %s\n", dtoRule.getName());
@@ -258,7 +258,7 @@ public class Console {
     }
 
     private static void printEndingConditions(List<DTOEndingCondition> endingConditions) {
-        printTitle("ENDING CONDITIONS:");
+        printTitle("ENDING CONDITIONS");
         int counter = 1;
 
         for (DTOEndingCondition dtoEndingCondition : endingConditions) {
