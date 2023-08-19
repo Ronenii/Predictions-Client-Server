@@ -52,6 +52,8 @@ public class Entity {
         return entityToString.toString();
     }
 
+    public List<EntityInstance> getEntityInstances(){ return entityInstances;}
+
     public int getCurrentPopulation() {
         int aliveCount = 0;
         for (EntityInstance e : entityInstances

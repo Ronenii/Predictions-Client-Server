@@ -8,9 +8,12 @@ import engine2ui.simulation.genral.impl.properties.property.impl.RangedDTOProper
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.result.ResultData;
+import simulation.properties.property.api.PropertyType;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -51,9 +54,7 @@ public class Console {
             return;
         }
         // Sort the Result data by date time
-        Arrays.sort(pastSimulationsData, (r1, r2) -> {
-            return r1.getDateTime().compareTo(r2.getDateTime());
-        });
+        Arrays.sort(pastSimulationsData, Comparator.comparing(ResultData::getDateTime));
 
         printTitle("PREVIOUS SIMULATION RUNS");
         System.out.println();
@@ -96,7 +97,6 @@ public class Console {
     public static void promptUserToInputPathForFile() {
     }
 
-    //TODO: Implement this after we have the structure of a simulation's result data
     public static void printResultData(ResultData resultData) {
         Console.printTitle("ENTITIES");
         Console.printTitle("");
@@ -106,6 +106,44 @@ public class Console {
         System.out.println("Display results by:");
         System.out.println("1. Entity quantity");
         System.out.println("2. Histogram of property");
+    }
+
+    /**
+     * Displays the histogram by the type of the property it represents.
+     * @param histogram The histogram to display
+     * @param property used for display and getting the property type's
+     */
+    public static void displayHistogramByType(Map<Object, Integer> histogram, DTOProperty property){
+        PropertyType type = PropertyType.valueOf(property.getType());
+
+        System.out.printf("Histogram for property: %s\n\n", property.getName().toUpperCase());
+        switch (type){
+            case DECIMAL:
+                printHistogram(histogram, Integer.class);
+                break;
+            case FLOAT:
+                printHistogram(histogram, Double.class);
+                break;
+            case BOOLEAN:
+                printHistogram(histogram, Boolean.class);
+                break;
+            case STRING:
+                printHistogram(histogram, String.class);
+                break;
+        }
+    }
+
+    /**
+     * @param histogram a map of keys and values where the keys are a property's value, and the
+     *                  map's values are the quantity this value appears.
+     * @param castingClass The class to cast the keys of the maps to.
+     */
+    private static void printHistogram(Map<Object, Integer> histogram, Class castingClass){
+        System.out.println("Value: Quantity\n\n");
+        for (Object o: histogram.keySet()
+             ) {
+            System.out.printf("%s: %d\n",castingClass.cast(o), histogram.get(o));
+        }
     }
 
     public static void printPromptForEnvironmentPropertyInput(DTOEnvironmentVariable dtoEnvironmentVariable) {
@@ -118,10 +156,10 @@ public class Console {
                 System.out.printf("(%.2f-%.2f)\n", dtoEnvironmentVariable.getFrom(), dtoEnvironmentVariable.getTo());
                 break;
             case "boolean":
-                System.out.printf("(true|false)\n");
+                Console.print("(true|false)\n");
                 break;
             case "string":
-                System.out.printf("a string of up to 50 characters, can only contain: \n" +
+                Console.print("a string of up to 50 characters, can only contain: \n" +
                         "- lower and upper case letters.\n" +
                         "- numbers: 0-9\n" +
                         "- these special characters: 'space'!,?_-.()\n");
@@ -134,7 +172,7 @@ public class Console {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("----------------\n").append("Environment variable name: ").append("'").append(dtoEnvironmentVariable.getName()).append("'\n");
         stringBuilder.append("Type: ").append(dtoEnvironmentVariable.getType());
-        System.out.println(stringBuilder.toString());
+        System.out.println(stringBuilder);
     }
 
     /**

@@ -5,20 +5,23 @@ import simulation.properties.property.api.Property;
 import java.util.Map;
 
 public class EntityInstance {
-    private final Map<String, Property> propertyValues;
+    private final Map<String, Property> properties;
     private boolean isAlive;
 
-    public EntityInstance(Map<String, Property>  properties)
-    {
+    public EntityInstance(Map<String, Property> properties) {
         isAlive = true;
-        this.propertyValues = properties;
+        this.properties = properties;
     }
 
-    public Property getPropertyByName(String propertyName){
-        return propertyValues.get(propertyName);
+    public Property getPropertyByName(String propertyName) {
+        return properties.get(propertyName);
     }
 
-    public void kill(){
+    public Map<String, Property> getProperties() {
+        return properties;
+    }
+
+    public void kill() {
         isAlive = false;
     }
 

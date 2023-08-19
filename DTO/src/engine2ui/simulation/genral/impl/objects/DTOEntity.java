@@ -10,11 +10,14 @@ public class DTOEntity {
     private final int endingPopulation;
     private final DTOProperty[] properties;
 
-    public DTOEntity(String name, int StartingPopulation, int endingPopulation, DTOProperty[] properties) {
+    private final DTOEntityInstance[] instances;
+
+    public DTOEntity(String name, int StartingPopulation, int endingPopulation, DTOProperty[] properties, DTOEntityInstance[] instances) {
         this.name = name;
         this.startingPopulation = StartingPopulation;
         this.endingPopulation = endingPopulation;
         this.properties = properties;
+        this.instances = instances;
     }
 
     public String getName() {
@@ -33,11 +36,15 @@ public class DTOEntity {
         return properties;
     }
 
+    public DTOEntityInstance[] getInstances() {
+        return instances;
+    }
+
     @Override
     public String toString() {
         return String.format("Name: %s\n", name) +
                 String.format("Population: %s\n", startingPopulation) +
                 "Properties: \n";
-                //TODO: add printing to properties array
+        //TODO: add printing to properties array
     }
 }
