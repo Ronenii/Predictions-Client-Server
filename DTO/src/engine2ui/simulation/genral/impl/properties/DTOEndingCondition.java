@@ -9,6 +9,14 @@ public class DTOEndingCondition {
         this.count = count;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
     @Override
     public String toString() {
 

@@ -1,10 +1,15 @@
 package display;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
+import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
+import engine2ui.simulation.genral.impl.properties.DTORule;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
+import engine2ui.simulation.genral.impl.properties.property.impl.RangedDTOProperty;
+import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.result.ResultData;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -24,8 +29,11 @@ public class Console {
     /**
      * Receives a string of simulation's details, formats it and prints it.
      */
-    public static void showSimulationDetails(String simDetails) {
-        // TODO: Implement this
+    public static void showSimulationDetails(PreviewData previewData) {
+        printTitle("THE SIMULATION DETAILS");
+        printEntitiesDetails(previewData.getEntities());
+        printRulesDetails(previewData.getRules());
+        printEndingConditions(previewData.getEndingConditions());
     }
 
 
@@ -183,6 +191,81 @@ public class Console {
         DTOProperty[] properties = entity.getProperties();
         for (int i = 1; i <= properties.length; i++) {
             System.out.printf("# %s %s: %s\n", i, properties[i - 1].getType().toUpperCase(), properties[i - 1].getName());
+        }
+    }
+
+    private static void printEntitiesDetails(List<DTOEntity> entities) {
+        printTitle("ENTITIES");
+
+        for (DTOEntity dtoEntity : entities) {
+            System.out.printf("\nName : %s\n", dtoEntity.getName());
+            System.out.printf("Entity's population: %d\n", dtoEntity.getStartingPopulation());
+            System.out.println("Properties: ");
+            printEntityProperties(dtoEntity.getProperties());
+        }
+    }
+
+    private static void printEntityProperties(DTOProperty[] properties) {
+        RangedDTOProperty rangedDTOProperty;
+
+        for (DTOProperty dtoProperty : properties) {
+            System.out.printf("\tProperty name: %s\n", dtoProperty.getName());
+            System.out.printf("\tProperty type: %s\n", dtoProperty.getType());
+            System.out.printf("\tIs random initialized: %s\n", dtoProperty.isRandomInit());
+            if (dtoProperty.getClass() == RangedDTOProperty.class) {
+                rangedDTOProperty = (RangedDTOProperty)dtoProperty;
+                if(dtoProperty.getType().equals("DECIMAL")){
+                    System.out.printf("\tProperty's range: from %d to %d\n\n", (int)rangedDTOProperty.getFrom(), (int)rangedDTOProperty.getTo());
+                }
+                else {
+                    System.out.printf("\tProperty's range: from %.2f to %.2f\n\n", rangedDTOProperty.getFrom(), rangedDTOProperty.getTo());
+                }
+
+            }
+        }
+    }
+
+    private static void printRulesDetails(List<DTORule> rules) {
+        printTitle("RULES");
+
+        for (DTORule dtoRule : rules) {
+            System.out.printf("\nName : %s\n", dtoRule.getName());
+            System.out.printf("Ticks : %d\n", dtoRule.getTicks());
+            System.out.printf("Probability : %.1f\n", dtoRule.getProbability());
+            System.out.printf("Number of actions : %d\n", dtoRule.getActions().length);
+            System.out.println("Actions types: ");
+            System.out.print("\t");
+            System.out.println(getStringOfActionsNames(dtoRule.getActions()));
+
+        }
+    }
+
+    private static String getStringOfActionsNames(String[] actions) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[");
+        int counter = 1, actionsCount = actions.length;
+
+        for (String action : actions) {
+            stringBuilder.append(action);
+            if (actionsCount != counter){
+                stringBuilder.append(", ");
+            }
+            counter++;
+        }
+
+        stringBuilder.append("]");
+        return stringBuilder.toString();
+    }
+
+    private static void printEndingConditions(List<DTOEndingCondition> endingConditions) {
+        printTitle("ENDING CONDITIONS");
+        int counter = 1;
+
+        for (DTOEndingCondition dtoEndingCondition : endingConditions) {
+            System.out.printf("\nEnding condition #%d\n",counter);
+            System.out.printf("Ending by: %s\n", dtoEndingCondition.getType());
+            System.out.printf("Limit: %d\n", dtoEndingCondition.getCount());
+            counter++;
         }
     }
 }
