@@ -28,7 +28,6 @@ public class Console {
         System.out.println("3. Run simulation");
         System.out.println("4. Show details of past simulation run");
         System.out.println("5. Exit");
-        System.out.print("Please enter your choice: ");
     }
 
     /**

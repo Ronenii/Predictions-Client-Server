@@ -31,7 +31,9 @@ public class Reader {
             InputStream inputStream = new FileInputStream(new File(filePath));
             PRDWorld prdWorld = deserializeFrom(inputStream);
             return prdConverter.PRDWorld2World(prdWorld);
-        } catch (FileNotFoundException | JAXBException e) {
+        } catch (FileNotFoundException e) {
+            throw new IllegalArgumentException("The given path is invalid. Please provide the full path for the simulation config file.");
+        } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
     }
@@ -53,10 +55,16 @@ public class Reader {
      * @param path a path to a world configuration xml file.
      * @return true if the file exists and that is an .xml file, false otherwise.
      */
-    public static boolean isValidPath(String path) {
+    public static void validatePath(String path) {
         File filePath = new File(path);
 
-        return filePath.exists() && path.endsWith(".xml");
+        if(!filePath.exists())
+        {
+            throw new IllegalArgumentException("The path provided is not valid. Please provide the full path to the simulation config file.");
+        }
+        if(!path.endsWith(".xml")){
+            throw new IllegalArgumentException("The file provided is not valid. Please provide the path to a valid simulation config file  with the .xml format.");
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package manager;
 
 import display.Console;
+import input.Input;
 import manager.exception.SimulationNotLoadedException;
 import manager.options.MenuOptions;
 
@@ -50,8 +51,7 @@ public class UI {
         MenuOptions userInput;
         Scanner scanner = new Scanner(System.in);
 
-        userInput = MenuOptions.values()[Integer.parseInt(scanner.nextLine()) - 1];
-
+        userInput = MenuOptions.values()[Input.getIntInputForListedItem("Please enter your choice", MenuOptions.values().length)-1];
         return userInput;
     }
 
