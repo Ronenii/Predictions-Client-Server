@@ -1,8 +1,5 @@
 package manager;
 
-import engine2ui.simulation.genral.impl.objects.DTOEntity;
-import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
-import engine2ui.simulation.genral.impl.properties.DTORule;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.result.ResultData;
@@ -11,10 +8,7 @@ import engine2ui.simulation.start.StartData;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import manager.value.initializer.ActionValueInitializer;
-import simulation.objects.entity.Entity;
 import simulation.objects.world.World;
-import simulation.properties.ending.conditions.EndingCondition;
-import simulation.properties.rule.Rule;
 import ui2engine.simulation.func1.DTOFirstFunction;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
@@ -36,9 +30,12 @@ public class WorldManager implements EngineInterface {
     private World world;
     private final Map<String, ResultData> pastSimulations;
 
+    private boolean isSimulationLoaded;
+
     public WorldManager() {
         world = null;
         pastSimulations = new HashMap<>();
+        isSimulationLoaded = false;
 
         //TODO: DEBUG
         ResultData r1 = new ResultData("23-01-2010 | 07:33:03");
@@ -50,6 +47,11 @@ public class WorldManager implements EngineInterface {
         addResultData(r1);
         addResultData(r2);
         addResultData(r3);
+    }
+
+    @Override
+    public boolean getIsSimulationLoaded() {
+        return isSimulationLoaded;
     }
 
     @Override
@@ -87,20 +89,24 @@ public class WorldManager implements EngineInterface {
                 dtoLoadSucceed = new DTOLoadSucceed(true);
             }
         }
-
+        isSimulationLoaded = true;
         return dtoLoadSucceed;
     }
 
     @Override
     public void runSimulation(DTOThirdFunction dtoThirdFunction) {
+        // Resets all entities in this world
+        world.resetWorld();
+
         // fetch the user data input into the simulation's environment properties.
         fetchDTOThirdFunctionObject(dtoThirdFunction);
-        // fetch the actions values from context value to the requested value..
+
+        // fetch the actions values from context value to the requested value.
         fetchSimulationActionsValues();
 
         // run the simulation.
-       // this.world.invoke();
-        // TODO : add the simulation result data to 'pastSimulations' and return to the UI these results.
+        ResultData result = this.world.runSimulation();
+        this.pastSimulations.put(result.getId(), result);
     }
 
 

@@ -19,10 +19,6 @@ public class Entity {
         this.properties = properties;
         this.currentPopulation = startingPopulation;
         this.entityInstances = new ArrayList<>();
-
-        for (int i = 0; i < this.startingPopulation; i++) {
-            entityInstances.add(new EntityInstance(new HashMap<>(properties)));
-        }
     }
 
     public int getStartingPopulation() {
@@ -57,7 +53,22 @@ public class Entity {
     }
 
     public int getCurrentPopulation() {
-        return currentPopulation;
+        int aliveCount = 0;
+        for (EntityInstance e : entityInstances
+        ) {
+            if (e.isAlive()) {
+                aliveCount++;
+            }
+        }
+
+        return  aliveCount;
+    }
+
+    public void resetPopulation(){
+        entityInstances.clear();
+        for (int i = 0; i < this.startingPopulation; i++) {
+            entityInstances.add(new EntityInstance(new HashMap<>(properties)));
+        }
     }
 
     public void setCurrentPopulation(int currentPopulation) {
@@ -74,14 +85,14 @@ public class Entity {
      * The action invocation depends on the probability and if the current entity instnace
      * is alive.
      *
-     * @param action The action to invoke on all instances.
+     * @param action      The action to invoke on all instances.
      * @param probability The probability of this action to invoke on instances.
      */
-    public void invokeActionOnAllInstances(Action action, double probability){
-        Random r =new Random();
-        for (EntityInstance e: entityInstances
-             ) {
-            if(r.nextDouble() <= probability && e.isAlive()){
+    public void invokeActionOnAllInstances(Action action, double probability) {
+        Random r = new Random();
+        for (EntityInstance e : entityInstances
+        ) {
+            if (r.nextDouble() <= probability && e.isAlive()) {
                 action.Invoke(e);
             }
         }
