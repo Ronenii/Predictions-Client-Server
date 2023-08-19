@@ -15,6 +15,22 @@ public class DTORule {
         this.actions = actions;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getTicks() {
+        return ticks;
+    }
+
+    public double getProbability() {
+        return probability;
+    }
+
+    public String[] getActions() {
+        return actions;
+    }
+
     @Override
     public String toString() {
 

@@ -29,21 +29,12 @@ public class EngineAgent {
         this.engine = new WorldManager();
     }
 
+
     /**
      * Gets the current simulation details from the engine and prints it.
      */
-    private void showSimulationDetails(int simId) {
-        Console.showSimulationDetails(engine.getSimulationDetailsById(simId));
-    }
-
-    /**
-     * Asks the engine to create a String describing the Current simulation details and returns it.
-     */
     public void showCurrentSimulationDetails() {
-        PreviewData previewData = engine.getCurrentSimulationDetails();
-        // TODO: unpack the data and print it.
-
-        //Console.showSimulationDetails(engine.getCurrentSimulationDetails());
+        Console.showSimulationDetails(engine.getCurrentSimulationDetails());
     }
 
     /**

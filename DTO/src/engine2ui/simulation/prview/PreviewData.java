@@ -20,6 +20,18 @@ public class PreviewData{
         this.endingConditions = endingConditions;
     }
 
+    public List<DTOEntity> getEntities() {
+        return entities;
+    }
+
+    public List<DTORule> getRules() {
+        return rules;
+    }
+
+    public List<DTOEndingCondition> getEndingConditions() {
+        return endingConditions;
+    }
+
     public void addEntity(DTOEntity entity) {
         entities.add(entity);
     }

@@ -19,6 +19,10 @@ abstract public class DTOProperty {
         return type;
     }
 
+    public boolean isRandomInit() {
+        return isRandomInit;
+    }
+
     @Override
     public String toString() {
 
