@@ -1,5 +1,6 @@
 package engine2ui.simulation.result.generator;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -37,5 +38,13 @@ public class IdGenerator {
 
     public static void clearIds(){
         generatedIds.clear();
+    }
+
+    public static Set<String> getGeneratedIds(){
+        return generatedIds;
+    }
+
+    public static void setGeneratedIds(Set<String> generatedIdsToAdd){
+        generatedIds.addAll(generatedIdsToAdd);
     }
 }

@@ -1,6 +1,8 @@
 package simulation.properties.property.api;
 
-public abstract class AbstractProperty implements Property {
+import java.io.Serializable;
+
+public abstract class AbstractProperty implements Property, Serializable {
     private final String name;
     private boolean isRandInit;
     private final PropertyType type;

@@ -6,6 +6,7 @@ import engine2ui.simulation.genral.impl.properties.property.impl.NonRangedDTOPro
 import engine2ui.simulation.genral.impl.properties.property.impl.RangedDTOProperty;
 import engine2ui.simulation.result.generator.IdGenerator;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
 /**
  * Holds the data of a simulation run after it ended.
  */
-public class ResultData {
+public class ResultData implements Serializable {
 
     private final LocalDateTime dateTime;
     private final String id;

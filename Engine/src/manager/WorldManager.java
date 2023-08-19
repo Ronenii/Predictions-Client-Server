@@ -5,6 +5,7 @@ import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.result.ResultData;
 import engine2ui.simulation.result.ResultInfo;
+import engine2ui.simulation.result.generator.IdGenerator;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.start.StartData;
 import jaxb.unmarshal.Reader;
@@ -24,21 +25,30 @@ import simulation.properties.property.random.value.impl.StringRndValueGen;
 import ui2engine.simulation.func3.DTOThirdFunction;
 import ui2engine.simulation.func3.user.input.EnvPropertyUserInput;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
 import java.util.*;
 
-public class WorldManager implements EngineInterface {
+public class WorldManager implements EngineInterface, Serializable {
     private World world;
-    private final Map<String, ResultData> pastSimulations;
-
+    private Map<String, ResultData> pastSimulations;
+    private Set<String> keysToSerialize;
     private boolean isSimulationLoaded;
 
     public WorldManager() {
         world = null;
         pastSimulations = new HashMap<>();
         isSimulationLoaded = false;
+        keysToSerialize = new HashSet<>();
+    }
+
+    public void loadValuesFromDeserialization(WorldManager instance){
+        world = instance.world;
+        pastSimulations = instance.pastSimulations;
+        keysToSerialize = instance.keysToSerialize;
+        isSimulationLoaded = instance.isSimulationLoaded;
     }
 
     @Override
@@ -108,11 +118,10 @@ public class WorldManager implements EngineInterface {
     /**
      * Clears all data of past simulations and all generated IDs.
      */
-    public void resetEngine(){
+    public void resetEngine() {
         pastSimulations.clear();
         ResultData.clearIds();
     }
-
 
     /**
      * Get the third function's DTO object, extract the user input from this object and update the simulation's environment variables.
@@ -212,4 +221,40 @@ public class WorldManager implements EngineInterface {
 
         return new DTOEnvironmentVariable(name, type, from, to);
     }
+
+    public void saveState(String path){
+        File toSerialize = new File(path);
+        keysToSerialize.addAll(IdGenerator.getGeneratedIds());
+
+        try {
+            toSerialize.createNewFile();
+            FileOutputStream fileOut = new FileOutputStream(path);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+
+            out.writeObject(this);
+            out.close();
+            fileOut.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadState(String path){
+        try{
+            FileInputStream file = new FileInputStream(path);
+            ObjectInputStream in = new ObjectInputStream(file);
+            loadValuesFromDeserialization((WorldManager)in.readObject());
+            IdGenerator.setGeneratedIds(keysToSerialize);
+            in.close();
+            file.close();
+
+        }catch (ClassNotFoundException e){
+            throw new RuntimeException(e);
+        }catch (IOException e){
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+
 }

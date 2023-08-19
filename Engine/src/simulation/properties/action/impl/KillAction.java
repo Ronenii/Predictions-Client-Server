@@ -6,7 +6,9 @@ import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 
-public class KillAction extends AbstractAction {
+import java.io.Serializable;
+
+public class KillAction extends AbstractAction implements Serializable {
     public KillAction(String property, String contextEntity, String contextValue) {
         super(ActionType.KILL, property, contextEntity, contextValue);
     }

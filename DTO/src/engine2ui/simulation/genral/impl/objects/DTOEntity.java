@@ -3,8 +3,9 @@ package engine2ui.simulation.genral.impl.objects;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 
 import javax.swing.text.html.parser.Entity;
+import java.io.Serializable;
 
-public class DTOEntity {
+public class DTOEntity implements Serializable {
     private final String name;
     private final int startingPopulation;
     private final int endingPopulation;

@@ -23,7 +23,6 @@ public class UI {
      */
     public void runProgram() {
         engineAgent = new EngineAgent();
-
         while (!exit) {
             Console.printMainMenu();
 
@@ -42,7 +41,6 @@ public class UI {
      */
     public MenuOptions getMenuInput() {
         MenuOptions userInput;
-        Scanner scanner = new Scanner(System.in);
 
         userInput = MenuOptions.values()[Input.getIntInputForListedItem("Please enter your choice", MenuOptions.values().length) - 1];
         return userInput;
@@ -56,7 +54,7 @@ public class UI {
         MenuOptions menuOption = getMenuInput();
 
         switch (menuOption) {
-            case LOAD_PROGRAM:
+            case LOAD_PROGRAM_FROM_XML:
                 // C:\Users\Ronen Gelmanovich\IdeaProjects\Predictions\WorldConfigFiles\ex1-cigarets.xml
                 // C:\Users\Ronen Gelmanovich\IdeaProjects\Predictions\WorldConfigFiles\master-ex1.xml
                 // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\ex1-cigarets.xml
@@ -65,6 +63,12 @@ public class UI {
                 // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\ex1-error-4.xml
                 // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\ex1-error-6.xml
                 engineAgent.loadSimulationFromFile();
+                break;
+            case LOAD_PROGRAM_STATE:
+                engineAgent.loadSimulationFromSaveState();
+                break;
+            case SAVE_PROGRAM_STATE:
+                engineAgent.saveSimulationState();
                 break;
             case SHOW_SIMULATION_DATA:
                 engineAgent.showCurrentSimulationDetails();

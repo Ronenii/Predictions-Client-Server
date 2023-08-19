@@ -1,6 +1,8 @@
 package simulation.properties.action.api;
 
-public abstract class AbstractAction implements Action{
+import java.io.Serializable;
+
+public abstract class AbstractAction implements Action, Serializable {
     private final ActionType type;
     private final String contextProperty;
     private final String contextEntity;

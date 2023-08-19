@@ -19,6 +19,8 @@ import validator.ui.exceptions.IllegalStringValueException;
 import validator.ui.exceptions.OutOfRangeException;
 import validator.ui.validator.InputValidator;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -32,12 +34,11 @@ public class EngineAgent {
         this.engine = new WorldManager();
     }
 
-
     /**
      * Gets the current simulation details from the engine and prints it.
      */
     public void showCurrentSimulationDetails() throws SimulationNotLoadedException {
-        if(!engine.getIsSimulationLoaded()){
+        if (!engine.getIsSimulationLoaded()) {
             throw new SimulationNotLoadedException("There is no simulation loaded in the system.");
         }
         Console.showSimulationDetails(engine.getCurrentSimulationDetails());
@@ -261,6 +262,73 @@ public class EngineAgent {
             int entityNumber = Input.getIntInputForListedItem("Choose the entity you wish to display", entities.length);
             return entities[entityNumber - 1];
         }
+    }
+
+    /**
+     * Gets the path to the save file from the user.
+     * serializes from said path into the engine
+     */
+    public void loadSimulationFromSaveState() {
+        String path = Input.getInput("Please enter the full path the save file");
+        File file = new File(path);
+        if (!file.exists()) {
+            Console.println("The path provided is invalid. Please provide the full path for the save file.");
+        } else {
+            engine.loadState(path);
+            Console.println("The file was loaded successfully.");
+        }
+    }
+
+    /**
+     * Gets the path to save from the user.
+     * gets the file location to save to.
+     * deserializes the engine into the given path & file.
+     */
+    public void saveSimulationState() {
+        String path, filename;
+        path = Input.getInput("Please enter the path you want to save in");
+        File file = new File(path);
+        if (!file.exists()) {
+            throw new IllegalArgumentException("The path provided is invalid. Please provide a valid path for saving the file.");
+        } else {
+            filename = Input.getInput("Please enter the filename of the save");
+            if (!isValidFilename(filename)) {
+                throw new IllegalArgumentException("The file name contains illegal characters. Please provide a valid name for saving the file.");
+            }
+            else{
+                path += "\\" + filename + ".out";
+                engine.saveState(path);
+                Console.println("The file was saved successfully.");
+            }
+        }
+
+    }
+
+    private static boolean isValidFilename(String filename) {
+        // Check for empty filename
+        if (filename.trim().isEmpty()) {
+            return false;
+        }
+
+        // Check for invalid characters (e.g., Windows reserved characters)
+        String invalidChars = "\\/:*?\"<>|";
+        for (char c : filename.toCharArray()) {
+            if (invalidChars.indexOf(c) != -1) {
+                return false;
+            }
+        }
+
+        // Check for reserved system filenames
+        File file = new File(filename);
+        try {
+            if (!file.getCanonicalFile().getName().equals(filename)) {
+                return false;
+            }
+        } catch (IOException e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

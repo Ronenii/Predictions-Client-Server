@@ -6,7 +6,9 @@ import simulation.properties.property.api.PropertyType;
 import simulation.properties.property.random.value.api.RandomValueGenerator;
 import simulation.properties.property.random.value.impl.BoolRndValueGen;
 
-public class BooleanProperty extends AbstractProperty {
+import java.io.Serializable;
+
+public class BooleanProperty extends AbstractProperty implements Serializable {
 
     public BooleanProperty(String name, boolean isRandInit, Object value) {
         super(name, isRandInit, PropertyType.BOOLEAN, value);

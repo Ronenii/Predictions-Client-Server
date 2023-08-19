@@ -1,6 +1,8 @@
 package simulation.properties.activition;
 
-public class Activation {
+import java.io.Serializable;
+
+public class Activation implements Serializable {
     private int ticks;
 
     public Activation(int ticks, double probability) {

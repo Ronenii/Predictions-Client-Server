@@ -1,6 +1,8 @@
 package simulation.properties.ending.conditions;
 
-public class EndingCondition {
+import java.io.Serializable;
+
+public class EndingCondition implements Serializable {
     private EndingConditionType type;
     private int count;
 

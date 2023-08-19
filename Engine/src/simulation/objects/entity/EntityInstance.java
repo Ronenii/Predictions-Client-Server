@@ -2,9 +2,10 @@ package simulation.objects.entity;
 
 import simulation.properties.property.api.Property;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class EntityInstance {
+public class EntityInstance implements Serializable {
     private final Map<String, Property> properties;
     private boolean isAlive;
 

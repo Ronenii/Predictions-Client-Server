@@ -7,7 +7,9 @@ import simulation.properties.property.random.value.api.RandomValueGenerator;
 import simulation.properties.property.random.value.impl.IntRndValueGen;
 import simulation.properties.property.random.value.impl.StringRndValueGen;
 
-public class StringProperty extends AbstractProperty {
+import java.io.Serializable;
+
+public class StringProperty extends AbstractProperty implements Serializable {
 
     public StringProperty(String name, boolean isRandInit, Object value) {
         super(name, isRandInit, PropertyType.STRING, value);

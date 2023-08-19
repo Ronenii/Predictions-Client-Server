@@ -1,6 +1,8 @@
 package simulation.properties.property.random.value.api;
 
-public abstract class AbstractNumericRndValueGen <T> extends AbstractRndValueGen <T> {
+import java.io.Serializable;
+
+public abstract class AbstractNumericRndValueGen <T> extends AbstractRndValueGen <T> implements Serializable {
     protected final T from;
     protected final T to;
 

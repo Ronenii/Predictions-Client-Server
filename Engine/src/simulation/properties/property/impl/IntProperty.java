@@ -7,7 +7,9 @@ import simulation.properties.property.random.value.api.RandomValueGenerator;
 import simulation.properties.property.random.value.impl.DoubleRndValueGen;
 import simulation.properties.property.random.value.impl.IntRndValueGen;
 
-public class IntProperty extends AbstractProperty implements RangedProperty {
+import java.io.Serializable;
+
+public class IntProperty extends AbstractProperty implements RangedProperty, Serializable {
     private int from;
     private int to;
 
