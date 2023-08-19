@@ -367,7 +367,7 @@ public class ExpressionAndValueValidator {
         if(type == ActionType.CONDITION){
             PRDCondition prdCondition = prdAction.getPRDCondition();
             if(prdCondition.getSingularity().equals("single") && (prdCondition.getOperator().equals("bt") || prdCondition.getOperator().equals("lt"))){
-                errorMessage =  "Condition operator type not allowed";
+                errorMessage =  "Boolean value can not compere with 'bt or 'lt'.";
                 throw new ExpressionConversionException();
             }
         }
@@ -392,7 +392,7 @@ public class ExpressionAndValueValidator {
         PropertyType propertyType;
 
         if(prdCondition.getSingularity().equals("single") && (prdCondition.getOperator().equals("bt") || prdCondition.getOperator().equals("lt"))){
-            errorMessage = "Condition operator type not allowed";
+            errorMessage = "Boolean value can not compere with 'bt or 'lt'.";
             throw new ExpressionConversionException();
         }
 
@@ -424,6 +424,14 @@ public class ExpressionAndValueValidator {
             throw new ExpressionConversionException();
         }
 
+        if(type == ActionType.CONDITION){
+            PRDCondition prdCondition = prdAction.getPRDCondition();
+            if(prdCondition.getSingularity().equals("single") && (prdCondition.getOperator().equals("bt") || prdCondition.getOperator().equals("lt"))){
+                errorMessage =  "String value can not compere with 'bt or 'lt'.";
+                throw new ExpressionConversionException();
+            }
+        }
+
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("STRING"))){
             errorMessage = "The property value type doesn't match the action value type";
@@ -442,6 +450,11 @@ public class ExpressionAndValueValidator {
 
         Entity entity = entities.get(entityName);
         PropertyType propertyType;
+
+        if(prdCondition.getSingularity().equals("single") && (prdCondition.getOperator().equals("bt") || prdCondition.getOperator().equals("lt"))){
+            errorMessage = "String value can not compere with 'bt or 'lt'.";
+            throw new ExpressionConversionException();
+        }
 
         propertyType = entity.getProperties().get(propertyName).getType();
         if ((!propertyType.name().equals("STRING"))){
