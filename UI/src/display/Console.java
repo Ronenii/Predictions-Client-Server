@@ -65,6 +65,7 @@ public class Console {
         ) {
             System.out.printf("#%-21s%-22s%-22s\n", counter++, r.getId(), r.getDateTimeString());
         }
+        println();
     }
 
     /**
@@ -91,8 +92,16 @@ public class Console {
         System.out.println(message);
     }
 
+    public static void println() {
+        System.out.println();
+    }
+
     public static void print(String message) {
         System.out.print(message);
+    }
+
+    public static void print() {
+        System.out.print("");
     }
 
     public static void promptUserToInputPathForFile() {
@@ -141,7 +150,7 @@ public class Console {
      * @param castingClass The class to cast the keys of the maps to.
      */
     private static void printHistogram(Map<Object, Integer> histogram, Class castingClass) {
-        System.out.println("Value: Quantity\n\n");
+        System.out.println("Value: Quantity");
         for (Object o : histogram.keySet()
         ) {
             System.out.printf("%s: %d\n", castingClass.cast(o), histogram.get(o));
@@ -194,6 +203,7 @@ public class Console {
         for (int i = 1; i <= entities.length; i++) {
             System.out.printf("#%s %s\n", i, entities[i - 1].getName());
         }
+        Console.println();
     }
 
     /**
@@ -207,22 +217,16 @@ public class Console {
         int totalStartingPopulation = 0;
         int totalEndingPopulation = 0;
 
-        if (entities.length > 1) {
-            for (int i = 1; i <= entities.length; i++) {
-                totalStartingPopulation += entities[i - 1].getStartingPopulation();
-                totalEndingPopulation += entities[i - 1].getEndingPopulation();
-                System.out.printf("\n#%s\n", i);
-                printEntityDetails(entities[i - 1]);
-            }
-        }
-        else{
-            println("There is only one entity to display.\n");
-            printEntityDetails(entities[0]);
+        for (int i = 1; i <= entities.length; i++) {
+            totalStartingPopulation += entities[i - 1].getStartingPopulation();
+            totalEndingPopulation += entities[i - 1].getEndingPopulation();
+            System.out.printf("\n#%s\n", i);
+            printEntityDetails(entities[i - 1]);
         }
 
-        System.out.printf("\nTotal population when simulation started: %s\n", totalStartingPopulation);
-        System.out.printf("Total population when simulation ended: %s\n", totalEndingPopulation);
-    }
+        System.out.printf("\nTotal population when simulation started: %s\n",totalStartingPopulation);
+        System.out.printf("Total population when simulation ended: %s\n",totalEndingPopulation);
+}
 
     /**
      * Prints out the given entity's details in the following format:
@@ -233,7 +237,7 @@ public class Console {
      * @param entity the given entity to print.
      */
     private static void printEntityDetails(DTOEntity entity) {
-        System.out.printf("%s\n", entity.getName().toUpperCase());
+        printTitle(entity.getName());
         System.out.printf("%s starting population: %s\n", entity.getName(), entity.getStartingPopulation());
         System.out.printf("%s population when simulation ended: %s\n", entity.getName(), entity.getEndingPopulation());
     }

@@ -39,11 +39,11 @@ public class DTOCreator {
     private List<DTOEntity> getDTOEntityList(Map<String, Entity> entities) {
         List<DTOEntity> entitiesList = new ArrayList<>();
 
-        entities.forEach((key, value) -> entitiesList.add(getDTOEntity(value)));
+        entities.forEach((key, value) -> entitiesList.add(convertEntity2DTOEntity(value)));
         return entitiesList;
     }
 
-    private DTOEntity getDTOEntity(Entity entity) {
+    private DTOEntity convertEntity2DTOEntity(Entity entity) {
         DTOProperty[] dtoPropertiesArray = convertProperties2DTOPropertiesArr(entity.getProperties());
         DTOEntityInstance[] dtoEntityInstancesArray = convertEntityInstances2DTOEntityInstances(entity.getEntityInstances());
         return new DTOEntity(entity.getName(), entity.getStartingPopulation(), entity.getCurrentPopulation(), dtoPropertiesArray, dtoEntityInstancesArray);
@@ -87,13 +87,21 @@ public class DTOCreator {
     }
 
     private DTOEntityInstance[] convertEntityInstances2DTOEntityInstances(List<EntityInstance> entityInstances) {
-        DTOEntityInstance[] dtoEntityInstances = new DTOEntityInstance[entityInstances.size()];
+        int size = 0, entitiesAdded = 0;
+        for (EntityInstance e : entityInstances
+        ) {
+            if (e.isAlive()) {
+                size++;
+            }
+        }
+
+        DTOEntityInstance[] dtoEntityInstances = new DTOEntityInstance[size];
         Map<String, DTOProperty> properties = new HashMap<>();
 
         for (int i = 0; i < entityInstances.size(); i++) {
             EntityInstance toAdd = entityInstances.get(i);
             if (toAdd.isAlive()) {
-                dtoEntityInstances[i] = new DTOEntityInstance(convertProperties2DTOPropertiesMap(entityInstances.get(i).getProperties()));
+                dtoEntityInstances[entitiesAdded++] = new DTOEntityInstance(convertProperties2DTOPropertiesMap(entityInstances.get(i).getProperties()));
             }
         }
 
