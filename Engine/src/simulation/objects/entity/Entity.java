@@ -68,9 +68,26 @@ public class Entity {
 
     public void resetPopulation(){
         entityInstances.clear();
+        Map <String, Property> propertyMap;
+
         for (int i = 0; i < this.startingPopulation; i++) {
-            entityInstances.add(new EntityInstance(new HashMap<>(properties)));
+            entityInstances.add(new EntityInstance(generateProperties()));
         }
+    }
+
+    private Map <String, Property> generateProperties() {
+        Map <String, Property> propertyMap = new HashMap<>();
+
+        for(Property property : properties.values()) {
+            if(property.isRandInit()) {
+                propertyMap.put(property.getName(), property.generateRandomValueProperty());
+            }
+            else {
+                propertyMap.put(property.getName(), property.dupProperty());
+            }
+        }
+
+        return propertyMap;
     }
 
     public void setCurrentPopulation(int currentPopulation) {

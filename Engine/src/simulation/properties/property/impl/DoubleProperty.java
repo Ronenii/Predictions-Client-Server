@@ -1,7 +1,11 @@
 package simulation.properties.property.impl;
 
 import simulation.properties.property.api.AbstractProperty;
+import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
+import simulation.properties.property.random.value.api.RandomValueGenerator;
+import simulation.properties.property.random.value.impl.BoolRndValueGen;
+import simulation.properties.property.random.value.impl.DoubleRndValueGen;
 
 public class DoubleProperty extends AbstractProperty implements RangedProperty {
     private double from;
@@ -47,4 +51,18 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty {
         return to;
     }
 
+    @Override
+    public Property dupProperty() {
+        return new DoubleProperty(getName(),isRandInit(), getValue(), from, to);
+    }
+
+    @Override
+    public Property generateRandomValueProperty() {
+        double value;
+
+        RandomValueGenerator<Double> randomValueGenerator = new DoubleRndValueGen(from, to);
+        value = randomValueGenerator.generateRandomValue();
+
+        return new DoubleProperty(getName(),isRandInit(), value, from, to);
+    }
 }

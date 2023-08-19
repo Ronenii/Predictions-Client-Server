@@ -1,7 +1,10 @@
 package simulation.properties.property.impl;
 
 import simulation.properties.property.api.AbstractProperty;
+import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
+import simulation.properties.property.random.value.api.RandomValueGenerator;
+import simulation.properties.property.random.value.impl.BoolRndValueGen;
 
 public class BooleanProperty extends AbstractProperty {
 
@@ -26,5 +29,20 @@ public class BooleanProperty extends AbstractProperty {
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
+    }
+
+    @Override
+    public Property dupProperty() {
+        return new BooleanProperty(getName(),isRandInit(),getValue());
+    }
+
+    @Override
+    public Property generateRandomValueProperty() {
+        boolean value;
+
+        RandomValueGenerator<Boolean> randomValueGenerator = new BoolRndValueGen();
+        value = randomValueGenerator.generateRandomValue();
+
+        return new BooleanProperty(getName(),isRandInit(), value);
     }
 }

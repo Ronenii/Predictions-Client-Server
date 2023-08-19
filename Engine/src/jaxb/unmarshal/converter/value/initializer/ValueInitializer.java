@@ -15,49 +15,35 @@ import simulation.properties.property.random.value.impl.StringRndValueGen;
 public class ValueInitializer {
 
     public static int integerInitial(String value, boolean isRandomInit, int from, int to) throws ValueOutOfRangeException {
-        int ret;
+        int ret = 0;
 
-        if(isRandomInit){
-            RandomValueGenerator<Integer> randomValueGenerator = new IntRndValueGen(from, to);
-            ret = randomValueGenerator.generateRandomValue();
-        }
-        else {
+        if(!isRandomInit){
             ret = Integer.parseInt(value);
-        }
-
-        if (ret < from || ret > to){
-            throw new ValueOutOfRangeException();
+            if (ret < from || ret > to){
+                throw new ValueOutOfRangeException();
+            }
         }
 
         return ret;
     }
 
     public static double doubleInitial(String value, boolean isRandomInit, double from, double to) throws ValueOutOfRangeException {
-        double ret;
+        double ret = 0.0;
 
-        if(isRandomInit){
-            RandomValueGenerator<Double> randomValueGenerator = new DoubleRndValueGen(from, to);
-            ret = randomValueGenerator.generateRandomValue();
-        }
-        else {
+        if(!isRandomInit){
             ret = Double.parseDouble(value);
-        }
-
-        if (ret < from || ret > to){
-            throw new ValueOutOfRangeException();
+            if (ret < from || ret > to){
+                throw new ValueOutOfRangeException();
+            }
         }
 
         return ret;
     }
 
     public static boolean booleanInitial(String value, boolean isRandomInit) throws InvalidBooleanValueException {
-        boolean ret;
+        boolean ret = false;
 
-        if(isRandomInit){
-            RandomValueGenerator<Boolean> randomValueGenerator = new BoolRndValueGen();
-            ret = randomValueGenerator.generateRandomValue();
-        }
-        else {
+        if(!isRandomInit){
             if(value.equals("true")){
                 ret = true;
             } else if (value.equals("false")) {
@@ -72,13 +58,9 @@ public class ValueInitializer {
     }
 
     public static String stringInitial(String value, boolean isRandomInit) throws InvalidStringValueException {
-        String ret, pattern = "^[A-Za-z0-9().\\-_,?! ]+$";
+        String ret = null, pattern = "^[A-Za-z0-9().\\-_,?! ]+$";
 
-        if(isRandomInit){
-            RandomValueGenerator<String> randomValueGenerator = new StringRndValueGen();
-            ret = randomValueGenerator.generateRandomValue();
-        }
-        else {
+        if(!isRandomInit){
             if(!value.matches(pattern)){
                 throw new InvalidStringValueException();
             }

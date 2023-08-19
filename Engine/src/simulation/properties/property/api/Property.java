@@ -19,7 +19,8 @@ public interface Property {
 
     void updateValueAndIsRandomInit(Object value, boolean isRandomInit);
 
+    public Property dupProperty();
 
-
+    public Property generateRandomValueProperty();
 
 }
