@@ -1,8 +1,5 @@
 package manager;
 
-import engine2ui.simulation.genral.impl.objects.DTOEntity;
-import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
-import engine2ui.simulation.genral.impl.properties.DTORule;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.result.ResultData;
@@ -11,10 +8,7 @@ import engine2ui.simulation.start.StartData;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import manager.value.initializer.ActionValueInitializer;
-import simulation.objects.entity.Entity;
 import simulation.objects.world.World;
-import simulation.properties.ending.conditions.EndingCondition;
-import simulation.properties.rule.Rule;
 import ui2engine.simulation.func1.DTOFirstFunction;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;

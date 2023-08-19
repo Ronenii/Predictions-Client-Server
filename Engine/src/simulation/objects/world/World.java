@@ -1,23 +1,13 @@
 package simulation.objects.world;
-
-import engine2ui.simulation.genral.impl.objects.DTOEntity;
-import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
-import engine2ui.simulation.genral.impl.properties.property.impl.NonRangedDTOProperty;
-import engine2ui.simulation.genral.impl.properties.property.impl.RangedDTOProperty;
 import engine2ui.simulation.result.ResultData;
+import manager.DTO.creator.DTOCreator;
 import simulation.objects.entity.Entity;
-import simulation.objects.world.Converter.DTOConverter;
 import simulation.properties.ending.conditions.EndingConditionType;
-import simulation.properties.property.impl.DoubleProperty;
-import simulation.properties.property.impl.IntProperty;
 import simulation.properties.rule.Rule;
 import simulation.properties.ending.conditions.EndingCondition;
 import simulation.properties.property.api.Property;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class World {
 
@@ -128,8 +118,8 @@ public class World {
         } while ((!endingConditionsMet()));
 
 
-        DTOConverter dtoConverter = new DTOConverter();
-        return new ResultData(dtoConverter.convertEntities2DTOEntities(entities));
+        DTOCreator dtoCreator = new DTOCreator();
+        return new ResultData(dtoCreator.convertEntities2DTOEntities(entities));
     }
 
     public void resetWorld(){
@@ -148,9 +138,7 @@ public class World {
      */
     private boolean isEndingByTicksMet() {
         if (endingConditions.containsKey(EndingConditionType.TICKS)) {
-            if (++ticks >= endingConditions.get(EndingConditionType.TICKS).getCount()) {
-                return true;
-            }
+            return ++ticks >= endingConditions.get(EndingConditionType.TICKS).getCount();
         }
 
         return false;
@@ -162,9 +150,7 @@ public class World {
     private boolean isEndingBySecondsMet() {
         if (endingConditions.containsKey(EndingConditionType.TIME)) {
             timePassed = (System.currentTimeMillis() - startingTime) / 1000;
-            if (timePassed >= endingConditions.get(EndingConditionType.TIME).getCount()) {
-                return true;
-            }
+            return timePassed >= endingConditions.get(EndingConditionType.TIME).getCount();
         }
 
         return false;
