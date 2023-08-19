@@ -10,7 +10,7 @@
 			<PRD-range from="0" to="10"/>
 		</PRD-env-property>		
 		<PRD-env-property type="decimal">
-			<PRD-name>cigarets-increase-non-smoker</PRD-name>
+			<PRD-name>cigarets-increase-smoker</PRD-name>
 			<PRD-range from="10" to="100"/>
 		</PRD-env-property>			
 	</PRD-evironment>
@@ -20,7 +20,7 @@
 			<PRD-properties>
 				<PRD-property type="decimal">
 					<PRD-name>lung-cancer-progress</PRD-name>
-					<PRD-range to="100" from="0"/>
+					<PRD-range to="100" from="-50"/>
 					<PRD-value random-initialize="false" init="0"/>
 				</PRD-property>
 				<PRD-property type="decimal">
@@ -30,7 +30,7 @@
 				</PRD-property>		
 				<PRD-property type="decimal">
 					<PRD-name>cigarets-per-month</PRD-name>
-					<PRD-range to="0" from="500"/>
+					<PRD-range to="500" from="0"/>
 					<PRD-value random-initialize="true"/>
 				</PRD-property>							
 			</PRD-properties>
@@ -39,7 +39,7 @@
 	<PRD-rules>
 		<PRD-rule name="aging">
 			<PRD-actions>
-				<PRD-action entity="Smoker" type="increase" property="age" by="1"/>
+				<PRD-action entity="Smoker" type="increase" property="age" by="true"/>
 			</PRD-actions>
 			<PRD-activation ticks="12"/>
 		</PRD-rule>
@@ -48,7 +48,7 @@
 				<PRD-action entity="Smoker" type="condition">
 					<PRD-condition singularity="multiple" logical="and">
 						<PRD-condition singularity="single" entity="Smoker"  property="cigarets-per-month" operator="bt" value="environment(cigarets-critical)"/>
-						<PRD-condition singularity="single" entity="Smoker" property="age" operator="bt" value="40"/>
+						<PRD-condition singularity="single" entity="Smoker" property="age" operator="bt" value="dfdfsf"/>
 					</PRD-condition>
 					<PRD-then>
 						<PRD-action entity="Smoker" type="increase" property="lung-cancer-progress" by="random(5)"></PRD-action>
@@ -61,7 +61,7 @@
 				<PRD-action entity="Smoker" type="condition">
 					<PRD-condition singularity="single" entity="Smoker" property="cigarets-per-month" operator="=" value="0"/>
 					<PRD-then>
-						<PRD-action entity="Smoker" type="increase" property="cigarets-per-month" by="environment(cigarets-increase-non-smoker)"></PRD-action>
+						<PRD-action entity="Smoker" type="increase" property="cigarets" by="environment(cigarets-increase-non-smoker)"></PRD-action>
 					</PRD-then>
 					<PRD-else>
 						<PRD-action entity="Smoker" type="increase" property="cigarets-per-month" by="environment(cigarets-increase-already-smoker)"></PRD-action>

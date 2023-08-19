@@ -313,7 +313,7 @@ public class ExpressionAndValueValidator {
 
         if(type == ActionType.KILL)
         {
-            errorMessage = "Action type not allowed";
+            errorMessage = "Action type doesn't match the value type.";
             throw new ExpressionConversionException();
         }
 
@@ -360,7 +360,7 @@ public class ExpressionAndValueValidator {
         PropertyType propertyType;
 
         if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION) {
-            errorMessage = "Action type not allowed";
+            errorMessage = "Action type doesn't match the value type.";
             throw new ExpressionConversionException();
         }
 
@@ -420,7 +420,7 @@ public class ExpressionAndValueValidator {
         PropertyType propertyType;
 
         if(type == ActionType.INCREASE || type == ActionType.DECREASE || type == ActionType.CALCULATION) {
-            errorMessage = "Action type not allowed";
+            errorMessage = "Action type doesn't match the value type.";
             throw new ExpressionConversionException();
         }
 
