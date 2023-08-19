@@ -11,7 +11,6 @@ import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import manager.value.initializer.ActionValueInitializer;
 import simulation.objects.world.World;
-import simulation.properties.ending.conditions.EndingCondition;
 import ui2engine.simulation.func1.DTOFirstFunction;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
@@ -39,17 +38,6 @@ public class WorldManager implements EngineInterface {
         world = null;
         pastSimulations = new HashMap<>();
         isSimulationLoaded = false;
-
-        //TODO: DEBUG
-        ResultData r1 = new ResultData("23-01-2010 | 07:33:03");
-
-        ResultData r2 = new ResultData("07-11-1997 | 00:31:59");
-
-        ResultData r3 = new ResultData("09-10-1999 | 12:32:15");
-
-        addResultData(r1);
-        addResultData(r2);
-        addResultData(r3);
     }
 
     @Override

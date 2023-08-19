@@ -72,15 +72,15 @@ public class DTOCreator {
         switch (property.getType()) {
             case DECIMAL:
                 IntProperty intProperty = (IntProperty) property;
-                ret = new RangedDTOProperty(intProperty.getName(), intProperty.getType().toString(), intProperty.isRandInit(), intProperty.getFrom(), intProperty.getTo());
+                ret = new RangedDTOProperty(intProperty.getName(), intProperty.getType().toString(), intProperty.isRandInit(), property.getValue(), intProperty.getFrom(), intProperty.getTo());
                 break;
             case FLOAT:
                 DoubleProperty doubleProperty = (DoubleProperty) property;
-                ret = new RangedDTOProperty(doubleProperty.getName(), doubleProperty.getType().toString(), doubleProperty.isRandInit(), doubleProperty.getFrom(), doubleProperty.getTo());
+                ret = new RangedDTOProperty(doubleProperty.getName(), doubleProperty.getType().toString(), doubleProperty.isRandInit(), property.getValue(), doubleProperty.getFrom(), doubleProperty.getTo());
                 break;
             case BOOLEAN:
             case STRING:
-                ret = new NonRangedDTOProperty(property.getName(), property.getType().toString(), property.isRandInit());
+                ret = new NonRangedDTOProperty(property.getName(), property.getType().toString(), property.isRandInit(), property.getValue());
                 break;
         }
         return ret;
