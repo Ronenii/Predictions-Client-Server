@@ -450,7 +450,7 @@ public class PRDConverter {
             objectSubConditions.add(conditionToAdd);
         }
 
-        return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, prdCondition.getLogical(), objectSubConditions, null);
+        return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getLogical()), objectSubConditions, null);
     }
 
     /**

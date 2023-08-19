@@ -6,17 +6,17 @@ import simulation.objects.entity.EntityInstance;
 import java.util.List;
 
 public class MultipleCondition extends AbstractConditionAction {
-    private final String logical;
+    private final ConditionOperator logical;
 
     private final List<AbstractConditionAction> subConditions;
 
-    public MultipleCondition(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, String logical, List<AbstractConditionAction> conditions, String contextValue) {
+    public MultipleCondition(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, ConditionOperator logical, List<AbstractConditionAction> conditions, String contextValue) {
         super(property, contextEntity, thenActions, elseActions, contextValue);
         this.logical = logical;
         this.subConditions = conditions;
     }
 
-    public String getLogical() {
+    public ConditionOperator getLogical() {
         return logical;
     }
 
@@ -40,9 +40,18 @@ public class MultipleCondition extends AbstractConditionAction {
             a.Invoke(entityInstance);
             if(isFirst){
                 isTrue = a.isTrue;
+                isFirst = false;
             }
             else{
-                isTrue &= a.isTrue;
+                switch (logical) {
+                    case AND:
+                        isTrue &= a.isTrue;
+                        break;
+                    case OR:
+                        isTrue |= a.isTrue;
+                        break;
+                }
+
             }
         }
         if(isTrue){

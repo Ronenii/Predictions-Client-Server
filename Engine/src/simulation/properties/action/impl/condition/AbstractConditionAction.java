@@ -45,7 +45,9 @@ public abstract class AbstractConditionAction extends AbstractAction {
      * @param entityInstance The given entity to invoke all "thenActions" upon.
      */
     protected void invokeThenActions(EntityInstance entityInstance){
-        thenActions.invoke(entityInstance);
+        if(thenActions != null){
+            thenActions.invoke(entityInstance);
+        }
         isTrue = true;
     }
 
@@ -55,7 +57,7 @@ public abstract class AbstractConditionAction extends AbstractAction {
      * @param entityInstance The given entity to invoke all "elseActions" upon.
      */
     protected void invokeElseActions(EntityInstance entityInstance){
-        if(!elseActions.getActionsToInvoke().isEmpty()) {
+        if(elseActions != null) {
             elseActions.invoke(entityInstance);
         }
         isTrue = false;

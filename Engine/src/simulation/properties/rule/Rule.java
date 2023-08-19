@@ -3,6 +3,7 @@ package simulation.properties.rule;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.Action;
+import simulation.properties.action.impl.condition.MultipleCondition;
 import simulation.properties.activition.Activation;
 
 import java.time.LocalDateTime;
@@ -96,7 +97,7 @@ public class Rule {
     private void invokeActionsOnEntity(Entity entity){
         for (Action a: actions
         ) {
-            if(a.getContextEntity().equals(entity.getName()))
+            if(a.getClass() == MultipleCondition.class || a.getContextEntity().equals(entity.getName()))
             {
                 entity.invokeActionOnAllInstances(a, activation.getProbability());
             }
