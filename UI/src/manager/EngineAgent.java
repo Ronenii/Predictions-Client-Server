@@ -19,10 +19,7 @@ import validator.ui.exceptions.IllegalStringValueException;
 import validator.ui.exceptions.OutOfRangeException;
 import validator.ui.validator.InputValidator;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Responsible for UI communication with the Engine module. Sends data to the Engine, receives results from Engine accordingly,
@@ -39,7 +36,10 @@ public class EngineAgent {
     /**
      * Gets the current simulation details from the engine and prints it.
      */
-    public void showCurrentSimulationDetails() {
+    public void showCurrentSimulationDetails() throws SimulationNotLoadedException {
+        if(!engine.getIsSimulationLoaded()){
+            throw new SimulationNotLoadedException("There is no simulation loaded in the system.");
+        }
         Console.showSimulationDetails(engine.getCurrentSimulationDetails());
     }
 
@@ -51,11 +51,15 @@ public class EngineAgent {
         System.out.print("Please enter path to the XML world config file: ");
         Scanner scanner = new Scanner(System.in);
         String path = scanner.nextLine();
-        DTOLoadSucceed dtoLoadSucceed;
 
-        dtoLoadSucceed = engine.loadSimulationFromFile(new DTOFirstFunction(path));
+        DTOLoadSucceed dtoLoadSucceed = engine.loadSimulationFromFile(new DTOFirstFunction(path));
+
+        // If we succeeded in creating the simulation we want to reset the engine.
+        // If a simulation was loaded beforehand and the creation failed we don't want
+        // to delete past data until a new simulation is loaded successfully.
         if (dtoLoadSucceed.isSucceed()) {
             Console.println("The simulation creation has completed successfully");
+            engine.resetEngine();
         } else {
             Console.println("The simulation creation has failed");
         }
@@ -178,7 +182,7 @@ public class EngineAgent {
      * Prompts the user to choose a simulation he wants to see the full details of (Based on ID).
      * Shows the user's chosen simulation details.
      */
-    public void ShowPastSimulationResults() {
+    public void showPastSimulationResults() {
         ResultData[] pastSimulationsResultData = engine.getPastSimulationResultData();
         Console.showShortDetailsOfAllPastSimulations(pastSimulationsResultData);
 
@@ -189,7 +193,7 @@ public class EngineAgent {
         // If there is only one simulation, there is no need to ask the user what simulation
         // he wants to display.
         else if (pastSimulationsResultData.length == 1) {
-            Console.println("Only one result to display.");
+            Console.println("Only one result to display.\n");
             chooseHowToDisplayResult(pastSimulationsResultData[0]);
         }
 
@@ -205,6 +209,7 @@ public class EngineAgent {
     /**
      * Prompts the user for how to display the results, either by quantity of an entity,
      * or a histogram of a property.
+     *
      * @param resultData the results from a simulation.
      */
     private void chooseHowToDisplayResult(ResultData resultData) {
@@ -225,65 +230,82 @@ public class EngineAgent {
     /**
      * Makes a histogram based on user choice of entity and a property of said entity.
      * Prints this histogram.
+     *
      * @param entities The entities to get the histogram from
      */
     private void makeAndDisplayHistogram(DTOEntity[] entities) {
         DTOEntity entity = getEntityToDisplayHistogram(entities);
-        if(entity.getInstances().length == 0){
-            Console.println("There are no living instances of the chose entity.");
+        if (entity.getInstances().length == 0) {
+            Console.println("There are no living instances of the chosen entity.");
+            return;
         }
 
         DTOProperty property = getPropertyToDisplayHistogram(entity);
         Map<Object, Integer> histogram = createHistogram(property, entity);
 
-        Console.displayHistogramByType(histogram,property);
+        Console.displayHistogramByType(histogram, property);
     }
 
     /**
      * Shows the user all entity types and gets user input for one of those entities.
      * Returns the chosen entity.
+     *
      * @param entities The entities to get the histogram from
      */
     private DTOEntity getEntityToDisplayHistogram(DTOEntity[] entities) {
         Console.printEntityNames(entities);
-        int entityNumber = Input.getIntInputForListedItem("Choose the entity you wish to display", entities.length);
-        return entities[entityNumber - 1];
+        if (entities.length == 1) {
+            Console.println("There is only one entity to display.");
+            return entities[0];
+        } else {
+            int entityNumber = Input.getIntInputForListedItem("Choose the entity you wish to display", entities.length);
+            return entities[entityNumber - 1];
+        }
     }
 
     /**
      * Shows the user all entity types and gets user input for one of those entities.
      * Returns the chosen entity.
+     *
      * @param entity The entity to get the properties from and display a histogram.
      */
     private DTOProperty getPropertyToDisplayHistogram(DTOEntity entity) {
         Console.printEntityProperties(entity);
-        int propertyNumber = Input.getIntInputForListedItem("Choose the property you wish to see a histogram of", entity.getProperties().length);
-        return entity.getProperties()[propertyNumber - 1];
+        if (entity.getProperties().length == 1) {
+            Console.println("There is only one property to display.");
+            return entity.getProperties()[0];
+        } else {
+            int propertyNumber = Input.getIntInputForListedItem("Choose the property you wish to see a histogram of", entity.getProperties().length);
+            return entity.getProperties()[propertyNumber - 1];
+        }
     }
 
 
     /**
      * Creates a histogram from the given property and entity's instances.
+     * Sorts the histogram by key in ascending order.
+     *
      * @param dtoProperty The property to build a histogram of
-     * @param entity We use this to go over all living instances of this entity and extract
-     *               the property's info.
+     * @param entity      We use this to go over all living instances of this entity and extract
+     *                    the property's info.
      * @return A histogram map where the key is the value of the property, and the map's value
      * is the number of times the key appears.
      */
     private Map<Object, Integer> createHistogram(DTOProperty dtoProperty, DTOEntity entity) {
-        Map<Object, Integer> ret = new LinkedHashMap<>();
+        Map<Object, Integer> unsortedMap = new HashMap<>();
         String propertyOfHistogram = dtoProperty.getName();
 
         for (DTOEntityInstance e : entity.getInstances()
         ) {
             Object value = e.getDTOPropertyByName(propertyOfHistogram).getValue();
-            if (!ret.containsKey(value)) {
-                ret.put(value, 1);
+            if (!unsortedMap.containsKey(value)) {
+                unsortedMap.put(value, 1);
             } else {
-                ret.put(value, ret.get(value) + 1);
+                unsortedMap.put(value, unsortedMap.get(value) + 1);
             }
         }
 
-        return ret;
+        // This makes a new map with its keys sorted.
+        return new TreeMap<>(unsortedMap);
     }
 }

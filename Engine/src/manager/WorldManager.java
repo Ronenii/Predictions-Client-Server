@@ -23,6 +23,7 @@ import simulation.properties.property.random.value.impl.IntRndValueGen;
 import simulation.properties.property.random.value.impl.StringRndValueGen;
 import ui2engine.simulation.func3.DTOThirdFunction;
 import ui2engine.simulation.func3.user.input.EnvPropertyUserInput;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,24 +63,24 @@ public class WorldManager implements EngineInterface {
         return pastSimulations.values().toArray(new ResultData[0]);
     }
 
-    private void addResultData(ResultData resultData){
+    private void addResultData(ResultData resultData) {
         pastSimulations.put(resultData.getId(), resultData);
     }
 
-    private ResultData getResultDataById(String id){
+    private ResultData getResultDataById(String id) {
         return pastSimulations.get(id);
     }
 
     @Override
     public DTOLoadSucceed loadSimulationFromFile(DTOFirstFunction dto) {
         DTOLoadSucceed dtoLoadSucceed = new DTOLoadSucceed(false);
+        Reader.validatePath(dto.getPath());
 
-        if (Reader.isValidPath(dto.getPath())) {
-            this.world = Reader.readWorldFromXML(dto.getPath());
-            if(this.world != null) {
-                dtoLoadSucceed = new DTOLoadSucceed(true);
-            }
+        this.world = Reader.readWorldFromXML(dto.getPath());
+        if (this.world != null) {
+            dtoLoadSucceed = new DTOLoadSucceed(true);
         }
+
         isSimulationLoaded = true;
         return dtoLoadSucceed;
     }
@@ -104,23 +105,30 @@ public class WorldManager implements EngineInterface {
         return new ResultInfo(result.getId(), dtoEndingCondition);
     }
 
+    /**
+     * Clears all data of past simulations and all generated IDs.
+     */
+    public void resetEngine(){
+        pastSimulations.clear();
+        ResultData.clearIds();
+    }
+
 
     /**
      * Get the third function's DTO object, extract the user input from this object and update the simulation's environment variables.
      *
      * @param dtoThirdFunction the third function's DTO object
      */
-    private void fetchDTOThirdFunctionObject(DTOThirdFunction dtoThirdFunction){
+    private void fetchDTOThirdFunctionObject(DTOThirdFunction dtoThirdFunction) {
         Set<EnvPropertyUserInput> envPropertyUserInputs = dtoThirdFunction.getEnvPropertyUserInputs();
         Map<String, Property> environmentProperties = this.world.getEnvironmentProperties();
         Property envProperty;
 
-        for (EnvPropertyUserInput envPropertyUserInput : envPropertyUserInputs){
+        for (EnvPropertyUserInput envPropertyUserInput : envPropertyUserInputs) {
             envProperty = environmentProperties.get(envPropertyUserInput.getName());
-            if(envPropertyUserInput.isRandomInit()){
-                envProperty.updateValueAndIsRandomInit(getRandomValueByType(envProperty),envPropertyUserInput.isRandomInit());
-            }
-            else {
+            if (envPropertyUserInput.isRandomInit()) {
+                envProperty.updateValueAndIsRandomInit(getRandomValueByType(envProperty), envPropertyUserInput.isRandomInit());
+            } else {
                 envProperty.updateValueAndIsRandomInit(envPropertyUserInput.getValue(), envPropertyUserInput.isRandomInit());
             }
         }
@@ -132,17 +140,17 @@ public class WorldManager implements EngineInterface {
      * @param envProperty the environment variable
      * @return a random object
      */
-    private Object getRandomValueByType(Property envProperty){
+    private Object getRandomValueByType(Property envProperty) {
         Object ret = null;
 
-        switch (envProperty.getType()){
+        switch (envProperty.getType()) {
             case DECIMAL:
-                IntProperty intProperty = (IntProperty)envProperty;
+                IntProperty intProperty = (IntProperty) envProperty;
                 RandomValueGenerator<Integer> randomIntValueGenerator = new IntRndValueGen(intProperty.getFrom(), intProperty.getTo());
                 ret = randomIntValueGenerator.generateRandomValue();
                 break;
             case FLOAT:
-                DoubleProperty doubleProperty = (DoubleProperty)envProperty;
+                DoubleProperty doubleProperty = (DoubleProperty) envProperty;
                 RandomValueGenerator<Double> randomDoubleValueGenerator = new DoubleRndValueGen(doubleProperty.getFrom(), doubleProperty.getTo());
                 ret = randomDoubleValueGenerator.generateRandomValue();
                 break;
@@ -162,7 +170,7 @@ public class WorldManager implements EngineInterface {
     private void fetchSimulationActionsValues() {
         ActionValueInitializer actionValueInitializer = new ActionValueInitializer(world.getEnvironmentProperties(), world.getEntities());
 
-        world.getRules().forEach((key,value) -> actionValueInitializer.initializeValues(value.getActions()));
+        world.getRules().forEach((key, value) -> actionValueInitializer.initializeValues(value.getActions()));
     }
 
 
@@ -188,20 +196,20 @@ public class WorldManager implements EngineInterface {
     /**
      * Create a 'DTOEnvironmentVariable' which contain the given environment variable's data and return it.
      */
-    private DTOEnvironmentVariable getDTOEnvironmentVariable(Property valueFromTheMap){
+    private DTOEnvironmentVariable getDTOEnvironmentVariable(Property valueFromTheMap) {
         String name = valueFromTheMap.getName(), type = valueFromTheMap.getType().toString().toLowerCase();
         Double from = null, to = null;
 
-        if(valueFromTheMap.getType() == PropertyType.FLOAT){
-            DoubleProperty doubleProperty = (DoubleProperty)valueFromTheMap;
+        if (valueFromTheMap.getType() == PropertyType.FLOAT) {
+            DoubleProperty doubleProperty = (DoubleProperty) valueFromTheMap;
             from = doubleProperty.getFrom();
             to = doubleProperty.getTo();
         } else if (valueFromTheMap.getType() == PropertyType.DECIMAL) {
-            IntProperty intProperty = (IntProperty)valueFromTheMap;
-            from = (double)intProperty.getFrom();
-            to = (double)intProperty.getTo();
+            IntProperty intProperty = (IntProperty) valueFromTheMap;
+            from = (double) intProperty.getFrom();
+            to = (double) intProperty.getTo();
         }
 
-        return new DTOEnvironmentVariable(name,type,from,to);
+        return new DTOEnvironmentVariable(name, type, from, to);
     }
 }

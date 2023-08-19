@@ -20,6 +20,8 @@ public interface EngineInterface {
 
     ResultInfo runSimulation(DTOThirdFunction dtoThirdFunction);
 
+    void resetEngine();
+
     StartData getSimulationStartData();
 
     boolean getIsSimulationLoaded();
