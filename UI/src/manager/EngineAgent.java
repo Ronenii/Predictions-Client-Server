@@ -299,8 +299,6 @@ public class EngineAgent {
         }
 
         // This makes a new map with its keys sorted.
-        Map<Object, Integer> sortedMap = new TreeMap<>(unsortedMap);
-
-        return sortedMap;
+        return new TreeMap<>(unsortedMap);
     }
 }
