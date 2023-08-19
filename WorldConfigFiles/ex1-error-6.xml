@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PRD-world xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="predictions-v1.xsd">
+	<PRD-evironment>
+		<PRD-env-property type="decimal">
+			<PRD-name>cigarets-critical</PRD-name>
+			<PRD-range from="10" to="100"/>
+		</PRD-env-property>
+		<PRD-env-property type="decimal">
+			<PRD-name>cigarets-increase-non-smoker</PRD-name>
+			<PRD-range from="0" to="10"/>
+		</PRD-env-property>		
+		<PRD-env-property type="decimal">
+			<PRD-name>cigarets-increase-already-smoker</PRD-name>
+			<PRD-range from="10" to="100"/>
+		</PRD-env-property>			
+	</PRD-evironment>
+	<PRD-entities>
+		<PRD-entity name="Smoker">
+			<PRD-population>100</PRD-population>
+			<PRD-properties>
+				<PRD-property type="decimal">
+					<PRD-name>lung-cancer-progress</PRD-name>
+					<PRD-range to="100" from="0"/>
+					<PRD-value random-initialize="false" init="0"/>
+				</PRD-property>
+				<PRD-property type="decimal">
+					<PRD-name>age</PRD-name>
+					<PRD-range to="50" from="15"/>
+					<PRD-value random-initialize="true"/>
+				</PRD-property>		
+				<PRD-property type="decimal">
+					<PRD-name>cigarets-per-month</PRD-name>
+					<PRD-range to="0" from="500"/>
+					<PRD-value random-initialize="true"/>
+				</PRD-property>							
+			</PRD-properties>
+		</PRD-entity>
+	</PRD-entities>
+	<PRD-rules>
+		<PRD-rule name="aging">
+			<PRD-actions>
+				<PRD-action entity="Smoker" type="increase" property="age" by="1"/>
+			</PRD-actions>
+			<PRD-activation ticks="12"/>
+		</PRD-rule>
+		<PRD-rule name="got cancer">
+			<PRD-actions>
+				<PRD-action entity="Smoker" type="condition">
+					<PRD-condition singularity="multiple" logical="and">
+						<PRD-condition singularity="single" entity="Smoker"  property="cigarets-per-month" operator="bt" value="environment(cigarets-critical)"/>
+						<PRD-condition singularity="single" entity="Smoker" property="age" operator="bt" value="40"/>
+					</PRD-condition>
+					<PRD-then>
+						<PRD-action entity="Smoker" type="increase" property="lung-cancer-progress" by="random(5)"></PRD-action>
+					</PRD-then>
+				</PRD-action>
+			</PRD-actions>
+		</PRD-rule>
+		<PRD-rule name="more-cigartes">
+			<PRD-actions>
+				<PRD-action entity="Smoker" type="condition">
+					<PRD-condition singularity="single" entity="Smoker" property="cigarets-per-month" operator="=" value="0"/>
+					<PRD-then>
+						<PRD-action entity="Smoker" type="increase" property="cigarets-per-month" by="avrum"></PRD-action>
+					</PRD-then>
+					<PRD-else>
+						<PRD-action entity="Smoker" type="increase" property="cigarets-per-month" by="environment(cigarets-increase-already-smoker)"></PRD-action>
+					</PRD-else>
+				</PRD-action>
+			</PRD-actions>
+			<PRD-activation probability="0.3"/>
+		</PRD-rule>
+		<PRD-rule name="death">
+			<PRD-actions>
+				<PRD-action entity="Smoker" type="condition">
+					<PRD-condition singularity="single" entity="Smoker" property="lung-cancer-progress" operator="bt" value="90"/>
+					<PRD-then>
+						<PRD-action entity="Smoker" type="kill"></PRD-action>
+					</PRD-then>
+				</PRD-action>
+			</PRD-actions>
+		</PRD-rule>
+	</PRD-rules>
+	<PRD-termination>	
+		<PRD-by-ticks count="840"/>
+		<PRD-by-second count="10"/>
+	</PRD-termination>
+</PRD-world>
