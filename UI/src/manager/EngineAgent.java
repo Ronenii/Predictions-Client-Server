@@ -131,7 +131,7 @@ public class EngineAgent {
 
         while (valueIsNotValid) {
             // If after an error the user decide to random initialize the value.
-            if (value.equals("\n")) {
+            if (value.equals("")) {
                 break;
             }
 

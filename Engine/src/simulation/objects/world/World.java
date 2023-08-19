@@ -30,10 +30,6 @@ public class World implements Serializable {
         this.timePassed = -1;
     }
 
-    public void invoke() {
-        //TODO : implement.
-    }
-
     public Map<String, Property> getEnvironmentProperties() {
         return environmentProperties;
     }
