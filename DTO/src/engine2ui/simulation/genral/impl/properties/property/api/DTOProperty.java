@@ -5,10 +5,12 @@ abstract public class DTOProperty {
     private final String type;
     private final boolean isRandomInit;
 
-    public DTOProperty(String name, String type, boolean isRandomInit) {
+    private final Object value;
+    public DTOProperty(String name, String type, boolean isRandomInit, Object value) {
         this.name = name;
         this.type = type;
         this.isRandomInit = isRandomInit;
+        this.value = value;
     }
 
     public String getName() {
@@ -21,6 +23,10 @@ abstract public class DTOProperty {
 
     public boolean isRandomInit() {
         return isRandomInit;
+    }
+
+    public Object getValue() {
+        return value;
     }
 
     @Override
