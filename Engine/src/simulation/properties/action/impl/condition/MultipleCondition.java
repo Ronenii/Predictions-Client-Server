@@ -1,9 +1,11 @@
 package simulation.properties.action.impl.condition;
 
 
+import simulation.objects.entity.EntityInstance;
+
 import java.util.List;
 
-public class MultipleCondition extends AbstractConditionAction{
+public class MultipleCondition extends AbstractConditionAction {
     private final String logical;
 
     private final List<AbstractConditionAction> subConditions;
@@ -22,8 +24,31 @@ public class MultipleCondition extends AbstractConditionAction{
         return subConditions;
     }
 
-    @Override
-    public void Invoke() {
 
+    /**
+     * Iterates on all nested conditions and invokes each on the given entity.
+     * If all nested conditions are true the invokes "thenActions" of this multiple condition,
+     * on the given instance.
+     * Else, invokes all "else actions".
+     * @param entityInstance The given instance to invoke the condition action on.
+     */
+    @Override
+    public void Invoke(EntityInstance entityInstance) {
+        boolean isFirst = true;
+        for (AbstractConditionAction a : subConditions
+        ) {
+            a.Invoke(entityInstance);
+            if(isFirst){
+                isTrue = a.isTrue;
+            }
+            else{
+                isTrue &= a.isTrue;
+            }
+        }
+        if(isTrue){
+            invokeThenActions(entityInstance);
+        }else{
+            invokeElseActions(entityInstance);
+        }
     }
 }

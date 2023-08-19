@@ -35,6 +35,11 @@ public abstract class AbstractProperty implements Property {
     }
 
     @Override
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
+    @Override
     public void updateValue(Object value) {
         this.value = (boolean)value;
     }

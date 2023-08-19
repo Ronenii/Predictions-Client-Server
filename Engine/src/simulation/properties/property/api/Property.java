@@ -13,6 +13,8 @@ public interface Property {
 
     Object getValue();
 
+    void setValue(Object value);
+
     Boolean isRandInit();
 
     void updateValue(Object value);

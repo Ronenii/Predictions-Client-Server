@@ -1,10 +1,9 @@
 package simulation.objects.entity;
 
+import simulation.properties.action.api.Action;
 import simulation.properties.property.api.Property;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Entity {
 
@@ -12,8 +11,7 @@ public class Entity {
     private int currentPopulation;
     private final String name;
     private final Map<String, Property> properties;
-
-    private List<EntityInstance> entityInstances;
+    private final List<EntityInstance> entityInstances;
 
     public Entity(int startingPopulation, String name, Map<String, Property> properties) {
         this.startingPopulation = startingPopulation;
@@ -23,7 +21,7 @@ public class Entity {
         this.entityInstances = new ArrayList<>();
 
         for (int i = 0; i < this.startingPopulation; i++) {
-            entityInstances.add(new EntityInstance(properties.values().toArray(new Property[0])));
+            entityInstances.add(new EntityInstance(new HashMap<>(properties)));
         }
     }
 
@@ -71,10 +69,30 @@ public class Entity {
         return name.length() * startingPopulation * properties.size();
     }
 
+    /**
+     * Iterates on all entity instances, and tries to invoke the given action on them.
+     * The action invocation depends on the probability and if the current entity instnace
+     * is alive.
+     *
+     * @param action The action to invoke on all instances.
+     * @param probability The probability of this action to invoke on instances.
+     */
+    public void invokeActionOnAllInstances(Action action, double probability){
+        Random r =new Random();
+        for (EntityInstance e: entityInstances
+             ) {
+            if(r.nextDouble() <= probability && e.isAlive()){
+                action.Invoke(e);
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object obj) {
         Entity toCompare = (Entity) obj;
 
         return toCompare.getName().equals(this.name) && toCompare.getStartingPopulation() == this.startingPopulation && toCompare.getProperties().equals(this.properties);
     }
+
+
 }

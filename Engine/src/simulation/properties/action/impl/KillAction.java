@@ -2,6 +2,7 @@ package simulation.properties.action.impl;
 
 import manager.value.update.object.api.UpdateObject;
 import manager.value.update.object.impl.OneObjectUpdate;
+import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 
@@ -16,7 +17,12 @@ public class KillAction extends AbstractAction {
     }
 
     @Override
-    public void Invoke() {
-        // TODO: implementation.
+    public Object getValue() {
+        return null;
+    }
+
+    @Override
+    public void Invoke(EntityInstance entityInstance) {
+        entityInstance.kill();
     }
 }

@@ -1,5 +1,5 @@
 package simulation.properties.action.impl.calculation;
 
-public enum ClaculationType {
+public enum CalculationType {
     MULTIPLY, DIVIDE
 }

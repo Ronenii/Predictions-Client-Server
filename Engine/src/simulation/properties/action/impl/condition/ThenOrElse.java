@@ -1,5 +1,6 @@
 package simulation.properties.action.impl.condition;
 
+import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.Action;
 
 import java.util.List;
@@ -18,7 +19,10 @@ public class ThenOrElse {
         return actionsToInvoke;
     }
 
-    public void invoke(){
-        // TODO: implement.
+    public void invoke(EntityInstance entityInstance){
+        for (Action a: actionsToInvoke
+             ) {
+            a.Invoke(entityInstance);
+        }
     }
 }
