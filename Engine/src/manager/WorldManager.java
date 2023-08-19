@@ -254,8 +254,6 @@ public class WorldManager implements EngineInterface, Serializable {
         }catch (IOException e){
             throw new IllegalArgumentException(e);
         }
-
-        IdGenerator.setGeneratedIds(this.keysToSerialize);
     }
 
 

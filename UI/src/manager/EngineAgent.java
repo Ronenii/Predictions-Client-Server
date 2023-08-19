@@ -275,6 +275,7 @@ public class EngineAgent {
             Console.println("The path provided is invalid. Please provide the full path for the save file.");
         } else {
             engine.loadState(path);
+            Console.println("The file was loaded successfully.");
         }
     }
 
@@ -297,6 +298,7 @@ public class EngineAgent {
             else{
                 path += "\\" + filename + ".out";
                 engine.saveState(path);
+                Console.println("The file was saved successfully.");
             }
         }
 
