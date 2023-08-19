@@ -19,10 +19,6 @@ public class Entity {
         this.properties = properties;
         this.currentPopulation = startingPopulation;
         this.entityInstances = new ArrayList<>();
-
-        for (int i = 0; i < this.startingPopulation; i++) {
-            entityInstances.add(new EntityInstance(new HashMap<>(properties)));
-        }
     }
 
     public int getStartingPopulation() {
@@ -66,6 +62,13 @@ public class Entity {
         }
 
         return  aliveCount;
+    }
+
+    public void resetPopulation(){
+        entityInstances.clear();
+        for (int i = 0; i < this.startingPopulation; i++) {
+            entityInstances.add(new EntityInstance(new HashMap<>(properties)));
+        }
     }
 
     public void setCurrentPopulation(int currentPopulation) {

@@ -114,7 +114,6 @@ public class World {
      * @return The result data of this simulation run.
      */
     public ResultData runSimulation() {
-
         // Set the starting time to calculate later for 'ending by seconds'
         if (endingConditions.containsKey(EndingConditionType.TIME)) {
             startingTime = System.currentTimeMillis();
@@ -131,6 +130,13 @@ public class World {
 
         DTOConverter dtoConverter = new DTOConverter();
         return new ResultData(dtoConverter.convertEntities2DTOEntities(entities));
+    }
+
+    public void resetWorld(){
+        for (Entity e: entities.values()
+             ) {
+            e.resetPopulation();
+        }
     }
 
     private boolean endingConditionsMet() {

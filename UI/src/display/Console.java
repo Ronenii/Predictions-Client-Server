@@ -4,6 +4,7 @@ import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.result.ResultData;
+
 import java.util.Arrays;
 
 
@@ -76,8 +77,12 @@ public class Console {
         // TODO: Implement this
     }
 
-    public static void printGivenMessage(String message){
+    public static void println(String message) {
         System.out.println(message);
+    }
+
+    public static void print(String message) {
+        System.out.print(message);
     }
 
     public static void promptUserToInputPathForFile() {
@@ -95,12 +100,38 @@ public class Console {
         System.out.println("2. Histogram of property");
     }
 
-    public static void showThirdFuncFirstMessage(Double from, Double to, boolean isHasRage) {
+    public static void showThirdFuncMessageForDecimal(int from, int to) {
         System.out.print("\nInput the value of the environment variable ");
-        if(isHasRage){
-            System.out.printf("from: %.2f to: %.2f\n",from,to);
-        }
+        System.out.printf("from: %d to: %d\n", from, to);
         System.out.println("Or press enter for random value");
+    }
+
+    public static void showThirdFuncForFloat(Double from, Double to, boolean isHasRage) {
+        if (isHasRage) {
+            System.out.printf("from: %.2f to: %.2f\n", from, to);
+        }
+    }
+
+    public static void printPromptForEnvironmentPropertyInput(DTOEnvironmentVariable dtoEnvironmentVariable) {
+        System.out.print("\nInput the value of the environment variable ");
+        switch (dtoEnvironmentVariable.getType()) {
+            case "decimal":
+                System.out.printf("(%d-%d)\n", (int)dtoEnvironmentVariable.getFrom(), (int)dtoEnvironmentVariable.getTo());
+                break;
+            case "float":
+                System.out.printf("(%.2f-%.2f)\n", dtoEnvironmentVariable.getFrom(), dtoEnvironmentVariable.getTo());
+                break;
+            case "boolean":
+                System.out.printf("(true|false)1\n", dtoEnvironmentVariable.getFrom(), dtoEnvironmentVariable.getTo());
+                break;
+            case "string":
+                System.out.printf("a string of up to 50 characters, can only contain: \n" +
+                        "- lower and upper case letters.\n" +
+                        "- numbers: 0-9\n" +
+                        "- these special characters: 'space'!,?_-.()\n");
+                break;
+        }
+        System.out.print("Or press enter for random value: ");
     }
 
     public static void showEnvPropertyDet(DTOEnvironmentVariable dtoEnvironmentVariable) {

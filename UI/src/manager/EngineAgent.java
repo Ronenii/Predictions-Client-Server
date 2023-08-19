@@ -4,6 +4,7 @@ import display.Console;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.result.ResultData;
+import manager.exception.SimulationNotLoadedException;
 import ui2engine.simulation.func1.DTOFirstFunction;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.start.StartData;
@@ -14,6 +15,7 @@ import validator.ui.exceptions.IllegalBooleanValueException;
 import validator.ui.exceptions.IllegalStringValueException;
 import validator.ui.exceptions.OutOfRangeException;
 import validator.ui.validator.InputValidator;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -54,10 +56,10 @@ public class EngineAgent {
 
         dtoLoadSucceed = engine.loadSimulationFromFile(new DTOFirstFunction(path));
         if (dtoLoadSucceed.isSucceed()){
-            Console.printGivenMessage("The simulation creation has completed successfully");
+            Console.println("The simulation creation has completed successfully");
         }
         else {
-            Console.printGivenMessage("The simulation creation has failed");
+            Console.println("The simulation creation has failed");
         }
     }
 
@@ -65,7 +67,11 @@ public class EngineAgent {
     /**
      * Starts a run of the currently loaded simulation.
      */
-    public void runSimulation() {
+    public void runSimulation() throws SimulationNotLoadedException {
+        if(!engine.getIsSimulationLoaded()){
+            throw new SimulationNotLoadedException("There is no simulation loaded in the system.");
+        }
+
         StartData startData = engine.getSimulationStartData();
         DTOThirdFunction dtoThirdFunction = createDTOThirdFunctionObject(startData);
 
@@ -86,13 +92,8 @@ public class EngineAgent {
         //TODO: add validation, check if the user enter a number and check if the number is in the range.
 
         for (DTOEnvironmentVariable dtoEnvironmentVariable : environmentVariables) {
-            if(dtoEnvironmentVariable.getType().equals("decimal") || dtoEnvironmentVariable.getType().equals("float")){
-                Console.showThirdFuncFirstMessage(dtoEnvironmentVariable.getFrom(),dtoEnvironmentVariable.getTo(), true);
-            }
-            else {
-                Console.showThirdFuncFirstMessage(dtoEnvironmentVariable.getFrom(),dtoEnvironmentVariable.getTo(), false);
-            }
             Console.showEnvPropertyDet(dtoEnvironmentVariable);
+            Console.printPromptForEnvironmentPropertyInput(dtoEnvironmentVariable);
             input = Input.getInput();
             if (input.equals("\n")) {
                 ret.updateEnvPropertyUserInputs(dtoEnvironmentVariable.getName(), getIsRandomInit(null), null);
@@ -139,12 +140,12 @@ public class EngineAgent {
 
             try {
                 switch (dtoEnvironmentVariable.getType()) {
-                    case "int":
+                    case "decimal":
                         int integerValue = Integer.parseInt(value);
                         inputValidator.isIntegerInRange(integerValue, (int) dtoEnvironmentVariable.getFrom(), (int) dtoEnvironmentVariable.getTo());
                         ret = integerValue;
                         break;
-                    case "double":
+                    case "float":
                         double doubleValue = Double.parseDouble(value);
                         inputValidator.isDoubleInRange(doubleValue, dtoEnvironmentVariable.getFrom(), dtoEnvironmentVariable.getTo());
                         ret = doubleValue;
@@ -162,13 +163,13 @@ public class EngineAgent {
                 valueIsNotValid = false;
 
             } catch (IllegalStringValueException e) {
-                Console.printGivenMessage(e.getMessage());
+                Console.println(e.getMessage());
             } catch (OutOfRangeException e) {
-                Console.printGivenMessage("The number is out of the property range! Please try again.");
+                Console.print("The number is out of the property range! Please try again: ");
             } catch (NumberFormatException e) {
-                Console.printGivenMessage("The number type doesn't match the property's value type! Please try again.");
+                Console.print(String.format("The input type can only be %s! Please try again: ", dtoEnvironmentVariable.getType()));
             } catch (IllegalBooleanValueException e) {
-                Console.printGivenMessage("Thr property's value type is boolean! Please try again.");
+                Console.print("The property's value type is boolean! Please try again: ");
             } finally { // If an error occurred, the user will enter a new input.
                 if (valueIsNotValid) {
                     value = Input.getInput();
