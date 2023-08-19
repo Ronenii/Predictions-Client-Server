@@ -12,7 +12,6 @@ import simulation.properties.action.api.Action;
 import simulation.properties.ending.conditions.EndingCondition;
 import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.property.api.Property;
-import simulation.properties.property.api.PropertyType;
 import simulation.properties.property.impl.DoubleProperty;
 import simulation.properties.property.impl.IntProperty;
 import simulation.properties.rule.Rule;
@@ -21,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Responsible cor converting program objects to DTO objects.
+ */
 public class DTOCreator {
 
     public PreviewData createSimulationPreviewDataObject(Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions) {
@@ -42,30 +44,57 @@ public class DTOCreator {
     }
 
     private DTOEntity getDTOEntity(Entity entity){
-        DTOProperty[] dtoPropertiesArray;
-        List<DTOProperty> dtoPropertyList = new ArrayList<>();
-
-        entity.getProperties().forEach((key, value)->dtoPropertyList.add(getDTOProperty(value)));
-        dtoPropertiesArray = dtoPropertyList.toArray(new DTOProperty[0]);
+        DTOProperty[] dtoPropertiesArray = convertProperties2DTOProperties(entity.getProperties());
         return new DTOEntity(entity.getName(), entity.getStartingPopulation(), entity.getCurrentPopulation(), dtoPropertiesArray);
     }
 
-    private DTOProperty getDTOProperty(Property property) {
-        DTOProperty dtoProperty;
+    /**
+     * Converts the given Map into an array of DTOProperties.
+     * Used in menu option 4.
+     * @param properties the properties we want to convert to an array.
+     * @return an array of DTOProperties
+     */
+    private DTOProperty[] convertProperties2DTOProperties(Map<String, Property> properties) {
+        Property[] propertyArr = properties.values().toArray(new Property[0]);
+        DTOProperty[] dtoProperties = new DTOProperty[propertyArr.length];
 
-        if (property.getType() == PropertyType.DECIMAL) {
-            IntProperty intProperty = (IntProperty)property;
-            dtoProperty = new RangedDTOProperty(intProperty.getName(), intProperty.getType().toString(), intProperty.isRandInit(), intProperty.getFrom(), intProperty.getTo());
-        } else if (property.getType() == PropertyType.FLOAT) {
-            DoubleProperty doubleProperty = (DoubleProperty)property;
-            dtoProperty = new RangedDTOProperty(doubleProperty.getName(), doubleProperty.getType().toString(), doubleProperty.isRandInit(), doubleProperty.getFrom(), doubleProperty.getTo());
+        for (int i = 0; i < propertyArr.length; i++) {
+            switch (propertyArr[i].getType()) {
+                case DECIMAL:
+                    IntProperty intProperty = (IntProperty) propertyArr[i];
+                    dtoProperties[i] = new RangedDTOProperty(intProperty.getName(), intProperty.getType().toString(), intProperty.isRandInit(), intProperty.getFrom(), intProperty.getTo());
+                    break;
+                case FLOAT:
+                    DoubleProperty doubleProperty = (DoubleProperty) propertyArr[i];
+                    dtoProperties[i] = new RangedDTOProperty(doubleProperty.getName(), doubleProperty.getType().toString(), doubleProperty.isRandInit(), doubleProperty.getFrom(), doubleProperty.getTo());
+                    break;
+                case BOOLEAN:
+                case STRING:
+                    dtoProperties[i] = new NonRangedDTOProperty(propertyArr[i].getName(), propertyArr[i].getType().toString(), propertyArr[i].isRandInit());
+                    break;
+            }
         }
-        else {
-            dtoProperty = new NonRangedDTOProperty(property.getName(), property.getType().toString(), property.isRandInit());
-        }
-
-        return dtoProperty;
+        return dtoProperties;
     }
+
+
+    /**
+     * Converts the given Map into an array of DTOEntities.
+     * Used in menu option 4.
+     * @param entities the entities we want to convert to an array.
+     * @return an array of DTOEntities
+     */
+    public DTOEntity[] convertEntities2DTOEntities(Map<String, Entity> entities) {
+        Entity[] entityArr = entities.values().toArray(new Entity[0]);
+        DTOEntity[] dtoEntities = new DTOEntity[entityArr.length];
+
+        for (int i = 0; i < entityArr.length; i++) {
+            dtoEntities[i] = new DTOEntity(entityArr[i].getName(), entityArr[i].getStartingPopulation(), entityArr[i].getCurrentPopulation(), convertProperties2DTOProperties(entityArr[i].getProperties()));
+        }
+
+        return dtoEntities;
+    }
+
 
     private List<DTORule> getDTORulesList(Map<String, Rule> rules) {
         List<DTORule> rulesList = new ArrayList<>();
