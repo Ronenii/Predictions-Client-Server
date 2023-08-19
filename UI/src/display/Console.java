@@ -122,7 +122,7 @@ public class Console {
                 System.out.printf("(%.2f-%.2f)\n", dtoEnvironmentVariable.getFrom(), dtoEnvironmentVariable.getTo());
                 break;
             case "boolean":
-                System.out.printf("(true|false)1\n", dtoEnvironmentVariable.getFrom(), dtoEnvironmentVariable.getTo());
+                System.out.printf("(true|false)\n");
                 break;
             case "string":
                 System.out.printf("a string of up to 50 characters, can only contain: \n" +

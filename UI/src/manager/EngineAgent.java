@@ -95,7 +95,7 @@ public class EngineAgent {
             Console.showEnvPropertyDet(dtoEnvironmentVariable);
             Console.printPromptForEnvironmentPropertyInput(dtoEnvironmentVariable);
             input = Input.getInput();
-            if (input.equals("\n")) {
+            if (input.isEmpty()) {
                 ret.updateEnvPropertyUserInputs(dtoEnvironmentVariable.getName(), getIsRandomInit(null), null);
             } else {
                 valueToSend = tryToParse(input, dtoEnvironmentVariable);
@@ -163,7 +163,7 @@ public class EngineAgent {
                 valueIsNotValid = false;
 
             } catch (IllegalStringValueException e) {
-                Console.println(e.getMessage());
+                Console.print(e.getMessage());
             } catch (OutOfRangeException e) {
                 Console.print("The number is out of the property range! Please try again: ");
             } catch (NumberFormatException e) {
