@@ -26,7 +26,7 @@ public class Console {
         System.out.println("1. Load simulation from file");
         System.out.println("2. Show simulation details");
         System.out.println("3. Run simulation");
-        System.out.println("4. Show full details of past simulation run");
+        System.out.println("4. Show details of past simulation run");
         System.out.println("5. Exit");
         System.out.print("Please enter your choice: ");
     }
@@ -340,8 +340,7 @@ public class Console {
     public static void printSimulationResultInfo(ResultInfo resultInfo) {
         System.out.println("\nSimulation run has completed.");
         System.out.printf("Simulation run id: %s\n", resultInfo.getId());
-        System.out.println("The simulation run terminate condition:");
-        System.out.printf("\tCondition type: %s\n", resultInfo.getEndingCondition().getType());
-        System.out.printf("\tCondition count: %s\n", resultInfo.getEndingCondition().getCount());
+        System.out.printf("The simulation run terminated after %s %s.\n",resultInfo.getEndingCondition().getCount(), resultInfo.getEndingCondition().getType().toLowerCase());
+
     }
 }

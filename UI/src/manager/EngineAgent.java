@@ -276,7 +276,7 @@ public class EngineAgent {
 
     /**
      * Creates a histogram from the given property and entity's instances.
-     *
+     * Sorts the histogram by key in ascending order.
      * @param dtoProperty The property to build a histogram of
      * @param entity      We use this to go over all living instances of this entity and extract
      *                    the property's info.
@@ -297,6 +297,7 @@ public class EngineAgent {
             }
         }
 
+        // This makes a new map with its keys sorted.
         Map<Object, Integer> sortedMap = new TreeMap<>(unsortedMap);
 
         return sortedMap;
