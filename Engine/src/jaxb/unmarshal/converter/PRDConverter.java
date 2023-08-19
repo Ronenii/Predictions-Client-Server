@@ -252,16 +252,16 @@ public class PRDConverter {
         try {
             switch (type) {
                 case DECIMAL:
-                    ret = new IntProperty(name, isRandomInit, parseOrRandomValue(type,value, isRandomInit, from, to) ,(int)from.doubleValue() , (int)to.doubleValue());
+                    ret = new IntProperty(name, isRandomInit, parseValue(type,value, isRandomInit, from, to) ,(int)from.doubleValue() , (int)to.doubleValue());
                     break;
                 case FLOAT:
-                    ret = new DoubleProperty(name, isRandomInit,parseOrRandomValue(type,value, isRandomInit, from, to), from, to);
+                    ret = new DoubleProperty(name, isRandomInit, parseValue(type,value, isRandomInit, from, to), from, to);
                     break;
                 case BOOLEAN:
-                    ret = new BooleanProperty(name, isRandomInit,parseOrRandomValue(type,value, isRandomInit, from, to));
+                    ret = new BooleanProperty(name, isRandomInit, parseValue(type,value, isRandomInit, from, to));
                     break;
                 case STRING:
-                    ret = new StringProperty(name, isRandomInit,parseOrRandomValue(type,value, isRandomInit, from, to));
+                    ret = new StringProperty(name, isRandomInit, parseValue(type,value, isRandomInit, from, to));
                     break;
             }
         }
@@ -282,7 +282,7 @@ public class PRDConverter {
     /**
      * Parse the property value or generates a random value according to the 'isRandomInit' flag.
      */
-    private Object parseOrRandomValue(PropertyType type, String value, boolean isRandomInit, Double from, Double to) throws ValueOutOfRangeException, InvalidBooleanValueException, InvalidStringValueException {
+    private Object parseValue(PropertyType type, String value, boolean isRandomInit, Double from, Double to) throws ValueOutOfRangeException, InvalidBooleanValueException, InvalidStringValueException {
         Object ret = null;
 
         switch (type) {

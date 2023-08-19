@@ -1,7 +1,11 @@
 package simulation.properties.property.impl;
 
 import simulation.properties.property.api.AbstractProperty;
+import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
+import simulation.properties.property.random.value.api.RandomValueGenerator;
+import simulation.properties.property.random.value.impl.IntRndValueGen;
+import simulation.properties.property.random.value.impl.StringRndValueGen;
 
 public class StringProperty extends AbstractProperty {
 
@@ -20,6 +24,21 @@ public class StringProperty extends AbstractProperty {
     @Override
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    @Override
+    public Property dupProperty() {
+        return new StringProperty(getName(),isRandInit(), getValue());
+    }
+
+    @Override
+    public Property generateRandomValueProperty() {
+        String value;
+
+        RandomValueGenerator<String> randomValueGenerator = new StringRndValueGen();
+        value = randomValueGenerator.generateRandomValue();
+
+        return new StringProperty(getName(),isRandInit(), value);
     }
 
 }
