@@ -66,17 +66,17 @@ public class PRDValidator extends Validator {
      * @param prdEnvProperty the PRDProperty we are validating
      */
     private void validatePRDEnvPropertyRange(PRDEnvProperty prdEnvProperty) throws PRDObjectConversionException {
-        if(prdEnvProperty.getType().equals("decimal") || prdEnvProperty.getType().equals("float"))
-        {
+        if(prdEnvProperty.getType().equals("decimal") || prdEnvProperty.getType().equals("float")) {
             double from = prdEnvProperty.getPRDRange().getFrom();
             double to = prdEnvProperty.getPRDRange().getTo();
 
-            if (from < 0.0 || to < 0.0) {
-                addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range contains negative values.");
-            }
-
             if (to <= from) {
                 addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
+            }
+        }
+        else {
+            if(prdEnvProperty.getPRDRange() != null) {
+                addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Boolean or string property can not contain range.");
             }
         }
     }
@@ -109,7 +109,12 @@ public class PRDValidator extends Validator {
             if (to <= from) {
                 addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
             }
+        }else {
+            if(prdProperty.getPRDRange() != null) {
+                addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Boolean or string property can not contain range.");
+            }
         }
+
     }
 
     /**
