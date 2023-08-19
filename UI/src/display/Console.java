@@ -100,18 +100,6 @@ public class Console {
         System.out.println("2. Histogram of property");
     }
 
-    public static void showThirdFuncMessageForDecimal(int from, int to) {
-        System.out.print("\nInput the value of the environment variable ");
-        System.out.printf("from: %d to: %d\n", from, to);
-        System.out.println("Or press enter for random value");
-    }
-
-    public static void showThirdFuncForFloat(Double from, Double to, boolean isHasRage) {
-        if (isHasRage) {
-            System.out.printf("from: %.2f to: %.2f\n", from, to);
-        }
-    }
-
     public static void printPromptForEnvironmentPropertyInput(DTOEnvironmentVariable dtoEnvironmentVariable) {
         System.out.print("\nInput the value of the environment variable ");
         switch (dtoEnvironmentVariable.getType()) {
