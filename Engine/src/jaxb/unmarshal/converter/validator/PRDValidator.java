@@ -373,11 +373,43 @@ public class PRDValidator extends Validator {
     }
 
     public void validatePRDTermination(PRDTermination prdTermination) throws PRDObjectConversionException {
+        validatePRDTerminationNotEmpty(prdTermination);
+        validateNumOfEndingConditions(prdTermination);
+    }
+
+    /**
+     * This is validated since the program cannot run without some sort of ending condition
+     * to stop it.
+     */
+    private void validatePRDTerminationNotEmpty(PRDTermination prdTermination) throws PRDObjectConversionException {
         List<Object> byTicksOrSec = prdTermination.getPRDByTicksOrPRDBySecond();
 
         if (byTicksOrSec.isEmpty()) {
             addErrorToListAndThrowException(prdTermination, "", "There are no ending conditions for this simulation.");
         }
+    }
+
+    /**
+     * We validate this since there cannot be more than one ending condition of each type.
+     */
+    private void validateNumOfEndingConditions(PRDTermination prdTermination) throws PRDObjectConversionException {
+        int terminateByTicksCount = 0;
+        int terminateBySecondsCount = 0;
+
+        for (Object t: prdTermination.getPRDByTicksOrPRDBySecond()
+             ) {
+            if(t.getClass() == PRDByTicks.class){
+                terminateByTicksCount++;
+            }
+            if(t.getClass() == PRDBySecond.class){
+                terminateBySecondsCount++;
+            }
+
+            if(terminateByTicksCount >1 || terminateBySecondsCount > 1){
+                addErrorToListAndThrowException(prdTermination, "", "There can only be at most one termination of each type.");
+            }
+        }
+
     }
 
     /**

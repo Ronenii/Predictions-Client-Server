@@ -54,7 +54,7 @@ public class PRDConverter {
 
     public World PRDWorld2World(PRDWorld prdWorld) {
 
-        Set<EndingCondition> endingConditions;
+        Map<EndingConditionType,EndingCondition> endingConditions;
 
         getEnvironmentPropertiesFromPRDWorld(prdWorld);
 
@@ -547,20 +547,22 @@ public class PRDConverter {
      * @param prdTermination The given List of termination conditions
      * @return a set of all valid ending conditions
      */
-    private Set<EndingCondition> getEndingConditions(PRDTermination prdTermination) {
+    private Map<EndingConditionType,EndingCondition> getEndingConditions(PRDTermination prdTermination) {
         try {
             validator.validatePRDTermination(prdTermination);
         } catch (PRDObjectConversionException e) {
             return null;
         }
 
-        Set<EndingCondition> endingConditions = new HashSet<>();
+        Map<EndingConditionType,EndingCondition> endingConditions = new HashMap<>();
 
         for (Object endingConditionObj : prdTermination.getPRDByTicksOrPRDBySecond()) {
             if (endingConditionObj.getClass() == PRDByTicks.class) {
-                endingConditions.add(PRDByTicks2EndingCondition((PRDByTicks) endingConditionObj));
+                EndingCondition toAdd = PRDByTicks2EndingCondition((PRDByTicks) endingConditionObj);
+                endingConditions.put(toAdd.getType(),toAdd);
             } else {
-                endingConditions.add(PRDBySecond2EndingCondition((PRDBySecond) endingConditionObj));
+                EndingCondition toAdd =PRDBySecond2EndingCondition((PRDBySecond) endingConditionObj);
+                endingConditions.put(toAdd.getType(),toAdd);
             }
         }
 

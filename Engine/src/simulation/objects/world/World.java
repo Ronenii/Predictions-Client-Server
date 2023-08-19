@@ -1,10 +1,21 @@
 package simulation.objects.world;
 
+import engine2ui.simulation.genral.impl.objects.DTOEntity;
+import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
+import engine2ui.simulation.genral.impl.properties.property.impl.NonRangedDTOProperty;
+import engine2ui.simulation.genral.impl.properties.property.impl.RangedDTOProperty;
+import engine2ui.simulation.result.ResultData;
 import simulation.objects.entity.Entity;
+import simulation.objects.world.Converter.DTOConverter;
+import simulation.properties.ending.conditions.EndingConditionType;
+import simulation.properties.property.impl.DoubleProperty;
+import simulation.properties.property.impl.IntProperty;
 import simulation.properties.rule.Rule;
 import simulation.properties.ending.conditions.EndingCondition;
 import simulation.properties.property.api.Property;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,16 +24,22 @@ public class World {
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
     private final Map<String, Rule> rules;
-    private final Set<EndingCondition> endingConditions;
+    private final Map<EndingConditionType, EndingCondition> endingConditions;
 
-    public World(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Set<EndingCondition> endingConditions) {
+    private int ticks;
+    private long timePassed;
+    private long startingTime;
+
+    public World(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions) {
         this.environmentProperties = environmentProperties;
         this.entities = entities;
         this.rules = rules;
         this.endingConditions = endingConditions;
+        this.ticks = 0;
+        this.timePassed = -1;
     }
 
-    public void invoke(){
+    public void invoke() {
         //TODO : implement.
     }
 
@@ -38,7 +55,7 @@ public class World {
         return rules;
     }
 
-    public Set<EndingCondition> getEndingConditions() {
+    public Map<EndingConditionType, EndingCondition> getEndingConditions() {
         return endingConditions;
     }
 
@@ -76,7 +93,7 @@ public class World {
         }
 
         worldToString.append(", endingConditions=[");
-        for (EndingCondition e : endingConditions) {
+        for (EndingCondition e : endingConditions.values()) {
             int counter = 0;
             worldToString.append(e);
             if (++counter != endingConditions.size())
@@ -87,6 +104,70 @@ public class World {
 
         worldToString.append('}');
         return worldToString.toString();
+    }
+
+    /**
+     * While the ending conditions are not met, this function iterates over
+     * all rules and tries to invoke their actions on each of the entities.
+     * In the end, it converts the entities in this world to DTOs and
+     * returns the array of DTO entities.
+     * @return The result data of this simulation run.
+     */
+    public ResultData runSimulation() {
+        // Set the starting time to calculate later for 'ending by seconds'
+        if (endingConditions.containsKey(EndingConditionType.TIME)) {
+            startingTime = System.currentTimeMillis();
+        }
+
+        // Try to invoke all rules on all entities.
+        do {
+            for (Rule r : rules.values()
+            ) {
+                r.invokeRuleOnWorldEntities(entities.values());
+            }
+        } while ((!endingConditionsMet()));
+
+
+        DTOConverter dtoConverter = new DTOConverter();
+        return new ResultData(dtoConverter.convertEntities2DTOEntities(entities));
+    }
+
+    public void resetWorld(){
+        for (Entity e: entities.values()
+             ) {
+            e.resetPopulation();
+        }
+    }
+
+    private boolean endingConditionsMet() {
+        return isEndingBySecondsMet() || isEndingByTicksMet();
+    }
+
+    /**
+     * @return If the simulation has met the required amount of ticks to stop it.
+     */
+    private boolean isEndingByTicksMet() {
+        if (endingConditions.containsKey(EndingConditionType.TICKS)) {
+            if (++ticks >= endingConditions.get(EndingConditionType.TICKS).getCount()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return If the simulation has met the required amount of seconds to stop it.
+     */
+    private boolean isEndingBySecondsMet() {
+        if (endingConditions.containsKey(EndingConditionType.TIME)) {
+            timePassed = (System.currentTimeMillis() - startingTime) / 1000;
+            if (timePassed >= endingConditions.get(EndingConditionType.TIME).getCount()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package manager;
 
 import display.Console;
+import manager.exception.SimulationNotLoadedException;
 import manager.options.MenuOptions;
 
 import java.util.Scanner;
@@ -9,9 +10,12 @@ import java.util.Scanner;
  * The class the controls the main program loop. handles getting input from user, sends it to the engineAgent to handle it.
  */
 public class UI {
-    private boolean exit =false;
+    private boolean exit;
     private EngineAgent engineAgent;
 
+    public UI(){
+        exit = false;
+    }
 
     /**
      * The main program loop. All exceptions are handled here.
@@ -55,14 +59,14 @@ public class UI {
      * Gets the user's menu input and handles it accordingly.
      * Handles incorrect user input.
      */
-    public void handleUserMenuChoice()
-    {
+    public void handleUserMenuChoice() throws SimulationNotLoadedException {
         MenuOptions menuOption = getMenuInput();
 
         switch (menuOption)
         {
             case LOAD_PROGRAM:
                 // C:\Users\Ronen Gelmanovich\IdeaProjects\Predictions\WorldConfigFiles\ex1-cigarets.xml
+                // C:\Users\Ronen Gelmanovich\IdeaProjects\Predictions\WorldConfigFiles\master-ex1.xml
                 // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\ex1-cigarets.xml
                 // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\master-ex1.xml
                 // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\ex1-error-2.xml
@@ -77,7 +81,7 @@ public class UI {
                 engineAgent.runSimulation();
                 break;
             case SHOW_PAST_SIMULATIONS:
-                engineAgent.MenuOption4();
+                engineAgent.ShowPastSimulationResults();
                 break;
             case EXIT:
                 exit = true;

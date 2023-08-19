@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PRD-world xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="predictions-v1.xsd">
+	<PRD-evironment>
+		<PRD-env-property type="decimal">
+			<PRD-name>e1</PRD-name>
+			<PRD-range from="10" to="100"/>
+		</PRD-env-property>
+		<PRD-env-property type="boolean">
+			<PRD-name>e2</PRD-name>
+		</PRD-env-property>
+		<PRD-env-property type="float">
+			<PRD-name>e3</PRD-name>
+			<PRD-range from="10.4" to="100.2"/>
+		</PRD-env-property>
+		<PRD-env-property type="string">
+			<PRD-name>e4</PRD-name>
+		</PRD-env-property>
+	</PRD-evironment>
+	<PRD-entities>
+		<PRD-entity name="ent-1">
+			<PRD-population>100</PRD-population>
+			<PRD-properties>
+				<PRD-property type="decimal">
+					<PRD-name>p1</PRD-name>
+					<PRD-range from="0" to="100"/>
+					<PRD-value random-initialize="false" init="0"/>
+				</PRD-property>
+				<PRD-property type="float">
+					<PRD-name>p2</PRD-name>
+					<PRD-range from="0" to="100"/>
+					<PRD-value random-initialize="true"/>
+				</PRD-property>
+				<PRD-property type="boolean">
+					<PRD-name>p3</PRD-name>
+					<PRD-value random-initialize="true"/>
+				</PRD-property>
+				<PRD-property type="string">
+					<PRD-name>p4</PRD-name>
+					<PRD-value random-initialize="false" init="example"/>
+				</PRD-property>
+			</PRD-properties>
+		</PRD-entity>
+	</PRD-entities>
+	<PRD-rules>
+		<PRD-rule name="r1">
+			<PRD-actions>
+				<PRD-action type="increase" entity="ent-1" property="p1" by="3"/>
+				<PRD-action type="decrease" entity="ent-1" property="p2" by="environment(e3)"/>
+				<PRD-action type="calculation" entity="ent-1" result-prop="p1">
+					<PRD-multiply arg1="p1" arg2="environment(e1)"/>
+				</PRD-action>
+				<PRD-action type="calculation" entity="ent-1" result-prop="p2">
+					<PRD-divide arg1="environment(e3)" arg2="3.2"/>
+				</PRD-action>
+			</PRD-actions>
+			<PRD-activation ticks="1" probability="0.4"/>
+		</PRD-rule>
+		<PRD-rule name="r2">
+			<PRD-actions>
+				<PRD-action type="condition" entity="ent-1">
+					<PRD-condition singularity="multiple" logical="or">
+						<PRD-condition singularity="single" entity="ent-1" property="p1" operator="bt" value="4"/>
+						<PRD-condition singularity="single" entity="ent-1" property="p2" operator="lt" value="3"/>
+						<PRD-condition singularity="multiple" logical="and">
+							<PRD-condition singularity="single" entity="ent-1" property="p4" operator="!=" value="nothing"/>
+							<PRD-condition singularity="single" entity="ent-1" property="p3" operator="=" value="environment(e2)"/>
+						</PRD-condition>
+					</PRD-condition>
+					<PRD-then>
+						<PRD-action type="increase" entity="ent-1" property="p1" by="3"/>
+						<PRD-action type="set" entity="ent-1" property="p1" value="random(3)"/>
+					</PRD-then>
+					<PRD-else>
+						<PRD-action type="kill" entity="ent-1"/>
+					</PRD-else>
+				</PRD-action>
+			</PRD-actions>
+		</PRD-rule>
+	</PRD-rules>
+	<PRD-termination>
+		<PRD-by-ticks count="480"/>
+		<PRD-by-second count="10"/>
+	</PRD-termination>
+</PRD-world>

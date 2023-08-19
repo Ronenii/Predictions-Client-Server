@@ -36,9 +36,12 @@ public class WorldManager implements EngineInterface {
     private World world;
     private final Map<String, ResultData> pastSimulations;
 
+    private boolean isSimulationLoaded;
+
     public WorldManager() {
         world = null;
         pastSimulations = new HashMap<>();
+        isSimulationLoaded = false;
 
         //TODO: DEBUG
         ResultData r1 = new ResultData("23-01-2010 | 07:33:03");
@@ -50,6 +53,11 @@ public class WorldManager implements EngineInterface {
         addResultData(r1);
         addResultData(r2);
         addResultData(r3);
+    }
+
+    @Override
+    public boolean getIsSimulationLoaded() {
+        return isSimulationLoaded;
     }
 
     @Override
@@ -87,20 +95,24 @@ public class WorldManager implements EngineInterface {
                 dtoLoadSucceed = new DTOLoadSucceed(true);
             }
         }
-
+        isSimulationLoaded = true;
         return dtoLoadSucceed;
     }
 
     @Override
     public void runSimulation(DTOThirdFunction dtoThirdFunction) {
+        // Resets all entities in this world
+        world.resetWorld();
+
         // fetch the user data input into the simulation's environment properties.
         fetchDTOThirdFunctionObject(dtoThirdFunction);
-        // fetch the actions values from context value to the requested value..
+
+        // fetch the actions values from context value to the requested value.
         fetchSimulationActionsValues();
 
         // run the simulation.
-       // this.world.invoke();
-        // TODO : add the simulation result data to 'pastSimulations' and return to the UI these results.
+        ResultData result = this.world.runSimulation();
+        this.pastSimulations.put(result.getId(), result);
     }
 
 
