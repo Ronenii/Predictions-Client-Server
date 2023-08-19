@@ -68,7 +68,6 @@ public class Entity {
 
     public void resetPopulation(){
         entityInstances.clear();
-        Map <String, Property> propertyMap;
 
         for (int i = 0; i < this.startingPopulation; i++) {
             entityInstances.add(new EntityInstance(generateProperties()));
