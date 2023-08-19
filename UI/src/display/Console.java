@@ -111,14 +111,15 @@ public class Console {
 
     /**
      * Displays the histogram by the type of the property it represents.
+     *
      * @param histogram The histogram to display
-     * @param property used for display and getting the property type's
+     * @param property  used for display and getting the property type's
      */
-    public static void displayHistogramByType(Map<Object, Integer> histogram, DTOProperty property){
+    public static void displayHistogramByType(Map<Object, Integer> histogram, DTOProperty property) {
         PropertyType type = PropertyType.valueOf(property.getType());
 
         System.out.printf("Histogram for property: %s\n\n", property.getName().toUpperCase());
-        switch (type){
+        switch (type) {
             case DECIMAL:
                 printHistogram(histogram, Integer.class);
                 break;
@@ -135,15 +136,15 @@ public class Console {
     }
 
     /**
-     * @param histogram a map of keys and values where the keys are a property's value, and the
-     *                  map's values are the quantity this value appears.
+     * @param histogram    a map of keys and values where the keys are a property's value, and the
+     *                     map's values are the quantity this value appears.
      * @param castingClass The class to cast the keys of the maps to.
      */
-    private static void printHistogram(Map<Object, Integer> histogram, Class castingClass){
+    private static void printHistogram(Map<Object, Integer> histogram, Class castingClass) {
         System.out.println("Value: Quantity\n\n");
-        for (Object o: histogram.keySet()
-             ) {
-            System.out.printf("%s: %d\n",castingClass.cast(o), histogram.get(o));
+        for (Object o : histogram.keySet()
+        ) {
+            System.out.printf("%s: %d\n", castingClass.cast(o), histogram.get(o));
         }
     }
 
@@ -151,7 +152,7 @@ public class Console {
         System.out.print("\nInput the value of the environment variable ");
         switch (dtoEnvironmentVariable.getType()) {
             case "decimal":
-                System.out.printf("(%d-%d)\n", (int)dtoEnvironmentVariable.getFrom(), (int)dtoEnvironmentVariable.getTo());
+                System.out.printf("(%d-%d)\n", (int) dtoEnvironmentVariable.getFrom(), (int) dtoEnvironmentVariable.getTo());
                 break;
             case "float":
                 System.out.printf("(%.2f-%.2f)\n", dtoEnvironmentVariable.getFrom(), dtoEnvironmentVariable.getTo());
@@ -206,11 +207,17 @@ public class Console {
         int totalStartingPopulation = 0;
         int totalEndingPopulation = 0;
 
-        for (int i = 1; i <= entities.length; i++) {
-            totalStartingPopulation += entities[i - 1].getStartingPopulation();
-            totalEndingPopulation += entities[i - 1].getEndingPopulation();
-            System.out.printf("\n#%s\n", i);
-            printEntityDetails(entities[i - 1]);
+        if (entities.length > 1) {
+            for (int i = 1; i <= entities.length; i++) {
+                totalStartingPopulation += entities[i - 1].getStartingPopulation();
+                totalEndingPopulation += entities[i - 1].getEndingPopulation();
+                System.out.printf("\n#%s\n", i);
+                printEntityDetails(entities[i - 1]);
+            }
+        }
+        else{
+            println("There is only one entity to display.\n");
+            printEntityDetails(entities[0]);
         }
 
         System.out.printf("\nTotal population when simulation started: %s\n", totalStartingPopulation);
@@ -271,11 +278,10 @@ public class Console {
             System.out.printf("\tProperty type: %s\n", dtoProperty.getType());
             System.out.printf("\tIs random initialized: %s\n", dtoProperty.isRandomInit());
             if (dtoProperty.getClass() == RangedDTOProperty.class) {
-                rangedDTOProperty = (RangedDTOProperty)dtoProperty;
-                if(dtoProperty.getType().equals("DECIMAL")){
-                    System.out.printf("\tProperty's range: from %d to %d\n\n", (int)rangedDTOProperty.getFrom(), (int)rangedDTOProperty.getTo());
-                }
-                else {
+                rangedDTOProperty = (RangedDTOProperty) dtoProperty;
+                if (dtoProperty.getType().equals("DECIMAL")) {
+                    System.out.printf("\tProperty's range: from %d to %d\n\n", (int) rangedDTOProperty.getFrom(), (int) rangedDTOProperty.getTo());
+                } else {
                     System.out.printf("\tProperty's range: from %.2f to %.2f\n\n", rangedDTOProperty.getFrom(), rangedDTOProperty.getTo());
                 }
 
@@ -305,7 +311,7 @@ public class Console {
 
         for (String action : actions) {
             stringBuilder.append(action);
-            if (actionsCount != counter){
+            if (actionsCount != counter) {
                 stringBuilder.append(", ");
             }
             counter++;
@@ -320,7 +326,7 @@ public class Console {
         int counter = 1;
 
         for (DTOEndingCondition dtoEndingCondition : endingConditions) {
-            System.out.printf("\nEnding condition #%d\n",counter);
+            System.out.printf("\nEnding condition #%d\n", counter);
             System.out.printf("Ending by: %s\n", dtoEndingCondition.getType());
             System.out.printf("Limit: %d\n", dtoEndingCondition.getCount());
             counter++;
