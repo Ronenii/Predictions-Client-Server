@@ -109,7 +109,7 @@ public class World {
      */
     public ResultData runSimulation() {
         // Set the starting time to calculate later for 'ending by seconds'
-        if (endingConditions.containsKey(EndingConditionType.TIME)) {
+        if (endingConditions.containsKey(EndingConditionType.SECONDS)) {
             startingTime = System.currentTimeMillis();
         }
 
@@ -161,10 +161,10 @@ public class World {
     private boolean isEndingBySecondsMet() {
         boolean ret = false;
 
-        if (endingConditions.containsKey(EndingConditionType.TIME)) {
+        if (endingConditions.containsKey(EndingConditionType.SECONDS)) {
             timePassed = (System.currentTimeMillis() - startingTime) / 1000;
-            if(timePassed >= endingConditions.get(EndingConditionType.TIME).getCount()){
-                terminateCondition = endingConditions.get(EndingConditionType.TIME);
+            if(timePassed >= endingConditions.get(EndingConditionType.SECONDS).getCount()){
+                terminateCondition = endingConditions.get(EndingConditionType.SECONDS);
                 ret = true;
             }
         }

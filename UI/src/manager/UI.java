@@ -14,31 +14,25 @@ public class UI {
     private boolean exit;
     private EngineAgent engineAgent;
 
-    public UI(){
+    public UI() {
         exit = false;
     }
 
     /**
      * The main program loop. All exceptions are handled here.
      */
-    public void runProgram()
-    {
+    public void runProgram() {
         engineAgent = new EngineAgent();
 
-        while(!exit)
-        {
+        while (!exit) {
             Console.printMainMenu();
 
             try {
                 handleUserMenuChoice();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
-
-        System.out.println("Magniv");
     }
 
     /**
@@ -46,12 +40,11 @@ public class UI {
      *
      * @return the menu item chosen by the user
      */
-    public MenuOptions getMenuInput()
-    {
+    public MenuOptions getMenuInput() {
         MenuOptions userInput;
         Scanner scanner = new Scanner(System.in);
 
-        userInput = MenuOptions.values()[Input.getIntInputForListedItem("Please enter your choice", MenuOptions.values().length)-1];
+        userInput = MenuOptions.values()[Input.getIntInputForListedItem("Please enter your choice", MenuOptions.values().length) - 1];
         return userInput;
     }
 
@@ -62,8 +55,7 @@ public class UI {
     public void handleUserMenuChoice() throws SimulationNotLoadedException {
         MenuOptions menuOption = getMenuInput();
 
-        switch (menuOption)
-        {
+        switch (menuOption) {
             case LOAD_PROGRAM:
                 // C:\Users\Ronen Gelmanovich\IdeaProjects\Predictions\WorldConfigFiles\ex1-cigarets.xml
                 // C:\Users\Ronen Gelmanovich\IdeaProjects\Predictions\WorldConfigFiles\master-ex1.xml

@@ -574,6 +574,6 @@ public class PRDConverter {
     }
 
     private EndingCondition PRDBySecond2EndingCondition(PRDBySecond prdBySecond) {
-        return new EndingCondition(EndingConditionType.TIME, prdBySecond.getCount());
+        return new EndingCondition(EndingConditionType.SECONDS, prdBySecond.getCount());
     }
 }
