@@ -1,6 +1,8 @@
 package engine2ui.simulation.genral.impl.properties.property.api;
 
-abstract public class DTOProperty {
+import java.io.Serializable;
+
+abstract public class DTOProperty implements Serializable {
     private final String name;
     private final String type;
     private final boolean isRandomInit;

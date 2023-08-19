@@ -7,9 +7,10 @@ import simulation.properties.rule.Rule;
 import simulation.properties.ending.conditions.EndingCondition;
 import simulation.properties.property.api.Property;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class World {
+public class World implements Serializable {
 
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;

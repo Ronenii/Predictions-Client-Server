@@ -25,4 +25,8 @@ public interface EngineInterface {
     StartData getSimulationStartData();
 
     boolean getIsSimulationLoaded();
+
+    void saveState(String path);
+
+    void loadState(String path);
 }

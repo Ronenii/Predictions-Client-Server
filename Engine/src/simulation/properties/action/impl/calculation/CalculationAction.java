@@ -7,7 +7,9 @@ import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.property.api.Property;
 
-public class CalculationAction extends AbstractAction {
+import java.io.Serializable;
+
+public class CalculationAction extends AbstractAction implements Serializable {
     private Object arg1;
     private Object arg2;
     private final CalculationType type;

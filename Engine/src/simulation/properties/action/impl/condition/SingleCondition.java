@@ -3,7 +3,9 @@ package simulation.properties.action.impl.condition;
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.property.api.Property;
 
-public class SingleCondition extends AbstractConditionAction {
+import java.io.Serializable;
+
+public class SingleCondition extends AbstractConditionAction implements Serializable {
     private final ConditionOperator operator;
 
     public SingleCondition(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, ConditionOperator operator, String contextValue) {

@@ -6,8 +6,10 @@ import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 
+import java.io.Serializable;
 
-public abstract class AbstractConditionAction extends AbstractAction {
+
+public abstract class AbstractConditionAction extends AbstractAction implements Serializable {
     protected Object value;
 
     protected boolean isTrue;

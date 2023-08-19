@@ -3,12 +3,12 @@ package simulation.objects.entity;
 import simulation.properties.action.api.Action;
 import simulation.properties.property.api.Property;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Entity {
+public class Entity implements Serializable {
 
     private final int startingPopulation;
-    private int currentPopulation;
     private final String name;
     private final Map<String, Property> properties;
     private final List<EntityInstance> entityInstances;
@@ -17,7 +17,6 @@ public class Entity {
         this.startingPopulation = startingPopulation;
         this.name = name;
         this.properties = properties;
-        this.currentPopulation = startingPopulation;
         this.entityInstances = new ArrayList<>();
     }
 
@@ -87,10 +86,6 @@ public class Entity {
         }
 
         return propertyMap;
-    }
-
-    public void setCurrentPopulation(int currentPopulation) {
-        this.currentPopulation = currentPopulation;
     }
 
     @Override

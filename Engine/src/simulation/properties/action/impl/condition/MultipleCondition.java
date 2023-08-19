@@ -3,9 +3,10 @@ package simulation.properties.action.impl.condition;
 
 import simulation.objects.entity.EntityInstance;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class MultipleCondition extends AbstractConditionAction {
+public class MultipleCondition extends AbstractConditionAction implements Serializable {
     private final ConditionOperator logical;
 
     private final List<AbstractConditionAction> subConditions;

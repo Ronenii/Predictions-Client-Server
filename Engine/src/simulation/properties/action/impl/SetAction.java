@@ -7,7 +7,9 @@ import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.property.api.Property;
 
-public class SetAction extends AbstractAction {
+import java.io.Serializable;
+
+public class SetAction extends AbstractAction implements Serializable {
     private Object value;
 
     public SetAction(String property, String contextEntity, String contextValue) {

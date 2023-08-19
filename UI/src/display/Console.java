@@ -23,11 +23,13 @@ import java.util.Map;
 public class Console {
     public static void printMainMenu() {
         printTitle("MAIN MENU");
-        System.out.println("1. Load simulation from file");
-        System.out.println("2. Show simulation details");
-        System.out.println("3. Run simulation");
-        System.out.println("4. Show details of past simulation run");
-        System.out.println("5. Exit");
+        System.out.println("1. Load simulation from xml configuration file");
+        System.out.println("2. Load simulation from save state file");
+        System.out.println("3. Save the state of the program");
+        System.out.println("4. Show simulation details");
+        System.out.println("5. Run simulation");
+        System.out.println("6. Show details of past simulation run");
+        System.out.println("7. Exit");
     }
 
     /**
@@ -97,18 +99,6 @@ public class Console {
 
     public static void print(String message) {
         System.out.print(message);
-    }
-
-    public static void print() {
-        System.out.print("");
-    }
-
-    public static void promptUserToInputPathForFile() {
-    }
-
-    public static void printResultData(ResultData resultData) {
-        Console.printTitle("ENTITIES");
-        Console.printTitle("");
     }
 
     public static void printResultDisplayOptionsMenu() {
