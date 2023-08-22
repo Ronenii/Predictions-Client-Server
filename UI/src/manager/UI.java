@@ -55,13 +55,6 @@ public class UI {
 
         switch (menuOption) {
             case LOAD_PROGRAM_FROM_XML:
-                // C:\Users\Ronen Gelmanovich\IdeaProjects\Predictions\WorldConfigFiles\ex1-cigarets.xml
-                // C:\Users\Ronen Gelmanovich\IdeaProjects\Predictions\WorldConfigFiles\master-ex1.xml
-                // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\ex1-cigarets.xml
-                // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\master-ex1.xml
-                // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\ex1-error-2.xml
-                // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\ex1-error-4.xml
-                // C:\Users\Roy\IdeaProjects\Predictions\WorldConfigFiles\ex1-error-6.xml
                 engineAgent.loadSimulationFromFile();
                 break;
             case LOAD_PROGRAM_STATE:
