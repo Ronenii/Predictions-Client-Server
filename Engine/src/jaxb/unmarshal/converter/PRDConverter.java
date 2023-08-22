@@ -1,6 +1,7 @@
 package jaxb.unmarshal.converter;
 
 import jaxb.schema.generated.*;
+import jaxb.unmarshal.converter.expression.converter.ExpressionConverter;
 import jaxb.unmarshal.converter.expression.converter.exception.InvalidBooleanValueException;
 import jaxb.unmarshal.converter.expression.converter.exception.InvalidStringValueException;
 import jaxb.unmarshal.converter.expression.converter.exception.ValueOutOfRangeException;
@@ -9,6 +10,7 @@ import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException
 import jaxb.unmarshal.converter.validator.PRDValidator;
 import jaxb.unmarshal.converter.value.initializer.ValueInitializer;
 import simulation.objects.entity.Entity;
+import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.impl.condition.*;
 import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.rule.Rule;
@@ -358,26 +360,27 @@ public class PRDConverter {
      */
     private Action PRDAction2Action(PRDAction prdAction) {
         Action ret = null;
+        ExpressionConverter expressionConverter = new ExpressionConverter(environmentProperties, entities);
 
         try {
             switch (ActionType.valueOf(prdAction.getType().toUpperCase())) {
                 case INCREASE:
-                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), prdAction.getBy());
+                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverter.getExpressionObjectFromPRDAction(prdAction));
                     break;
                 case DECREASE:
-                    ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), prdAction.getBy());
+                    ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverter.getExpressionObjectFromPRDAction(prdAction));
                     break;
                 case CALCULATION:
-                    ret = getMulOrDiv(prdAction);
+                    ret = getMulOrDiv(prdAction, expressionConverter);
                     break;
                 case CONDITION:
-                    ret = getSingleOrMultiple(prdAction);
+                    ret = getSingleOrMultiple(prdAction, expressionConverter);
                     break;
                 case SET:
-                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), prdAction.getValue());
+                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverter.getExpressionObjectFromPRDAction(prdAction));
                     break;
                 case KILL:
-                    ret = new KillAction(prdAction.getProperty(), prdAction.getEntity(), null);
+                    ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
                     break;
                 case REPLACE:
                     break;
@@ -398,16 +401,22 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return a CalculationAction representation of the given PRDActivation.
      */
-    private CalculationAction getMulOrDiv(PRDAction prdAction) {
+    private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverter expressionConverter) {
         CalculationAction ret = null;
         PRDMultiply mul = prdAction.getPRDMultiply();
         PRDDivide div = prdAction.getPRDDivide();
+        PropertyType type = entities.get(prdAction.getEntity()).getProperties().get(prdAction.getProperty()).getType();
+        Expression exp1, exp2;
 
         // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
         if (mul != null) {
-            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), mul.getArg1(), mul.getArg2(), CalculationType.MULTIPLY, null);
+            exp1 = expressionConverter.createExpressionObject(mul.getArg1(), type, prdAction.getEntity());
+            exp2 = expressionConverter.createExpressionObject(mul.getArg2(), type, prdAction.getEntity());
+            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), exp1, exp2, CalculationType.MULTIPLY);
         } else if (div != null) {
-            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), div.getArg1(), div.getArg2(), CalculationType.DIVIDE, null);
+            exp1 = expressionConverter.createExpressionObject(div.getArg1(), type, prdAction.getEntity());
+            exp2 = expressionConverter.createExpressionObject(div.getArg2(), type, prdAction.getEntity());
+            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), exp1, exp2, CalculationType.DIVIDE);
         } else {
             validator.addErrorToList(prdAction, prdAction.getType(), "Calculation action is not Multiply or Divide");
         }
@@ -421,17 +430,19 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return an AbstractConditionAction representation of the given PRDActivation.
      */
-    private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction) {
+    private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction,ExpressionConverter expressionConverter) {
         AbstractConditionAction ret = null;
         PRDCondition prdCondition = prdAction.getPRDCondition();
         ThenOrElse thenActions, elseActions;
+        Expression expression;
         // Then and else objects are created in this method.
         thenActions = getAndCreateThenOrElse(prdAction,true);
         elseActions = getAndCreateThenOrElse(prdAction,false);
         if (prdCondition.getSingularity().equals("single")) {
-            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getOperator()), prdCondition.getValue());
+            expression = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition);
+            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getOperator()), expression);
         } else if (prdCondition.getSingularity().equals("multiple")) {
-            ret = getMultipleConditionObject(prdCondition,thenActions,elseActions);
+            ret = getMultipleConditionObject(prdCondition,thenActions,elseActions, expressionConverter);
         }
 
         return ret;
@@ -440,13 +451,13 @@ public class PRDConverter {
     /**
      * Build the multiple condition object and its sub condition objects.
      */
-    private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ThenOrElse thenActions, ThenOrElse elseActions){
+    private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ThenOrElse thenActions, ThenOrElse elseActions, ExpressionConverter expressionConverter){
         List<PRDCondition> prdSubConditions = prdCondition.getPRDCondition();
         List<AbstractConditionAction> objectSubConditions = new ArrayList<>();
         AbstractConditionAction conditionToAdd;
 
         for(PRDCondition prdSubCondition : prdSubConditions){
-            conditionToAdd = getAbstractConditionToBuildMultiple(prdSubCondition);
+            conditionToAdd = getAbstractConditionToBuildMultiple(prdSubCondition, expressionConverter);
             objectSubConditions.add(conditionToAdd);
         }
 
@@ -456,13 +467,15 @@ public class PRDConverter {
     /**
      * 'getMultipleConditionObject' helper, build any kind of the condition objects.
      */
-    private AbstractConditionAction getAbstractConditionToBuildMultiple(PRDCondition prdCondition){
+    private AbstractConditionAction getAbstractConditionToBuildMultiple(PRDCondition prdCondition , ExpressionConverter expressionConverter){
         AbstractConditionAction ret = null;
+        Expression expression;
 
         if (prdCondition.getSingularity().equals("single")) {
-            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), null, null, ConditionOperator.tryParse(prdCondition.getOperator()), prdCondition.getValue());
+            expression = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition);
+            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), null, null, ConditionOperator.tryParse(prdCondition.getOperator()), expression);
         } else if (prdCondition.getSingularity().equals("multiple")) {
-            ret = getMultipleConditionObject(prdCondition, null, null);
+            ret = getMultipleConditionObject(prdCondition, null, null, expressionConverter);
         }
         return ret;
     }

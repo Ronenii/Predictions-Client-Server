@@ -1,31 +1,24 @@
 package simulation.properties.action.impl.condition;
 
-import manager.value.update.object.api.UpdateObject;
-import manager.value.update.object.impl.OneObjectUpdate;
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
+import simulation.properties.action.expression.api.Expression;
 
 import java.io.Serializable;
 
 
 public abstract class AbstractConditionAction extends AbstractAction implements Serializable {
-    protected Object value;
-
+    protected Expression value;
     protected boolean isTrue;
     protected final ThenOrElse thenActions;
     protected final ThenOrElse elseActions;
 
-    public AbstractConditionAction(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, String contextValue) {
-        super(ActionType.CONDITION, property, contextEntity, contextValue);
+    public AbstractConditionAction(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, Expression value) {
+        super(ActionType.CONDITION, property, contextEntity);
         this.thenActions = thenActions;
         this.elseActions = elseActions;
-    }
-
-    @Override
-    public void updateValue(UpdateObject updateObject) {
-        OneObjectUpdate oneObjectUpdate = (OneObjectUpdate)updateObject;
-        value = oneObjectUpdate.getObjectForUpdate();
+        this.value = value;
     }
 
     public ThenOrElse getThenActions() {
@@ -38,7 +31,7 @@ public abstract class AbstractConditionAction extends AbstractAction implements 
 
     @Override
     public Object getValue() {
-        return value;
+        return value.evaluate();
     }
 
     /**
@@ -65,7 +58,4 @@ public abstract class AbstractConditionAction extends AbstractAction implements 
         isTrue = false;
     }
 
-    public void updateValue(Object value){
-        this.value = value;
-    }
 }

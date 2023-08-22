@@ -2,6 +2,7 @@ package simulation.properties.action.impl.condition;
 
 
 import simulation.objects.entity.EntityInstance;
+import simulation.properties.action.expression.api.Expression;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,8 +12,8 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
 
     private final List<AbstractConditionAction> subConditions;
 
-    public MultipleCondition(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, ConditionOperator logical, List<AbstractConditionAction> conditions, String contextValue) {
-        super(property, contextEntity, thenActions, elseActions, contextValue);
+    public MultipleCondition(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, ConditionOperator logical, List<AbstractConditionAction> conditions, Expression value) {
+        super(property, contextEntity, thenActions, elseActions, value);
         this.logical = logical;
         this.subConditions = conditions;
     }
