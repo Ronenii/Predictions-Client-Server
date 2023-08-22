@@ -1,6 +1,7 @@
 package simulation.properties.action.impl.condition;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.properties.action.expression.api.Expression;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
@@ -8,8 +9,8 @@ import java.io.Serializable;
 public class SingleCondition extends AbstractConditionAction implements Serializable {
     private final ConditionOperator operator;
 
-    public SingleCondition(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, ConditionOperator operator, String contextValue) {
-        super(property, contextEntity, thenActions, elseActions, contextValue);
+    public SingleCondition(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, ConditionOperator operator, Expression value) {
+        super(property, contextEntity, thenActions, elseActions, value);
         this.operator = operator;
     }
 

@@ -6,13 +6,11 @@ public abstract class AbstractAction implements Action, Serializable {
     private final ActionType type;
     private final String contextProperty;
     private final String contextEntity;
-    private final String contextValue;
 
-    public AbstractAction(ActionType type, String property, String contextEntity, String contextValue) {
+    public AbstractAction(ActionType type, String property, String contextEntity) {
         this.type = type;
         this.contextProperty = property;
         this.contextEntity = contextEntity;
-        this.contextValue = contextValue;
     }
 
     @Override
@@ -28,11 +26,6 @@ public abstract class AbstractAction implements Action, Serializable {
     @Override
     public String getContextEntity() {
         return contextEntity;
-    }
-
-    @Override
-    public String getContextValue() {
-        return this.contextValue;
     }
 
     @Override

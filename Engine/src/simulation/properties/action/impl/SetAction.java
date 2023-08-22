@@ -1,30 +1,24 @@
 package simulation.properties.action.impl;
 
-import manager.value.update.object.api.UpdateObject;
-import manager.value.update.object.impl.OneObjectUpdate;
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
+import simulation.properties.action.expression.api.Expression;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
 
 public class SetAction extends AbstractAction implements Serializable {
-    private Object value;
+    private Expression value;
 
-    public SetAction(String property, String contextEntity, String contextValue) {
-        super(ActionType.SET, property, contextEntity, contextValue);
-    }
-
-    @Override
-    public void updateValue(UpdateObject updateObject) {
-        OneObjectUpdate oneObjectUpdate = (OneObjectUpdate)updateObject;
-        value = oneObjectUpdate.getObjectForUpdate();
+    public SetAction(String property, String contextEntity, Expression value) {
+        super(ActionType.SET, property, contextEntity);
+        this.value = value;
     }
 
     @Override
     public Object getValue() {
-        return value;
+        return value.evaluate();
     }
     @Override
     public void Invoke(EntityInstance entityInstance) {
@@ -33,6 +27,6 @@ public class SetAction extends AbstractAction implements Serializable {
             return;
         }
 
-        toSet.setValue(value);
+        toSet.setValue(value.evaluate());
     }
 }

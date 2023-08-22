@@ -1,30 +1,24 @@
 package simulation.properties.action.impl;
 
-import manager.value.update.object.api.UpdateObject;
-import manager.value.update.object.impl.OneObjectUpdate;
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
+import simulation.properties.action.expression.api.Expression;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
 
 public class DecreaseAction extends AbstractAction implements Serializable {
-    private Object value;
+    private Expression value;
 
-    public DecreaseAction(String property, String contextEntity, String contextValue) {
-        super(ActionType.DECREASE, property, contextEntity, contextValue);
-    }
-
-    @Override
-    public void updateValue(UpdateObject updateObject) {
-        OneObjectUpdate oneObjectUpdate = (OneObjectUpdate)updateObject;
-        value = oneObjectUpdate.getObjectForUpdate();
+    public DecreaseAction(String property, String contextEntity, Expression value) {
+        super(ActionType.DECREASE, property, contextEntity);
+        this.value = value;
     }
 
     @Override
     public Object getValue() {
-        return value;
+        return value.evaluate();
     }
 
     /**
@@ -43,10 +37,10 @@ public class DecreaseAction extends AbstractAction implements Serializable {
         switch (toDecrease.getType())
         {
             case DECIMAL:
-                toDecrease.setValue((int)toDecrease.getValue() - (int)value);
+                toDecrease.setValue((int)toDecrease.getValue() - (int)value.evaluate());
                 break;
             case FLOAT:
-                toDecrease.setValue((double)toDecrease.getValue() - (double)value);
+                toDecrease.setValue((double)toDecrease.getValue() - (double)value.evaluate());
                 break;
         }
     }

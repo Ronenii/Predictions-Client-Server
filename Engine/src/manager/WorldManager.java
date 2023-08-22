@@ -10,7 +10,6 @@ import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.start.StartData;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
-import manager.value.initializer.ActionValueInitializer;
 import simulation.objects.world.World;
 import ui2engine.simulation.func1.DTOFirstFunction;
 import simulation.properties.property.api.Property;
@@ -103,9 +102,6 @@ public class WorldManager implements EngineInterface, Serializable {
         // fetch the user data input into the simulation's environment properties.
         fetchDTOThirdFunctionObject(dtoThirdFunction);
 
-        // fetch the actions values from context value to the requested value.
-        fetchSimulationActionsValues();
-
         // run the simulation.
         ResultData result = this.world.runSimulation();
         this.pastSimulations.put(result.getId(), result);
@@ -174,12 +170,6 @@ public class WorldManager implements EngineInterface, Serializable {
         }
 
         return ret;
-    }
-
-    private void fetchSimulationActionsValues() {
-        ActionValueInitializer actionValueInitializer = new ActionValueInitializer(world.getEnvironmentProperties(), world.getEntities());
-
-        world.getRules().forEach((key, value) -> actionValueInitializer.initializeValues(value.getActions()));
     }
 
 
