@@ -13,6 +13,10 @@ import simulation.properties.property.api.PropertyType;
 
 import java.util.Map;
 
+/**
+ * The 'ExpressionConverter' class convert PRDAction or PRDCondition into an Expression
+ */
+
 public class ExpressionConverter {
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
@@ -22,6 +26,9 @@ public class ExpressionConverter {
         this.entities = entities;
     }
 
+    /**
+     * Invoke 'createExpressionObject' from PRDAction object
+     */
     public Expression getExpressionObjectFromPRDAction(PRDAction prdAction) {
         Expression ret;
         PropertyType type = entities.get(prdAction.getEntity()).getProperties().get(prdAction.getProperty()).getType();
@@ -36,11 +43,22 @@ public class ExpressionConverter {
         return ret;
     }
 
+    /**
+     * Invoke 'createExpressionObject' from PRDCondition object
+     */
     public Expression getExpressionObjectFromPRDCondition(PRDCondition prdCondition) {
         PropertyType type = entities.get(prdCondition.getEntity()).getProperties().get(prdCondition.getProperty()).getType();
         return createExpressionObject(prdCondition.getValue(), type, prdCondition.getEntity());
     }
 
+    /**
+     * Create an Expression object according to the 'contextValue'.
+     *
+     * @param contextValue the given value (in String) from the XML
+     * @param type the Action's property type
+     * @param entityName the Action's entity name
+     * @return the Action's Expression object.
+     */
     public Expression createExpressionObject(String contextValue, PropertyType type, String entityName){
         Expression ret;
 
