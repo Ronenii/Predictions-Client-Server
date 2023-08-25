@@ -4,6 +4,7 @@ import jaxb.schema.generated.PRDAction;
 import jaxb.schema.generated.PRDCondition;
 import jaxb.schema.generated.PRDProperty;
 import jaxb.unmarshal.converter.expression.converter.exception.ExpressionConversionException;
+import jaxb.unmarshal.converter.expression.converter.two.params.TwoParams;
 import simulation.objects.entity.Entity;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.property.api.Property;
@@ -61,15 +62,28 @@ public class ExpressionAndValueValidator {
      */
     public void isPRDActionValueMatchItsPropertyType(PRDAction prdAction, PRDCondition prdCondition, String prdValueStr) throws ExpressionConversionException {
         String valueType;
-        valueType = getObjectTypeIfFunction(prdValueStr);
-        if(valueType == null){
-            valueType = getTypeIfProperty(prdAction, prdCondition, prdValueStr);
+
+        if(prdAction != null){
+            valueType = getExpressionType(prdValueStr,prdAction.getEntity());
         }
-        if(valueType == null){
-            valueType = parseValueType(prdValueStr);
+        else {
+            valueType = getExpressionType(prdValueStr,prdCondition.getEntity());
         }
 
         compareActionValueToGivenPropertyValue(prdAction, prdCondition, valueType);
+    }
+
+    private String getExpressionType(String valueStr, String entityName) throws ExpressionConversionException {
+        String valueType;
+        valueType = getObjectTypeIfFunction(valueStr, entityName);
+        if(valueType == null){
+            valueType = getTypeIfProperty(entityName, valueStr);
+        }
+        if(valueType == null){
+            valueType = parseValueType(valueStr);
+        }
+
+        return valueType;
     }
 
     /**
@@ -79,7 +93,7 @@ public class ExpressionAndValueValidator {
      * @param prdValueStr the PRDAction value string.
      * @return the return value type from the function if exists.
      */
-    private String getObjectTypeIfFunction(String prdValueStr) throws ExpressionConversionException {
+    private String getObjectTypeIfFunction(String prdValueStr, String entityName) throws ExpressionConversionException {
         String functionName = getFucntionName(prdValueStr);
         String ret = null;
         if(functionName != null){
@@ -100,13 +114,13 @@ public class ExpressionAndValueValidator {
                         ret = "DECIMAL";
                         break;
                     case EVALUATE:
-                        ret = null;
+                        ret = getPropertyParamType(prdValueStr);
                         break;
                     case PERCENT:
-                        ret = null;
+                        ret = getTwoParamsType(prdValueStr, entityName);
                         break;
                     case TICKS:
-                        ret = null;
+                        ret = getPropertyParamType(prdValueStr);
                         break;
                 }
             }
@@ -119,24 +133,51 @@ public class ExpressionAndValueValidator {
         return ret;
     }
 
+    private String getPropertyParamType(String valueStr) throws Exception {
+        String entityName, propertyName, ret = null;
+        Property property;
+        int dotIndex = valueStr.indexOf(".");
+
+        if (dotIndex != -1){
+            entityName = valueStr.substring(0,dotIndex);
+            propertyName = valueStr.substring(dotIndex + 1, valueStr.length() - 1);
+            property = entities.get(entityName).getProperties().get(propertyName);
+            if(property == null){
+                throw new Exception();
+            }
+            ret = property.getType().toString();
+        }
+        else {
+            throw new Exception();
+        }
+
+        return ret;
+    }
+
+    private String getTwoParamsType(String valueStr, String entityName) throws ExpressionConversionException {
+        int openParenIndex = valueStr.indexOf("(");
+        String argumentsStr = valueStr.substring(openParenIndex, valueStr.length() - 1), argOneType, argTwoType;
+        String[] arguments = argumentsStr.split(", ");
+
+        argOneType = getExpressionType(arguments[0],entityName);
+        argTwoType = getExpressionType(arguments[1],entityName);
+
+        if((!argOneType.equals("DECIMAL") && !argOneType.equals("FLOAT")) || (!argTwoType.equals("DECIMAL") && !argTwoType.equals("FLOAT"))){
+            throw new ExpressionConversionException();
+        }
+        else {
+            return "FLOAT";
+        }
+    }
+
     /**
      * Check if the PRDAction value is a property name and return the property value type.
      * If the value is not a property name, the return value will be null.
      *
-     * @param prdAction the given PRDTAction generated from reading the XML file
      * @param prdValueStr the PRDAction value string.
      * @return the requested property value type
      */
-    private String getTypeIfProperty(PRDAction prdAction, PRDCondition prdCondition, String prdValueStr) {
-        String entityName;
-
-        if(prdCondition == null){
-            entityName = prdAction.getEntity();
-        }
-        else {
-            entityName = prdCondition.getEntity();
-        }
-
+    private String getTypeIfProperty(String entityName, String prdValueStr) {
         Entity entity = entities.get(entityName);
         Property property = entity.getProperties().get(prdValueStr);
         String ret = null;
@@ -236,13 +277,16 @@ public class ExpressionAndValueValidator {
      * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
      * @return the functions params in the given string.
      */
-    private String getFunctionParam(String prdValueStr){
+    private String getFunctionParam(String prdValueStr) throws Exception {
         String ret = null;
         int openParenIndex = prdValueStr.indexOf("(");
         int closeParenIndex = prdValueStr.indexOf(")");
 
         if (openParenIndex != -1 && closeParenIndex != -1 && closeParenIndex > openParenIndex) {
             ret = prdValueStr.substring(openParenIndex + 1, closeParenIndex);
+        }
+        else {
+            throw new Exception();
         }
 
         return ret;

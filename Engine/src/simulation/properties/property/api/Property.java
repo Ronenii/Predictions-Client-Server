@@ -23,4 +23,6 @@ public interface Property {
 
     public Property generateRandomValueProperty();
 
+    int getLastChangeTickCount();
+
 }

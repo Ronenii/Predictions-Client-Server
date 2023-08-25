@@ -2,6 +2,7 @@ package simulation.objects.world;
 import engine2ui.simulation.result.ResultData;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.entity.Entity;
+import simulation.objects.world.ticks.counter.TicksCounter;
 import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.rule.Rule;
 import simulation.properties.ending.conditions.EndingCondition;
@@ -17,16 +18,16 @@ public class World implements Serializable {
     private final Map<String, Rule> rules;
     private final Map<EndingConditionType, EndingCondition> endingConditions;
     private EndingCondition terminateCondition;
-    private int ticks;
+    private final TicksCounter ticks;
     private long timePassed;
     private long startingTime;
 
-    public World(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions) {
+    public World(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter) {
         this.environmentProperties = environmentProperties;
         this.entities = entities;
         this.rules = rules;
         this.endingConditions = endingConditions;
-        this.ticks = 0;
+        this.ticks = ticksCounter;
         this.timePassed = -1;
     }
 
@@ -48,6 +49,10 @@ public class World implements Serializable {
 
     public EndingCondition getTerminateCondition() {
         return terminateCondition;
+    }
+
+    public TicksCounter getTicks() {
+        return ticks;
     }
 
     @Override
@@ -124,7 +129,7 @@ public class World implements Serializable {
     }
 
     public void resetWorld(){
-        ticks = 0;
+        ticks.resetTicks();
         this.timePassed = -1;
         for (Entity e: entities.values()
              ) {
@@ -143,10 +148,11 @@ public class World implements Serializable {
         boolean ret = false;
 
         if (endingConditions.containsKey(EndingConditionType.TICKS)) {
-            if (++ticks >= endingConditions.get(EndingConditionType.TICKS).getCount()){
+            if (ticks.getTicks() >= endingConditions.get(EndingConditionType.TICKS).getCount()){
                 terminateCondition = endingConditions.get(EndingConditionType.TICKS);
                 ret = true;
             }
+            ticks.moveTicksByOne();
         }
 
         return ret;
