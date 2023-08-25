@@ -101,6 +101,7 @@ public class ExpressionAndValueValidator {
                 String param = getFunctionParam(prdValueStr);
                 switch (HelperFunctionsType.valueOf(functionName.toUpperCase())){
                     case ENVIRONMENT:
+                        // TODO: put this block in a separate method.
                         Property checkStr = environmentProperties.get(param);
                         if(checkStr != null){
                             ret = checkStr.getType().toString();
@@ -120,6 +121,7 @@ public class ExpressionAndValueValidator {
                         ret = getTwoParamsType(prdValueStr, entityName);
                         break;
                     case TICKS:
+                        //TODO: the type doesn't matter here, need to stop the validation if 'getPropertyParamType' completed.
                         ret = getPropertyParamType(prdValueStr);
                         break;
                 }
