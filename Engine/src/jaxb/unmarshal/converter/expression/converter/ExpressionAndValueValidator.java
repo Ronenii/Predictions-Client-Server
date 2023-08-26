@@ -69,7 +69,10 @@ public class ExpressionAndValueValidator {
             valueType = getExpressionType(prdValueStr,prdCondition.getEntity());
         }
 
-        compareActionValueToGivenPropertyValue(prdAction, prdCondition, valueType);
+        // In case of side method "Ticks", there is no need to invoke 'compareActionValueToGivenPropertyValue'.
+        if(!valueType.equals("Ticks")){
+            compareActionValueToGivenPropertyValue(prdAction, prdCondition, valueType);
+        }
     }
 
     private String getExpressionType(String valueStr, String entityName) throws ExpressionConversionException {
@@ -100,14 +103,7 @@ public class ExpressionAndValueValidator {
                 String param = getFunctionParam(prdValueStr);
                 switch (HelperFunctionsType.valueOf(functionName.toUpperCase())){
                     case ENVIRONMENT:
-                        // TODO: put this block in a separate method.
-                        Property checkStr = environmentProperties.get(param);
-                        if(checkStr != null){
-                            ret = checkStr.getType().toString();
-                        }
-                        else {
-                            throw new Exception();
-                        }
+                        ret = getEnvironmentVarType(param);
                         break;
                     case RANDOM:
                         int checkInt = Integer.parseInt(param);
@@ -120,8 +116,11 @@ public class ExpressionAndValueValidator {
                         ret = getTwoParamsType(prdValueStr, entityName);
                         break;
                     case TICKS:
-                        //TODO: the type doesn't matter here, need to stop the validation if 'getPropertyParamType' completed.
-                        ret = getPropertyParamType(prdValueStr);
+                        // Try to validate the given properties, in this case, their type doesn't matter for the validation, only their existence.
+                        // The use of 'getPropertyParamType' is to catch exceptions. Therefore, the result from 'getPropertyParamType' ignored,
+                        // and the return value will be "Ticks" in order to stop the validation progress.
+                        getPropertyParamType(prdValueStr);
+                        ret = "Ticks";
                         break;
                 }
             }
@@ -129,6 +128,24 @@ public class ExpressionAndValueValidator {
                 errorMessage = "The value function's param doesn't match to the function.";
                 throw new ExpressionConversionException();
             }
+        }
+
+        return ret;
+    }
+
+    /**
+     * Receive an environment variable name and return its type if the variable exists.
+     * If not, throw an exception.
+     */
+    private String getEnvironmentVarType(String param) throws Exception {
+        String ret;
+        Property checkStr = environmentProperties.get(param);
+
+        if(checkStr != null){
+            ret = checkStr.getType().toString();
+        }
+        else {
+            throw new Exception();
         }
 
         return ret;
