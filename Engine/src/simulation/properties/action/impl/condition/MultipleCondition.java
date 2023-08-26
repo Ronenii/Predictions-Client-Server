@@ -35,11 +35,11 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
      * @param entityInstance The given instance to invoke the condition action on.
      */
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangTickCount) {
+    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         boolean isFirst = true;
         for (AbstractConditionAction a : subConditions
         ) {
-            a.Invoke(entityInstance, lastChangTickCount);
+            a.Invoke(entityInstance, lastChangeTickCount);
             if(isFirst){
                 isTrue = a.isTrue;
                 isFirst = false;
@@ -57,9 +57,9 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
             }
         }
         if(isTrue){
-            invokeThenActions(entityInstance, lastChangTickCount);
+            invokeThenActions(entityInstance, lastChangeTickCount);
         }else{
-            invokeElseActions(entityInstance, lastChangTickCount);
+            invokeElseActions(entityInstance, lastChangeTickCount);
         }
     }
 }

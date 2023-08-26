@@ -34,7 +34,7 @@ public class CalculationAction extends AbstractAction implements Serializable {
     }
 
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangTickCount) {
+    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         Property toSet = entityInstance.getPropertyByName(getContextProperty());
 
         if(toSet == null){
@@ -43,10 +43,10 @@ public class CalculationAction extends AbstractAction implements Serializable {
 
         switch (type){
             case MULTIPLY:
-                multiplyAndSetPropertyValue(toSet, lastChangTickCount);
+                multiplyAndSetPropertyValue(toSet, lastChangeTickCount);
                 break;
             case DIVIDE:
-                divideAndSetPropertyValue(toSet, lastChangTickCount);
+                divideAndSetPropertyValue(toSet, lastChangeTickCount);
                 break;
         }
     }

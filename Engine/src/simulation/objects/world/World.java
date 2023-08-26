@@ -152,7 +152,7 @@ public class World implements Serializable {
                 terminateCondition = endingConditions.get(EndingConditionType.TICKS);
                 ret = true;
             }
-            ticks.moveTicksByOne();
+            ticks.incrementTick();
         }
 
         return ret;

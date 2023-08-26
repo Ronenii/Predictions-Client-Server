@@ -21,12 +21,12 @@ public class SetAction extends AbstractAction implements Serializable {
         return value.evaluate();
     }
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangTickCount) {
+    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         Property toSet = entityInstance.getPropertyByName(getContextProperty());
         if(toSet == null){
             return;
         }
 
-        toSet.setValue(value.evaluate(), lastChangTickCount);
+        toSet.setValue(value.evaluate(), lastChangeTickCount);
     }
 }

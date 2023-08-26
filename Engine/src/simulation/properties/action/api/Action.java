@@ -13,6 +13,6 @@ public interface Action {
 
     Object getValue();
 
-    void Invoke(EntityInstance entityInstance, int lastChangTickCount);
+    void Invoke(EntityInstance entityInstance, int lastChangeTickCount);
 
 }

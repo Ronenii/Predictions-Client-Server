@@ -10,7 +10,7 @@ public class TicksCounter {
         return ticks;
     }
 
-    public void moveTicksByOne(){
+    public void incrementTick(){
         ticks++;
     }
 

@@ -15,7 +15,7 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
     }
 
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangTickCount) {
+    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         Property toCompare = entityInstance.getPropertyByName(getContextProperty());
 
         if (toCompare == null) {
@@ -26,16 +26,16 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
             // These 2 operators don;t require casting for comparison
             case EQUALS:
                 if (toCompare.getValue() == getValue()) {
-                    invokeThenActions(entityInstance, lastChangTickCount);
+                    invokeThenActions(entityInstance, lastChangeTickCount);
                 } else {
-                    invokeElseActions(entityInstance, lastChangTickCount);
+                    invokeElseActions(entityInstance, lastChangeTickCount);
                 }
                 break;
             case NOT_EQUALS:
                 if (toCompare.getValue() != getValue()) {
-                    invokeThenActions(entityInstance, lastChangTickCount);
+                    invokeThenActions(entityInstance, lastChangeTickCount);
                 } else {
-                    invokeElseActions(entityInstance, lastChangTickCount);
+                    invokeElseActions(entityInstance, lastChangeTickCount);
                 }
                 break;
                 // For Lt & Bt we do require casting, it is handled in these funcs.
@@ -43,10 +43,10 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
             default:
                 switch (toCompare.getType()){
                     case DECIMAL:
-                        compareInequalityByInteger(toCompare, entityInstance, lastChangTickCount);
+                        compareInequalityByInteger(toCompare, entityInstance, lastChangeTickCount);
                         break;
                     case FLOAT:
-                        compareInequalityByFloat(toCompare, entityInstance, lastChangTickCount);
+                        compareInequalityByFloat(toCompare, entityInstance, lastChangeTickCount);
                         break;
                 }
         }
