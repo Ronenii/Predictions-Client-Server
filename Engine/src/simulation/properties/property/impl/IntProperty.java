@@ -31,7 +31,7 @@ public class IntProperty extends AbstractProperty implements RangedProperty, Ser
     }
 
     @Override
-    public void setValue(Object value) {
+    public void setValue(Object value, int lastChangTickCount) {
         int givenValue = (int)value;
 
         if(givenValue < from){
@@ -42,6 +42,8 @@ public class IntProperty extends AbstractProperty implements RangedProperty, Ser
         else {
             this.value = value;
         }
+
+        this.lastChangeTickCount = lastChangTickCount;
     }
 
     public int getFrom() {

@@ -4,6 +4,7 @@ import jaxb.schema.generated.PRDAction;
 import jaxb.schema.generated.PRDCondition;
 import jaxb.schema.generated.PRDProperty;
 import jaxb.unmarshal.converter.expression.converter.exception.ExpressionConversionException;
+import jaxb.unmarshal.converter.expression.converter.two.params.TwoParams;
 import simulation.objects.entity.Entity;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.property.api.Property;
@@ -15,7 +16,6 @@ public class ExpressionAndValueValidator {
 
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
-
     private String errorMessage;
 
     public String getErrorMessage() {
@@ -61,15 +61,31 @@ public class ExpressionAndValueValidator {
      */
     public void isPRDActionValueMatchItsPropertyType(PRDAction prdAction, PRDCondition prdCondition, String prdValueStr) throws ExpressionConversionException {
         String valueType;
-        valueType = getObjectTypeIfFunction(prdValueStr);
-        if(valueType == null){
-            valueType = getTypeIfProperty(prdAction, prdCondition, prdValueStr);
+
+        if(prdAction != null){
+            valueType = getExpressionType(prdValueStr,prdAction.getEntity());
         }
-        if(valueType == null){
-            valueType = parseValueType(prdValueStr);
+        else {
+            valueType = getExpressionType(prdValueStr,prdCondition.getEntity());
         }
 
-        compareActionValueToGivenPropertyValue(prdAction, prdCondition, valueType);
+        // In case of side method "Ticks", there is no need to invoke 'compareActionValueToGivenPropertyValue'.
+        if(!valueType.equals("Ticks")){
+            compareActionValueToGivenPropertyValue(prdAction, prdCondition, valueType);
+        }
+    }
+
+    private String getExpressionType(String valueStr, String entityName) throws ExpressionConversionException {
+        String valueType;
+        valueType = getObjectTypeIfFunction(valueStr, entityName);
+        if(valueType == null){
+            valueType = getTypeIfProperty(entityName, valueStr);
+        }
+        if(valueType == null){
+            valueType = parseValueType(valueStr);
+        }
+
+        return valueType;
     }
 
     /**
@@ -79,7 +95,7 @@ public class ExpressionAndValueValidator {
      * @param prdValueStr the PRDAction value string.
      * @return the return value type from the function if exists.
      */
-    private String getObjectTypeIfFunction(String prdValueStr) throws ExpressionConversionException {
+    private String getObjectTypeIfFunction(String prdValueStr, String entityName) throws ExpressionConversionException {
         String functionName = getFucntionName(prdValueStr);
         String ret = null;
         if(functionName != null){
@@ -87,26 +103,24 @@ public class ExpressionAndValueValidator {
                 String param = getFunctionParam(prdValueStr);
                 switch (HelperFunctionsType.valueOf(functionName.toUpperCase())){
                     case ENVIRONMENT:
-                        Property checkStr = environmentProperties.get(param);
-                        if(checkStr != null){
-                            ret = checkStr.getType().toString();
-                        }
-                        else {
-                            throw new Exception();
-                        }
+                        ret = getEnvironmentVarType(param);
                         break;
                     case RANDOM:
                         int checkInt = Integer.parseInt(param);
                         ret = "DECIMAL";
                         break;
                     case EVALUATE:
-                        ret = null;
+                        ret = getPropertyParamType(prdValueStr);
                         break;
                     case PERCENT:
-                        ret = null;
+                        ret = getTwoParamsType(prdValueStr, entityName);
                         break;
                     case TICKS:
-                        ret = null;
+                        // Try to validate the given properties, in this case, their type doesn't matter for the validation, only their existence.
+                        // The use of 'getPropertyParamType' is to catch exceptions. Therefore, the result from 'getPropertyParamType' ignored,
+                        // and the return value will be "Ticks" in order to stop the validation progress.
+                        getPropertyParamType(prdValueStr);
+                        ret = "Ticks";
                         break;
                 }
             }
@@ -120,23 +134,76 @@ public class ExpressionAndValueValidator {
     }
 
     /**
+     * Receive an environment variable name and return its type if the variable exists.
+     * If not, throw an exception.
+     */
+    private String getEnvironmentVarType(String param) throws Exception {
+        String ret;
+        Property checkStr = environmentProperties.get(param);
+
+        if(checkStr != null){
+            ret = checkStr.getType().toString();
+        }
+        else {
+            throw new Exception();
+        }
+
+        return ret;
+    }
+
+    /**
+     * Receive string represent by this format: "<Entity>.<Property>", extract and return the entity's property type if exists.
+     * If not, or if the string doesn't match the given format, throw an exception.
+     */
+    private String getPropertyParamType(String valueStr) throws Exception {
+        String entityName, propertyName, ret = null;
+        Property property;
+        int dotIndex = valueStr.indexOf(".");
+
+        if (dotIndex != -1){
+            entityName = valueStr.substring(0,dotIndex);
+            propertyName = valueStr.substring(dotIndex + 1, valueStr.length() - 1);
+            property = entities.get(entityName).getProperties().get(propertyName);
+            if(property == null){
+                throw new Exception();
+            }
+            ret = property.getType().toString();
+        }
+        else {
+            throw new Exception();
+        }
+
+        return ret;
+    }
+
+    /**
+     * Receive string which represent a call to the side method "Percent", extract the two parameters from the string
+     * and check these two params types, if they are not numbers, throw an exception.
+     */
+    private String getTwoParamsType(String valueStr, String entityName) throws ExpressionConversionException {
+        int openParenIndex = valueStr.indexOf("(");
+        String argumentsStr = valueStr.substring(openParenIndex, valueStr.length() - 1), argOneType, argTwoType;
+        String[] arguments = argumentsStr.split(", ");
+
+        argOneType = getExpressionType(arguments[0],entityName);
+        argTwoType = getExpressionType(arguments[1],entityName);
+
+        if((!argOneType.equals("DECIMAL") && !argOneType.equals("FLOAT")) || (!argTwoType.equals("DECIMAL") && !argTwoType.equals("FLOAT"))){
+            throw new ExpressionConversionException();
+        }
+        else {
+            return "FLOAT";
+        }
+    }
+
+    /**
      * Check if the PRDAction value is a property name and return the property value type.
      * If the value is not a property name, the return value will be null.
      *
-     * @param prdAction the given PRDTAction generated from reading the XML file
      * @param prdValueStr the PRDAction value string.
      * @return the requested property value type
      */
-    private String getTypeIfProperty(PRDAction prdAction, PRDCondition prdCondition, String prdValueStr) {
-        String entityName;
-
-        if(prdCondition == null){
-            entityName = prdAction.getEntity();
-        }
-        else {
-            entityName = prdCondition.getEntity();
-        }
-
+    private String getTypeIfProperty(String entityName, String prdValueStr) {
         Entity entity = entities.get(entityName);
         Property property = entity.getProperties().get(prdValueStr);
         String ret = null;
@@ -236,13 +303,16 @@ public class ExpressionAndValueValidator {
      * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
      * @return the functions params in the given string.
      */
-    private String getFunctionParam(String prdValueStr){
+    private String getFunctionParam(String prdValueStr) throws Exception {
         String ret = null;
         int openParenIndex = prdValueStr.indexOf("(");
         int closeParenIndex = prdValueStr.indexOf(")");
 
         if (openParenIndex != -1 && closeParenIndex != -1 && closeParenIndex > openParenIndex) {
             ret = prdValueStr.substring(openParenIndex + 1, closeParenIndex);
+        }
+        else {
+            throw new Exception();
         }
 
         return ret;

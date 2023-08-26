@@ -10,6 +10,7 @@ import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException
 import jaxb.unmarshal.converter.validator.PRDValidator;
 import jaxb.unmarshal.converter.value.initializer.ValueInitializer;
 import simulation.objects.entity.Entity;
+import simulation.objects.world.ticks.counter.TicksCounter;
 import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.impl.condition.*;
 import simulation.properties.ending.conditions.EndingConditionType;
@@ -42,8 +43,8 @@ public class PRDConverter {
 
     private Map<String, Property> environmentProperties;
     private Map<String, Entity> entities;
-
     private Map<String, Rule> rules;
+    private TicksCounter ticksCounter;
 
     private final PRDValidator validator;
 
@@ -52,6 +53,7 @@ public class PRDConverter {
         environmentProperties = new HashMap<>();
         entities = new HashMap<>();
         rules = new HashMap<>();
+        ticksCounter = new TicksCounter();
     }
 
     public World PRDWorld2World(PRDWorld prdWorld) {
@@ -78,7 +80,7 @@ public class PRDConverter {
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
-        return new World(environmentProperties, entities, rules, endingConditions);
+        return new World(environmentProperties, entities, rules, endingConditions, ticksCounter);
     }
 
     /**
@@ -360,7 +362,7 @@ public class PRDConverter {
      */
     private Action PRDAction2Action(PRDAction prdAction) {
         Action ret = null;
-        ExpressionConverter expressionConverter = new ExpressionConverter(environmentProperties, entities);
+        ExpressionConverter expressionConverter = new ExpressionConverter(environmentProperties, entities, ticksCounter);
 
         try {
             switch (ActionType.valueOf(prdAction.getType().toUpperCase())) {

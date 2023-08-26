@@ -101,12 +101,12 @@ public class Entity implements Serializable {
      * @param action      The action to invoke on all instances.
      * @param probability The probability of this action to invoke on instances.
      */
-    public void invokeActionOnAllInstances(Action action, double probability) {
+    public void invokeActionOnAllInstances(Action action, double probability, int lastChangTickCount) {
         Random r = new Random();
         for (EntityInstance e : entityInstances
         ) {
             if (r.nextDouble() <= probability && e.isAlive()) {
-                action.Invoke(e);
+                action.Invoke(e, lastChangTickCount);
             }
         }
     }

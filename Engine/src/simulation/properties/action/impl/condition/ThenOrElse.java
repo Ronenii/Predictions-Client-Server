@@ -20,10 +20,10 @@ public class ThenOrElse implements Serializable {
         return actionsToInvoke;
     }
 
-    public void invoke(EntityInstance entityInstance){
+    public void invoke(EntityInstance entityInstance, int lastChangTickCount){
         for (Action a: actionsToInvoke
              ) {
-            a.Invoke(entityInstance);
+            a.Invoke(entityInstance, lastChangTickCount);
         }
     }
 }

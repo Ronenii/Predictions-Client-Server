@@ -2,12 +2,13 @@ package jaxb.unmarshal.converter.expression.converter;
 
 import jaxb.schema.generated.PRDAction;
 import jaxb.schema.generated.PRDCondition;
+import jaxb.unmarshal.converter.expression.converter.two.params.TwoParams;
 import simulation.objects.entity.Entity;
+import simulation.objects.world.ticks.counter.TicksCounter;
 import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.expression.impl.PropertyValueExpression;
 import simulation.properties.action.expression.impl.RegularValueExpression;
-import simulation.properties.action.expression.impl.methods.EnvironmentExpression;
-import simulation.properties.action.expression.impl.methods.RandomExpression;
+import simulation.properties.action.expression.impl.methods.*;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
 
@@ -20,10 +21,12 @@ import java.util.Map;
 public class ExpressionConverter {
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
+    private final TicksCounter ticksCounter;
 
-    public ExpressionConverter(Map<String, Property> environmentProperties, Map<String, Entity> entities) {
+    public ExpressionConverter(Map<String, Property> environmentProperties, Map<String, Entity> entities, TicksCounter ticksCounter) {
         this.environmentProperties = environmentProperties;
         this.entities = entities;
+        this.ticksCounter = ticksCounter;
     }
 
     /**
@@ -62,7 +65,7 @@ public class ExpressionConverter {
     public Expression createExpressionObject(String contextValue, PropertyType type, String entityName){
         Expression ret;
 
-        ret = getExpressionIfFunction(contextValue);
+        ret = getExpressionIfFunction(contextValue, type, entityName);
         if(ret == null) {
             ret = getExpressionIfProperty(contextValue, entityName);
         }
@@ -80,33 +83,58 @@ public class ExpressionConverter {
      * @param valueStr the PRDAction value string.
      * @return the return value from the function if exists.
      */
-    private Expression getExpressionIfFunction(String valueStr){
-        String functionName = getFucntionName(valueStr), param1, param2;
+    private Expression getExpressionIfFunction(String valueStr, PropertyType type, String entityName){
+        String functionName = getFucntionName(valueStr), param;
+        TwoParams twoParams;
         Expression ret = null;
         if(functionName != null) {
+            param = getFunctionParam(valueStr);
             switch (HelperFunctionsType.valueOf(functionName.toUpperCase())) {
                 case ENVIRONMENT:
-                    param1 = getFunctionParam(valueStr);
-                    Property envVariable = environmentProperties.get(param1);
+                    Property envVariable = environmentProperties.get(param);
                     ret = new EnvironmentExpression(envVariable.getType(), envVariable);
                     break;
                 case RANDOM:
-                    param1 = getFunctionParam(valueStr);
-                    ret = new RandomExpression(PropertyType.DECIMAL,Integer.parseInt(param1));
+                    ret = new RandomExpression(PropertyType.DECIMAL,Integer.parseInt(param));
                     break;
                 case EVALUATE:
-                    ret = null;
+                    Property propertyForEvaluate = getProperty(param);
+                    ret = new EvaluateExpression(propertyForEvaluate.getType(), propertyForEvaluate);
                     break;
                 case PERCENT:
-                    ret = null;
+                    twoParams = getTwoParams(valueStr);
+                    ret = new PercentExpression(type, createExpressionObject(twoParams.getParam1(),type,entityName), createExpressionObject(twoParams.getParam2(),type,entityName));
                     break;
                 case TICKS:
-                    ret = null;
+                    Property propertyForTicks = getProperty(param);
+                    ret = new TicksExpression(propertyForTicks.getType(), propertyForTicks, ticksCounter);
                     break;
             }
         }
 
         return ret;
+    }
+
+    /**
+     * Receive string represent by this format: "<Entity>.<Property>", extract and return the entity's property if exists.
+     */
+    private Property getProperty(String valueStr) {
+        String entityName, propertyName;
+        int dotIndex = valueStr.indexOf(".");
+        entityName = valueStr.substring(0,dotIndex);
+        propertyName = valueStr.substring(dotIndex + 1, valueStr.length() - 1);
+        return entities.get(entityName).getProperties().get(propertyName);
+    }
+
+    /**
+     * Receive string which represent a call to the side method "Percent", extract the two parameters from the string
+     * and create a "TwoParams" object with these two params.
+     */
+    private TwoParams getTwoParams(String valueStr) {
+        int openParenIndex = valueStr.indexOf("(");
+        String argumentsStr = valueStr.substring(openParenIndex, valueStr.length() - 1);
+        String[] arguments = argumentsStr.split(", ");
+        return new TwoParams(arguments[0], arguments[1]);
     }
 
     /**

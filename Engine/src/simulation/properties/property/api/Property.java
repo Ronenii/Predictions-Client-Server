@@ -13,7 +13,7 @@ public interface Property {
 
     Object getValue();
 
-    void setValue(Object value);
+    void setValue(Object value, int lastChangTickCount);
 
     Boolean isRandInit();
 
@@ -22,5 +22,7 @@ public interface Property {
     public Property dupProperty();
 
     public Property generateRandomValueProperty();
+
+    int getLastChangeTickCount();
 
 }

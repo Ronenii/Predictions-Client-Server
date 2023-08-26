@@ -39,9 +39,9 @@ public abstract class AbstractConditionAction extends AbstractAction implements 
      * If this is activated then this condition must be true.
      * @param entityInstance The given entity to invoke all "thenActions" upon.
      */
-    protected void invokeThenActions(EntityInstance entityInstance){
+    protected void invokeThenActions(EntityInstance entityInstance, int lastChangTickCount){
         if(thenActions != null){
-            thenActions.invoke(entityInstance);
+            thenActions.invoke(entityInstance, lastChangTickCount);
         }
         isTrue = true;
     }
@@ -51,9 +51,9 @@ public abstract class AbstractConditionAction extends AbstractAction implements 
      * If this is activated then this condition must be true.
      * @param entityInstance The given entity to invoke all "elseActions" upon.
      */
-    protected void invokeElseActions(EntityInstance entityInstance){
+    protected void invokeElseActions(EntityInstance entityInstance, int lastChangTickCount){
         if(elseActions != null) {
-            elseActions.invoke(entityInstance);
+            elseActions.invoke(entityInstance, lastChangTickCount);
         }
         isTrue = false;
     }
