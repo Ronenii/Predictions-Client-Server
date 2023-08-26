@@ -27,7 +27,7 @@ public class DecreaseAction extends AbstractAction implements Serializable {
      * @param entityInstance The given entity to decrease the value of the action's property from.
      */
     @Override
-    public void Invoke(EntityInstance entityInstance) {
+    public void Invoke(EntityInstance entityInstance, int lastChangTickCount) {
         Property toDecrease = entityInstance.getPropertyByName(getContextProperty());
 
         if(toDecrease == null){
@@ -37,10 +37,10 @@ public class DecreaseAction extends AbstractAction implements Serializable {
         switch (toDecrease.getType())
         {
             case DECIMAL:
-                toDecrease.setValue((int)toDecrease.getValue() - (int)value.evaluate());
+                toDecrease.setValue((int)toDecrease.getValue() - (int)value.evaluate(), lastChangTickCount);
                 break;
             case FLOAT:
-                toDecrease.setValue((double)toDecrease.getValue() - (double)value.evaluate());
+                toDecrease.setValue((double)toDecrease.getValue() - (double)value.evaluate(), lastChangTickCount);
                 break;
         }
     }

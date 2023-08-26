@@ -15,7 +15,7 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
     }
 
     @Override
-    public void Invoke(EntityInstance entityInstance) {
+    public void Invoke(EntityInstance entityInstance, int lastChangTickCount) {
         Property toCompare = entityInstance.getPropertyByName(getContextProperty());
 
         if (toCompare == null) {
@@ -26,16 +26,16 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
             // These 2 operators don;t require casting for comparison
             case EQUALS:
                 if (toCompare.getValue() == getValue()) {
-                    invokeThenActions(entityInstance);
+                    invokeThenActions(entityInstance, lastChangTickCount);
                 } else {
-                    invokeElseActions(entityInstance);
+                    invokeElseActions(entityInstance, lastChangTickCount);
                 }
                 break;
             case NOT_EQUALS:
                 if (toCompare.getValue() != getValue()) {
-                    invokeThenActions(entityInstance);
+                    invokeThenActions(entityInstance, lastChangTickCount);
                 } else {
-                    invokeElseActions(entityInstance);
+                    invokeElseActions(entityInstance, lastChangTickCount);
                 }
                 break;
                 // For Lt & Bt we do require casting, it is handled in these funcs.
@@ -43,48 +43,48 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
             default:
                 switch (toCompare.getType()){
                     case DECIMAL:
-                        compareInequalityByInteger(toCompare, entityInstance);
+                        compareInequalityByInteger(toCompare, entityInstance, lastChangTickCount);
                         break;
                     case FLOAT:
-                        compareInequalityByFloat(toCompare, entityInstance);
+                        compareInequalityByFloat(toCompare, entityInstance, lastChangTickCount);
                         break;
                 }
         }
     }
 
-    private void compareInequalityByInteger(Property toCompare, EntityInstance entityInstance){
+    private void compareInequalityByInteger(Property toCompare, EntityInstance entityInstance, int lastChangTickCount){
         switch (operator) {
             case BIGGER_THAN:
                 if ((int) toCompare.getValue() > (int) getValue()) {
-                    invokeThenActions(entityInstance);
+                    invokeThenActions(entityInstance, lastChangTickCount);
                 } else {
-                    invokeElseActions(entityInstance);
+                    invokeElseActions(entityInstance, lastChangTickCount);
                 }
                 break;
             case LESSER_THAN:
                 if ((int) toCompare.getValue() < (int) getValue()) {
-                    invokeThenActions(entityInstance);
+                    invokeThenActions(entityInstance, lastChangTickCount);
                 } else {
-                    invokeElseActions(entityInstance);
+                    invokeElseActions(entityInstance, lastChangTickCount);
                 }
                 break;
         }
     }
 
-    private void compareInequalityByFloat(Property toCompare, EntityInstance entityInstance){
+    private void compareInequalityByFloat(Property toCompare, EntityInstance entityInstance, int lastChangTickCount){
         switch (operator) {
             case BIGGER_THAN:
                 if ((double) toCompare.getValue() > (double) getValue()) {
-                    invokeThenActions(entityInstance);
+                    invokeThenActions(entityInstance, lastChangTickCount);
                 } else {
-                    invokeElseActions(entityInstance);
+                    invokeElseActions(entityInstance, lastChangTickCount);
                 }
                 break;
             case LESSER_THAN:
                 if ((double) toCompare.getValue() < (double) getValue()) {
-                    invokeThenActions(entityInstance);
+                    invokeThenActions(entityInstance, lastChangTickCount);
                 } else {
-                    invokeElseActions(entityInstance);
+                    invokeElseActions(entityInstance, lastChangTickCount);
                 }
                 break;
         }

@@ -34,7 +34,7 @@ public class CalculationAction extends AbstractAction implements Serializable {
     }
 
     @Override
-    public void Invoke(EntityInstance entityInstance) {
+    public void Invoke(EntityInstance entityInstance, int lastChangTickCount) {
         Property toSet = entityInstance.getPropertyByName(getContextProperty());
 
         if(toSet == null){
@@ -43,31 +43,31 @@ public class CalculationAction extends AbstractAction implements Serializable {
 
         switch (type){
             case MULTIPLY:
-                multiplyAndSetPropertyValue(toSet);
+                multiplyAndSetPropertyValue(toSet, lastChangTickCount);
                 break;
             case DIVIDE:
-                divideAndSetPropertyValue(toSet);
+                divideAndSetPropertyValue(toSet, lastChangTickCount);
                 break;
         }
     }
 
-    private void multiplyAndSetPropertyValue(Property toSet){
+    private void multiplyAndSetPropertyValue(Property toSet, int lastChangTickCount){
         switch (toSet.getType()){
             case DECIMAL:
-                toSet.setValue((int)arg1.evaluate() * (int)arg2.evaluate());
+                toSet.setValue((int)arg1.evaluate() * (int)arg2.evaluate(), lastChangTickCount);
                 break;
             case FLOAT:
-                toSet.setValue((double)arg1.evaluate() * (double)arg2.evaluate());
+                toSet.setValue((double)arg1.evaluate() * (double)arg2.evaluate(), lastChangTickCount);
                 break;
         }
     }
-    private void divideAndSetPropertyValue(Property toSet){
+    private void divideAndSetPropertyValue(Property toSet, int lastChangTickCount){
         switch (toSet.getType()){
             case DECIMAL:
-                toSet.setValue((int)arg1.evaluate() / (int)arg2.evaluate());
+                toSet.setValue((int)arg1.evaluate() / (int)arg2.evaluate(), lastChangTickCount);
                 break;
             case FLOAT:
-                toSet.setValue((double)arg1.evaluate() / (double)arg2.evaluate());
+                toSet.setValue((double)arg1.evaluate() / (double)arg2.evaluate(), lastChangTickCount);
                 break;
         }
     }

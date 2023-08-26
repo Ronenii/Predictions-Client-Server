@@ -115,6 +115,9 @@ public class ExpressionConverter {
         return ret;
     }
 
+    /**
+     * Receive string represent by this format: "<Entity>.<Property>", extract and return the entity's property if exists.
+     */
     private Property getProperty(String valueStr) {
         String entityName, propertyName;
         int dotIndex = valueStr.indexOf(".");
@@ -123,6 +126,10 @@ public class ExpressionConverter {
         return entities.get(entityName).getProperties().get(propertyName);
     }
 
+    /**
+     * Receive string which represent a call to the side method "Percent", extract the two parameters from the string
+     * and create a "TwoParams" object with these two params.
+     */
     private TwoParams getTwoParams(String valueStr) {
         int openParenIndex = valueStr.indexOf("(");
         String argumentsStr = valueStr.substring(openParenIndex, valueStr.length() - 1);

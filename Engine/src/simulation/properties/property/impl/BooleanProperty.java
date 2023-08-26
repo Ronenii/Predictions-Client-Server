@@ -24,8 +24,9 @@ public class BooleanProperty extends AbstractProperty implements Serializable {
     }
 
     @Override
-    public void setValue(Object value) {
+    public void setValue(Object value, int lastChangTickCount) {
         this.value = value;
+        this.lastChangeTickCount = lastChangTickCount;
     }
 
     @Override

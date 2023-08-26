@@ -81,11 +81,11 @@ public class Rule implements Serializable {
      *
      * @param entities The world's entities that we invoke the rule on
      */
-    public void invokeRuleOnWorldEntities(Collection<Entity> entities) {
+    public void invokeRuleOnWorldEntities(Collection<Entity> entities, int lastChangTickCount) {
         if (willInvoke()) {
             for (Entity e: entities
                  ) {
-                invokeActionsOnEntity(e);
+                invokeActionsOnEntity(e, lastChangTickCount);
             }
         }
     }
@@ -95,12 +95,12 @@ public class Rule implements Serializable {
      * is designed for then invoke said action on all instances of this entity.
      * @param entity the given entity to invoke the actions upon.
      */
-    private void invokeActionsOnEntity(Entity entity){
+    private void invokeActionsOnEntity(Entity entity, int lastChangTickCount){
         for (Action a: actions
         ) {
             if(a.getClass() == MultipleCondition.class || a.getContextEntity().equals(entity.getName()))
             {
-                entity.invokeActionOnAllInstances(a, activation.getProbability());
+                entity.invokeActionOnAllInstances(a, activation.getProbability(), lastChangTickCount);
             }
         }
     }

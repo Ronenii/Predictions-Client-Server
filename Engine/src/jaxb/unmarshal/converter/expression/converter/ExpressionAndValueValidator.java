@@ -16,7 +16,6 @@ public class ExpressionAndValueValidator {
 
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
-
     private String errorMessage;
 
     public String getErrorMessage() {
@@ -135,6 +134,10 @@ public class ExpressionAndValueValidator {
         return ret;
     }
 
+    /**
+     * Receive string represent by this format: "<Entity>.<Property>", extract and return the entity's property type if exists.
+     * If not, or if the string doesn't match the given format, throw an exception.
+     */
     private String getPropertyParamType(String valueStr) throws Exception {
         String entityName, propertyName, ret = null;
         Property property;
@@ -156,6 +159,10 @@ public class ExpressionAndValueValidator {
         return ret;
     }
 
+    /**
+     * Receive string which represent a call to the side method "Percent", extract the two parameters from the string
+     * and check these two params types, if they are not numbers, throw an exception.
+     */
     private String getTwoParamsType(String valueStr, String entityName) throws ExpressionConversionException {
         int openParenIndex = valueStr.indexOf("(");
         String argumentsStr = valueStr.substring(openParenIndex, valueStr.length() - 1), argOneType, argTwoType;

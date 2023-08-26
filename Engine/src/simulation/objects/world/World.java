@@ -119,7 +119,7 @@ public class World implements Serializable {
         do {
             for (Rule r : rules.values()
             ) {
-                r.invokeRuleOnWorldEntities(entities.values());
+                r.invokeRuleOnWorldEntities(entities.values(), ticks.getTicks());
             }
         } while ((!endingConditionsMet()));
 

@@ -27,7 +27,7 @@ public class IncreaseAction extends AbstractAction implements Serializable {
      * @param entityInstance The given entity to increase the value of the action's property.
      */
     @Override
-    public void Invoke(EntityInstance entityInstance) {
+    public void Invoke(EntityInstance entityInstance, int lastChangTickCount) {
         Property toIncrease = entityInstance.getPropertyByName(getContextProperty());
 
         if(toIncrease == null){
@@ -37,10 +37,10 @@ public class IncreaseAction extends AbstractAction implements Serializable {
         switch (toIncrease.getType())
         {
             case DECIMAL:
-                toIncrease.setValue((int)toIncrease.getValue() + (int)value.evaluate());
+                toIncrease.setValue((int)toIncrease.getValue() + (int)value.evaluate(), lastChangTickCount);
                 break;
             case FLOAT:
-                toIncrease.setValue((double)toIncrease.getValue() + (double)value.evaluate());
+                toIncrease.setValue((double)toIncrease.getValue() + (double)value.evaluate(), lastChangTickCount);
                 break;
         }
     }

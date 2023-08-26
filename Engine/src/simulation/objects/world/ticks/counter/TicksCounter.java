@@ -1,5 +1,8 @@
 package simulation.objects.world.ticks.counter;
 
+/**
+ * This class holds ticks for a simulation.
+ */
 public class TicksCounter {
     private int ticks = 0;
 

@@ -17,7 +17,7 @@ public class KillAction extends AbstractAction implements Serializable {
     }
 
     @Override
-    public void Invoke(EntityInstance entityInstance) {
+    public void Invoke(EntityInstance entityInstance, int lastChangTickCount) {
         entityInstance.kill();
     }
 }
