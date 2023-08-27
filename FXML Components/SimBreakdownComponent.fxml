@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="260.0" prefHeight="354.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+  <columnConstraints>
+      <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="80.0" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="80.0" vgrow="NEVER" />
+    <RowConstraints minHeight="10.0" prefHeight="80.0" vgrow="NEVER" />
+    <RowConstraints minHeight="10.0" prefHeight="80.0" vgrow="NEVER" />
+    <RowConstraints minHeight="10.0" prefHeight="80.0" vgrow="NEVER" />
+  </rowConstraints>
+   <children>
+      <RadioButton id="radio-SimBreakdown-EnvVar" mnemonicParsing="false" text="Environment Variables" wrapText="true" GridPane.columnSpan="2" />
+      <RadioButton id="radio-SimBreakdown-Grid" layoutX="10.0" layoutY="40.0" mnemonicParsing="false" text="Grid" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+      <RadioButton id="radio-SimBreakdown-Entities" layoutX="10.0" layoutY="120.0" mnemonicParsing="false" text="Entities" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+      <RadioButton id="radio-SimBreakdown-Rules" layoutX="10.0" layoutY="200.0" mnemonicParsing="false" text="Rules" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+      <RadioButton id="radio-SimBreakdown-EndCondition" layoutX="10.0" layoutY="280.0" mnemonicParsing="false" text="Ending Conditions" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+      <ComboBox id="cb-SimBreakdown-EnvVar" prefWidth="150.0" GridPane.columnIndex="2" GridPane.columnSpan="2" />
+      <ComboBox id="cb-SimBreakdown-Grid" layoutX="250.0" layoutY="35.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+      <ComboBox id="cb-SimBreakdown-Entities" layoutX="250.0" layoutY="115.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+      <ComboBox id="cb-SimBreakdown-Rules" layoutX="250.0" layoutY="195.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+      <ComboBox id="cb-SimBreakdown-EndCondition" layoutX="250.0" layoutY="275.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+   </children>
+</GridPane>
