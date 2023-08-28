@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
 <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <GridPane>
@@ -38,7 +37,7 @@
       </GridPane>
       <AnchorPane prefHeight="400.0" prefWidth="545.0" HBox.hgrow="ALWAYS">
          <children>
-            <TextArea layoutX="9.0" layoutY="11.0" prefHeight="372.0" prefWidth="479.0" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="11.0" />
+            <TextArea editable="false" layoutX="9.0" layoutY="11.0" prefHeight="372.0" prefWidth="479.0" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="11.0" />
          </children>
       </AnchorPane>
    </children>
