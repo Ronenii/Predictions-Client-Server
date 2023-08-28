@@ -12,23 +12,15 @@
    <center>
       <TabPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="Details">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </Tab>
+          <Tab text="Details" />
           <Tab text="New Execution">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <content>
+                  <AnchorPane>
                      <children>
-                        <AnchorPane>
-                           <children>
-                              <fx:include source="NewExecutionMenu.fxml" />
-                           </children>
-                        </AnchorPane>
+                        <fx:include source="New%20Execution/Menu.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
-            </content>
+               </content>
           </Tab>
             <Tab text="Result">
                <content>
