@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="205.0" prefWidth="700.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label text="Excecution Details" />
@@ -30,7 +29,7 @@
             <RowConstraints minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="13.0">
                <children>
                   <Label text="Simulation ID:" />
                   <Label text="-" />
@@ -42,7 +41,7 @@
                   <Label text="-" />
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="41.0" GridPane.rowIndex="2">
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="38.0" GridPane.rowIndex="2">
                <children>
                   <Label text="Duration:" />
                   <Label text="-" />
@@ -54,7 +53,7 @@
                      <children>
                         <Button mnemonicParsing="false" text="Resume">
                            <StackPane.margin>
-                              <Insets right="15.0" />
+                              <Insets right="30.0" />
                            </StackPane.margin>
                         </Button>
                      </children>
