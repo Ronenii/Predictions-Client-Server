@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -22,36 +21,31 @@
    </columnConstraints>
    <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
-      <RowConstraints minHeight="150.0" prefHeight="140.0" vgrow="NEVER" />
+      <RowConstraints minHeight="150.0" prefHeight="200.0" vgrow="NEVER" />
       <RowConstraints maxHeight="100.0" minHeight="-Infinity" prefHeight="10.0" vgrow="ALWAYS" />
       <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
    </rowConstraints>
    <children>
-      <TableView prefHeight="200.0" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
+      <TableView prefHeight="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.rowSpan="2">
          <columns>
             <TableColumn prefWidth="75.0" text="C1" />
             <TableColumn prefWidth="75.0" text="C2" />
          </columns>
       </TableView>
-      <Label text="Execution Details" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-         <GridPane.margin>
-            <Insets />
-         </GridPane.margin>
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <AnchorPane GridPane.columnIndex="3" GridPane.rowIndex="6">
+      <AnchorPane GridPane.columnIndex="3" GridPane.rowIndex="4">
          <children>
             <fx:include source="Control%20Bar.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
-      <VBox prefHeight="200.0" prefWidth="100.0" spacing="13.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="13.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
+            <Label text="Execution Details" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
             <HBox spacing="13.0">
                <children>
                   <Label text="Simulation ID:" />
