@@ -135,21 +135,8 @@ public class PRDValidator extends Validator {
 
     public void validatePRDEntity(PRDEntity prdEntity, Map<String, Entity> entities) throws PRDObjectConversionException {
         validatePRDEntityDoesntExists(prdEntity, entities);
-        validatePRDEntityPopulation(prdEntity);
     }
 
-    /**
-     * Validates that prdEntity's population is >= 0.
-     *
-     * @param prdEntity the PRDEntity we are validating
-     */
-    private void validatePRDEntityPopulation(PRDEntity prdEntity) throws PRDObjectConversionException {
-        int population = prdEntity.getPRDPopulation();
-
-        if (population < 0) {
-            addErrorToListAndThrowException(prdEntity, prdEntity.getName(), "Population cannot be negative.");
-        }
-    }
 
     private void validatePRDEntityDoesntExists(PRDEntity prdEntity, Map<String, Entity> entities) throws PRDObjectConversionException {
         if (entities.containsKey(prdEntity.getName())) {
@@ -224,15 +211,25 @@ public class PRDValidator extends Validator {
 
     public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
 
-        if(prdAction.getType().equals("calculation")){
-            validatePRDActionEntityAndProperty(prdAction, prdAction.getResultProp(), entities, ruleName);
-            validatePRDCalculation(prdAction, expressionAndValueValidator, ruleName);
-        } else if (prdAction.getType().equals("condition")) {
-            validatePRDCondition(prdAction.getPRDCondition(), entities, prdAction.getPRDThen(), prdAction.getPRDElse(), false, expressionAndValueValidator, ruleName);
-        }
-        else {
-            validatePRDActionEntityAndProperty(prdAction, prdAction.getProperty(), entities, ruleName);
-            validatePRDActionValue(prdAction, expressionAndValueValidator, ruleName);
+        switch (prdAction.getType())
+        {
+            case "calculation":
+                validatePRDActionEntityAndProperty(prdAction, prdAction.getResultProp(), entities, ruleName);
+                validatePRDCalculation(prdAction, expressionAndValueValidator, ruleName);
+                break;
+            case "condition":
+                validatePRDCondition(prdAction.getPRDCondition(), entities, prdAction.getPRDThen(), prdAction.getPRDElse(), false, expressionAndValueValidator, ruleName);
+                break;
+            case "replace":
+                validatePRDReplace(prdAction,entities,ruleName);
+                break;
+            case "proximity":
+                validatePRDProximity(prdAction,entities,ruleName,expressionAndValueValidator);
+                break;
+            default:
+                validatePRDActionEntityAndProperty(prdAction, prdAction.getProperty(), entities, ruleName);
+                validatePRDActionValue(prdAction, expressionAndValueValidator, ruleName);
+                break;
         }
     }
 
@@ -339,6 +336,47 @@ public class PRDValidator extends Validator {
         }
     }
 
+    private void validatePRDReplace(PRDAction prdAction, Map<String, Entity> entities, String ruleName) throws PRDObjectConversionException {
+        if(prdAction.getKill() == null || prdAction.getCreate() == null){
+            addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given replace action does not contain kill/create entities.");
+        }
+
+        if(entities.get(prdAction.getKill()) == null || entities.get(prdAction.getCreate()) == null){
+            addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "One or two of the given replace action kill/create entities does not exist.");
+        }
+
+        if(prdAction.getMode() == null || !prdAction.getMode().equals("scratch") || !prdAction.getMode().equals("derived")){
+            addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given replace action does not contain valid mode");
+        }
+    }
+
+    private void validatePRDProximity(PRDAction prdAction, Map<String, Entity> entities, String ruleName, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
+        if(prdAction.getPRDBetween() == null || prdAction.getPRDBetween().getSourceEntity() == null || prdAction.getPRDBetween().getTargetEntity() == null) {
+            addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given proximity action does not contain valid 'Between'");
+        }
+
+        if(entities.get(prdAction.getPRDBetween().getSourceEntity()) == null || entities.get(prdAction.getPRDBetween().getTargetEntity()) == null) {
+            addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "One or two of the given proximity action source/target entities does not exist.");
+        }
+
+        if(prdAction.getPRDEnvDepth() == null || prdAction.getPRDEnvDepth().getOf() == null){
+            addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given proximity action does not contain valid 'Env-Depth'");
+        }
+
+        try {
+            expressionAndValueValidator.isPRDProximityDepthIsNumber(prdAction.getPRDEnvDepth().getOf(), prdAction.getPRDBetween().getSourceEntity());
+        } catch (ExpressionConversionException e) {
+            addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, expressionAndValueValidator.getErrorMessage());
+        }
+
+        if(prdAction.getPRDActions() != null && prdAction.getPRDActions().getPRDAction() != null) {
+            for (PRDAction subPRDAction : prdAction.getPRDActions().getPRDAction()) {
+                actionNumber++;
+                validatePRDAction(subPRDAction,entities,expressionAndValueValidator,ruleName);
+            }
+        }
+    }
+
     /**
      * Property name is send to the method in order to use this method on calculation actions.
      */
@@ -387,7 +425,7 @@ public class PRDValidator extends Validator {
      * to stop it.
      */
     private void validatePRDTerminationNotEmpty(PRDTermination prdTermination) throws PRDObjectConversionException {
-        List<Object> byTicksOrSec = prdTermination.getPRDByTicksOrPRDBySecond();
+        List<Object> byTicksOrSec = prdTermination.getPRDBySecondOrPRDByTicks();
 
         if (byTicksOrSec.isEmpty()) {
             addErrorToListAndThrowException(prdTermination, "", "There are no ending conditions for this simulation.");
@@ -401,7 +439,7 @@ public class PRDValidator extends Validator {
         int terminateByTicksCount = 0;
         int terminateBySecondsCount = 0;
 
-        for (Object t: prdTermination.getPRDByTicksOrPRDBySecond()
+        for (Object t: prdTermination.getPRDBySecondOrPRDByTicks()
              ) {
             if(t.getClass() == PRDByTicks.class){
                 terminateByTicksCount++;

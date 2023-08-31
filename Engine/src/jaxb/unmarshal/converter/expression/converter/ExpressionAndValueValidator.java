@@ -75,6 +75,15 @@ public class ExpressionAndValueValidator {
         }
     }
 
+    public void isPRDProximityDepthIsNumber(String valueStr, String entityName) throws ExpressionConversionException {
+        String valueType = getExpressionType(valueStr, entityName);
+
+        if(!valueType.equals("DECIMAL") && !valueType.equals("FLOAT")) {
+            errorMessage = "The depth value type is not a number";
+            throw new ExpressionConversionException();
+        }
+    }
+
     private String getExpressionType(String valueStr, String entityName) throws ExpressionConversionException {
         String valueType;
         valueType = getObjectTypeIfFunction(valueStr, entityName);
