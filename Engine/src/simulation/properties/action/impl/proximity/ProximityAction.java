@@ -5,15 +5,15 @@ import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 
-public class Proximity extends AbstractAction {
+public class ProximityAction extends AbstractAction {
     private final String targetEntityName;
 
     private final Expression depth;
 
-    private final ProximityActions proximityActions;
+    private final ProximitySubActions proximityActions;
 
-    public Proximity(ActionType type, String property, String contextEntity, String targetEntityName, Expression depth, ProximityActions proximityActions) {
-        super(type, property, contextEntity);
+    public ProximityAction(String property, String contextEntity, String targetEntityName, Expression depth, ProximitySubActions proximityActions) {
+        super(ActionType.PROXIMITY, property, contextEntity);
         this.targetEntityName = targetEntityName;
         this.depth = depth;
         this.proximityActions = proximityActions;

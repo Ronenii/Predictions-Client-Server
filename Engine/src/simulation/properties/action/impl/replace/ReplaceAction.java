@@ -9,8 +9,8 @@ public class ReplaceAction extends AbstractAction {
 
     private final ReplaceActionType replaceType;
 
-    public ReplaceAction(ActionType type, String property, String contextEntity, String newEntityName, ReplaceActionType replaceType) {
-        super(type, property, contextEntity);
+    public ReplaceAction(String property, String contextEntity, String newEntityName, ReplaceActionType replaceType) {
+        super(ActionType.REPLACE, property, contextEntity);
         this.newEntityName = newEntityName;
         this.replaceType = replaceType;
     }

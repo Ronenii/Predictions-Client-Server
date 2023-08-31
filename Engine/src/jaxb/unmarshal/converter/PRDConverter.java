@@ -13,6 +13,10 @@ import simulation.objects.entity.Entity;
 import simulation.objects.world.ticks.counter.TicksCounter;
 import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.impl.condition.*;
+import simulation.properties.action.impl.proximity.ProximityAction;
+import simulation.properties.action.impl.proximity.ProximitySubActions;
+import simulation.properties.action.impl.replace.ReplaceAction;
+import simulation.properties.action.impl.replace.ReplaceActionType;
 import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.rule.Rule;
 import simulation.objects.world.World;
@@ -385,8 +389,10 @@ public class PRDConverter {
                     ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
                     break;
                 case REPLACE:
+                    ret = new ReplaceAction(null,prdAction.getKill(), prdAction.getCreate(), ReplaceActionType.valueOf(prdAction.getMode().toUpperCase()));
                     break;
                 case PROXIMITY:
+                    ret = getProximityActionObject(prdAction,expressionConverter);
                     break;
             }
         } catch (IllegalArgumentException e) {
@@ -401,7 +407,7 @@ public class PRDConverter {
      * Converts the given PRDAction to multiply or divide calculation action.
      *
      * @param prdAction the given PRDAction generated from reading the XML file
-     * @return a CalculationAction representation of the given PRDActivation.
+     * @return a CalculationAction representation of the given PRDAction.
      */
     private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverter expressionConverter) {
         CalculationAction ret = null;
@@ -529,6 +535,21 @@ public class PRDConverter {
 
         return ret;
     }
+
+    /**
+     * Converts the given PRDAction to proximity action.
+     *
+     * @param prdAction the given PRDAction generated from reading the XML file
+     * @return a ProximityAction representation of the given PRDAction.
+     */
+    private ProximityAction getProximityActionObject(PRDAction prdAction, ExpressionConverter expressionConverter) {
+        Expression expression = expressionConverter.createExpressionObject(prdAction.getPRDEnvDepth().getOf(), PropertyType.DECIMAL, prdAction.getPRDBetween().getSourceEntity());
+        ProximitySubActions proximitySubActions = new ProximitySubActions(getActionsFromPRDActionsList(prdAction.getPRDActions().getPRDAction()));
+
+        return new ProximityAction(null,prdAction.getPRDBetween().getSourceEntity(), prdAction.getPRDBetween().getTargetEntity(), expression,proximitySubActions);
+    }
+
+
 
     /**
      * Converts the given PRDActivation to Activation
