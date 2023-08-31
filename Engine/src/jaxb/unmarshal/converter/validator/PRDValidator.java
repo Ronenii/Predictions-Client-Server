@@ -25,6 +25,18 @@ public class PRDValidator extends Validator {
 
     private int actionNumber;
 
+    public void validatePRDGridAndPRDThreadCount(PRDWorld prdWorld) throws PRDObjectConversionException {
+        int rows = prdWorld.getPRDGrid().getRows(), columns = prdWorld.getPRDGrid().getColumns();
+
+        if (prdWorld.getPRDThreadCount() <= 0){
+            addErrorToListAndThrowException(prdWorld, "world", "The given world's thread count must be at least 1.");
+        }
+
+        if(rows < 10 || rows > 100 || columns < 10 || columns > 100) {
+            addErrorToListAndThrowException(prdWorld, "world", "The given world's grid rows/columns size must be between 10 to 100.");
+        }
+    }
+
     public void validatePRDProperty(PRDProperty prdProperty, Map<String, Property> entityProperties) throws PRDObjectConversionException {
         validatePRDPropertyDoesntExist(prdProperty, entityProperties);
         validatePRDPropertyRange(prdProperty);

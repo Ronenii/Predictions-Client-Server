@@ -64,6 +64,11 @@ public class PRDConverter {
 
         Map<EndingConditionType,EndingCondition> endingConditions;
 
+        if(!isWorldGridAndThreadCountValid(prdWorld)){
+            validator.addEntitiesAndEnvPropCreationErrorMessage();
+            throw new IllegalArgumentException(validator.getErrorList());
+        }
+
         getEnvironmentPropertiesFromPRDWorld(prdWorld);
 
         getEntitiesFromPRDWorld(prdWorld);
@@ -85,6 +90,18 @@ public class PRDConverter {
         }
 
         return new World(environmentProperties, entities, rules, endingConditions, ticksCounter, prdWorld.getPRDGrid().getRows(), prdWorld.getPRDGrid().getColumns(), prdWorld.getPRDThreadCount());
+    }
+
+    private boolean isWorldGridAndThreadCountValid(PRDWorld prdWorld){
+        boolean ret = true;
+
+        try {
+            validator.validatePRDGridAndPRDThreadCount(prdWorld);
+        } catch (PRDObjectConversionException e) {
+            ret = false;
+        }
+
+        return ret;
     }
 
 
