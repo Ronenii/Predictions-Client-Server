@@ -80,8 +80,9 @@ public class PRDConverter {
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
-        return new World(environmentProperties, entities, rules, endingConditions, ticksCounter);
+        return new World(environmentProperties, entities, rules, endingConditions, ticksCounter, prdWorld.getPRDGrid().getRows(), prdWorld.getPRDGrid().getColumns(), prdWorld.getPRDThreadCount());
     }
+
 
     /**
      * Extracts all valid environment properties from given PRDWorld.
@@ -90,7 +91,7 @@ public class PRDConverter {
      * @return All Successfully converted environment properties
      */
     private void getEnvironmentPropertiesFromPRDWorld(PRDWorld prdWorld) {
-        List<PRDEnvProperty> prdEnvProperties = prdWorld.getPRDEvironment().getPRDEnvProperty();
+        List<PRDEnvProperty> prdEnvProperties = prdWorld.getPRDEnvironment().getPRDEnvProperty();
         Property propertyToAdd;
 
         for (PRDEnvProperty envProperty : prdEnvProperties) {
@@ -322,12 +323,11 @@ public class PRDConverter {
         }
 
         String name = prdEntity.getName();
-        int population = prdEntity.getPRDPopulation();
         Map<String, Property> properties;
 
         properties = getPropertiesFromPRDEntity(prdEntity);
 
-        return new Entity(population, name, properties);
+        return new Entity(name, properties);
     }
 
     /**
@@ -571,7 +571,7 @@ public class PRDConverter {
 
         Map<EndingConditionType,EndingCondition> endingConditions = new HashMap<>();
 
-        for (Object endingConditionObj : prdTermination.getPRDByTicksOrPRDBySecond()) {
+        for (Object endingConditionObj : prdTermination.getPRDBySecondOrPRDByTicks()) {
             if (endingConditionObj.getClass() == PRDByTicks.class) {
                 EndingCondition toAdd = PRDByTicks2EndingCondition((PRDByTicks) endingConditionObj);
                 endingConditions.put(toAdd.getType(),toAdd);

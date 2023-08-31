@@ -13,8 +13,8 @@ public class Entity implements Serializable {
     private final Map<String, Property> properties;
     private final List<EntityInstance> entityInstances;
 
-    public Entity(int startingPopulation, String name, Map<String, Property> properties) {
-        this.startingPopulation = startingPopulation;
+    public Entity(String name, Map<String, Property> properties) {
+        this.startingPopulation = 0;
         this.name = name;
         this.properties = properties;
         this.entityInstances = new ArrayList<>();
