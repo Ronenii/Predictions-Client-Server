@@ -9,7 +9,7 @@ import simulation.properties.property.api.Property;
 import java.io.Serializable;
 
 public class DecreaseAction extends AbstractAction implements Serializable {
-    private Expression value;
+    private final Expression value;
 
     public DecreaseAction(String property, String contextEntity, Expression value) {
         super(ActionType.DECREASE, property, contextEntity);

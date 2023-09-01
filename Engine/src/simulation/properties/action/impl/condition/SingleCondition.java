@@ -9,8 +9,17 @@ import java.io.Serializable;
 public class SingleCondition extends AbstractConditionAction implements Serializable {
     private final ConditionOperator operator;
 
-    public SingleCondition(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, ConditionOperator operator, Expression value) {
-        super(property, contextEntity, thenActions, elseActions, value);
+    public SingleCondition(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, ConditionOperator operator, Expression value, SecondaryEntity secondaryEntity) {
+        super(property, contextEntity, thenActions, elseActions, value, secondaryEntity);
+        this.operator = operator;
+    }
+
+    /**
+     * This ctor is designated for a pure condition action without any then or else actions.
+     * Mainly for the condition inside the secondary entity.
+     */
+    public SingleCondition(String property, String contextEntity, ConditionOperator operator, Expression value) {
+        super(property, contextEntity, null, null, value, null);
         this.operator = operator;
     }
 

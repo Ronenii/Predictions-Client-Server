@@ -220,7 +220,7 @@ public class PRDValidator extends Validator {
     }
 
     public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
-        validatePRDSecondaryEntity(prdAction.getPRDSecondaryEntity(), entities, prdAction, expressionAndValueValidator, ruleName);
+        validatePRDSecondaryEntity(prdAction.getPRDSecondaryEntity(), entities, expressionAndValueValidator, ruleName);
         switch (prdAction.getType()) {
             case "calculation":
                 validatePRDActionEntityAndProperty(prdAction, prdAction.getResultProp(), entities, ruleName);
@@ -261,14 +261,13 @@ public class PRDValidator extends Validator {
      *
      * @param prdSecondaryEntity          The given secondary entity we want to validate,
      * @param entities                    A map of entities we use as context for selection's condition validation and to see that the secondary entity exists there.
-     * @param prdAction                   The action containing this secondary entity. We mainly use it for the condition validation.
      * @param expressionAndValueValidator Validates the expression inside the condition.
      * @param ruleName                    The rule in which this PRDSecondaryEntity's PRDAction is located
      * @throws PRDObjectConversionException Throws this Exception if selection validation failed or the secondary entity is not defined in entities.
      */
-    private void validatePRDSecondaryEntity(PRDAction.PRDSecondaryEntity prdSecondaryEntity, Map<String, Entity> entities, PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+    private void validatePRDSecondaryEntity(PRDAction.PRDSecondaryEntity prdSecondaryEntity, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
         if (prdSecondaryEntity != null) {
-            validatePRDSelection(prdSecondaryEntity.getPRDSelection(), entities, prdAction, expressionAndValueValidator, ruleName);
+            validatePRDSelection(prdSecondaryEntity.getPRDSelection(), entities, expressionAndValueValidator, ruleName);
             if (!entities.containsKey(prdSecondaryEntity.getEntity())) {
                 addErrorToListAndThrowException(prdSecondaryEntity, prdSecondaryEntity.getEntity(), "The given entity name does not exist. Only an existing entity can be defined as a secondary entity.");
             }
@@ -281,14 +280,13 @@ public class PRDValidator extends Validator {
      *
      * @param prdSelection                the selection we validate.
      * @param entities                    A map of entities we use as context for the condition validation.
-     * @param prdAction                   The action containing this selection. We mainly use it for the condition validation.
      * @param expressionAndValueValidator Validates the expression inside the condition.
      * @param ruleName                    The rule in which this PRDSelection's PRDAction is located
      * @throws PRDObjectConversionException Throws this Exception if the count or condition are invalid.
      */
-    private void validatePRDSelection(PRDAction.PRDSecondaryEntity.PRDSelection prdSelection, Map<String, Entity> entities, PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+    private void validatePRDSelection(PRDAction.PRDSecondaryEntity.PRDSelection prdSelection, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
         validatePRDSelectionCount(prdSelection.getCount());
-        validatePRDCondition(prdSelection.getPRDCondition(), entities, prdAction.getPRDThen(), prdAction.getPRDElse(), false, expressionAndValueValidator, ruleName);
+        validateSecondaryEntityPRDCondition(prdSelection.getPRDCondition(), entities, expressionAndValueValidator, ruleName);
     }
 
     /**
@@ -347,12 +345,30 @@ public class PRDValidator extends Validator {
     }
 
 
-    private void validatePRDCondition(PRDCondition prdCondition, Map<String, Entity> entities, PRDThen prdThen, PRDElse prdElse, boolean isSubCondition, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+    private void validateSecondaryEntityPRDCondition(PRDCondition prdCondition, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+        validateCommonPRDConditionValues(prdCondition, entities, expressionAndValueValidator, ruleName);
 
-        if (prdCondition == null) {
-            addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, "The given action type is 'condition' and does not contain 'condition' object.");
+        if (prdCondition.getSingularity().equals("multiple")) {
+            if (prdCondition.getPRDCondition().size() < 2) {
+                addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, "The given multiple condition does not contain 2 sub conditions.");
+            }
+
+            for (PRDCondition subPRDCondition : prdCondition.getPRDCondition()) {
+                actionNumber++;
+                validateSecondaryEntityPRDCondition(subPRDCondition, entities, expressionAndValueValidator, ruleName);
+            }
         }
+    }
 
+    /**
+     * This validation happens both in the secondary entity PRDCondition and in the regular prd condition.
+     * Validates the following:
+     * 1) The given entity and property do in fact exist and are legal to reference in this condition.
+     * 2) The given value of the condition if it is a singularity.
+     * 3) The logical and operator of this condition.
+     * 4) That the condition is either a single condition or a multiple one.
+     */
+    private void validateCommonPRDConditionValues(PRDCondition prdCondition, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
         validatePRDConditionEntityAndProperty(prdCondition, entities, ruleName);
 
         if (prdCondition.getSingularity().equals("single")) {
@@ -366,6 +382,15 @@ public class PRDValidator extends Validator {
         if (!prdCondition.getSingularity().equals("single") && !prdCondition.getSingularity().equals("multiple")) {
             addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, "The given condition type does not contain singularity.");
         }
+    }
+
+    private void validatePRDCondition(PRDCondition prdCondition, Map<String, Entity> entities, PRDThen prdThen, PRDElse prdElse, boolean isSubCondition, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+
+        if (prdCondition == null) {
+            addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, "The given action type is 'condition' and does not contain 'condition' object.");
+        }
+
+        validateCommonPRDConditionValues(prdCondition, entities, expressionAndValueValidator, ruleName);
 
 
         if (prdCondition.getSingularity().equals("multiple")) {
@@ -518,8 +543,6 @@ public class PRDValidator extends Validator {
 
     /**
      * Like the base method 'addErrorToList' but throws an exception as well.
-     *
-     * @throws PRDObjectConversionException
      */
     public void addErrorToListAndThrowException(Object operatingClass, String objectName, String error) throws PRDObjectConversionException {
         super.addErrorToList(operatingClass, objectName, error);

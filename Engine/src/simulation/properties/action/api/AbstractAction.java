@@ -7,6 +7,7 @@ public abstract class AbstractAction implements Action, Serializable {
     private final String contextProperty;
     private final String contextEntity;
 
+
     public AbstractAction(ActionType type, String property, String contextEntity) {
         this.type = type;
         this.contextProperty = property;

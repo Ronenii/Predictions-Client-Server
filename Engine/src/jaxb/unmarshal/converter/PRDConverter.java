@@ -45,10 +45,10 @@ import java.util.*;
 public class PRDConverter {
     // In order to get values from the world object on the run.
 
-    private Map<String, Property> environmentProperties;
-    private Map<String, Entity> entities;
-    private Map<String, Rule> rules;
-    private TicksCounter ticksCounter;
+    private final Map<String, Property> environmentProperties;
+    private final Map<String, Entity> entities;
+    private final Map<String, Rule> rules;
+    private final TicksCounter ticksCounter;
 
     private final PRDValidator validator;
 
@@ -62,9 +62,9 @@ public class PRDConverter {
 
     public World PRDWorld2World(PRDWorld prdWorld) {
 
-        Map<EndingConditionType,EndingCondition> endingConditions;
+        Map<EndingConditionType, EndingCondition> endingConditions;
 
-        if(!isWorldGridAndThreadCountValid(prdWorld)){
+        if (!isWorldGridAndThreadCountValid(prdWorld)) {
             validator.addEntitiesAndEnvPropCreationErrorMessage();
             throw new IllegalArgumentException(validator.getErrorList());
         }
@@ -92,7 +92,7 @@ public class PRDConverter {
         return new World(environmentProperties, entities, rules, endingConditions, ticksCounter, prdWorld.getPRDGrid().getRows(), prdWorld.getPRDGrid().getColumns(), prdWorld.getPRDThreadCount());
     }
 
-    private boolean isWorldGridAndThreadCountValid(PRDWorld prdWorld){
+    private boolean isWorldGridAndThreadCountValid(PRDWorld prdWorld) {
         boolean ret = true;
 
         try {
@@ -109,7 +109,6 @@ public class PRDConverter {
      * Extracts all valid environment properties from given PRDWorld.
      *
      * @param prdWorld the given PRDWorld to extract the EnvProperties from.
-     * @return All Successfully converted environment properties
      */
     private void getEnvironmentPropertiesFromPRDWorld(PRDWorld prdWorld) {
         List<PRDEnvProperty> prdEnvProperties = prdWorld.getPRDEnvironment().getPRDEnvProperty();
@@ -127,7 +126,6 @@ public class PRDConverter {
      * Extracts all valid entities from given PRDWorld.
      *
      * @param prdWorld the given PRDWorld to extract the entities from.
-     * @return All Successfully converted entities
      */
     private void getEntitiesFromPRDWorld(PRDWorld prdWorld) {
         List<PRDEntity> prdEntities = prdWorld.getPRDEntities().getPRDEntity();
@@ -146,7 +144,6 @@ public class PRDConverter {
      * Extracts all valid rule from given PRDWorld.
      *
      * @param prdWorld the given PRDWorld to extract the rule from.
-     * @return All Successfully converted rules
      */
     private void getRulesFromPRDWorld(PRDWorld prdWorld) {
         List<PRDRule> prdRules = prdWorld.getPRDRules().getPRDRule();
@@ -218,7 +215,7 @@ public class PRDConverter {
         String name = prdEnvProperty.getPRDName();
         Double to = null, from = null;
 
-        if(prdEnvProperty.getType().equals("decimal") || prdEnvProperty.getType().equals("float")){
+        if (prdEnvProperty.getType().equals("decimal") || prdEnvProperty.getType().equals("float")) {
             to = prdEnvProperty.getPRDRange().getTo();
             from = prdEnvProperty.getPRDRange().getFrom();
         }
@@ -266,7 +263,7 @@ public class PRDConverter {
         Double to = null;
         Double from = null;
 
-        if(prdProperty.getType().equals("decimal") || prdProperty.getType().equals("float")){
+        if (prdProperty.getType().equals("decimal") || prdProperty.getType().equals("float")) {
             to = prdProperty.getPRDRange().getTo();
             from = prdProperty.getPRDRange().getFrom();
         }
@@ -278,20 +275,19 @@ public class PRDConverter {
         try {
             switch (type) {
                 case DECIMAL:
-                    ret = new IntProperty(name, isRandomInit, parseValue(type,value, isRandomInit, from, to) ,(int)from.doubleValue() , (int)to.doubleValue());
+                    ret = new IntProperty(name, isRandomInit, parseValue(type, value, isRandomInit, from, to), (int) from.doubleValue(), (int) to.doubleValue());
                     break;
                 case FLOAT:
-                    ret = new DoubleProperty(name, isRandomInit, parseValue(type,value, isRandomInit, from, to), from, to);
+                    ret = new DoubleProperty(name, isRandomInit, parseValue(type, value, isRandomInit, from, to), from, to);
                     break;
                 case BOOLEAN:
-                    ret = new BooleanProperty(name, isRandomInit, parseValue(type,value, isRandomInit, from, to));
+                    ret = new BooleanProperty(name, isRandomInit, parseValue(type, value, isRandomInit, from, to));
                     break;
                 case STRING:
-                    ret = new StringProperty(name, isRandomInit, parseValue(type,value, isRandomInit, from, to));
+                    ret = new StringProperty(name, isRandomInit, parseValue(type, value, isRandomInit, from, to));
                     break;
             }
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             validator.addErrorToList(prdProperty, prdProperty.getPRDName(), "Invalid property type.");
         } catch (InvalidBooleanValueException e) {
             validator.addErrorToList(prdProperty, prdProperty.getPRDName(), "Invalid value type, value is not boolean.");
@@ -313,7 +309,7 @@ public class PRDConverter {
 
         switch (type) {
             case DECIMAL:
-                ret = ValueInitializer.integerInitial(value, isRandomInit, (int)from.doubleValue(), (int)to.doubleValue());
+                ret = ValueInitializer.integerInitial(value, isRandomInit, (int) from.doubleValue(), (int) to.doubleValue());
                 break;
             case FLOAT:
                 ret = ValueInitializer.doubleInitial(value, isRandomInit, from, to);
@@ -358,7 +354,7 @@ public class PRDConverter {
      * @return a Rule representation of PRDRule.
      */
     private Rule PRDRule2Rule(PRDRule prdRule) {
-        ExpressionAndValueValidator expressionAndValueValidator = new ExpressionAndValueValidator(environmentProperties,entities);
+        ExpressionAndValueValidator expressionAndValueValidator = new ExpressionAndValueValidator(environmentProperties, entities);
 
         try {
             validator.validatePRDRule(prdRule, entities, rules, expressionAndValueValidator);
@@ -367,7 +363,7 @@ public class PRDConverter {
         }
 
         String name = prdRule.getName();
-        Activation activation = PRDActivation2Activation(prdRule.getPRDActivation(), prdRule);
+        Activation activation = PRDActivation2Activation(prdRule.getPRDActivation());
         List<Action> actions;
 
         actions = getActionsFromPRDActionsList(prdRule.getPRDActions().getPRDAction());
@@ -406,10 +402,10 @@ public class PRDConverter {
                     ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
                     break;
                 case REPLACE:
-                    ret = new ReplaceAction(null,prdAction.getKill(), prdAction.getCreate(), ReplaceActionType.valueOf(prdAction.getMode().toUpperCase()));
+                    ret = new ReplaceAction(null, prdAction.getKill(), prdAction.getCreate(), ReplaceActionType.valueOf(prdAction.getMode().toUpperCase()));
                     break;
                 case PROXIMITY:
-                    ret = getProximityActionObject(prdAction,expressionConverter);
+                    ret = getProximityActionObject(prdAction, expressionConverter);
                     break;
             }
         } catch (IllegalArgumentException e) {
@@ -418,6 +414,44 @@ public class PRDConverter {
         }
 
         return ret;
+    }
+
+    private AbstractConditionAction.SecondaryEntity getSecondaryEntityFromPRDAction(PRDAction prdAction, ExpressionConverter expressionConverter) {
+        PRDAction.PRDSecondaryEntity prdSecondaryEntity = prdAction.getPRDSecondaryEntity();
+        if (prdSecondaryEntity == null) {
+            return null;
+        }
+
+        Action condition = getSecondaryEntityCondition(prdSecondaryEntity.getPRDSelection().getPRDCondition(), expressionConverter);
+        return new AbstractConditionAction.SecondaryEntity(prdSecondaryEntity.getEntity(), getCountFromPRDSecondaryEntity(prdSecondaryEntity), condition);
+    }
+
+    /**
+     * Converts the PRDCondition inside PRDSecondaryEntity to a condition without any the\else actions.
+     */
+    private AbstractConditionAction getSecondaryEntityCondition(PRDCondition prdCondition, ExpressionConverter expressionConverter){
+        AbstractConditionAction ret = null;
+
+        if (prdCondition.getSingularity().equals("single")) {
+            Expression expression = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition);
+            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), ConditionOperator.tryParse(prdCondition.getOperator()), expression);
+        } else if (prdCondition.getSingularity().equals("multiple")) {
+            ret = getMultipleConditionSelection(prdCondition, expressionConverter);
+        }
+
+        return ret;
+    }
+
+    /**
+     * Returns the count value in the secondary entity as an integer.
+     */
+    private int getCountFromPRDSecondaryEntity(PRDAction.PRDSecondaryEntity prdSecondaryEntity) {
+        String count = prdSecondaryEntity.getPRDSelection().getCount();
+        if (count.equals("ALL")) {
+            return entities.get(prdSecondaryEntity.getEntity()).getStartingPopulation();
+        }
+
+        return Integer.parseInt(count);
     }
 
     /**
@@ -455,19 +489,22 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return an AbstractConditionAction representation of the given PRDActivation.
      */
-    private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction,ExpressionConverter expressionConverter) {
+    private AbstractConditionAction getSingleOrMultiple(PRDAction prdAction, ExpressionConverter expressionConverter) {
         AbstractConditionAction ret = null;
         PRDCondition prdCondition = prdAction.getPRDCondition();
         ThenOrElse thenActions, elseActions;
         Expression expression;
         // Then and else objects are created in this method.
-        thenActions = getAndCreateThenOrElse(prdAction,true);
-        elseActions = getAndCreateThenOrElse(prdAction,false);
+        thenActions = getAndCreateThenOrElse(prdAction, true);
+        elseActions = getAndCreateThenOrElse(prdAction, false);
+
+        AbstractConditionAction.SecondaryEntity secondaryEntity = getSecondaryEntityFromPRDAction(prdAction, expressionConverter);
+
         if (prdCondition.getSingularity().equals("single")) {
             expression = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition);
-            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getOperator()), expression);
+            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getOperator()), expression, secondaryEntity);
         } else if (prdCondition.getSingularity().equals("multiple")) {
-            ret = getMultipleConditionObject(prdCondition,thenActions,elseActions, expressionConverter);
+            ret = getMultipleConditionObject(prdCondition, thenActions, elseActions, expressionConverter, secondaryEntity);
         }
 
         return ret;
@@ -475,32 +512,55 @@ public class PRDConverter {
 
     /**
      * Build the multiple condition object and its sub condition objects.
+     * This is used for a multiple condition which has some actions inside it needs to perform if
+     * the condition is true.
      */
-    private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ThenOrElse thenActions, ThenOrElse elseActions, ExpressionConverter expressionConverter){
+    private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ThenOrElse thenActions, ThenOrElse elseActions, ExpressionConverter expressionConverter, AbstractConditionAction.SecondaryEntity secondaryEntity) {
+        List<AbstractConditionAction> objectSubConditions = getAllSubConditions(prdCondition, expressionConverter);
+
+        return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getLogical()), objectSubConditions, null, secondaryEntity);
+    }
+
+    /**
+     * The selection condition does not have then\else actions and therefore all we need is to get all the
+     * sub conditions and create a multiple condition without any actions.
+     */
+    private MultipleCondition getMultipleConditionSelection(PRDCondition prdCondition, ExpressionConverter expressionConverter){
+
+        List<AbstractConditionAction> objectSubConditions = getAllSubConditions(prdCondition, expressionConverter);
+
+        return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), ConditionOperator.tryParse(prdCondition.getLogical()), objectSubConditions, null);
+    }
+
+    /**
+     * Given a condition, iterates through all sub conditions, converts them from PRD to regular
+     * and returns a list of said sub conditions.
+     */
+    private List<AbstractConditionAction> getAllSubConditions(PRDCondition prdCondition, ExpressionConverter expressionConverter) {
         List<PRDCondition> prdSubConditions = prdCondition.getPRDCondition();
         List<AbstractConditionAction> objectSubConditions = new ArrayList<>();
         AbstractConditionAction conditionToAdd;
 
-        for(PRDCondition prdSubCondition : prdSubConditions){
+        for (PRDCondition prdSubCondition : prdSubConditions) {
             conditionToAdd = getAbstractConditionToBuildMultiple(prdSubCondition, expressionConverter);
             objectSubConditions.add(conditionToAdd);
         }
 
-        return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getLogical()), objectSubConditions, null);
+        return objectSubConditions;
     }
 
     /**
      * 'getMultipleConditionObject' helper, build any kind of the condition objects.
      */
-    private AbstractConditionAction getAbstractConditionToBuildMultiple(PRDCondition prdCondition , ExpressionConverter expressionConverter){
+    private AbstractConditionAction getAbstractConditionToBuildMultiple(PRDCondition prdCondition, ExpressionConverter expressionConverter) {
         AbstractConditionAction ret = null;
         Expression expression;
 
         if (prdCondition.getSingularity().equals("single")) {
             expression = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition);
-            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), null, null, ConditionOperator.tryParse(prdCondition.getOperator()), expression);
+            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), ConditionOperator.tryParse(prdCondition.getOperator()), expression);
         } else if (prdCondition.getSingularity().equals("multiple")) {
-            ret = getMultipleConditionObject(prdCondition, null, null, expressionConverter);
+            ret = getMultipleConditionObject(prdCondition, null, null, expressionConverter,null);
         }
         return ret;
     }
@@ -509,8 +569,8 @@ public class PRDConverter {
      * Converts the given PRDAction to Then and Else objects which contain a set of actions to invoke.
      * According to the XML file, if one of them has no actions to invoke, the object remains null.
      *
-     * @param prdAction   the given PRDAction generated from reading the XML file
-     * @param thenOrElse  if true, the method creates an object from prdThen, otherwise from prdElse
+     * @param prdAction  the given PRDAction generated from reading the XML file
+     * @param thenOrElse if true, the method creates an object from prdThen, otherwise from prdElse
      */
     private ThenOrElse getAndCreateThenOrElse(PRDAction prdAction, boolean thenOrElse) {
         // 'getThenOrElseActionSet' creates the Set of Actions for them both.
@@ -518,19 +578,18 @@ public class PRDConverter {
         // we send null for 'prdElse', same for Else.
         ThenOrElse ret = null;
 
-        if(thenOrElse){
+        if (thenOrElse) {
             List<Action> thenActionsSet = getThenOrElseActionSet(prdAction.getPRDThen(), null);
             if (thenActionsSet != null) {
                 ret = new ThenOrElse(thenActionsSet);
             }
-        }
-        else {
+        } else {
             List<Action> elseActionsSet = getThenOrElseActionSet(null, prdAction.getPRDElse());
             if (elseActionsSet != null) {
                 ret = new ThenOrElse(elseActionsSet);
             }
         }
-       return ret;
+        return ret;
     }
 
     /**
@@ -539,7 +598,7 @@ public class PRDConverter {
      *
      * @param prdThen the given PRDThen generated from reading the XML file
      * @param prdElse the given PRDElse generated from reading the XML file
-     * @return a Set of actions representation of the given PRDThen or PRDElse.
+     * @return a List of actions representation of the given PRDThen or PRDElse.
      */
     private List<Action> getThenOrElseActionSet(PRDThen prdThen, PRDElse prdElse) {
         List<Action> ret = null;
@@ -563,9 +622,8 @@ public class PRDConverter {
         Expression expression = expressionConverter.createExpressionObject(prdAction.getPRDEnvDepth().getOf(), PropertyType.DECIMAL, prdAction.getPRDBetween().getSourceEntity());
         ProximitySubActions proximitySubActions = new ProximitySubActions(getActionsFromPRDActionsList(prdAction.getPRDActions().getPRDAction()));
 
-        return new ProximityAction(null,prdAction.getPRDBetween().getSourceEntity(), prdAction.getPRDBetween().getTargetEntity(), expression,proximitySubActions);
+        return new ProximityAction(null, prdAction.getPRDBetween().getSourceEntity(), prdAction.getPRDBetween().getTargetEntity(), expression, proximitySubActions);
     }
-
 
 
     /**
@@ -574,20 +632,20 @@ public class PRDConverter {
      * @param prdActivation the given PRDAction generated from reading the XML file
      * @return an Activation representation of PRDActivation.
      */
-    private Activation PRDActivation2Activation(PRDActivation prdActivation, PRDRule prdRule) {
+    private Activation PRDActivation2Activation(PRDActivation prdActivation) {
         Integer ticks = null;
         Double probability = null;
 
-        if(prdActivation != null){
+        if (prdActivation != null) {
             ticks = prdActivation.getTicks();
             probability = prdActivation.getProbability();
         }
 
-        if(ticks == null){
+        if (ticks == null) {
             ticks = 1;
         }
 
-        if (probability == null){
+        if (probability == null) {
             probability = 1.0;
         }
 
@@ -598,25 +656,25 @@ public class PRDConverter {
      * Extracts all valid properties from given PRDTermination.
      *
      * @param prdTermination The given List of termination conditions
-     * @return a set of all valid ending conditions
+     * @return a map of all valid ending conditions
      */
-    private Map<EndingConditionType,EndingCondition> getEndingConditions(PRDTermination prdTermination) {
+    private Map<EndingConditionType, EndingCondition> getEndingConditions(PRDTermination prdTermination) {
         try {
             validator.validatePRDTermination(prdTermination);
         } catch (PRDObjectConversionException e) {
             return null;
         }
 
-        Map<EndingConditionType,EndingCondition> endingConditions = new HashMap<>();
+        Map<EndingConditionType, EndingCondition> endingConditions = new HashMap<>();
 
         for (Object endingConditionObj : prdTermination.getPRDBySecondOrPRDByTicks()) {
+            EndingCondition toAdd;
             if (endingConditionObj.getClass() == PRDByTicks.class) {
-                EndingCondition toAdd = PRDByTicks2EndingCondition((PRDByTicks) endingConditionObj);
-                endingConditions.put(toAdd.getType(),toAdd);
+                toAdd = PRDByTicks2EndingCondition((PRDByTicks) endingConditionObj);
             } else {
-                EndingCondition toAdd =PRDBySecond2EndingCondition((PRDBySecond) endingConditionObj);
-                endingConditions.put(toAdd.getType(),toAdd);
+                toAdd = PRDBySecond2EndingCondition((PRDBySecond) endingConditionObj);
             }
+            endingConditions.put(toAdd.getType(), toAdd);
         }
 
         return endingConditions;

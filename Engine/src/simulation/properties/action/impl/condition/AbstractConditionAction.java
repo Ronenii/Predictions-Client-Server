@@ -3,6 +3,7 @@ package simulation.properties.action.impl.condition;
 import jaxb.schema.generated.PRDAction;
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
+import simulation.properties.action.api.Action;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 
@@ -14,12 +15,22 @@ public abstract class AbstractConditionAction extends AbstractAction implements 
     protected boolean isTrue;
     protected final ThenOrElse thenActions;
     protected final ThenOrElse elseActions;
+    protected final SecondaryEntity secondaryEntity;
 
-    public AbstractConditionAction(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, Expression value) {
+    public AbstractConditionAction(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, Expression value, SecondaryEntity secondaryEntity) {
         super(ActionType.CONDITION, property, contextEntity);
         this.thenActions = thenActions;
         this.elseActions = elseActions;
         this.value = value;
+        this.secondaryEntity = secondaryEntity;
+    }
+
+    public SecondaryEntity getSecondaryEntity() {
+        return secondaryEntity;
+    }
+
+    public boolean isTrue() {
+        return isTrue;
     }
 
     public ThenOrElse getThenActions() {
@@ -59,8 +70,28 @@ public abstract class AbstractConditionAction extends AbstractAction implements 
         isTrue = false;
     }
 
-    private static class SecondaryEntity{
+    public static class SecondaryEntity{
+        private final String contextEntity;
+        private final int count;
+        private final Action Condition;
 
+        public SecondaryEntity(String contextEntity, int count, Action condition) {
+            this.contextEntity = contextEntity;
+            this.count = count;
+            Condition = condition;
+        }
+
+        public String getContextEntity() {
+            return contextEntity;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public Action getCondition() {
+            return Condition;
+        }
     }
 
 }
