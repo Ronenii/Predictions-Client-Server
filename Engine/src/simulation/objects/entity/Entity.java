@@ -1,6 +1,7 @@
 package simulation.objects.entity;
 
 import simulation.properties.action.api.Action;
+import simulation.properties.action.api.OneEntAction;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
@@ -69,11 +70,11 @@ public class Entity implements Serializable {
         entityInstances.clear();
 
         for (int i = 0; i < this.startingPopulation; i++) {
-            entityInstances.add(new EntityInstance(generateProperties()));
+            entityInstances.add(new EntityInstance(generateProperties(), this));
         }
     }
 
-    private Map <String, Property> generateProperties() {
+    public Map <String, Property> generateProperties() {
         Map <String, Property> propertyMap = new HashMap<>();
 
         for(Property property : properties.values()) {
@@ -106,7 +107,14 @@ public class Entity implements Serializable {
         for (EntityInstance e : entityInstances
         ) {
             if (r.nextDouble() <= probability && e.isAlive()) {
-                action.Invoke(e, lastChangTickCount);
+                if(action.getClass().getSuperclass() == OneEntAction.class)
+                {
+                    ((OneEntAction)action).Invoke(e, lastChangTickCount);
+                }
+                else {
+                    //Todo : implement this.
+                }
+
             }
         }
     }
