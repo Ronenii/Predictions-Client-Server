@@ -1,5 +1,6 @@
 package simulation.properties.action.impl.condition;
 
+import jaxb.schema.generated.PRDAction;
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
@@ -56,6 +57,10 @@ public abstract class AbstractConditionAction extends AbstractAction implements 
             elseActions.invoke(entityInstance, lastChangTickCount);
         }
         isTrue = false;
+    }
+
+    private static class SecondaryEntity{
+
     }
 
 }

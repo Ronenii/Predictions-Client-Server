@@ -28,11 +28,11 @@ public class PRDValidator extends Validator {
     public void validatePRDGridAndPRDThreadCount(PRDWorld prdWorld) throws PRDObjectConversionException {
         int rows = prdWorld.getPRDGrid().getRows(), columns = prdWorld.getPRDGrid().getColumns();
 
-        if (prdWorld.getPRDThreadCount() <= 0){
+        if (prdWorld.getPRDThreadCount() <= 0) {
             addErrorToListAndThrowException(prdWorld, "world", "The given world's thread count must be at least 1.");
         }
 
-        if(rows < 10 || rows > 100 || columns < 10 || columns > 100) {
+        if (rows < 10 || rows > 100 || columns < 10 || columns > 100) {
             addErrorToListAndThrowException(prdWorld, "world", "The given world's grid rows/columns size must be between 10 to 100.");
         }
     }
@@ -47,7 +47,7 @@ public class PRDValidator extends Validator {
     private void validatePRDPropertyValue(PRDProperty prdProperty) throws PRDObjectConversionException {
         ExpressionAndValueValidator expressionAndValueValidator = new ExpressionAndValueValidator(null, null);
 
-        if(!expressionAndValueValidator.isPRDPropertyValueMatchItsType(prdProperty)) {
+        if (!expressionAndValueValidator.isPRDPropertyValueMatchItsType(prdProperty)) {
             addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "The given property's value doesn't match the property type.");
         }
     }
@@ -60,7 +60,7 @@ public class PRDValidator extends Validator {
     private void validatePRDEnvironmentPropertyDoesntExist(PRDEnvProperty prdEnvProperty, Map<String, Property> environmentProperties) throws PRDObjectConversionException {
         String propertyName = prdEnvProperty.getPRDName();
 
-        if(propertyName == null){
+        if (propertyName == null) {
             addErrorToListAndThrowException(prdEnvProperty, "Environment variable without name", "Property must have a name.");
         }
 
@@ -78,16 +78,15 @@ public class PRDValidator extends Validator {
      * @param prdEnvProperty the PRDProperty we are validating
      */
     private void validatePRDEnvPropertyRange(PRDEnvProperty prdEnvProperty) throws PRDObjectConversionException {
-        if(prdEnvProperty.getType().equals("decimal") || prdEnvProperty.getType().equals("float")) {
+        if (prdEnvProperty.getType().equals("decimal") || prdEnvProperty.getType().equals("float")) {
             double from = prdEnvProperty.getPRDRange().getFrom();
             double to = prdEnvProperty.getPRDRange().getTo();
 
             if (to <= from) {
                 addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
             }
-        }
-        else {
-            if(prdEnvProperty.getPRDRange() != null) {
+        } else {
+            if (prdEnvProperty.getPRDRange() != null) {
                 addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Boolean or string property can not contain range.");
             }
         }
@@ -96,7 +95,7 @@ public class PRDValidator extends Validator {
     private void validatePRDPropertyDoesntExist(PRDProperty prdProperty, Map<String, Property> properties) throws PRDObjectConversionException {
         String propertyName = prdProperty.getPRDName();
 
-        if(propertyName == null){
+        if (propertyName == null) {
             addErrorToListAndThrowException(prdProperty, "Property without name", "Property must have a name.");
         }
 
@@ -114,15 +113,15 @@ public class PRDValidator extends Validator {
      * @param prdProperty the PRDProperty we are validating
      */
     private void validatePRDPropertyRange(PRDProperty prdProperty) throws PRDObjectConversionException {
-        if(prdProperty.getType().equals("decimal") || prdProperty.getType().equals("float")){
+        if (prdProperty.getType().equals("decimal") || prdProperty.getType().equals("float")) {
             double from = prdProperty.getPRDRange().getFrom();
             double to = prdProperty.getPRDRange().getTo();
 
             if (to <= from) {
                 addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Range value 'from' cannot be greater than or equal to 'to'.");
             }
-        }else {
-            if(prdProperty.getPRDRange() != null) {
+        } else {
+            if (prdProperty.getPRDRange() != null) {
                 addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Boolean or string property can not contain range.");
             }
         }
@@ -177,12 +176,11 @@ public class PRDValidator extends Validator {
     }
 
     private void validateRuleDoesntExist(PRDRule prdRule, Map<String, Rule> rules) throws PRDObjectConversionException {
-        if(prdRule.getName() == null){
+        if (prdRule.getName() == null) {
             addErrorToListAndThrowException(prdRule, "Rule without name", "Property must have a name.");
         }
 
-        if(rules.containsKey(prdRule.getName()))
-        {
+        if (rules.containsKey(prdRule.getName())) {
             addErrorToListAndThrowException(prdRule, prdRule.getName(), "There is already a rule with this name");
         }
     }
@@ -193,10 +191,10 @@ public class PRDValidator extends Validator {
      * @param prdActivation the PRDActivation we are validating
      */
     private void validatePRDActivationTicks(PRDActivation prdActivation, PRDRule prdRule) throws PRDObjectConversionException {
-        if(prdActivation != null){
+        if (prdActivation != null) {
             Integer ticks = prdActivation.getTicks();
 
-            if(ticks != null){
+            if (ticks != null) {
                 if (ticks < 0) {
                     addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Ticks cannot be negative.");
                 }
@@ -210,10 +208,10 @@ public class PRDValidator extends Validator {
      * @param prdActivation the PRDActivation we are validating
      */
     private void validatePRDActivationProbability(PRDActivation prdActivation, PRDRule prdRule) throws PRDObjectConversionException {
-        if(prdActivation != null){
+        if (prdActivation != null) {
             Double probability = prdActivation.getProbability();
 
-            if(probability != null){
+            if (probability != null) {
                 if (probability < 0 || probability > 1) {
                     addErrorToListAndThrowException(prdActivation, prdRule.getName(), "Probability must be between 0 & 1.");
                 }
@@ -222,9 +220,8 @@ public class PRDValidator extends Validator {
     }
 
     public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
-
-        switch (prdAction.getType())
-        {
+        validatePRDSecondaryEntity(prdAction.getPRDSecondaryEntity(), entities, prdAction, expressionAndValueValidator, ruleName);
+        switch (prdAction.getType()) {
             case "calculation":
                 validatePRDActionEntityAndProperty(prdAction, prdAction.getResultProp(), entities, ruleName);
                 validatePRDCalculation(prdAction, expressionAndValueValidator, ruleName);
@@ -233,10 +230,10 @@ public class PRDValidator extends Validator {
                 validatePRDCondition(prdAction.getPRDCondition(), entities, prdAction.getPRDThen(), prdAction.getPRDElse(), false, expressionAndValueValidator, ruleName);
                 break;
             case "replace":
-                validatePRDReplace(prdAction,entities,ruleName);
+                validatePRDReplace(prdAction, entities, ruleName);
                 break;
             case "proximity":
-                validatePRDProximity(prdAction,entities,ruleName,expressionAndValueValidator);
+                validatePRDProximity(prdAction, entities, ruleName, expressionAndValueValidator);
                 break;
             default:
                 validatePRDActionEntityAndProperty(prdAction, prdAction.getProperty(), entities, ruleName);
@@ -246,13 +243,12 @@ public class PRDValidator extends Validator {
     }
 
     private void validatePRDActionValue(PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
-        if (!prdAction.getType().equals("kill")){
-            try{
-                if(prdAction.getType().equals("increase") || prdAction.getType().equals("decrease")){
-                    expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction,null, prdAction.getBy());
-                }
-                else {
-                    expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction,null, prdAction.getValue());
+        if (!prdAction.getType().equals("kill")) {
+            try {
+                if (prdAction.getType().equals("increase") || prdAction.getType().equals("decrease")) {
+                    expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdAction.getBy());
+                } else {
+                    expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdAction.getValue());
                 }
             } catch (ExpressionConversionException e) {
                 addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, expressionAndValueValidator.getErrorMessage());
@@ -260,9 +256,63 @@ public class PRDValidator extends Validator {
         }
     }
 
-    private void validatePRDConditionValue(PRDCondition prdCondition , ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
-        try{
-            expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(null,prdCondition, prdCondition.getValue());
+    /**
+     * Validates prdSecondaryEntity's PRDSelection & that this secondaryEntity is defined.
+     *
+     * @param prdSecondaryEntity          The given secondary entity we want to validate,
+     * @param entities                    A map of entities we use as context for selection's condition validation and to see that the secondary entity exists there.
+     * @param prdAction                   The action containing this secondary entity. We mainly use it for the condition validation.
+     * @param expressionAndValueValidator Validates the expression inside the condition.
+     * @param ruleName                    The rule in which this PRDSecondaryEntity's PRDAction is located
+     * @throws PRDObjectConversionException Throws this Exception if selection validation failed or the secondary entity is not defined in entities.
+     */
+    private void validatePRDSecondaryEntity(PRDAction.PRDSecondaryEntity prdSecondaryEntity, Map<String, Entity> entities, PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+        if (prdSecondaryEntity != null) {
+            validatePRDSelection(prdSecondaryEntity.getPRDSelection(), entities, prdAction, expressionAndValueValidator, ruleName);
+            if (!entities.containsKey(prdSecondaryEntity.getEntity())) {
+                addErrorToListAndThrowException(prdSecondaryEntity, prdSecondaryEntity.getEntity(), "The given entity name does not exist. Only an existing entity can be defined as a secondary entity.");
+            }
+        }
+    }
+
+
+    /**
+     * Validates that the given prdSelection has a valid condition and a count.
+     *
+     * @param prdSelection                the selection we validate.
+     * @param entities                    A map of entities we use as context for the condition validation.
+     * @param prdAction                   The action containing this selection. We mainly use it for the condition validation.
+     * @param expressionAndValueValidator Validates the expression inside the condition.
+     * @param ruleName                    The rule in which this PRDSelection's PRDAction is located
+     * @throws PRDObjectConversionException Throws this Exception if the count or condition are invalid.
+     */
+    private void validatePRDSelection(PRDAction.PRDSecondaryEntity.PRDSelection prdSelection, Map<String, Entity> entities, PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+        validatePRDSelectionCount(prdSelection.getCount());
+        validatePRDCondition(prdSelection.getPRDCondition(), entities, prdAction.getPRDThen(), prdAction.getPRDElse(), false, expressionAndValueValidator, ruleName);
+    }
+
+    /**
+     * Validates that the given count in the PRDSelection is only "ALL" or a positive integer.
+     *
+     * @param count The number of secondary entities we want to access from the context entity.
+     * @throws PRDObjectConversionException Throws this Exception if the count is invalid.
+     */
+    private void validatePRDSelectionCount(String count) throws PRDObjectConversionException {
+        try {
+            if (!count.equals("ALL")) {
+                int toCheck = Integer.parseInt(count);
+                if (toCheck < 1) {
+                    throw new Exception();
+                }
+            }
+        } catch (Exception e) {
+            addErrorToListAndThrowException(count, "Count", "Secondary entity count should be \"ALL\" or a positive integer.");
+        }
+    }
+
+    private void validatePRDConditionValue(PRDCondition prdCondition, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+        try {
+            expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(null, prdCondition, prdCondition.getValue());
         } catch (ExpressionConversionException e) {
             addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, expressionAndValueValidator.getErrorMessage());
         }
@@ -276,7 +326,7 @@ public class PRDValidator extends Validator {
                 addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given calculation type does not contain multiply or divide actions.");
             }
 
-            validatePRDCalculationValue(prdAction,expressionAndValueValidator, ruleName);
+            validatePRDCalculationValue(prdAction, expressionAndValueValidator, ruleName);
         }
     }
 
@@ -284,15 +334,14 @@ public class PRDValidator extends Validator {
         PRDDivide prdDivide = prdAction.getPRDDivide();
         PRDMultiply prdMultiply = prdAction.getPRDMultiply();
         try {
-            if(prdDivide != null){
-                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction,null, prdDivide.getArg1());
-                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction,null, prdDivide.getArg2());
+            if (prdDivide != null) {
+                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdDivide.getArg1());
+                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdDivide.getArg2());
+            } else {
+                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdMultiply.getArg1());
+                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdMultiply.getArg2());
             }
-            else {
-                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction,null, prdMultiply.getArg1());
-                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction,null, prdMultiply.getArg2());
-            }
-        }catch (ExpressionConversionException e) {
+        } catch (ExpressionConversionException e) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, expressionAndValueValidator.getErrorMessage());
         }
     }
@@ -306,11 +355,11 @@ public class PRDValidator extends Validator {
 
         validatePRDConditionEntityAndProperty(prdCondition, entities, ruleName);
 
-        if(prdCondition.getSingularity().equals("single")){
+        if (prdCondition.getSingularity().equals("single")) {
             validatePRDConditionValue(prdCondition, expressionAndValueValidator, ruleName);
         }
 
-        if(prdCondition.getLogical() == null && prdCondition.getOperator() == null) {
+        if (prdCondition.getLogical() == null && prdCondition.getOperator() == null) {
             addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, "The given condition type does not contain logical/operator.");
         }
 
@@ -319,59 +368,59 @@ public class PRDValidator extends Validator {
         }
 
 
-        if(prdCondition.getSingularity().equals("multiple")){
+        if (prdCondition.getSingularity().equals("multiple")) {
             if (prdCondition.getPRDCondition().size() < 2) {
                 addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, "The given multiple condition does not contain 2 sub conditions.");
             }
 
-            for(PRDCondition subPRDCondition : prdCondition.getPRDCondition()) {
+            for (PRDCondition subPRDCondition : prdCondition.getPRDCondition()) {
                 actionNumber++;
-                validatePRDCondition(subPRDCondition, entities, null, null, true, expressionAndValueValidator,ruleName);
+                validatePRDCondition(subPRDCondition, entities, null, null, true, expressionAndValueValidator, ruleName);
             }
         }
 
-        if(!isSubCondition) {
-            if(prdThen == null){
+        if (!isSubCondition) {
+            if (prdThen == null) {
                 addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, "The given condition type does not 'then' actions.");
             }
-            for (PRDAction prdAction : prdThen.getPRDAction()){
+            for (PRDAction prdAction : prdThen.getPRDAction()) {
                 actionNumber++;
-                validatePRDAction(prdAction,entities,expressionAndValueValidator,ruleName);
+                validatePRDAction(prdAction, entities, expressionAndValueValidator, ruleName);
             }
 
-            if (prdElse != null){
-                for (PRDAction prdAction : prdElse.getPRDAction()){
+            if (prdElse != null) {
+                for (PRDAction prdAction : prdElse.getPRDAction()) {
                     actionNumber++;
-                    validatePRDAction(prdAction,entities,expressionAndValueValidator,ruleName);
+                    validatePRDAction(prdAction, entities, expressionAndValueValidator, ruleName);
                 }
             }
         }
     }
 
     private void validatePRDReplace(PRDAction prdAction, Map<String, Entity> entities, String ruleName) throws PRDObjectConversionException {
-        if(prdAction.getKill() == null || prdAction.getCreate() == null){
+        if (prdAction.getKill() == null || prdAction.getCreate() == null) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given replace action does not contain kill/create entities.");
         }
 
-        if(entities.get(prdAction.getKill()) == null || entities.get(prdAction.getCreate()) == null){
+        if (entities.get(prdAction.getKill()) == null || entities.get(prdAction.getCreate()) == null) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "One or two of the given replace action kill/create entities does not exist.");
         }
 
-        if(prdAction.getMode() == null || !prdAction.getMode().equals("scratch") || !prdAction.getMode().equals("derived")){
+        if (prdAction.getMode() == null || !prdAction.getMode().equals("scratch") || !prdAction.getMode().equals("derived")) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given replace action does not contain valid mode");
         }
     }
 
     private void validatePRDProximity(PRDAction prdAction, Map<String, Entity> entities, String ruleName, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
-        if(prdAction.getPRDBetween() == null || prdAction.getPRDBetween().getSourceEntity() == null || prdAction.getPRDBetween().getTargetEntity() == null) {
+        if (prdAction.getPRDBetween() == null || prdAction.getPRDBetween().getSourceEntity() == null || prdAction.getPRDBetween().getTargetEntity() == null) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given proximity action does not contain valid 'Between'");
         }
 
-        if(entities.get(prdAction.getPRDBetween().getSourceEntity()) == null || entities.get(prdAction.getPRDBetween().getTargetEntity()) == null) {
+        if (entities.get(prdAction.getPRDBetween().getSourceEntity()) == null || entities.get(prdAction.getPRDBetween().getTargetEntity()) == null) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "One or two of the given proximity action source/target entities does not exist.");
         }
 
-        if(prdAction.getPRDEnvDepth() == null || prdAction.getPRDEnvDepth().getOf() == null){
+        if (prdAction.getPRDEnvDepth() == null || prdAction.getPRDEnvDepth().getOf() == null) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given proximity action does not contain valid 'Env-Depth'");
         }
 
@@ -381,10 +430,10 @@ public class PRDValidator extends Validator {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, expressionAndValueValidator.getErrorMessage());
         }
 
-        if(prdAction.getPRDActions() != null && prdAction.getPRDActions().getPRDAction() != null) {
+        if (prdAction.getPRDActions() != null && prdAction.getPRDActions().getPRDAction() != null) {
             for (PRDAction subPRDAction : prdAction.getPRDActions().getPRDAction()) {
                 actionNumber++;
-                validatePRDAction(subPRDAction,entities,expressionAndValueValidator,ruleName);
+                validatePRDAction(subPRDAction, entities, expressionAndValueValidator, ruleName);
             }
         }
     }
@@ -395,7 +444,7 @@ public class PRDValidator extends Validator {
     private void validatePRDActionEntityAndProperty(PRDAction prdAction, String propertyName, Map<String, Entity> entities, String ruleName) throws PRDObjectConversionException {
         String entityName = prdAction.getEntity();
 
-        if(!prdAction.getType().equals("kill") && propertyName == null){
+        if (!prdAction.getType().equals("kill") && propertyName == null) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given action's property doesn't exist.");
         }
 
@@ -413,7 +462,7 @@ public class PRDValidator extends Validator {
     private void validatePRDConditionEntityAndProperty(PRDCondition prdCondition, Map<String, Entity> entities, String ruleName) throws PRDObjectConversionException {
         String entityName = prdCondition.getEntity(), propertyName;
 
-        if(prdCondition.getSingularity().equals("single")){
+        if (prdCondition.getSingularity().equals("single")) {
             if (!entities.containsKey(entityName)) {
                 addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, "The given condition's entity doesn't exist.");
             } else { // Can be done only if the given entity exists.
@@ -451,16 +500,16 @@ public class PRDValidator extends Validator {
         int terminateByTicksCount = 0;
         int terminateBySecondsCount = 0;
 
-        for (Object t: prdTermination.getPRDBySecondOrPRDByTicks()
-             ) {
-            if(t.getClass() == PRDByTicks.class){
+        for (Object t : prdTermination.getPRDBySecondOrPRDByTicks()
+        ) {
+            if (t.getClass() == PRDByTicks.class) {
                 terminateByTicksCount++;
             }
-            if(t.getClass() == PRDBySecond.class){
+            if (t.getClass() == PRDBySecond.class) {
                 terminateBySecondsCount++;
             }
 
-            if(terminateByTicksCount >1 || terminateBySecondsCount > 1){
+            if (terminateByTicksCount > 1 || terminateBySecondsCount > 1) {
                 addErrorToListAndThrowException(prdTermination, "", "There can only be at most one termination of each type.");
             }
         }
