@@ -9,6 +9,8 @@ import java.util.Map;
 public class EntityInstance implements Serializable {
     private final Map<String, Property> properties;
     private boolean isAlive;
+    public int xGridCoordinate;
+    public int yGridCoordinate;
 
     public EntityInstance(Map<String, Property> properties, Entity entityContext) {
         isAlive = true;
@@ -30,6 +32,8 @@ public class EntityInstance implements Serializable {
     public boolean isAlive() {
         return isAlive;
     }
+
+
 
     public void updateDerivedEntityInstance(EntityInstance killedInstance, int lastChangeTickCount) {
         Property newInstanceProperty;

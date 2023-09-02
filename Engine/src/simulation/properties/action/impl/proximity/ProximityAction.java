@@ -26,38 +26,35 @@ public class ProximityAction extends TwoEntAction {
 
     public void Invoke(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, EntityInstance[][] grid, int lastChangeTickCount) {
         int depthValue = (int) depth.evaluate();
-        int sourceEntRow = 0, sourceEntColumn = 0, startingRowIndex = sourceEntRow - depthValue, startingColIndex = sourceEntColumn;
-        int circleIndexRow = startingRowIndex, circleIndexCol = startingColIndex;
-        boolean firstIteration = true;
 
-        //Todo: think of something else.
-        while (firstIteration || (circleIndexRow != startingRowIndex && circleIndexCol != startingColIndex)) {
-            firstIteration = false;
+        for (int i = -depthValue; i <= depthValue; i++) {
+            for (int j = -depthValue; j <= depthValue; j++) {
+                int x = adjustCoordinate((firstEntityInstance.xGridCoordinate + i), grid.length);
+                int y = adjustCoordinate((firstEntityInstance.yGridCoordinate + j), grid[0].length);
 
-            if (grid[circleIndexRow][circleIndexCol] == secondEntityInstance) {
-                proximityActions.invoke(firstEntityInstance, secondEntityInstance, lastChangeTickCount);
-                break;
-            }
-
-            if (circleIndexCol == sourceEntColumn + depthValue) {
-                if (circleIndexRow == sourceEntRow + depthValue) {
-                    circleIndexCol--;
-                } else {
-                    circleIndexRow--;
+                if (grid[x][y] == secondEntityInstance) {
+                    // Target entity found within the circle
+                    proximityActions.invoke(firstEntityInstance, secondEntityInstance, lastChangeTickCount);
+                    break;
                 }
-            } else if (circleIndexRow == sourceEntRow - depthValue) {
-                circleIndexCol++;
-            } else if (circleIndexRow == sourceEntRow + depthValue) {
-                if(circleIndexCol == sourceEntColumn - depthValue) {
-                    circleIndexRow--;
-                }
-                else {
-                    circleIndexCol--;
-                }
-            }
-            else {
-                circleIndexRow--;
             }
         }
     }
+
+    /**
+     * Helper for the 'Invoke' method, adjust the coordinate in case the circle pass the grid length.
+     */
+    private int adjustCoordinate(int currentCoordinate, int length){
+        int ret;
+
+        if(currentCoordinate < 0) {
+            ret = length + currentCoordinate;
+        }
+        else {
+            ret = currentCoordinate % length;
+        }
+
+        return ret;
+    }
+
 }
