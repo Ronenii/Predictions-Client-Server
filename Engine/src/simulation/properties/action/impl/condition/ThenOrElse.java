@@ -16,10 +16,6 @@ public class ThenOrElse implements Serializable {
         this.actionsToInvoke = actionsToInvoke;
     }
 
-    public List<Action> getActionsToInvoke() {
-        return actionsToInvoke;
-    }
-
     public void invoke(EntityInstance entityInstance, int lastChangTickCount){
         for (Action a: actionsToInvoke
              ) {

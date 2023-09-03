@@ -13,6 +13,10 @@ import simulation.objects.entity.Entity;
 import simulation.objects.world.ticks.counter.TicksCounter;
 import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.impl.condition.*;
+import simulation.properties.action.impl.proximity.ProximityAction;
+import simulation.properties.action.impl.proximity.ProximitySubActions;
+import simulation.properties.action.impl.replace.ReplaceAction;
+import simulation.properties.action.impl.replace.ReplaceActionType;
 import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.rule.Rule;
 import simulation.objects.world.World;
@@ -60,6 +64,11 @@ public class PRDConverter {
 
         Map<EndingConditionType,EndingCondition> endingConditions;
 
+        if(!isWorldGridAndThreadCountValid(prdWorld)){
+            validator.addEntitiesAndEnvPropCreationErrorMessage();
+            throw new IllegalArgumentException(validator.getErrorList());
+        }
+
         getEnvironmentPropertiesFromPRDWorld(prdWorld);
 
         getEntitiesFromPRDWorld(prdWorld);
@@ -80,8 +89,21 @@ public class PRDConverter {
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
-        return new World(environmentProperties, entities, rules, endingConditions, ticksCounter);
+        return new World(environmentProperties, entities, rules, endingConditions, ticksCounter, prdWorld.getPRDGrid().getRows(), prdWorld.getPRDGrid().getColumns(), prdWorld.getPRDThreadCount());
     }
+
+    private boolean isWorldGridAndThreadCountValid(PRDWorld prdWorld){
+        boolean ret = true;
+
+        try {
+            validator.validatePRDGridAndPRDThreadCount(prdWorld);
+        } catch (PRDObjectConversionException e) {
+            ret = false;
+        }
+
+        return ret;
+    }
+
 
     /**
      * Extracts all valid environment properties from given PRDWorld.
@@ -90,7 +112,7 @@ public class PRDConverter {
      * @return All Successfully converted environment properties
      */
     private void getEnvironmentPropertiesFromPRDWorld(PRDWorld prdWorld) {
-        List<PRDEnvProperty> prdEnvProperties = prdWorld.getPRDEvironment().getPRDEnvProperty();
+        List<PRDEnvProperty> prdEnvProperties = prdWorld.getPRDEnvironment().getPRDEnvProperty();
         Property propertyToAdd;
 
         for (PRDEnvProperty envProperty : prdEnvProperties) {
@@ -322,12 +344,11 @@ public class PRDConverter {
         }
 
         String name = prdEntity.getName();
-        int population = prdEntity.getPRDPopulation();
         Map<String, Property> properties;
 
         properties = getPropertiesFromPRDEntity(prdEntity);
 
-        return new Entity(population, name, properties);
+        return new Entity(name, properties);
     }
 
     /**
@@ -385,8 +406,10 @@ public class PRDConverter {
                     ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
                     break;
                 case REPLACE:
+                    ret = new ReplaceAction(null,prdAction.getKill(), prdAction.getCreate(), ReplaceActionType.valueOf(prdAction.getMode().toUpperCase()));
                     break;
                 case PROXIMITY:
+                    ret = getProximityActionObject(prdAction,expressionConverter);
                     break;
             }
         } catch (IllegalArgumentException e) {
@@ -401,7 +424,7 @@ public class PRDConverter {
      * Converts the given PRDAction to multiply or divide calculation action.
      *
      * @param prdAction the given PRDAction generated from reading the XML file
-     * @return a CalculationAction representation of the given PRDActivation.
+     * @return a CalculationAction representation of the given PRDAction.
      */
     private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverter expressionConverter) {
         CalculationAction ret = null;
@@ -531,6 +554,21 @@ public class PRDConverter {
     }
 
     /**
+     * Converts the given PRDAction to proximity action.
+     *
+     * @param prdAction the given PRDAction generated from reading the XML file
+     * @return a ProximityAction representation of the given PRDAction.
+     */
+    private ProximityAction getProximityActionObject(PRDAction prdAction, ExpressionConverter expressionConverter) {
+        Expression expression = expressionConverter.createExpressionObject(prdAction.getPRDEnvDepth().getOf(), PropertyType.DECIMAL, prdAction.getPRDBetween().getSourceEntity());
+        ProximitySubActions proximitySubActions = new ProximitySubActions(getActionsFromPRDActionsList(prdAction.getPRDActions().getPRDAction()));
+
+        return new ProximityAction(null,prdAction.getPRDBetween().getSourceEntity(), prdAction.getPRDBetween().getTargetEntity(), expression,proximitySubActions);
+    }
+
+
+
+    /**
      * Converts the given PRDActivation to Activation
      *
      * @param prdActivation the given PRDAction generated from reading the XML file
@@ -571,7 +609,7 @@ public class PRDConverter {
 
         Map<EndingConditionType,EndingCondition> endingConditions = new HashMap<>();
 
-        for (Object endingConditionObj : prdTermination.getPRDByTicksOrPRDBySecond()) {
+        for (Object endingConditionObj : prdTermination.getPRDBySecondOrPRDByTicks()) {
             if (endingConditionObj.getClass() == PRDByTicks.class) {
                 EndingCondition toAdd = PRDByTicks2EndingCondition((PRDByTicks) endingConditionObj);
                 endingConditions.put(toAdd.getType(),toAdd);

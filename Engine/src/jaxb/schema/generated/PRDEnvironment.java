@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{}PRD-property" maxOccurs="unbounded"/>
+ *         &lt;element ref="{}PRD-env-property" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,41 +38,41 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "prdProperty"
+    "prdEnvProperty"
 })
-@XmlRootElement(name = "PRD-properties")
-public class PRDProperties {
+@XmlRootElement(name = "PRD-environment")
+public class PRDEnvironment {
 
-    @XmlElement(name = "PRD-property", required = true)
-    protected List<PRDProperty> prdProperty;
+    @XmlElement(name = "PRD-env-property", required = true)
+    protected List<PRDEnvProperty> prdEnvProperty;
 
     /**
-     * Gets the value of the prdProperty property.
+     * Gets the value of the prdEnvProperty property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the prdProperty property.
+     * This is why there is not a <CODE>set</CODE> method for the prdEnvProperty property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getPRDProperty().add(newItem);
+     *    getPRDEnvProperty().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link PRDProperty }
+     * {@link PRDEnvProperty }
      * 
      * 
      */
-    public List<PRDProperty> getPRDProperty() {
-        if (prdProperty == null) {
-            prdProperty = new ArrayList<PRDProperty>();
+    public List<PRDEnvProperty> getPRDEnvProperty() {
+        if (prdEnvProperty == null) {
+            prdEnvProperty = new ArrayList<PRDEnvProperty>();
         }
-        return this.prdProperty;
+        return this.prdEnvProperty;
     }
 
 }

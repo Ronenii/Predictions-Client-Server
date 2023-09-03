@@ -75,6 +75,24 @@ public class ExpressionAndValueValidator {
         }
     }
 
+    /**
+     * Analyze the value string in case the given string represent a function, a property or just a regular value.
+     * The method checks whether the object matches decimal or float type.
+     * If not, an exception thrown in order to stop this action object creation.
+     *
+     * @param valueStr the given value name from the given PRDTAction generated from reading the XML file.
+     * @param entityName the given entity name from the given PRDTAction generated from reading the XML file.
+     * The name sent separately in order to analyze the two arguments of 'Calculation' action too..
+     */
+    public void isPRDProximityDepthIsNumber(String valueStr, String entityName) throws ExpressionConversionException {
+        String valueType = getExpressionType(valueStr, entityName);
+
+        if(!valueType.equals("DECIMAL") && !valueType.equals("FLOAT")) {
+            errorMessage = "The depth value type is not a number";
+            throw new ExpressionConversionException();
+        }
+    }
+
     private String getExpressionType(String valueStr, String entityName) throws ExpressionConversionException {
         String valueType;
         valueType = getObjectTypeIfFunction(valueStr, entityName);

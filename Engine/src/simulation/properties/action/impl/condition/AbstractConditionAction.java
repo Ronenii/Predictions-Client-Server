@@ -1,14 +1,14 @@
 package simulation.properties.action.impl.condition;
 
 import simulation.objects.entity.EntityInstance;
-import simulation.properties.action.api.AbstractAction;
+import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 
 import java.io.Serializable;
 
 
-public abstract class AbstractConditionAction extends AbstractAction implements Serializable {
+public abstract class AbstractConditionAction extends OneEntAction implements Serializable {
     protected Expression value;
     protected boolean isTrue;
     protected final ThenOrElse thenActions;
