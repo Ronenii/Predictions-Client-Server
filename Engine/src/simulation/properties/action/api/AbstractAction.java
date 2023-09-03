@@ -30,6 +30,10 @@ public abstract class AbstractAction implements Action {
         return contextEntity;
     }
 
+    public SecondaryEntity getSecondaryEntity() {
+        return secondaryEntity;
+    }
+
     public static class SecondaryEntity{
         private final String contextEntity;
         private final int count;
