@@ -3,6 +3,7 @@ import engine2ui.simulation.result.ResultData;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.grid.Grid;
 import simulation.objects.world.ticks.counter.TicksCounter;
 import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.rule.Rule;
@@ -10,6 +11,8 @@ import simulation.properties.ending.conditions.EndingCondition;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class World implements Serializable {
@@ -22,10 +25,10 @@ public class World implements Serializable {
     private final TicksCounter ticks;
     private long timePassed;
     private long startingTime;
-    private int threadCount;
-    private EntityInstance[][] grid;
+    private final int threadCount;
+    private final Grid grid;
 
-    public World(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, int gridRows, int gridCols, int threadCount) {
+    public World(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
         this.environmentProperties = environmentProperties;
         this.entities = entities;
         this.rules = rules;
@@ -33,7 +36,7 @@ public class World implements Serializable {
         this.ticks = ticksCounter;
         this.timePassed = -1;
         this.threadCount = threadCount;
-        this.grid = new EntityInstance[gridRows][gridCols];
+        this.grid = grid;
     }
 
     public Map<String, Property> getEnvironmentProperties() {
@@ -115,6 +118,7 @@ public class World implements Serializable {
      * @return The result data of this simulation run.
      */
     public ResultData runSimulation() {
+        grid.moveAllEntities();
         // Set the starting time to calculate later for 'ending by seconds'
         if (endingConditions.containsKey(EndingConditionType.SECONDS)) {
             startingTime = System.currentTimeMillis();
@@ -140,6 +144,22 @@ public class World implements Serializable {
              ) {
             e.resetPopulation();
         }
+        grid.populateGrid(getListOfAllInstances());
+    }
+
+    /**
+     * This function is only used to build a list in order to populate the grid.
+     * @return A list of all entity instances across all entities.
+     */
+    private List<EntityInstance> getListOfAllInstances(){
+        List<EntityInstance> instances = new ArrayList<>();
+
+        for (Entity e : entities.values()
+             ) {
+            instances.addAll(e.getEntityInstances());
+        }
+
+        return instances;
     }
 
     private boolean endingConditionsMet() {

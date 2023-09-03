@@ -3,8 +3,8 @@ package simulation.objects.world.grid;
 import simulation.objects.entity.EntityInstance;
 
 import java.awt.*;
-import java.util.EnumSet;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
 
 /**
  * The grid of the world containing all living entity instances. If a certain cell does not contain an entity
@@ -14,21 +14,21 @@ import java.util.Random;
 public class Grid {
 
     private final EntityInstance[][] grid;
-    private final int height;
-    private final int width;
+    private final int rows;
+    private final int columns;
 
     public Grid(int height, int width) {
         grid = new EntityInstance[height][width];
-        this.height = height;
-        this.width = width;
+        this.rows = height;
+        this.columns = width;
     }
 
     /**
      * Iterates through the grid and tries to move around all entities.
      */
     public void moveAllEntities() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
                 if (grid[i][j] != null) {
                     tryToMoveEntity(grid[i][j]);
                 }
@@ -123,16 +123,57 @@ public class Grid {
     }
 
     /**
+     * Scatters all given entity instances across the grid.
+     * 1) Creates a Set of all available coordinates on the grid.
+     * 2) Iterates over all given entity instances
+     * 2.1) Raffles a coordinate for the current entity instance
+     * 2.2) Sets grid cell corresponding to the coordinate as the current instance
+     * and sets the current instance's inner coordinate accordingly.
+     * 2.3) Remove the raffled coordinate from the coordinate set and run loop again.
+     *
+     * @param entityInstances All Entity instances generated in the beginning of the simulation run.
+     */
+    public void populateGrid(List<EntityInstance> entityInstances) {
+        Random random = new Random();
+        Set<Point> coordinateSet = getAllCoordinatesSet();
+
+        for (EntityInstance e : entityInstances
+        ) {
+            int coordinateIndex = random.nextInt(coordinateSet.size());
+            Point coordinate = (Point) coordinateSet.toArray()[coordinateIndex];
+
+            grid[coordinate.x][coordinate.y] = e;
+            e.setX(coordinate.x);
+            e.setY(coordinate.y);
+
+            coordinateSet.remove(coordinate);
+        }
+    }
+
+    /**
+     * @return A set of all possible coordinates on the grid represented as Points.
+     */
+    private Set<Point> getAllCoordinatesSet() {
+        HashSet<Point> coordinates = new HashSet<>();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                coordinates.add(new Point(i, j));
+            }
+        }
+        return coordinates;
+    }
+
+    /**
      * Converts the given x to a valid row in the grid.
      */
     private int toRow(int x) {
-        return x % height;
+        return x % rows;
     }
 
     /**
      * Converts the given y to a valid column in the grid.
      */
     private int toColumn(int y) {
-        return y % width;
+        return y % columns;
     }
 }

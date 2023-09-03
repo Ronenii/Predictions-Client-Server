@@ -10,6 +10,7 @@ import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException
 import jaxb.unmarshal.converter.validator.PRDValidator;
 import jaxb.unmarshal.converter.value.initializer.ValueInitializer;
 import simulation.objects.entity.Entity;
+import simulation.objects.world.grid.Grid;
 import simulation.objects.world.ticks.counter.TicksCounter;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.expression.api.Expression;
@@ -70,6 +71,8 @@ public class PRDConverter {
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
+        Grid grid = PRDGrid2Grid(prdWorld.getPRDGrid());
+
         getEnvironmentPropertiesFromPRDWorld(prdWorld);
 
         getEntitiesFromPRDWorld(prdWorld);
@@ -90,7 +93,11 @@ public class PRDConverter {
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
-        return new World(environmentProperties, entities, rules, endingConditions, ticksCounter, prdWorld.getPRDGrid().getRows(), prdWorld.getPRDGrid().getColumns(), prdWorld.getPRDThreadCount());
+        return new World(environmentProperties, entities, rules, endingConditions, ticksCounter, grid, prdWorld.getPRDThreadCount());
+    }
+
+    private Grid PRDGrid2Grid(PRDWorld.PRDGrid grid) {
+        return new Grid(grid.getRows(), grid.getColumns());
     }
 
     private boolean isWorldGridAndThreadCountValid(PRDWorld prdWorld) {
@@ -386,25 +393,25 @@ public class PRDConverter {
 
             switch (ActionType.valueOf(prdAction.getType().toUpperCase())) {
                 case INCREASE:
-                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(),secondaryEntity, expressionConverter.getExpressionObjectFromPRDAction(prdAction));
+                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), secondaryEntity, expressionConverter.getExpressionObjectFromPRDAction(prdAction));
                     break;
                 case DECREASE:
                     ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), secondaryEntity, expressionConverter.getExpressionObjectFromPRDAction(prdAction));
                     break;
                 case CALCULATION:
-                    ret = getMulOrDiv(prdAction, expressionConverter,secondaryEntity);
+                    ret = getMulOrDiv(prdAction, expressionConverter, secondaryEntity);
                     break;
                 case CONDITION:
                     ret = getSingleOrMultiple(prdAction, expressionConverter);
                     break;
                 case SET:
-                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), secondaryEntity,expressionConverter.getExpressionObjectFromPRDAction(prdAction));
+                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), secondaryEntity, expressionConverter.getExpressionObjectFromPRDAction(prdAction));
                     break;
                 case KILL:
-                    ret = new KillAction(prdAction.getProperty(),prdAction.getEntity(), secondaryEntity); // Secondary entity will always be null in this case
+                    ret = new KillAction(prdAction.getProperty(), prdAction.getEntity(), secondaryEntity); // Secondary entity will always be null in this case
                     break;
                 case REPLACE:
-                    ret = new ReplaceAction(null, prdAction.getKill(), prdAction.getCreate(), secondaryEntity,ReplaceActionType.valueOf(prdAction.getMode().toUpperCase()));
+                    ret = new ReplaceAction(null, prdAction.getKill(), prdAction.getCreate(), secondaryEntity, ReplaceActionType.valueOf(prdAction.getMode().toUpperCase()));
                     break;
                 case PROXIMITY:
                     ret = getProximityActionObject(prdAction, expressionConverter, secondaryEntity);
@@ -431,7 +438,7 @@ public class PRDConverter {
     /**
      * Converts the PRDCondition inside PRDSecondaryEntity to a condition without any the\else actions.
      */
-    private AbstractConditionAction getSecondaryEntityCondition(PRDCondition prdCondition, ExpressionConverter expressionConverter){
+    private AbstractConditionAction getSecondaryEntityCondition(PRDCondition prdCondition, ExpressionConverter expressionConverter) {
         AbstractConditionAction ret = null;
 
         if (prdCondition.getSingularity().equals("single")) {
@@ -473,11 +480,11 @@ public class PRDConverter {
         if (mul != null) {
             exp1 = expressionConverter.createExpressionObject(mul.getArg1(), type, prdAction.getEntity());
             exp2 = expressionConverter.createExpressionObject(mul.getArg2(), type, prdAction.getEntity());
-            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(),secondaryEntity, exp1, exp2, CalculationType.MULTIPLY);
+            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), secondaryEntity, exp1, exp2, CalculationType.MULTIPLY);
         } else if (div != null) {
             exp1 = expressionConverter.createExpressionObject(div.getArg1(), type, prdAction.getEntity());
             exp2 = expressionConverter.createExpressionObject(div.getArg2(), type, prdAction.getEntity());
-            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(),secondaryEntity, exp1, exp2, CalculationType.DIVIDE);
+            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), secondaryEntity, exp1, exp2, CalculationType.DIVIDE);
         } else {
             validator.addErrorToList(prdAction, prdAction.getType(), "Calculation action is not Multiply or Divide");
         }
@@ -504,7 +511,7 @@ public class PRDConverter {
 
         if (prdCondition.getSingularity().equals("single")) {
             expression = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition);
-            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(),secondaryEntity, thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getOperator()), expression);
+            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), secondaryEntity, thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getOperator()), expression);
         } else if (prdCondition.getSingularity().equals("multiple")) {
             ret = getMultipleConditionObject(prdCondition, thenActions, elseActions, expressionConverter, secondaryEntity);
         }
@@ -520,14 +527,14 @@ public class PRDConverter {
     private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ThenOrElse thenActions, ThenOrElse elseActions, ExpressionConverter expressionConverter, AbstractAction.SecondaryEntity secondaryEntity) {
         List<AbstractConditionAction> objectSubConditions = getAllSubConditions(prdCondition, expressionConverter);
 
-        return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), secondaryEntity,thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getLogical()), objectSubConditions, null);
+        return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), secondaryEntity, thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getLogical()), objectSubConditions, null);
     }
 
     /**
      * The selection condition does not have then\else actions and therefore all we need is to get all the
      * sub conditions and create a multiple condition without any actions.
      */
-    private MultipleCondition getMultipleConditionSelection(PRDCondition prdCondition, ExpressionConverter expressionConverter){
+    private MultipleCondition getMultipleConditionSelection(PRDCondition prdCondition, ExpressionConverter expressionConverter) {
 
         List<AbstractConditionAction> objectSubConditions = getAllSubConditions(prdCondition, expressionConverter);
 
@@ -562,7 +569,7 @@ public class PRDConverter {
             expression = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition);
             ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), ConditionOperator.tryParse(prdCondition.getOperator()), expression);
         } else if (prdCondition.getSingularity().equals("multiple")) {
-            ret = getMultipleConditionObject(prdCondition, null, null, expressionConverter,null);
+            ret = getMultipleConditionObject(prdCondition, null, null, expressionConverter, null);
         }
         return ret;
     }
