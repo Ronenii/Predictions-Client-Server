@@ -29,8 +29,8 @@ public class ProximityAction extends AbstractAction {
 
         for (int i = -depthValue; i <= depthValue; i++) {
             for (int j = -depthValue; j <= depthValue; j++) {
-                int x = adjustCoordinate((firstEntityInstance.xGridCoordinate + i), grid.length);
-                int y = adjustCoordinate((firstEntityInstance.yGridCoordinate + j), grid[0].length);
+                int x = adjustCoordinate((firstEntityInstance.getX() + i), grid.length);
+                int y = adjustCoordinate((firstEntityInstance.getY() + j), grid[0].length);
 
                 if (grid[x][y] == secondEntityInstance) {
                     // Target entity found within the circle

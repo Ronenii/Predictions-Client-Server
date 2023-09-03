@@ -3,18 +3,39 @@ package simulation.objects.entity;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 public class EntityInstance implements Serializable {
+    private final Entity contextEntity;
     private final Map<String, Property> properties;
     private boolean isAlive;
-    public int xGridCoordinate;
-    public int yGridCoordinate;
+    private int xGridCoordinate;
+    private int yGridCoordinate;
 
     public EntityInstance(Map<String, Property> properties, Entity entityContext) {
         isAlive = true;
         this.properties = properties;
+        this.contextEntity = entityContext;
+    }
+
+    public int getX() {
+        return xGridCoordinate;
+    }
+
+    public int getY() {
+        return yGridCoordinate;
+    }
+
+    public void setX(int xGridCoordinate) {
+        this.xGridCoordinate = xGridCoordinate;
+    }
+
+    public void setY(int yGridCoordinate) {
+        this.yGridCoordinate = yGridCoordinate;
+    }
+
+    public String getInstanceEntityName(){
+        return contextEntity.getName();
     }
 
     public Property getPropertyByName(String propertyName) {
