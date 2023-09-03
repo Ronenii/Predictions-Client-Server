@@ -109,7 +109,7 @@ public class Entity implements Serializable {
             if (r.nextDouble() <= probability && e.isAlive()) {
                 if(action.getClass().getSuperclass() == OneEntAction.class)
                 {
-                    ((OneEntAction)action).Invoke(e, lastChangTickCount);
+                    ((OneEntAction)action).invoke(e, lastChangTickCount);
                 }
                 else {
                     //Todo : implement this.

@@ -7,8 +7,8 @@ import simulation.properties.action.api.ActionType;
 import java.io.Serializable;
 
 public class KillAction extends OneEntAction implements Serializable {
-    public KillAction(String property, String contextEntity) {
-        super(ActionType.KILL, property, contextEntity);
+    public KillAction(String property, String contextEntity, SecondaryEntity secondaryEntity) {
+        super(ActionType.KILL, property,contextEntity, secondaryEntity);
     }
 
     @Override
@@ -17,7 +17,7 @@ public class KillAction extends OneEntAction implements Serializable {
     }
 
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         entityInstance.kill();
     }
 }

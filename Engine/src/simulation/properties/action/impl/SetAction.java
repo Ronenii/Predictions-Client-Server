@@ -11,8 +11,8 @@ import java.io.Serializable;
 public class SetAction extends OneEntAction implements Serializable {
     private Expression value;
 
-    public SetAction(String property, String contextEntity, Expression value) {
-        super(ActionType.SET, property, contextEntity);
+    public SetAction(String property, String contextEntity,SecondaryEntity secondaryEntity, Expression value) {
+        super(ActionType.SET, property, contextEntity, secondaryEntity);
         this.value = value;
     }
 
@@ -21,7 +21,7 @@ public class SetAction extends OneEntAction implements Serializable {
         return value.evaluate();
     }
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         Property toSet = entityInstance.getPropertyByName(getContextProperty());
         if(toSet == null){
             return;

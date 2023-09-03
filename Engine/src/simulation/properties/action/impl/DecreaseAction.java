@@ -9,10 +9,10 @@ import simulation.properties.property.api.Property;
 import java.io.Serializable;
 
 public class DecreaseAction extends OneEntAction implements Serializable {
-    private Expression value;
+    private final Expression value;
 
-    public DecreaseAction(String property, String contextEntity, Expression value) {
-        super(ActionType.DECREASE, property, contextEntity);
+    public DecreaseAction(String property, String contextEntity,SecondaryEntity secondaryEntity, Expression value) {
+        super(ActionType.DECREASE, property, contextEntity, secondaryEntity);
         this.value = value;
     }
 
@@ -26,7 +26,8 @@ public class DecreaseAction extends OneEntAction implements Serializable {
      * Decrease actions can only take place on decimal or floats.
      * @param entityInstance The given entity to decrease the value of the action's property from.
      */
-    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    @Override
+    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         Property toDecrease = entityInstance.getPropertyByName(getContextProperty());
 
         if(toDecrease == null){
@@ -43,7 +44,4 @@ public class DecreaseAction extends OneEntAction implements Serializable {
                 break;
         }
     }
-
-
-
 }

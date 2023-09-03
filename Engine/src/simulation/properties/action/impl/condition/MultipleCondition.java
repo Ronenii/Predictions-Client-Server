@@ -12,8 +12,14 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
 
     private final List<AbstractConditionAction> subConditions;
 
-    public MultipleCondition(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, ConditionOperator logical, List<AbstractConditionAction> conditions, Expression value) {
-        super(property, contextEntity, thenActions, elseActions, value);
+    public MultipleCondition(String property, String contextEntity, SecondaryEntity secondaryEntity, ThenOrElse thenActions, ThenOrElse elseActions, ConditionOperator logical, List<AbstractConditionAction> conditions, Expression value) {
+        super(property, contextEntity,secondaryEntity, thenActions, elseActions, value);
+        this.logical = logical;
+        this.subConditions = conditions;
+    }
+
+    public MultipleCondition(String property, String contextEntity, ConditionOperator logical, List<AbstractConditionAction> conditions, Expression value) {
+        super(property, contextEntity, null, null, null, value);
         this.logical = logical;
         this.subConditions = conditions;
     }
@@ -35,11 +41,11 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
      * @param entityInstance The given instance to invoke the condition action on.
      */
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         boolean isFirst = true;
         for (AbstractConditionAction a : subConditions
         ) {
-            a.Invoke(entityInstance, lastChangeTickCount);
+            a.invoke(entityInstance, lastChangeTickCount);
             if(isFirst){
                 isTrue = a.isTrue;
                 isFirst = false;

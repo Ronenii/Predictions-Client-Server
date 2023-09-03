@@ -1,6 +1,9 @@
 package simulation.properties.action.impl.condition;
 
+import jaxb.schema.generated.PRDAction;
 import simulation.objects.entity.EntityInstance;
+import simulation.properties.action.api.OneEntAction;
+import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
@@ -14,11 +17,16 @@ public abstract class AbstractConditionAction extends OneEntAction implements Se
     protected final ThenOrElse thenActions;
     protected final ThenOrElse elseActions;
 
-    public AbstractConditionAction(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, Expression value) {
-        super(ActionType.CONDITION, property, contextEntity);
+    public AbstractConditionAction(String property, String contextEntity, SecondaryEntity secondaryEntity, ThenOrElse thenActions, ThenOrElse elseActions, Expression value) {
+        super(ActionType.CONDITION, property, contextEntity, secondaryEntity);
         this.thenActions = thenActions;
         this.elseActions = elseActions;
         this.value = value;
+    }
+
+
+    public boolean isTrue() {
+        return isTrue;
     }
 
     public ThenOrElse getThenActions() {
@@ -57,5 +65,4 @@ public abstract class AbstractConditionAction extends OneEntAction implements Se
         }
         isTrue = false;
     }
-
 }
