@@ -19,7 +19,7 @@ public class ThenOrElse implements Serializable {
     public void invoke(EntityInstance entityInstance, int lastChangTickCount){
         for (Action a: actionsToInvoke
              ) {
-            a.Invoke(entityInstance, lastChangTickCount);
+            //a.Invoke(entityInstance, lastChangTickCount);
         }
     }
 }
