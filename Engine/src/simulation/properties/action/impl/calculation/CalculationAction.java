@@ -1,14 +1,14 @@
 package simulation.properties.action.impl.calculation;
 
 import simulation.objects.entity.EntityInstance;
-import simulation.properties.action.api.AbstractAction;
+import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
 
-public class CalculationAction extends AbstractAction implements Serializable {
+public class CalculationAction extends OneEntAction implements Serializable {
     private Expression arg1;
     private Expression arg2;
     private final CalculationType type;
