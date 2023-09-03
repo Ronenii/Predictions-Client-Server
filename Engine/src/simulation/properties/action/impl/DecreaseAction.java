@@ -27,7 +27,7 @@ public class DecreaseAction extends OneEntAction implements Serializable {
      * @param entityInstance The given entity to decrease the value of the action's property from.
      */
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         Property toDecrease = entityInstance.getPropertyByName(getContextProperty());
 
         if(toDecrease == null){

@@ -2,8 +2,6 @@ package simulation.properties.action.impl.condition;
 
 
 import simulation.objects.entity.EntityInstance;
-import simulation.properties.action.api.AbstractAction;
-import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.expression.api.Expression;
 
 import java.io.Serializable;
@@ -43,11 +41,11 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
      * @param entityInstance The given instance to invoke the condition action on.
      */
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         boolean isFirst = true;
         for (AbstractConditionAction a : subConditions
         ) {
-            a.Invoke(entityInstance, lastChangeTickCount);
+            a.invoke(entityInstance, lastChangeTickCount);
             if(isFirst){
                 isTrue = a.isTrue;
                 isFirst = false;

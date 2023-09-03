@@ -3,7 +3,6 @@ package simulation.properties.action.impl.proximity;
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
-import simulation.properties.action.api.TwoEntAction;
 import simulation.properties.action.expression.api.Expression;
 
 public class ProximityAction extends AbstractAction {
@@ -25,7 +24,7 @@ public class ProximityAction extends AbstractAction {
         return null;
     }
 
-    public void Invoke(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, EntityInstance[][] grid, int lastChangeTickCount) {
+    public void invoke(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, EntityInstance[][] grid, int lastChangeTickCount) {
         int depthValue = (int) depth.evaluate();
 
         for (int i = -depthValue; i <= depthValue; i++) {

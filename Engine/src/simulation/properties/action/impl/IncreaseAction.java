@@ -27,7 +27,7 @@ public class IncreaseAction extends OneEntAction implements Serializable {
      * @param entityInstance The given entity to increase the value of the action's property.
      */
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         Property toIncrease = entityInstance.getPropertyByName(getContextProperty());
 
         if(toIncrease == null){

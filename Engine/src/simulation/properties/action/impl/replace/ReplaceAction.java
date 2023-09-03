@@ -3,7 +3,6 @@ package simulation.properties.action.impl.replace;
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
-import simulation.properties.action.api.TwoEntAction;
 
 public class ReplaceAction extends AbstractAction {
     private final String newEntityName;
@@ -26,7 +25,7 @@ public class ReplaceAction extends AbstractAction {
     }
 
 
-    public void Invoke(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, int lastChangeTickCount) {
         if(replaceType == ReplaceActionType.DERIVED) {
             secondEntityInstance.updateDerivedEntityInstance(firstEntityInstance, lastChangeTickCount);
         }

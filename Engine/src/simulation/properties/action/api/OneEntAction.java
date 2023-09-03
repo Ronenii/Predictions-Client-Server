@@ -11,5 +11,5 @@ public abstract class OneEntAction extends AbstractAction implements Action, Ser
         super(type, contextProperty, contextEntity, secondaryEntity);
     }
 
-    abstract public void Invoke(EntityInstance entityInstance, int lastChangeTickCount);
+    abstract public void invoke(EntityInstance entityInstance, int lastChangeTickCount);
 }

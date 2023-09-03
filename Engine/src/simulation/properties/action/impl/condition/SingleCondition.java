@@ -24,7 +24,7 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
     }
 
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         Property toCompare = entityInstance.getPropertyByName(getContextProperty());
 
         if (toCompare == null) {

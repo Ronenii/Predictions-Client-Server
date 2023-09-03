@@ -21,7 +21,7 @@ public class SetAction extends OneEntAction implements Serializable {
         return value.evaluate();
     }
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         Property toSet = entityInstance.getPropertyByName(getContextProperty());
         if(toSet == null){
             return;

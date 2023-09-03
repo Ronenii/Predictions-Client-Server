@@ -34,7 +34,7 @@ public class CalculationAction extends OneEntAction implements Serializable {
     }
 
     @Override
-    public void Invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         Property toSet = entityInstance.getPropertyByName(getContextProperty());
 
         if(toSet == null){
