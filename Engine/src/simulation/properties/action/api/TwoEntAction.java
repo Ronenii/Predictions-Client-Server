@@ -32,7 +32,7 @@ public abstract class TwoEntAction implements Action, Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        Action toCompare = (AbstractAction) obj;
+        Action toCompare = (OneEntAction) obj;
         return (toCompare.getType().equals(this.type)) && (toCompare.getContextEntity().equals(this.contextEntity)) && (toCompare.getContextProperty().equals(this.contextProperty));
     }
 }

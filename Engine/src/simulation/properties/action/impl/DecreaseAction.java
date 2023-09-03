@@ -1,7 +1,7 @@
 package simulation.properties.action.impl;
 
 import simulation.objects.entity.EntityInstance;
-import simulation.properties.action.api.AbstractAction;
+import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 import simulation.properties.property.api.Property;

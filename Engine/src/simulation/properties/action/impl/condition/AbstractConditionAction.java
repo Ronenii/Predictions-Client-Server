@@ -2,7 +2,7 @@ package simulation.properties.action.impl.condition;
 
 import jaxb.schema.generated.PRDAction;
 import simulation.objects.entity.EntityInstance;
-import simulation.properties.action.api.AbstractAction;
+import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;
