@@ -11,8 +11,8 @@ import java.io.Serializable;
 public class SetAction extends OneEntAction implements Serializable {
     private Expression value;
 
-    public SetAction(String property, String contextEntity, Expression value) {
-        super(ActionType.SET, property, contextEntity);
+    public SetAction(String property, String contextEntity,SecondaryEntity secondaryEntity, Expression value) {
+        super(ActionType.SET, property, contextEntity, secondaryEntity);
         this.value = value;
     }
 

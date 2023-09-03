@@ -16,19 +16,14 @@ public abstract class AbstractConditionAction extends OneEntAction implements Se
     protected boolean isTrue;
     protected final ThenOrElse thenActions;
     protected final ThenOrElse elseActions;
-    protected final SecondaryEntity secondaryEntity;
 
-    public AbstractConditionAction(String property, String contextEntity, ThenOrElse thenActions, ThenOrElse elseActions, Expression value, SecondaryEntity secondaryEntity) {
-        super(ActionType.CONDITION, property, contextEntity);
+    public AbstractConditionAction(String property, String contextEntity, SecondaryEntity secondaryEntity, ThenOrElse thenActions, ThenOrElse elseActions, Expression value) {
+        super(ActionType.CONDITION, property, contextEntity, secondaryEntity);
         this.thenActions = thenActions;
         this.elseActions = elseActions;
         this.value = value;
-        this.secondaryEntity = secondaryEntity;
     }
 
-    public SecondaryEntity getSecondaryEntity() {
-        return secondaryEntity;
-    }
 
     public boolean isTrue() {
         return isTrue;
@@ -70,29 +65,4 @@ public abstract class AbstractConditionAction extends OneEntAction implements Se
         }
         isTrue = false;
     }
-
-    public static class SecondaryEntity{
-        private final String contextEntity;
-        private final int count;
-        private final Action Condition;
-
-        public SecondaryEntity(String contextEntity, int count, Action condition) {
-            this.contextEntity = contextEntity;
-            this.count = count;
-            Condition = condition;
-        }
-
-        public String getContextEntity() {
-            return contextEntity;
-        }
-
-        public int getCount() {
-            return count;
-        }
-
-        public Action getCondition() {
-            return Condition;
-        }
-    }
-
 }

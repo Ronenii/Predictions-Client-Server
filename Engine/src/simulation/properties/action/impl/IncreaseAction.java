@@ -11,8 +11,8 @@ import java.io.Serializable;
 public class IncreaseAction extends OneEntAction implements Serializable {
     private Expression value;
 
-    public IncreaseAction(String property, String contextEntity, Expression value) {
-        super(ActionType.INCREASE, property, contextEntity);
+    public IncreaseAction(String property, String contextEntity, SecondaryEntity secondaryEntity, Expression value) {
+        super(ActionType.INCREASE, property, contextEntity,secondaryEntity);
         this.value = value;
     }
 

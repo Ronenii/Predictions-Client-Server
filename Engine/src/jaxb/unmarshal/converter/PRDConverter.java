@@ -11,6 +11,7 @@ import jaxb.unmarshal.converter.validator.PRDValidator;
 import jaxb.unmarshal.converter.value.initializer.ValueInitializer;
 import simulation.objects.entity.Entity;
 import simulation.objects.world.ticks.counter.TicksCounter;
+import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.impl.condition.*;
 import simulation.properties.action.impl.proximity.ProximityAction;
@@ -380,32 +381,33 @@ public class PRDConverter {
     private Action PRDAction2Action(PRDAction prdAction) {
         Action ret = null;
         ExpressionConverter expressionConverter = new ExpressionConverter(environmentProperties, entities, ticksCounter);
-
         try {
+            AbstractAction.SecondaryEntity secondaryEntity = getSecondaryEntityFromPRDAction(prdAction, expressionConverter);
+
             switch (ActionType.valueOf(prdAction.getType().toUpperCase())) {
                 case INCREASE:
-                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverter.getExpressionObjectFromPRDAction(prdAction));
+                    ret = new IncreaseAction(prdAction.getProperty(), prdAction.getEntity(),secondaryEntity, expressionConverter.getExpressionObjectFromPRDAction(prdAction));
                     break;
                 case DECREASE:
-                    ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverter.getExpressionObjectFromPRDAction(prdAction));
+                    ret = new DecreaseAction(prdAction.getProperty(), prdAction.getEntity(), secondaryEntity, expressionConverter.getExpressionObjectFromPRDAction(prdAction));
                     break;
                 case CALCULATION:
-                    ret = getMulOrDiv(prdAction, expressionConverter);
+                    ret = getMulOrDiv(prdAction, expressionConverter,secondaryEntity);
                     break;
                 case CONDITION:
                     ret = getSingleOrMultiple(prdAction, expressionConverter);
                     break;
                 case SET:
-                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), expressionConverter.getExpressionObjectFromPRDAction(prdAction));
+                    ret = new SetAction(prdAction.getProperty(), prdAction.getEntity(), secondaryEntity,expressionConverter.getExpressionObjectFromPRDAction(prdAction));
                     break;
                 case KILL:
-                    ret = new KillAction(prdAction.getProperty(), prdAction.getEntity());
+                    ret = new KillAction(prdAction.getProperty(),prdAction.getEntity(), secondaryEntity); // Secondary entity will always be null in this case
                     break;
                 case REPLACE:
-                    ret = new ReplaceAction(null, prdAction.getKill(), prdAction.getCreate(), ReplaceActionType.valueOf(prdAction.getMode().toUpperCase()));
+                    ret = new ReplaceAction(null, prdAction.getKill(), prdAction.getCreate(), secondaryEntity,ReplaceActionType.valueOf(prdAction.getMode().toUpperCase()));
                     break;
                 case PROXIMITY:
-                    ret = getProximityActionObject(prdAction, expressionConverter);
+                    ret = getProximityActionObject(prdAction, expressionConverter, secondaryEntity);
                     break;
             }
         } catch (IllegalArgumentException e) {
@@ -416,14 +418,14 @@ public class PRDConverter {
         return ret;
     }
 
-    private AbstractConditionAction.SecondaryEntity getSecondaryEntityFromPRDAction(PRDAction prdAction, ExpressionConverter expressionConverter) {
+    private AbstractAction.SecondaryEntity getSecondaryEntityFromPRDAction(PRDAction prdAction, ExpressionConverter expressionConverter) {
         PRDAction.PRDSecondaryEntity prdSecondaryEntity = prdAction.getPRDSecondaryEntity();
         if (prdSecondaryEntity == null) {
             return null;
         }
 
         Action condition = getSecondaryEntityCondition(prdSecondaryEntity.getPRDSelection().getPRDCondition(), expressionConverter);
-        return new AbstractConditionAction.SecondaryEntity(prdSecondaryEntity.getEntity(), getCountFromPRDSecondaryEntity(prdSecondaryEntity), condition);
+        return new AbstractAction.SecondaryEntity(prdSecondaryEntity.getEntity(), getCountFromPRDSecondaryEntity(prdSecondaryEntity), condition);
     }
 
     /**
@@ -460,7 +462,7 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return a CalculationAction representation of the given PRDAction.
      */
-    private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverter expressionConverter) {
+    private CalculationAction getMulOrDiv(PRDAction prdAction, ExpressionConverter expressionConverter, AbstractAction.SecondaryEntity secondaryEntity) {
         CalculationAction ret = null;
         PRDMultiply mul = prdAction.getPRDMultiply();
         PRDDivide div = prdAction.getPRDDivide();
@@ -471,11 +473,11 @@ public class PRDConverter {
         if (mul != null) {
             exp1 = expressionConverter.createExpressionObject(mul.getArg1(), type, prdAction.getEntity());
             exp2 = expressionConverter.createExpressionObject(mul.getArg2(), type, prdAction.getEntity());
-            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), exp1, exp2, CalculationType.MULTIPLY);
+            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(),secondaryEntity, exp1, exp2, CalculationType.MULTIPLY);
         } else if (div != null) {
             exp1 = expressionConverter.createExpressionObject(div.getArg1(), type, prdAction.getEntity());
             exp2 = expressionConverter.createExpressionObject(div.getArg2(), type, prdAction.getEntity());
-            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(), exp1, exp2, CalculationType.DIVIDE);
+            ret = new CalculationAction(prdAction.getResultProp(), prdAction.getEntity(),secondaryEntity, exp1, exp2, CalculationType.DIVIDE);
         } else {
             validator.addErrorToList(prdAction, prdAction.getType(), "Calculation action is not Multiply or Divide");
         }
@@ -498,11 +500,11 @@ public class PRDConverter {
         thenActions = getAndCreateThenOrElse(prdAction, true);
         elseActions = getAndCreateThenOrElse(prdAction, false);
 
-        AbstractConditionAction.SecondaryEntity secondaryEntity = getSecondaryEntityFromPRDAction(prdAction, expressionConverter);
+        AbstractAction.SecondaryEntity secondaryEntity = getSecondaryEntityFromPRDAction(prdAction, expressionConverter);
 
         if (prdCondition.getSingularity().equals("single")) {
             expression = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition);
-            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getOperator()), expression, secondaryEntity);
+            ret = new SingleCondition(prdCondition.getProperty(), prdCondition.getEntity(),secondaryEntity, thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getOperator()), expression);
         } else if (prdCondition.getSingularity().equals("multiple")) {
             ret = getMultipleConditionObject(prdCondition, thenActions, elseActions, expressionConverter, secondaryEntity);
         }
@@ -515,10 +517,10 @@ public class PRDConverter {
      * This is used for a multiple condition which has some actions inside it needs to perform if
      * the condition is true.
      */
-    private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ThenOrElse thenActions, ThenOrElse elseActions, ExpressionConverter expressionConverter, AbstractConditionAction.SecondaryEntity secondaryEntity) {
+    private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ThenOrElse thenActions, ThenOrElse elseActions, ExpressionConverter expressionConverter, AbstractAction.SecondaryEntity secondaryEntity) {
         List<AbstractConditionAction> objectSubConditions = getAllSubConditions(prdCondition, expressionConverter);
 
-        return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getLogical()), objectSubConditions, null, secondaryEntity);
+        return new MultipleCondition(prdCondition.getProperty(), prdCondition.getEntity(), secondaryEntity,thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getLogical()), objectSubConditions, null);
     }
 
     /**
@@ -618,11 +620,11 @@ public class PRDConverter {
      * @param prdAction the given PRDAction generated from reading the XML file
      * @return a ProximityAction representation of the given PRDAction.
      */
-    private ProximityAction getProximityActionObject(PRDAction prdAction, ExpressionConverter expressionConverter) {
+    private ProximityAction getProximityActionObject(PRDAction prdAction, ExpressionConverter expressionConverter, AbstractAction.SecondaryEntity secondaryEntity) {
         Expression expression = expressionConverter.createExpressionObject(prdAction.getPRDEnvDepth().getOf(), PropertyType.DECIMAL, prdAction.getPRDBetween().getSourceEntity());
         ProximitySubActions proximitySubActions = new ProximitySubActions(getActionsFromPRDActionsList(prdAction.getPRDActions().getPRDAction()));
 
-        return new ProximityAction(null, prdAction.getPRDBetween().getSourceEntity(), prdAction.getPRDBetween().getTargetEntity(), expression, proximitySubActions);
+        return new ProximityAction(null, prdAction.getPRDBetween().getSourceEntity(), secondaryEntity, prdAction.getPRDBetween().getTargetEntity(), expression, proximitySubActions);
     }
 
 

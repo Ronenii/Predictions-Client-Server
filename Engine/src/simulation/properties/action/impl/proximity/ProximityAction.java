@@ -1,19 +1,20 @@
 package simulation.properties.action.impl.proximity;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.api.TwoEntAction;
 import simulation.properties.action.expression.api.Expression;
 
-public class ProximityAction extends TwoEntAction {
+public class ProximityAction extends AbstractAction {
     private final String targetEntityName;
 
     private final Expression depth;
 
     private final ProximitySubActions proximityActions;
 
-    public ProximityAction(String property, String contextEntity, String targetEntityName, Expression depth, ProximitySubActions proximityActions) {
-        super(ActionType.PROXIMITY, property, contextEntity);
+    public ProximityAction(String property, String contextEntity,SecondaryEntity secondaryEntity, String targetEntityName, Expression depth, ProximitySubActions proximityActions) {
+        super(ActionType.PROXIMITY, property, contextEntity, secondaryEntity);
         this.targetEntityName = targetEntityName;
         this.depth = depth;
         this.proximityActions = proximityActions;

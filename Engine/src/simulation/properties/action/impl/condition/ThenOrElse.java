@@ -2,6 +2,8 @@ package simulation.properties.action.impl.condition;
 
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.Action;
+import simulation.properties.action.api.OneEntAction;
+import simulation.properties.action.impl.proximity.ProximityAction;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,7 +21,6 @@ public class ThenOrElse implements Serializable {
     public void invoke(EntityInstance entityInstance, int lastChangTickCount){
         for (Action a: actionsToInvoke
              ) {
-            a.Invoke(entityInstance, lastChangTickCount);
         }
     }
 }
