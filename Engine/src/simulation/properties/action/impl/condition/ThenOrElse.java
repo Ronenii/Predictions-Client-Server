@@ -22,15 +22,15 @@ public class ThenOrElse implements Serializable {
             // TODO: Find a way to implement this.
             if(a instanceof OneEntAction){
                 OneEntAction action = (OneEntAction)a;
-                action.invoke();
+                //action.invoke();
             }
             if(a instanceof ProximityAction){
                 ProximityAction action = (ProximityAction)a;
-                action.invoke();
+                //action.invoke();
             }
             if(a instanceof ReplaceAction){
                 ReplaceAction action = (ReplaceAction)a;
-                action.invoke();
+                //action.invoke();
             }
         }
     }
