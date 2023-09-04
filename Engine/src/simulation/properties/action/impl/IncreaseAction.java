@@ -9,7 +9,7 @@ import simulation.properties.property.api.Property;
 import java.io.Serializable;
 
 public class IncreaseAction extends OneEntAction implements Serializable {
-    private Expression value;
+    private final Expression value;
 
     public IncreaseAction(String property, String contextEntity, SecondaryEntity secondaryEntity, Expression value) {
         super(ActionType.INCREASE, property, contextEntity,secondaryEntity);
