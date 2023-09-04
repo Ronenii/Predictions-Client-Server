@@ -1,4 +1,5 @@
 package gui.simulation.breakdown;
+import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
@@ -10,8 +11,13 @@ import java.util.ResourceBundle;
 
 public class SimBreakdownMenuController implements Initializable {
 
+    private SubMenusController mainController;
     @FXML
     private TreeView<String> simTreeView;
+
+    public void setMainController(SubMenusController mainController) {
+        this.mainController = mainController;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

@@ -6,18 +6,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.net.URL;
+
 public class Main extends Application{
-    public static void main(String[] args) {
-        launch(Main.class);
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Predictions");
-
-        Parent load = FXMLLoader.load(getClass().getResource("app/PredictionApp.fxml"));
-        Scene scene = new Scene(load, 600, 400);
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        URL url = getClass().getResource("PredictionApp.fxml");
+        fxmlLoader.setLocation(url);
+        Parent root = fxmlLoader.load(url.openStream());
+        Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        Thread.currentThread().setName("mainGUI");
+        launch(args);;
     }
 }

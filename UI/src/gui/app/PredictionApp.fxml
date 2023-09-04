@@ -25,10 +25,10 @@
                   <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
                </rowConstraints>
                <children>
-                  <fx:include fx:id="HeaderComponent" source="../header/component/HeaderComponent.fxml" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <fx:include fx:id="headerComponent" source="../header/component/HeaderComponent.fxml" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
                      <children>
-                        <fx:include fx:id="SubMenus" source="../sub/menus/SubMenus.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <fx:include fx:id="subMenus" source="../sub/menus/SubMenus.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </children>
