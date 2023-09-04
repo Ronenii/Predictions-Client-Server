@@ -293,7 +293,7 @@ public class Console {
             System.out.printf("Number of actions : %d\n", dtoRule.getActions().length);
             System.out.println("Actions types: ");
             System.out.print("\t");
-            System.out.println(getStringOfActionsNames(dtoRule.getActions()));
+            //System.out.println(getStringOfActionsNames(dtoRule.getActions()));
 
         }
     }
