@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.result.execution.details.ExecutionDetailsComponentController">
    <columnConstraints>
       <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
       <ColumnConstraints hgrow="NEVER" maxWidth="174.0" minWidth="150.0" prefWidth="171.0" />
@@ -28,7 +28,7 @@
       <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
    </rowConstraints>
    <children>
-      <TableView prefHeight="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.rowSpan="2">
+      <TableView fx:id="entitiesTV" prefHeight="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.rowSpan="2">
          <columns>
             <TableColumn prefWidth="75.0" text="C1" />
             <TableColumn prefWidth="75.0" text="C2" />
@@ -36,12 +36,12 @@
       </TableView>
       <AnchorPane GridPane.columnIndex="3" GridPane.rowIndex="4">
          <children>
-            <fx:include source="Control%20Bar.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <fx:include fx:id="executionDetailsControlBar" source="control/bar/ExecutionDetailsControlBar.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
       <VBox prefHeight="200.0" prefWidth="100.0" spacing="13.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Label text="Execution Details" textAlignment="CENTER">
+            <Label fx:id="executionDetLabel" text="Execution Details" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -49,19 +49,19 @@
             <HBox spacing="13.0">
                <children>
                   <Label text="Simulation ID:" />
-                  <Label id="lbl-ExecDetails-SimID" text="-" />
+                  <Label id="lbl-ExecDetails-SimID" fx:id="simulationIdDetLabel" text="-" />
                </children>
             </HBox>
             <HBox spacing="13.0">
                <children>
                   <Label text="Current Tick" />
-                  <Label id="lbl-ExecDetails-CurrTick" text="-" />
+                  <Label id="lbl-ExecDetails-CurrTick" fx:id="currentTickDetLabel" text="-" />
                </children>
             </HBox>
             <HBox spacing="13.0">
                <children>
                   <Label text="Duration" />
-                  <Label id="lbl-ExecDetails-Duration" text="-" />
+                  <Label id="lbl-ExecDetails-Duration" fx:id="durationDetLabel" text="-" />
                </children>
             </HBox>
          </children>
