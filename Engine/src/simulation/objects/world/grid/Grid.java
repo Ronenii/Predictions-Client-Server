@@ -23,6 +23,14 @@ public class Grid {
         this.columns = width;
     }
 
+    public int getRows() {
+        return rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
     /**
      * Iterates through the grid and tries to move around all entities.
      */
@@ -75,13 +83,13 @@ public class Grid {
     private boolean isValidMove(EntityInstance entityInstance, Direction direction) {
         switch (direction) {
             case UP:
-                return grid[toRow(entityInstance.getX() - 1)][toColumn(entityInstance.getY())] != null;
+                return grid[toRow(entityInstance.row - 1)][toColumn(entityInstance.column)] != null;
             case DOWN:
-                return grid[toRow(entityInstance.getX() + 1)][toColumn(entityInstance.getY())] != null;
+                return grid[toRow(entityInstance.row + 1)][toColumn(entityInstance.column)] != null;
             case LEFT:
-                return grid[toRow(entityInstance.getX())][toColumn(entityInstance.getY() - 1)] != null;
+                return grid[toRow(entityInstance.row)][toColumn(entityInstance.column - 1)] != null;
             case RIGHT:
-                return grid[toRow(entityInstance.getX())][toColumn(entityInstance.getY() + 1)] != null;
+                return grid[toRow(entityInstance.row)][toColumn(entityInstance.column + 1)] != null;
         }
         return false;
     }
@@ -90,35 +98,26 @@ public class Grid {
      * Moves the entity to the given direction and updates both grid cells and the entity's inner x,y coordinate members.
      */
     private void moveEntity(EntityInstance entityInstance, Direction direction) {
-        Point prevCoords = new Point(entityInstance.getX(), entityInstance.getY());
-        Point newCoords = null;
+        Point prevCoords = new Point(entityInstance.row, entityInstance.column);
         switch (direction) {
             case UP: {
-                int newRow = toRow(entityInstance.getX() - 1);
-                entityInstance.setX(newRow);
-                newCoords = new Point(newRow, entityInstance.getY());
+                entityInstance.row = toRow(entityInstance.row - 1);
                 break;
             }
             case DOWN: {
-                int newRow = toRow(entityInstance.getX() + 1);
-                entityInstance.setX(newRow);
-                newCoords = new Point(newRow, entityInstance.getY());
+                entityInstance.row = toRow(entityInstance.row + 1);
                 break;
             }
             case LEFT: {
-                int newCol = toColumn(entityInstance.getY() - 1);
-                entityInstance.setY(newCol);
-                newCoords = new Point(entityInstance.getX(), newCol);
+                entityInstance.column = toColumn(entityInstance.column - 1);
                 break;
             }
             case RIGHT: {
-                int newCol = toColumn(entityInstance.getY() + 1);
-                entityInstance.setY(newCol);
-                newCoords = new Point(entityInstance.getX(), newCol);
+                entityInstance.column = toColumn(entityInstance.column + 1);
                 break;
             }
         }
-        grid[newCoords.x][newCoords.y] = grid[prevCoords.x][prevCoords.y];
+        grid[entityInstance.row][entityInstance.column] = grid[prevCoords.x][prevCoords.y];
         grid[prevCoords.x][prevCoords.y] = null;
     }
 
@@ -143,11 +142,25 @@ public class Grid {
             Point coordinate = (Point) coordinateSet.toArray()[coordinateIndex];
 
             grid[coordinate.x][coordinate.y] = e;
-            e.setX(coordinate.x);
-            e.setY(coordinate.y);
+            e.row = coordinate.x;
+            e.column = coordinate.y;
 
             coordinateSet.remove(coordinate);
         }
+    }
+
+    /**
+     * @return The entity instance in the given point
+     */
+    public EntityInstance getInstance(int row, int column){
+        return grid[row][column];
+    }
+
+    /**
+     * @return The entity instance in the given point
+     */
+    public EntityInstance getInstance(Point coordinate){
+        return grid[coordinate.x][coordinate.y];
     }
 
     /**

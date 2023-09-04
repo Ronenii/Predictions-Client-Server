@@ -9,29 +9,13 @@ public class EntityInstance implements Serializable {
     private final Entity contextEntity;
     private final Map<String, Property> properties;
     private boolean isAlive;
-    private int xGridCoordinate;
-    private int yGridCoordinate;
+    public int row;
+    public int column;
 
     public EntityInstance(Map<String, Property> properties, Entity entityContext) {
         isAlive = true;
         this.properties = properties;
         this.contextEntity = entityContext;
-    }
-
-    public int getX() {
-        return xGridCoordinate;
-    }
-
-    public int getY() {
-        return yGridCoordinate;
-    }
-
-    public void setX(int xGridCoordinate) {
-        this.xGridCoordinate = xGridCoordinate;
-    }
-
-    public void setY(int yGridCoordinate) {
-        this.yGridCoordinate = yGridCoordinate;
     }
 
     public String getInstanceEntityName(){

@@ -1,6 +1,7 @@
 package simulation.properties.action.impl.proximity;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
@@ -24,15 +25,15 @@ public class ProximityAction extends AbstractAction {
         return null;
     }
 
-    public void invoke(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, EntityInstance[][] grid, int lastChangeTickCount) {
+    public void invoke(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Grid grid, int lastChangeTickCount) {
         int depthValue = (int) depth.evaluate();
 
         for (int i = -depthValue; i <= depthValue; i++) {
             for (int j = -depthValue; j <= depthValue; j++) {
-                int x = adjustCoordinate((firstEntityInstance.getX() + i), grid.length);
-                int y = adjustCoordinate((firstEntityInstance.getY() + j), grid[0].length);
+                int x = adjustCoordinate((firstEntityInstance.row + i), grid.getRows());
+                int y = adjustCoordinate((firstEntityInstance.column + j), grid.getColumns());
 
-                if (grid[x][y] == secondEntityInstance) {
+                if (grid.getInstance(x,y) == secondEntityInstance) {
                     // Target entity found within the circle
                     proximityActions.invoke(firstEntityInstance, secondEntityInstance, lastChangeTickCount);
                     break;
