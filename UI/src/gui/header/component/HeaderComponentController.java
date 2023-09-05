@@ -49,7 +49,9 @@ public class HeaderComponentController {
 
         File selectedFile = fileChooser.showOpenDialog(null);
 
-        loadFileAndUpdateHeader(selectedFile);
+        if(selectedFile != null){
+            loadFileAndUpdateHeader(selectedFile);
+        }
     }
 
     private void loadFileAndUpdateHeader(File fileToLoad){
