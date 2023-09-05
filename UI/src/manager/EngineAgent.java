@@ -139,7 +139,7 @@ public class EngineAgent {
                 switch (dtoEnvironmentVariable.getType()) {
                     case "decimal":
                         int integerValue = Integer.parseInt(value);
-                        inputValidator.isIntegerInRange(integerValue, (int) dtoEnvironmentVariable.getFrom(), (int) dtoEnvironmentVariable.getTo());
+                        inputValidator.isIntegerInRange(integerValue, (int) dtoEnvironmentVariable.getFrom().doubleValue(), (int) dtoEnvironmentVariable.getTo().doubleValue());
                         ret = integerValue;
                         break;
                     case "float":

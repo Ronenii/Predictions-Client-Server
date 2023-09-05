@@ -150,7 +150,7 @@ public class Console {
         System.out.print("\nInput the value of the environment variable ");
         switch (dtoEnvironmentVariable.getType()) {
             case "decimal":
-                System.out.printf("(%d-%d)\n", (int) dtoEnvironmentVariable.getFrom(), (int) dtoEnvironmentVariable.getTo());
+                System.out.printf("(%d-%d)\n", (int) dtoEnvironmentVariable.getFrom().doubleValue(), (int) dtoEnvironmentVariable.getTo().doubleValue());
                 break;
             case "float":
                 System.out.printf("(%.2f-%.2f)\n", dtoEnvironmentVariable.getFrom(), dtoEnvironmentVariable.getTo());
