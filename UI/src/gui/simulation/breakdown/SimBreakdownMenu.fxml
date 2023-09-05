@@ -22,7 +22,7 @@
    <children>
       <AnchorPane GridPane.columnIndex="3" GridPane.rowIndex="1">
          <children>
-            <fx:include fx:id="displayComponent" source="../../../../../../../AppData/Local/Temp/Tempfaf212d2-da61-4226-acbf-3ea446259ea1_details.zip/details/DisplayComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <fx:include fx:id="displayComponent" source="details/DisplayComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children></AnchorPane>
       <GridPane minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
          <columnConstraints>
