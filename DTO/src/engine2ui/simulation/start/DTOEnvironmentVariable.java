@@ -21,12 +21,12 @@ public class DTOEnvironmentVariable {
         return type;
     }
 
-    public double getFrom() {
-        return from.doubleValue();
+    public Double getFrom() {
+        return from;
     }
 
-    public double getTo() {
-        return to.doubleValue();
+    public Double getTo() {
+        return to;
     }
 
     @Override

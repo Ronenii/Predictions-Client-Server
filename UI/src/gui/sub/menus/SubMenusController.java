@@ -1,5 +1,6 @@
 package gui.sub.menus;
 
+import engine2ui.simulation.prview.PreviewData;
 import gui.app.AppController;
 import gui.execution.NewExecutionComponentController;
 import gui.result.ResultComponentController;
@@ -27,6 +28,10 @@ public class SubMenusController {
             newExecutionComponentController.setMainController(this);
             resultComponentController.setMainController(this);
         }
+    }
+
+    public void setPreviewDataForSimBreakdown(PreviewData previewData){
+        simBreakdownMenuController.setPreviewData(previewData);
     }
 
 }
