@@ -59,7 +59,7 @@ public class WorldManager implements EngineInterface, Serializable {
     public PreviewData getCurrentSimulationDetails() {
         DTOCreator dtoCreator = new DTOCreator();
 
-        return dtoCreator.createSimulationPreviewDataObject(world.getEntities(), world.getRules(), world.getEndingConditions());
+        return dtoCreator.createSimulationPreviewDataObject(world.getEnvironmentProperties(), world.getEntities(), world.getRules(), world.getEndingConditions(), world.getGrid(), world.getThreadCount());
     }
 
     @Override

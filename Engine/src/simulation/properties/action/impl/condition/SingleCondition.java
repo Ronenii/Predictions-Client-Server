@@ -14,6 +14,10 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
         this.operator = operator;
     }
 
+    public ConditionOperator getOperator() {
+        return operator;
+    }
+
     /**
      * This ctor is designated for a pure condition action without any then or else actions.
      * Mainly for the condition inside the secondary entity.
