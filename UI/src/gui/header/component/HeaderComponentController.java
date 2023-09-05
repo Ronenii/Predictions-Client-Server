@@ -1,12 +1,14 @@
 package gui.header.component;
 
 import gui.app.AppController;
+import gui.header.component.queue.manager.QueueManagerComponentController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import manager.EngineAgent;
 import manager.EngineInterface;
@@ -19,8 +21,12 @@ public class HeaderComponentController {
     private AppController mainController;
     @FXML
     private Button loadFileBTN;
+
     @FXML
-    private Button queueManBTN;
+    private GridPane QueueManagerComponent;
+
+    @FXML private QueueManagerComponentController queueManagerComponentController;
+
     @FXML
     private TextField pathTF;
     @FXML
@@ -31,6 +37,12 @@ public class HeaderComponentController {
     public void setMainController(AppController mainController) {
         this.mainController = mainController;
         currentLoadedFilePath = "";
+    }
+
+    public void initialize() {
+        if(queueManagerComponentController != null) {
+            queueManagerComponentController.setMainController(this);
+        }
     }
 
     /**
@@ -49,17 +61,17 @@ public class HeaderComponentController {
 
         File selectedFile = fileChooser.showOpenDialog(null);
 
-        if(selectedFile != null){
+        if (selectedFile != null) {
             loadFileAndUpdateHeader(selectedFile);
         }
     }
 
-    private void loadFileAndUpdateHeader(File fileToLoad){
+    private void loadFileAndUpdateHeader(File fileToLoad) {
         try {
             mainController.engineAgent.loadSimulationFromFile(fileToLoad);
             pathTF.setText(fileToLoad.getPath());
             currentLoadedFilePath = fileToLoad.getPath();
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             // TODO: Change this to a graphical user notification
             System.out.println(e);
         }
@@ -67,18 +79,12 @@ public class HeaderComponentController {
 
     @FXML
     void loadFileTextFieldListener(ActionEvent event) {
-        if(!pathTF.getText().equals(currentLoadedFilePath)){
+        if (!pathTF.getText().equals(currentLoadedFilePath)) {
             File file = new File(pathTF.getText());
 
             loadFileAndUpdateHeader(file);
         }
     }
-
-    @FXML
-    void queueManButtonActionListener(ActionEvent event) {
-
-    }
-
 
     @FXML
     void resetTextOnMouseEnteredTextFieldListener(MouseEvent event) {
@@ -90,8 +96,8 @@ public class HeaderComponentController {
         resetTextFieldIfNotFocused();
     }
 
-    private void resetTextFieldIfNotFocused(){
-        if(!pathTF.isFocused()){
+    private void resetTextFieldIfNotFocused() {
+        if (!pathTF.isFocused()) {
             pathTF.setText(currentLoadedFilePath);
         }
     }

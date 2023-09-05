@@ -31,6 +31,6 @@
          <font>
             <Font name="System Bold" size="20.0" />
          </font></Label>
-      <fx:include source="queue/manager/QueueManager.fxml" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+      <fx:include source="queue/manager/QueueManagerComponent.fxml" GridPane.columnIndex="5" GridPane.rowIndex="2" />
    </children>
 </GridPane>
