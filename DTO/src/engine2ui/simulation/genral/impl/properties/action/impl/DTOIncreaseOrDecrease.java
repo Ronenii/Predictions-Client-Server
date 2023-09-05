@@ -5,8 +5,8 @@ import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
 public class DTOIncreaseOrDecrease extends DTOAction {
     private final String value;
 
-    public DTOIncreaseOrDecrease(String name, String type, String mainEntity, String secondaryEntity, String property, String value) {
-        super(name, type, mainEntity, secondaryEntity, property);
+    public DTOIncreaseOrDecrease(String type, String mainEntity, String secondaryEntity, String property, String value) {
+        super(type, mainEntity, secondaryEntity, property);
         this.value = value;
     }
 

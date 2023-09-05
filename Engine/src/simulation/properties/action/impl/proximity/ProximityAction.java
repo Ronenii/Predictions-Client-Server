@@ -25,6 +25,18 @@ public class ProximityAction extends AbstractAction {
         return null;
     }
 
+    public String getTargetEntityName() {
+        return targetEntityName;
+    }
+
+    public String getDepthString() {
+        return (String)depth.evaluate();
+    }
+
+    public int getSubActionsCount() {
+        return proximityActions.getSubActionsCount();
+    }
+
     public void invoke(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Grid grid, int lastChangeTickCount) {
         int depthValue = (int) depth.evaluate();
 

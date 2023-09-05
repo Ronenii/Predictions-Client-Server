@@ -12,6 +12,10 @@ public class ProximitySubActions {
         this.actionsToInvoke = actionsToInvoke;
     }
 
+    public int getSubActionsCount(){
+        return actionsToInvoke.size();
+    }
+
     public void invoke(EntityInstance sourceEntityInstance, EntityInstance targetEntityInstance, int lastChangTickCount){
         for (Action a: actionsToInvoke) {
 

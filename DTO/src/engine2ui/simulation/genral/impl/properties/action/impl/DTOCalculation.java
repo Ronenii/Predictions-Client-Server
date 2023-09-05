@@ -7,8 +7,8 @@ public class DTOCalculation extends DTOAction {
     private final String arg2;
     private final String calculationType;
 
-    public DTOCalculation(String name, String type, String mainEntity, String secondaryEntity, String property, String arg1, String arg2, String calculationType) {
-        super(name, type, mainEntity, secondaryEntity, property);
+    public DTOCalculation(String type, String mainEntity, String secondaryEntity, String property, String arg1, String arg2, String calculationType) {
+        super(type, mainEntity, secondaryEntity, property);
         this.arg1 = arg1;
         this.arg2 = arg2;
         this.calculationType = calculationType;

@@ -290,7 +290,7 @@ public class Console {
             System.out.printf("\nName : %s\n", dtoRule.getName());
             System.out.printf("Ticks : %d\n", dtoRule.getTicks());
             System.out.printf("Probability : %.1f\n", dtoRule.getProbability());
-            System.out.printf("Number of actions : %d\n", dtoRule.getActions().length);
+            System.out.printf("Number of actions : %d\n", dtoRule.getActions().size());
             System.out.println("Actions types: ");
             System.out.print("\t");
             //System.out.println(getStringOfActionsNames(dtoRule.getActions()));

@@ -19,6 +19,10 @@ public class ReplaceAction extends AbstractAction {
         return newEntityName;
     }
 
+    public ReplaceActionType getReplaceType() {
+        return replaceType;
+    }
+
     @Override
     public Object getValue() {
         return null;

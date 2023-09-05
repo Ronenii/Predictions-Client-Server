@@ -71,7 +71,6 @@ public class SimBreakdownMenuController implements Initializable {
         for(DTOEnvironmentVariable envVar : envVariables) {
             envVarItem = new TreeItem<>(envVar.getName());
             envVarsItem.getChildren().add(envVarItem);
-            // Todo: assign envVarItem its detail component.
         }
     }
 
@@ -91,7 +90,6 @@ public class SimBreakdownMenuController implements Initializable {
         for (DTOProperty property : entityProp) {
             propertyItem = new TreeItem<>(property.getName());
             entityItem.getChildren().add(propertyItem);
-            // Todo: assign propertyItem its detail component.
         }
     }
 
@@ -108,13 +106,12 @@ public class SimBreakdownMenuController implements Initializable {
         }
     }
 
-    private void updateRuleActionsInTreeView(TreeItem<String> ruleItem, DTOAction[] actions) {
+    private void updateRuleActionsInTreeView(TreeItem<String> ruleItem, List<DTOAction> actions) {
         TreeItem<String> actionItem;
 
         for (DTOAction action : actions) {
-            actionItem = new TreeItem<>(action.getName());
+            actionItem = new TreeItem<>(action.getType());
             ruleItem.getChildren().add(actionItem);
-            // Todo: assign actionItem its detail component.
         }
     }
 

@@ -6,8 +6,8 @@ public class DTOReplace extends DTOAction {
     private final String createEntity;
     private final String replaceType;
 
-    public DTOReplace(String name, String type, String mainEntity, String secondaryEntity, String property, String createEntity, String replaceType) {
-        super(name, type, mainEntity, secondaryEntity, property);
+    public DTOReplace(String type, String mainEntity, String secondaryEntity, String property, String createEntity, String replaceType) {
+        super(type, mainEntity, secondaryEntity, property);
         this.createEntity = createEntity;
         this.replaceType = replaceType;
     }

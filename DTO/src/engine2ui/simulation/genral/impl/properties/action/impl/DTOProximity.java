@@ -7,8 +7,8 @@ public class DTOProximity extends DTOAction {
     private final String depth;
     private final int subActionsCount;
 
-    public DTOProximity(String name, String type, String mainEntity, String secondaryEntity, String property, String targetEntity, String depth, int subActionsCount) {
-        super(name, type, mainEntity, secondaryEntity, property);
+    public DTOProximity(String type, String mainEntity, String secondaryEntity, String property, String targetEntity, String depth, int subActionsCount) {
+        super(type, mainEntity, secondaryEntity, property);
         this.targetEntity = targetEntity;
         this.depth = depth;
         this.subActionsCount = subActionsCount;

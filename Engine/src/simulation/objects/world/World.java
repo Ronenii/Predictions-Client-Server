@@ -63,6 +63,14 @@ public class World implements Serializable {
         return ticks;
     }
 
+    public Grid getGrid() {
+        return grid;
+    }
+
+    public int getThreadCount() {
+        return threadCount;
+    }
+
     @Override
     public String toString() {
         StringBuilder worldToString = new StringBuilder("World{" +

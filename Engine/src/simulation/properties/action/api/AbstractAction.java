@@ -30,6 +30,7 @@ public abstract class AbstractAction implements Action {
         return contextEntity;
     }
 
+    @Override
     public SecondaryEntity getSecondaryEntity() {
         return secondaryEntity;
     }

@@ -11,13 +11,13 @@ import java.io.Serializable;
 public class CalculationAction extends OneEntAction implements Serializable {
     private Expression arg1;
     private Expression arg2;
-    private final CalculationType type;
+    private final CalculationType calculationType;
 
     public CalculationAction(String property, String contextEntity, SecondaryEntity secondaryEntity,Expression arg1, Expression arg2, CalculationType type1) {
         super(ActionType.CALCULATION, property, contextEntity, secondaryEntity);
         this.arg1 = arg1;
         this.arg2 = arg2;
-        this.type = type1;
+        this.calculationType = type1;
     }
 
     public Object getArg1() {
@@ -26,6 +26,10 @@ public class CalculationAction extends OneEntAction implements Serializable {
 
     public Object getArg2() {
         return arg2.evaluate();
+    }
+
+    public CalculationType getCalculationType() {
+        return calculationType;
     }
 
     @Override
@@ -41,7 +45,7 @@ public class CalculationAction extends OneEntAction implements Serializable {
             return;
         }
 
-        switch (type){
+        switch (calculationType){
             case MULTIPLY:
                 multiplyAndSetPropertyValue(toSet, lastChangeTickCount);
                 break;

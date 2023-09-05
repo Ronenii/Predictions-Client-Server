@@ -3,17 +3,33 @@ package manager.DTO.creator;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.objects.DTOEntityInstance;
 import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
+import engine2ui.simulation.genral.impl.properties.DTOGridAndThread;
 import engine2ui.simulation.genral.impl.properties.DTORule;
+import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
+import engine2ui.simulation.genral.impl.properties.action.impl.*;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 import engine2ui.simulation.genral.impl.properties.property.impl.NonRangedDTOProperty;
 import engine2ui.simulation.genral.impl.properties.property.impl.RangedDTOProperty;
 import engine2ui.simulation.prview.PreviewData;
+import engine2ui.simulation.start.DTOEnvironmentVariable;
+import engine2ui.simulation.start.StartData;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
+import simulation.properties.action.impl.DecreaseAction;
+import simulation.properties.action.impl.IncreaseAction;
+import simulation.properties.action.impl.KillAction;
+import simulation.properties.action.impl.SetAction;
+import simulation.properties.action.impl.calculation.CalculationAction;
+import simulation.properties.action.impl.condition.MultipleCondition;
+import simulation.properties.action.impl.condition.SingleCondition;
+import simulation.properties.action.impl.proximity.ProximityAction;
+import simulation.properties.action.impl.replace.ReplaceAction;
 import simulation.properties.ending.conditions.EndingCondition;
 import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.property.api.Property;
+import simulation.properties.property.api.PropertyType;
 import simulation.properties.property.impl.DoubleProperty;
 import simulation.properties.property.impl.IntProperty;
 import simulation.properties.rule.Rule;
@@ -25,15 +41,51 @@ import java.util.*;
  */
 public class DTOCreator {
 
-    public PreviewData createSimulationPreviewDataObject(Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions) {
+    public PreviewData createSimulationPreviewDataObject(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, Grid grid, int threadCount) {
         List<DTOEntity> entitiesList;
         List<DTORule> rulesList;
         List<DTOEndingCondition> endingConditionsList;
+        List<DTOEnvironmentVariable> envVariables;
+        DTOGridAndThread gridAndThread;
 
+        envVariables = getDTOEnvironmentVariableList(environmentProperties);
         entitiesList = getDTOEntityList(entities);
         rulesList = getDTORulesList(rules);
         endingConditionsList = getDTOEndingConditionsList(endingConditions);
-        return new PreviewData(entitiesList, rulesList, endingConditionsList);
+        gridAndThread = new DTOGridAndThread(grid.getRows(),grid.getColumns(),threadCount);
+        return new PreviewData(gridAndThread, envVariables, entitiesList, rulesList, endingConditionsList);
+    }
+
+    private List<DTOEnvironmentVariable> getDTOEnvironmentVariableList(Map<String, Property> environmentProperties){
+        List<DTOEnvironmentVariable> environmentVariables = new ArrayList<>();
+        Property valueFromTheMap;
+
+        for (Map.Entry<String, Property> entry : environmentProperties.entrySet()) {
+            valueFromTheMap = entry.getValue();
+            environmentVariables.add(getDTOEnvironmentVariable(valueFromTheMap));
+        }
+
+        return environmentVariables;
+    }
+
+    /**
+     * Create a 'DTOEnvironmentVariable' which contain the given environment variable's data and return it.
+     */
+    private DTOEnvironmentVariable getDTOEnvironmentVariable(Property valueFromTheMap) {
+        String name = valueFromTheMap.getName(), type = valueFromTheMap.getType().toString().toLowerCase();
+        Double from = null, to = null;
+
+        if (valueFromTheMap.getType() == PropertyType.FLOAT) {
+            DoubleProperty doubleProperty = (DoubleProperty) valueFromTheMap;
+            from = doubleProperty.getFrom();
+            to = doubleProperty.getTo();
+        } else if (valueFromTheMap.getType() == PropertyType.DECIMAL) {
+            IntProperty intProperty = (IntProperty) valueFromTheMap;
+            from = (double) intProperty.getFrom();
+            to = (double) intProperty.getTo();
+        }
+
+        return new DTOEnvironmentVariable(name, type, from, to);
     }
 
     private List<DTOEntity> getDTOEntityList(Map<String, Entity> entities) {
@@ -146,13 +198,45 @@ public class DTOCreator {
     }
 
     private DTORule getDTORule(Rule rule) {
-        List<String> actionsNames = new ArrayList<>();
+        List<DTOAction> dtoActions = new ArrayList<>();
         List<Action> actions = rule.getActions();
-        String[] actionsNamesArray;
 
-        actions.forEach((value) -> actionsNames.add(value.getType().toString()));
-        actionsNamesArray = actionsNames.toArray(new String[0]);
-        return new DTORule(rule.getName(), rule.getActivation().getTicks(), rule.getActivation().getProbability(), actionsNamesArray);
+        actions.forEach((value) -> dtoActions.add(getDTOAction(value)));
+        return new DTORule(rule.getName(), rule.getActivation().getTicks(), rule.getActivation().getProbability(), dtoActions);
+    }
+
+    private DTOAction getDTOAction(Action action){
+        DTOAction ret = null;
+        String type = action.getType().toString().toLowerCase(), mainEntity = action.getContextEntity(), secondaryEntity = null, property = action.getContextProperty();
+
+        if(action.getSecondaryEntity() != null){
+            secondaryEntity = action.getSecondaryEntity().getContextEntity();
+        }
+
+        if(action instanceof IncreaseAction || action instanceof DecreaseAction){
+            ret = new DTOIncreaseOrDecrease(type, mainEntity, secondaryEntity, property, (String)action.getValue());
+        } else if (action instanceof CalculationAction) {
+            CalculationAction calculationAction = (CalculationAction)action;
+            ret = new DTOCalculation(type, mainEntity, secondaryEntity, property, (String)calculationAction.getArg1(), (String)calculationAction.getArg2(), calculationAction.getCalculationType().toString().toLowerCase());
+        } else if (action instanceof SingleCondition) {
+            SingleCondition singleCondition = (SingleCondition)action;
+            ret = new DTOSingleCondition(type, mainEntity, secondaryEntity, property,singleCondition.getThenActionsCount(), singleCondition.getElseActionsCount(), (String)singleCondition.getValue(), singleCondition.getOperator().toString().toLowerCase(), property);
+        } else if (action instanceof MultipleCondition) {
+            MultipleCondition multipleCondition = (MultipleCondition)action;
+            ret = new DTOMultipleCondition(type, mainEntity, secondaryEntity, property, multipleCondition.getThenActionsCount(),multipleCondition.getElseActionsCount(), multipleCondition.getLogical().toString().toLowerCase());
+        } else if (action instanceof SetAction) {
+            ret = new DTOSet(type, mainEntity, secondaryEntity, property, (String)action.getValue());
+        } else if (action instanceof KillAction) {
+            ret = new DTOKill(type, mainEntity, secondaryEntity, property);
+        } else if (action instanceof ReplaceAction) {
+            ReplaceAction replaceAction = (ReplaceAction)action;
+            ret = new DTOReplace(type,mainEntity, secondaryEntity, property, replaceAction.getNewEntityName(), replaceAction.getReplaceType().toString().toLowerCase());
+        } else if (action instanceof ProximityAction) {
+            ProximityAction proximityAction = (ProximityAction)action;
+            ret = new DTOProximity(type, mainEntity, secondaryEntity, property, proximityAction.getTargetEntityName(), proximityAction.getDepthString(), proximityAction.getSubActionsCount());
+        }
+
+        return ret;
     }
 
     private List<DTOEndingCondition> getDTOEndingConditionsList(Map<EndingConditionType, EndingCondition> endingConditions) {
