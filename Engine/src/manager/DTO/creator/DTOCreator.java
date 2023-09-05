@@ -223,7 +223,7 @@ public class DTOCreator {
             ret = new DTOSingleCondition(type, mainEntity, secondaryEntity, property,singleCondition.getThenActionsCount(), singleCondition.getElseActionsCount(), (String)singleCondition.getValue(), singleCondition.getOperator().toString().toLowerCase(), property);
         } else if (action instanceof MultipleCondition) {
             MultipleCondition multipleCondition = (MultipleCondition)action;
-            ret = new DTOMultipleCondition(type, mainEntity, secondaryEntity, property, multipleCondition.getThenActionsCount(),multipleCondition.getElseActionsCount(), multipleCondition.getLogical().toString().toLowerCase());
+            ret = new DTOMultipleCondition(type, mainEntity, secondaryEntity, property, multipleCondition.getThenActionsCount(),multipleCondition.getElseActionsCount(), multipleCondition.getLogical().toString().toLowerCase(), multipleCondition.getSubConditions().size());
         } else if (action instanceof SetAction) {
             ret = new DTOSet(type, mainEntity, secondaryEntity, property, (String)action.getValue());
         } else if (action instanceof KillAction) {

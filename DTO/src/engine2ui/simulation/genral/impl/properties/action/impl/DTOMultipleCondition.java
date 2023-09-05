@@ -6,16 +6,14 @@ public class DTOMultipleCondition extends DTOAction {
     private final int thenActionsCount;
     private final int elseActionCount;
     private final String logic;
+    private final int subConditionsCount;
 
-    public DTOMultipleCondition(String type, String mainEntity, String secondaryEntity, String property, int thenActionsCount, int elseActionCount, String logic) {
+    public DTOMultipleCondition(String type, String mainEntity, String secondaryEntity, String property, int thenActionsCount, int elseActionCount, String logic, int subConditionsCount) {
         super(type, mainEntity, secondaryEntity, property);
         this.thenActionsCount = thenActionsCount;
         this.elseActionCount = elseActionCount;
         this.logic = logic;
-    }
-
-    public int getThenAndElseActionCount() {
-        return thenAndElseActionCount;
+        this.subConditionsCount = subConditionsCount;
     }
 
     public int getThenActionsCount() {
@@ -28,5 +26,9 @@ public class DTOMultipleCondition extends DTOAction {
 
     public String getLogic() {
         return logic;
+    }
+
+    public int getSubConditionsCount() {
+        return subConditionsCount;
     }
 }
