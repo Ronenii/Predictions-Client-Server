@@ -13,9 +13,9 @@
       <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
       <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" prefWidth="100.0" />
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="80.0" />
-      <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" prefWidth="100.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" prefWidth="200.0" />
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="80.0" />
-      <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" prefWidth="150.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" prefWidth="200.0" />
       <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
    </columnConstraints>
    <rowConstraints>
@@ -26,14 +26,11 @@
    </rowConstraints>
    <children>
       <Button id="btn-Header-LoadFile" fx:id="loadFileBTN" mnemonicParsing="false" onAction="#loadFileButtonActionListener" text="Load file" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Button id="btn-Header-QueueManagment" fx:id="queueManBTN" mnemonicParsing="false" onAction="#queueManButtonActionListener" prefHeight="31.0" prefWidth="129.0" text="Queue management" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-         <font>
-            <Font size="12.0" />
-         </font></Button>
       <TextField id="tf-Header-FilePath" fx:id="pathTF" onAction="#loadFileTextFieldListener" onMouseEntered="#resetTextOnMouseEnteredTextFieldListener" onMouseExited="#resetTextOnMouseExitTextFieldListener" prefWidth="236.0" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <Label id="lbl-Header-Predictions" fx:id="predictionLabel" text="Predictions" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />
          </font></Label>
+      <fx:include source="queue/manager/QueueManager.fxml" GridPane.columnIndex="5" GridPane.rowIndex="2" />
    </children>
 </GridPane>
