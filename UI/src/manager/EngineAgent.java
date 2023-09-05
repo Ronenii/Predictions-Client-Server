@@ -48,16 +48,14 @@ public class EngineAgent {
      * prompts the user to input a path to a simulation XML config file and loads it
      * into the system.
      */
-    public void loadSimulationFromFile() {
-        System.out.print("Please enter path to the XML world config file: ");
-        Scanner scanner = new Scanner(System.in);
-        String path = scanner.nextLine();
+    public void loadSimulationFromFile(File file) {
+        DTOLoadSucceed dtoLoadSucceed = engine.loadSimulationFromFile(new DTOFirstFunction(file));
 
-        DTOLoadSucceed dtoLoadSucceed = engine.loadSimulationFromFile(new DTOFirstFunction(path));
+        /* If we succeeded in creating the simulation we want to reset the engine.
+         If a simulation was loaded beforehand and the creation failed we don't want
+         to delete past data until a new simulation is loaded successfully. */
 
-        // If we succeeded in creating the simulation we want to reset the engine.
-        // If a simulation was loaded beforehand and the creation failed we don't want
-        // to delete past data until a new simulation is loaded successfully.
+        // TODO: Change this to a graphical user notification
         if (dtoLoadSucceed.isSucceed()) {
             Console.println("The simulation creation has completed successfully");
             engine.resetEngine();

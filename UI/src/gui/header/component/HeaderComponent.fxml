@@ -30,7 +30,7 @@
          <font>
             <Font size="12.0" />
          </font></Button>
-      <TextField id="tf-Header-FilePath" fx:id="pathTF" prefWidth="236.0" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+      <TextField id="tf-Header-FilePath" fx:id="pathTF" onAction="#loadFileTextFieldListener" onMouseEntered="#resetTextOnMouseEnteredTextFieldListener" onMouseExited="#resetTextOnMouseExitTextFieldListener" prefWidth="236.0" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <Label id="lbl-Header-Predictions" fx:id="predictionLabel" text="Predictions" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />

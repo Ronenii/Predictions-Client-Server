@@ -55,7 +55,7 @@ public class UI {
 
         switch (menuOption) {
             case LOAD_PROGRAM_FROM_XML:
-                engineAgent.loadSimulationFromFile();
+                //engineAgent.loadSimulationFromFile();
                 break;
             case LOAD_PROGRAM_STATE:
                 engineAgent.loadSimulationFromSaveState();
