@@ -15,7 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
-public class HeaderComponentController extends Component {
+public class HeaderComponentController {
     private AppController mainController;
     @FXML
     private Button loadFileBTN;
