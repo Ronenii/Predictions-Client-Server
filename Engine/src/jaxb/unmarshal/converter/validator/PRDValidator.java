@@ -435,7 +435,7 @@ public class PRDValidator extends Validator {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "One or two of the given replace action kill/create entities does not exist.");
         }
 
-        if (prdAction.getMode() == null || !prdAction.getMode().equals("scratch") || !prdAction.getMode().equals("derived")) {
+        if (prdAction.getMode() == null || (!prdAction.getMode().equals("scratch") && !prdAction.getMode().equals("derived"))) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given replace action does not contain valid mode");
         }
     }
@@ -517,7 +517,7 @@ public class PRDValidator extends Validator {
     private void validatePRDTerminationNotEmpty(PRDTermination prdTermination) throws PRDObjectConversionException {
         List<Object> byTicksOrSec = prdTermination.getPRDBySecondOrPRDByTicks();
 
-        if (byTicksOrSec.isEmpty()) {
+        if (byTicksOrSec.isEmpty() && prdTermination.getPRDByUser() == null) {
             addErrorToListAndThrowException(prdTermination, "", "There are no ending conditions for this simulation.");
         }
     }

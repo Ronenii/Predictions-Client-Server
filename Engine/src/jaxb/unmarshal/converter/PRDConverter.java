@@ -473,7 +473,7 @@ public class PRDConverter {
         CalculationAction ret = null;
         PRDMultiply mul = prdAction.getPRDMultiply();
         PRDDivide div = prdAction.getPRDDivide();
-        PropertyType type = entities.get(prdAction.getEntity()).getProperties().get(prdAction.getProperty()).getType();
+        PropertyType type = entities.get(prdAction.getEntity()).getProperties().get(prdAction.getResultProp()).getType();
         Expression exp1, exp2;
 
         // Without loss of generality, if mul equals null - the calculation action is not a multiply action.
