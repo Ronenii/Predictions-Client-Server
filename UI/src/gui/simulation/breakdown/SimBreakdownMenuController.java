@@ -7,14 +7,20 @@ import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
+import gui.simulation.breakdown.details.DisplayComponentController;
+import gui.simulation.breakdown.details.entity.property.PropertyDetailsController;
+import gui.simulation.breakdown.details.envrionment.EnvironmentVarDetailsController;
+import gui.simulation.breakdown.details.general.GeneralDetailsController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -22,10 +28,13 @@ import java.util.ResourceBundle;
 public class SimBreakdownMenuController implements Initializable {
 
     private SubMenusController mainController;
+    private PreviewData previewData;
     @FXML
     private TreeView<String> simTreeView;
     @FXML
-    private AnchorPane detailsAnchorPane;
+    private ScrollPane displayComponent;
+    @FXML
+    private DisplayComponentController displayComponentController;
     private TreeItem<String> envVarsItem;
     private TreeItem<String> entitiesItem;
     private TreeItem<String> rulesItem;
@@ -33,6 +42,10 @@ public class SimBreakdownMenuController implements Initializable {
 
     public void setMainController(SubMenusController mainController) {
         this.mainController = mainController;
+    }
+
+    public void setPreviewData(PreviewData previewData) {
+        this.previewData = previewData;
     }
 
     @Override
@@ -50,7 +63,6 @@ public class SimBreakdownMenuController implements Initializable {
         updateEnvVarsInTreeView(previewData.getEnvVariables());
         updateEntitiesInTreeView(previewData.getEntities());
         updateRulesInTreeView(previewData.getRules());
-        updateGeneralInTreeView(previewData.getEndingConditions(), previewData.getGridAndThread());
     }
 
     private void updateEnvVarsInTreeView(List<DTOEnvironmentVariable> envVariables) {
@@ -106,18 +118,75 @@ public class SimBreakdownMenuController implements Initializable {
         }
     }
 
-    private void updateGeneralInTreeView(List<DTOEndingCondition> endingConditions, DTOGridAndThread gridAndThread){
-
-    }
-
-
-
 
     @FXML
     void selectItem(MouseEvent event) {
         TreeItem<String> selectedItem = simTreeView.getSelectionModel().getSelectedItem();
-        if(selectedItem != null){
 
+        try {
+            if(selectedItem != null){
+                if(selectedItem.getValue().equals("General")) {
+                    setGeneralComponent(selectedItem);
+                }
+                else {
+                    String engineObjectType = selectedItem.getParent().getValue();
+                    if(engineObjectType.equals("Environment Variables")){
+                        setEnvVarsComponent(selectedItem);
+                    }
+                    else {
+                        engineObjectType = selectedItem.getParent().getParent().getValue();
+                        if(engineObjectType.equals("Entities")){
+                            setEntitiesComponent(selectedItem, selectedItem.getParent().getValue());
+                        }
+                        else {
+                            engineObjectType = selectedItem.getParent().getParent().getParent().getValue();
+                            if(engineObjectType.equals("Rules")) {
+
+                            }
+                            else {
+                                //Todo: error occurred
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            //Todo: mashu
         }
     }
+
+    private void setEnvVarsComponent(TreeItem<String> selectedItem) throws IOException {
+        EnvironmentVarDetailsController environmentVariablesComponentController = (EnvironmentVarDetailsController)displayComponentController.loadFXMLComponent("details/environment/EnvironmentVarDetails.fxml");
+        displayComponentController.setLblTitle(selectedItem.getValue());
+        for(DTOEnvironmentVariable environmentVariable : previewData.getEnvVariables()) {
+            if(environmentVariable.getName().equals(selectedItem.getValue())) {
+                environmentVariablesComponentController.setComponentDet(environmentVariable);
+                break;
+            }
+        }
+    }
+
+    private void setEntitiesComponent(TreeItem<String> selectedItem, String entityName) throws IOException {
+        PropertyDetailsController propertyDetailsController = (PropertyDetailsController)displayComponentController.loadFXMLComponent("details/entity/property/PropertyDetails.fxml");
+        displayComponentController.setLblTitle(selectedItem.getValue());
+        for (DTOEntity entity : previewData.getEntities()) {
+            if(entity.getName().equals(entityName)){
+                for (DTOProperty property : entity.getProperties()) {
+                    if(property.getName().equals(selectedItem.getValue())){
+                        propertyDetailsController.setComponentDet(property);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    private void setGeneralComponent(TreeItem<String> selectedItem) throws IOException {
+        GeneralDetailsController generalDetailsController = (GeneralDetailsController)displayComponentController.loadFXMLComponent("details/general/GeneralDetails.fxml");
+        displayComponentController.setLblTitle(selectedItem.getValue());
+        generalDetailsController.setComponentDet(previewData.getEndingConditions(), previewData.getGridAndThread());
+
+    }
+
 }
