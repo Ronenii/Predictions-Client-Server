@@ -1,0 +1,11 @@
+package gui.simulation.breakdown.details.rule.action;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+
+public class SecondaryEntityTypeController {
+
+    @FXML
+    private Label lblSecondaryEntityType;
+
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<GridPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.execution.inputs.entity.EntityPopulationComponentController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="220.0" minWidth="-Infinity" prefWidth="180.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="100.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="33.0" minHeight="0.0" prefHeight="10.0" vgrow="NEVER" />
+      <RowConstraints prefHeight="30.0" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints minHeight="0.0" prefHeight="10.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="400.0" prefHeight="150.0" vgrow="ALWAYS" />
+      <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
+   </rowConstraints>
+   <children>
+      <TextField id="tf-NewExec-EntPopValue" fx:id="populationTF" maxWidth="250.0" minWidth="50.0" onAction="#populationTextFieldActionListener" prefWidth="120.0" promptText="Population" scaleShape="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+      <Button id="btn-NewExec-SetEntPop" fx:id="setBTN" mnemonicParsing="false" onAction="#setButtonActionListener" text="Set" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+      <ListView id="lv-NewExec-Entities" fx:id="entitiesLW" maxHeight="500.0" maxWidth="400.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS" />
+      <Label id="lbl-NewExec-Entity" fx:id="entityLabel" text="Entity" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+   </children>
+</GridPane>

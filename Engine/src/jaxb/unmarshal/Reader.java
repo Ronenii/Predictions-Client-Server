@@ -22,13 +22,13 @@ public class Reader {
      * Given an XML file, reads the world settings in it and returns the world object.
      * Reads the XML world into an intermediate class from the given schema and converts the intermediate Object to an object used in the program.
      *
-     * @param filePath The xml file path to read the world from.
+     * @param file The xml file to read the world from.
      * @return The world read from the xml file
      */
-    public static World readWorldFromXML(String filePath) {
+    public static World readWorldFromXML(File file) {
         PRDConverter prdConverter = new PRDConverter();
         try {
-            InputStream inputStream = new FileInputStream(new File(filePath));
+            InputStream inputStream = new FileInputStream(file);
             PRDWorld prdWorld = deserializeFrom(inputStream);
             return prdConverter.PRDWorld2World(prdWorld);
         } catch (FileNotFoundException e) {

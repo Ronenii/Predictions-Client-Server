@@ -1,18 +1,18 @@
 package engine2ui.simulation.genral.impl.properties;
 
-import java.util.List;
+import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
 
 public class DTORule {
     private final String name;
     private final int ticks;
     private final double probability;
-    private final String[] actions;
+    private DTOAction[] actions;
 
     public DTORule(String name, int ticks, double probability, String[] actions) {
         this.name = name;
         this.ticks = ticks;
         this.probability = probability;
-        this.actions = actions;
+
     }
 
     public String getName() {
@@ -27,7 +27,7 @@ public class DTORule {
         return probability;
     }
 
-    public String[] getActions() {
+    public DTOAction[] getActions() {
         return actions;
     }
 

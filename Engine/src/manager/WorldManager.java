@@ -83,9 +83,9 @@ public class WorldManager implements EngineInterface, Serializable {
     @Override
     public DTOLoadSucceed loadSimulationFromFile(DTOFirstFunction dto) {
         DTOLoadSucceed dtoLoadSucceed = new DTOLoadSucceed(false);
-        Reader.validatePath(dto.getPath());
+        Reader.validatePath(dto.getFile().getPath());
 
-        this.world = Reader.readWorldFromXML(dto.getPath());
+        this.world = Reader.readWorldFromXML(dto.getFile());
         if (this.world != null) {
             dtoLoadSucceed = new DTOLoadSucceed(true);
         }

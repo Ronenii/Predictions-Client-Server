@@ -1,13 +1,15 @@
 package ui2engine.simulation.func1;
 
-public class DTOFirstFunction {
-    String path;
+import java.io.File;
 
-    public DTOFirstFunction(String path) {
-        this.path = path;
+public class DTOFirstFunction {
+    private File file;
+
+    public DTOFirstFunction(File file) {
+        this.file = file;
     }
 
-    public String getPath() {
-        return path;
+    public File getFile() {
+        return file;
     }
 }
