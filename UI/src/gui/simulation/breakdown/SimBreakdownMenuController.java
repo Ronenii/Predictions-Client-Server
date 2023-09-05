@@ -3,7 +3,7 @@ import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
 import engine2ui.simulation.genral.impl.properties.DTOGridAndThread;
 import engine2ui.simulation.genral.impl.properties.DTORule;
-import engine2ui.simulation.genral.impl.properties.action.DTOAction;
+import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.start.DTOEnvironmentVariable;

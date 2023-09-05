@@ -1,8 +1,6 @@
 package engine2ui.simulation.genral.impl.properties;
 
-import engine2ui.simulation.genral.impl.properties.action.DTOAction;
-
-import java.util.List;
+import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
 
 public class DTORule {
     private final String name;
