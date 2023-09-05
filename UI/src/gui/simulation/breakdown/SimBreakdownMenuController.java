@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
 import java.util.List;
@@ -23,6 +24,8 @@ public class SimBreakdownMenuController implements Initializable {
     private SubMenusController mainController;
     @FXML
     private TreeView<String> simTreeView;
+    @FXML
+    private AnchorPane detailsAnchorPane;
     private TreeItem<String> envVarsItem;
     private TreeItem<String> entitiesItem;
     private TreeItem<String> rulesItem;
@@ -112,6 +115,9 @@ public class SimBreakdownMenuController implements Initializable {
 
     @FXML
     void selectItem(MouseEvent event) {
+        TreeItem<String> selectedItem = simTreeView.getSelectionModel().getSelectedItem();
+        if(selectedItem != null){
 
+        }
     }
 }
