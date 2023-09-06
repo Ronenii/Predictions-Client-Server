@@ -4,11 +4,11 @@ import java.io.File;
 import java.util.EventListener;
 import java.util.List;
 
-public class DTOLoad {
+public class DTOLoadFile {
     private final File file;
     private final List<EventListener> listeners;
 
-    public DTOLoad(File file, List<EventListener> listeners) {
+    public DTOLoadFile(File file, List<EventListener> listeners) {
         this.file = file;
         this.listeners = listeners;
     }

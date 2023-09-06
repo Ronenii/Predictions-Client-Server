@@ -8,7 +8,7 @@ import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.result.ResultData;
 import engine2ui.simulation.result.ResultInfo;
 import manager.exception.SimulationNotLoadedException;
-import ui2engine.simulation.load.DTOLoad;
+import ui2engine.simulation.load.DTOLoadFile;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.start.StartData;
 import input.Input;
@@ -49,7 +49,7 @@ public class EngineAgent {
      * into the system.
      */
     public void loadSimulationFromFile(File file, List<EventListener> listeners) {
-        DTOLoadSucceed dtoLoadSucceed = engine.loadSimulationFromFile(new DTOLoad(file, listeners));
+        DTOLoadSucceed dtoLoadSucceed = engine.loadSimulationFromFile(new DTOLoadFile(file, listeners));
 
         /* If we succeeded in creating the simulation we want to reset the engine.
          If a simulation was loaded beforehand and the creation failed we don't want

@@ -7,7 +7,7 @@ import engine2ui.simulation.start.StartData;
 import ui2engine.simulation.func3.DTOThirdFunction;
 
 import engine2ui.simulation.result.ResultData;
-import ui2engine.simulation.load.DTOLoad;
+import ui2engine.simulation.load.DTOLoadFile;
 
 public interface EngineInterface {
     PreviewData getCurrentSimulationDetails();
@@ -16,7 +16,7 @@ public interface EngineInterface {
 
     ResultData[] getPastSimulationResultData();
 
-    DTOLoadSucceed loadSimulationFromFile(DTOLoad dto);
+    DTOLoadSucceed loadSimulationFromFile(DTOLoadFile dto);
 
     ResultInfo runSimulation(DTOThirdFunction dtoThirdFunction);
 

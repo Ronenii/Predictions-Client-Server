@@ -11,7 +11,7 @@ import engine2ui.simulation.start.StartData;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.world.World;
-import ui2engine.simulation.load.DTOLoad;
+import ui2engine.simulation.load.DTOLoadFile;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
 import simulation.properties.property.impl.DoubleProperty;
@@ -81,7 +81,7 @@ public class WorldManager implements EngineInterface, Serializable {
     }
 
     @Override
-    public DTOLoadSucceed loadSimulationFromFile(DTOLoad dto) {
+    public DTOLoadSucceed loadSimulationFromFile(DTOLoadFile dto) {
         DTOLoadSucceed dtoLoadSucceed = new DTOLoadSucceed(false);
         Reader.validatePath(dto.getFile().getPath());
 
