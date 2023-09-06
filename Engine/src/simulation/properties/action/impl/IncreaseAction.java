@@ -11,8 +11,8 @@ import java.io.Serializable;
 public class IncreaseAction extends OneEntAction implements Serializable {
     private final Expression value;
 
-    public IncreaseAction(String property, String contextEntity, SecondaryEntity secondaryEntity, Expression value) {
-        super(ActionType.INCREASE, property, contextEntity,secondaryEntity);
+    public IncreaseAction(ActionType type, Expression contextProperty, String contextEntity, SecondaryEntity secondaryEntity, Expression value) {
+        super(type, contextProperty, contextEntity, secondaryEntity);
         this.value = value;
     }
 
@@ -28,12 +28,14 @@ public class IncreaseAction extends OneEntAction implements Serializable {
      */
     @Override
     public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
-        Property toIncrease = entityInstance.getPropertyByName(getContextProperty());
+        String propertyName = ((Property)getContextProperty().evaluate()).getName();
+        Property toIncrease = entityInstance.getPropertyByName(propertyName);
 
         if(toIncrease == null){
             return;
         }
 
+        updateExpression(entityInstance, value);
         switch (toIncrease.getType())
         {
             case DECIMAL:

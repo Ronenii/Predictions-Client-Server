@@ -224,11 +224,13 @@ public class PRDValidator extends Validator {
     }
 
     public void validatePRDAction(PRDAction prdAction, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+        String propertyType;
+
         validatePRDSecondaryEntity(prdAction.getPRDSecondaryEntity(), entities, expressionAndValueValidator, ruleName);
         switch (prdAction.getType()) {
             case "calculation":
-                validatePRDActionEntityAndProperty(prdAction, prdAction.getResultProp(), entities, ruleName);
-                validatePRDCalculation(prdAction, expressionAndValueValidator, ruleName);
+                propertyType = validatePRDActionEntityAndProperty(prdAction, prdAction.getResultProp(), entities, ruleName, expressionAndValueValidator);
+                validatePRDCalculation(prdAction, expressionAndValueValidator, ruleName, propertyType);
                 break;
             case "condition":
                 validatePRDCondition(prdAction.getPRDCondition(), entities, prdAction.getPRDThen(), prdAction.getPRDElse(), false, expressionAndValueValidator, ruleName);
@@ -240,19 +242,19 @@ public class PRDValidator extends Validator {
                 validatePRDProximity(prdAction, entities, ruleName, expressionAndValueValidator);
                 break;
             default:
-                validatePRDActionEntityAndProperty(prdAction, prdAction.getProperty(), entities, ruleName);
-                validatePRDActionValue(prdAction, expressionAndValueValidator, ruleName);
+                propertyType = validatePRDActionEntityAndProperty(prdAction, prdAction.getProperty(), entities, ruleName, expressionAndValueValidator);
+                validatePRDActionValue(prdAction, expressionAndValueValidator, ruleName, propertyType);
                 break;
         }
     }
 
-    private void validatePRDActionValue(PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+    private void validatePRDActionValue(PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator, String ruleName, String propertyType) throws PRDObjectConversionException {
         if (!prdAction.getType().equals("kill")) {
             try {
                 if (prdAction.getType().equals("increase") || prdAction.getType().equals("decrease")) {
-                    expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdAction.getBy());
+                    expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdAction.getBy(), propertyType);
                 } else {
-                    expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdAction.getValue());
+                    expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdAction.getValue(), propertyType);
                 }
             } catch (ExpressionConversionException e) {
                 addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, expressionAndValueValidator.getErrorMessage());
@@ -312,36 +314,37 @@ public class PRDValidator extends Validator {
         }
     }
 
-    private void validatePRDConditionValue(PRDCondition prdCondition, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+    private void validatePRDConditionValueAndProperty(PRDCondition prdCondition, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
         try {
-            expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(null, prdCondition, prdCondition.getValue());
+            String propertyType = expressionAndValueValidator.isPropertyExpressionIsValid(prdCondition.getProperty(), prdCondition.getEntity(), true);
+            expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(null, prdCondition, prdCondition.getValue(), propertyType);
         } catch (ExpressionConversionException e) {
             addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, expressionAndValueValidator.getErrorMessage());
         }
     }
 
 
-    private void validatePRDCalculation(PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+    private void validatePRDCalculation(PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator, String ruleName, String propertyType) throws PRDObjectConversionException {
 
         if (prdAction.getType().equals("calculation")) {
             if (prdAction.getPRDMultiply() == null && prdAction.getPRDDivide() == null) {
                 addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given calculation type does not contain multiply or divide actions.");
             }
 
-            validatePRDCalculationValue(prdAction, expressionAndValueValidator, ruleName);
+            validatePRDCalculationValue(prdAction, expressionAndValueValidator, ruleName, propertyType);
         }
     }
 
-    private void validatePRDCalculationValue(PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+    private void validatePRDCalculationValue(PRDAction prdAction, ExpressionAndValueValidator expressionAndValueValidator, String ruleName, String propertyType) throws PRDObjectConversionException {
         PRDDivide prdDivide = prdAction.getPRDDivide();
         PRDMultiply prdMultiply = prdAction.getPRDMultiply();
         try {
             if (prdDivide != null) {
-                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdDivide.getArg1());
-                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdDivide.getArg2());
+                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdDivide.getArg1(), propertyType);
+                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdDivide.getArg2(), propertyType);
             } else {
-                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdMultiply.getArg1());
-                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdMultiply.getArg2());
+                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdMultiply.getArg1(), propertyType);
+                expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdMultiply.getArg2(), propertyType);
             }
         } catch (ExpressionConversionException e) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, expressionAndValueValidator.getErrorMessage());
@@ -373,10 +376,10 @@ public class PRDValidator extends Validator {
      * 4) That the condition is either a single condition or a multiple one.
      */
     private void validateCommonPRDConditionValues(PRDCondition prdCondition, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
-        validatePRDConditionEntityAndProperty(prdCondition, entities, ruleName);
+        validatePRDConditionEntity(prdCondition, entities, ruleName);
 
         if (prdCondition.getSingularity().equals("single")) {
-            validatePRDConditionValue(prdCondition, expressionAndValueValidator, ruleName);
+            validatePRDConditionValueAndProperty(prdCondition, expressionAndValueValidator, ruleName);
         }
 
         if (prdCondition.getLogical() == null && prdCondition.getOperator() == null) {
@@ -435,7 +438,7 @@ public class PRDValidator extends Validator {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "One or two of the given replace action kill/create entities does not exist.");
         }
 
-        if (prdAction.getMode() == null || !prdAction.getMode().equals("scratch") || !prdAction.getMode().equals("derived")) {
+        if (prdAction.getMode() == null || (!prdAction.getMode().equals("scratch") && !prdAction.getMode().equals("derived"))) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given replace action does not contain valid mode");
         }
     }
@@ -468,10 +471,10 @@ public class PRDValidator extends Validator {
     }
 
     /**
-     * Property name is send to the method in order to use this method on calculation actions.
+     * Property name is send to the method in order to use this method on calculation actions, return the property type.
      */
-    private void validatePRDActionEntityAndProperty(PRDAction prdAction, String propertyName, Map<String, Entity> entities, String ruleName) throws PRDObjectConversionException {
-        String entityName = prdAction.getEntity();
+    private String validatePRDActionEntityAndProperty(PRDAction prdAction, String propertyName, Map<String, Entity> entities, String ruleName, ExpressionAndValueValidator expressionAndValueValidator) throws PRDObjectConversionException {
+        String entityName = prdAction.getEntity(), propertyType = null;
 
         if (!prdAction.getType().equals("kill") && propertyName == null) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given action's property doesn't exist.");
@@ -480,27 +483,24 @@ public class PRDValidator extends Validator {
         if (!entities.containsKey(entityName)) {
             addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given action's entity doesn't exist.");
         } else { // Can be done only if the given entity exists.
-            Map<String, Property> properties = entities.get(entityName).getProperties();
-
-            if (!prdAction.getType().equals("kill") && !properties.containsKey(propertyName)) {
-                addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, "The given action's entity doesn't possess this given property.");
+            if (!prdAction.getType().equals("kill")){
+                try {
+                    propertyType = expressionAndValueValidator.isPropertyExpressionIsValid(propertyName,entityName, false);
+                } catch (ExpressionConversionException e) {
+                    addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, expressionAndValueValidator.getErrorMessage());
+                }
             }
         }
+
+        return propertyType;
     }
 
-    private void validatePRDConditionEntityAndProperty(PRDCondition prdCondition, Map<String, Entity> entities, String ruleName) throws PRDObjectConversionException {
-        String entityName = prdCondition.getEntity(), propertyName;
+    private void validatePRDConditionEntity(PRDCondition prdCondition, Map<String, Entity> entities, String ruleName) throws PRDObjectConversionException {
+        String entityName = prdCondition.getEntity();
 
         if (prdCondition.getSingularity().equals("single")) {
             if (!entities.containsKey(entityName)) {
                 addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, "The given condition's entity doesn't exist.");
-            } else { // Can be done only if the given entity exists.
-                Map<String, Property> properties = entities.get(entityName).getProperties();
-                propertyName = prdCondition.getProperty();
-
-                if (!properties.containsKey(propertyName)) {
-                    addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, "The given action's entity doesn't possess this given property.");
-                }
             }
         }
     }
@@ -517,7 +517,7 @@ public class PRDValidator extends Validator {
     private void validatePRDTerminationNotEmpty(PRDTermination prdTermination) throws PRDObjectConversionException {
         List<Object> byTicksOrSec = prdTermination.getPRDBySecondOrPRDByTicks();
 
-        if (byTicksOrSec.isEmpty()) {
+        if (byTicksOrSec.isEmpty() && prdTermination.getPRDByUser() == null) {
             addErrorToListAndThrowException(prdTermination, "", "There are no ending conditions for this simulation.");
         }
     }

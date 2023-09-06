@@ -18,7 +18,7 @@ public class ProximitySubActions {
 
     public void invoke(EntityInstance sourceEntityInstance, EntityInstance targetEntityInstance, int lastChangTickCount){
         for (Action a: actionsToInvoke) {
-
+            // Todo: find a solution for this invoke, the actions can receive the source entity, but the value expression can be composed from the target entity property
         }
     }
 }

@@ -7,10 +7,17 @@ import simulation.properties.property.api.PropertyType;
 public class RegularValueExpression extends AbstractExpression {
 
     private final Object value;
+    private final PropertyType type;
 
-    public RegularValueExpression(PropertyType returnValueType, Object value) {
+    public RegularValueExpression(PropertyType returnValueType, Object value, PropertyType type) {
         super(returnValueType);
         this.value = value;
+        this.type = type;
+    }
+
+    @Override
+    public PropertyType getType() {
+        return type;
     }
 
     @Override

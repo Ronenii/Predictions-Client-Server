@@ -16,6 +16,11 @@ public class PercentExpression extends AbstractExpression {
     }
 
     @Override
+    public PropertyType getType() {
+        return PropertyType.FLOAT;
+    }
+
+    @Override
     public Object evaluate() {
         // ask aviad if the numbers must be int or double or both.
         Object ret;

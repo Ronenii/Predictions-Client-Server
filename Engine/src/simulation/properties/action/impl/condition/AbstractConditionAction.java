@@ -17,13 +17,12 @@ public abstract class AbstractConditionAction extends OneEntAction implements Se
     protected final ThenOrElse thenActions;
     protected final ThenOrElse elseActions;
 
-    public AbstractConditionAction(String property, String contextEntity, SecondaryEntity secondaryEntity, ThenOrElse thenActions, ThenOrElse elseActions, Expression value) {
-        super(ActionType.CONDITION, property, contextEntity, secondaryEntity);
+    public AbstractConditionAction(ActionType type, Expression contextProperty, String contextEntity, SecondaryEntity secondaryEntity, Expression value, ThenOrElse thenActions, ThenOrElse elseActions) {
+        super(type, contextProperty, contextEntity, secondaryEntity);
+        this.value = value;
         this.thenActions = thenActions;
         this.elseActions = elseActions;
-        this.value = value;
     }
-
 
     public boolean isTrue() {
         return isTrue;

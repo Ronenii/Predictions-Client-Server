@@ -7,13 +7,22 @@ import simulation.properties.property.api.PropertyType;
 
 public class TicksExpression extends AbstractExpression {
 
-    private final Property property;
+    private Property property;
     private final TicksCounter simulationTicks;
 
     public TicksExpression(PropertyType returnValueType, Property property, TicksCounter simulationTicks) {
         super(returnValueType);
         this.property = property;
         this.simulationTicks = simulationTicks;
+    }
+
+    public void setProperty(Property property) {
+        this.property = property;
+    }
+
+    @Override
+    public PropertyType getType() {
+        return PropertyType.DECIMAL;
     }
 
     @Override

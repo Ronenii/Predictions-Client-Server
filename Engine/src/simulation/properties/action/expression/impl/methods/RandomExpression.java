@@ -14,6 +14,11 @@ public class RandomExpression extends AbstractExpression {
     }
 
     @Override
+    public PropertyType getType() {
+        return PropertyType.DECIMAL;
+    }
+
+    @Override
     public Object evaluate() {
         Random random = new Random();
         return random.nextInt(range + 1);
