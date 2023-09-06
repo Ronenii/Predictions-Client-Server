@@ -25,6 +25,9 @@ public class ErrorBarComponentController {
     @FXML
     private HBox hBoxMessageBox;
 
+    @FXML
+    private HBox hBoxExpand;
+
     public void setMainController(AppController mainController) {
         this.mainController = mainController;
     }
@@ -51,14 +54,13 @@ public class ErrorBarComponentController {
         Hyperlink expandLink = new Hyperlink("expand");
         expandLink.minWidth(expandLink.getWidth());
         expandLink.setOnAction(event -> showErrorWindow(text));
-        VBox vbox = new VBox(expandLink);
-        VBox.setMargin(expandLink, new Insets(5,0,0,0));
 
         // Set a bit of space between the label and the hyperlink
         lblError.setGraphic(new Text("\n"));
         lblError.setGraphicTextGap(5);
 
-        hBoxMessageBox.getChildren().add(vbox);
+        hBoxExpand.getChildren().add(expandLink);
+        hBoxExpand.minWidth(hBoxExpand.getWidth());
     }
 
     private void showErrorWindow(String errorMessage) {
