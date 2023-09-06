@@ -1,5 +1,6 @@
 package gui.app;
 
+import gui.error.ErrorBarComponentController;
 import gui.header.component.HeaderComponentController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
@@ -12,13 +13,17 @@ public class AppController {
     @FXML private GridPane subMenus;
     @FXML private SubMenusController subMenusController;
 
+    @FXML private GridPane errorBarComponent;
+    @FXML private ErrorBarComponentController errorBarComponentController;
+
     public EngineAgent engineAgent;
 
     @FXML
     public void initialize() {
-        if(headerComponentController != null && subMenusController != null) {
+        if(headerComponentController != null && subMenusController != null && errorBarComponentController != null) {
             headerComponentController.setMainController(this);
             subMenusController.setMainController(this);
+            errorBarComponentController.setMainController(this);
             engineAgent = new EngineAgent();
         }
     }

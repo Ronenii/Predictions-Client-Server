@@ -34,6 +34,9 @@
                </children>
             </GridPane>
          </center>
+         <bottom>
+            <fx:include source="../error/ErrorBarComponent.fxml" />
+         </bottom>
       </BorderPane>
    </content>
 </ScrollPane>
