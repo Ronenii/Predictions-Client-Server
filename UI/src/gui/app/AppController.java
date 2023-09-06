@@ -33,6 +33,8 @@ public class AppController implements HasFileLoadedListeners {
         listeners.add(headerComponentController);
         listeners.addAll(subMenusController.getAllFileLoadedListeners());
         return listeners;
+
+
     }
 
 

@@ -75,7 +75,6 @@ public class HeaderComponentController implements FileLoadedEvent {
 
     }
 
-
     @FXML
     void resetTextOnMouseEnteredTextFieldListener(MouseEvent event) {
         resetTextFieldIfNotFocused();
