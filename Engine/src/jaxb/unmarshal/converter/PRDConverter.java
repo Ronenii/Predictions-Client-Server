@@ -459,7 +459,7 @@ public class PRDConverter {
         if (prdCondition.getSingularity().equals("single")) {
             PropertyType type = getActionPropertyAndValueType(prdCondition.getProperty(), prdCondition.getEntity());
             Expression property = expressionConverter.createExpressionObject(prdCondition.getProperty(), type, prdCondition.getEntity());
-            Expression expression = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition);
+            Expression expression = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition, property.getType());
             ret = new SingleCondition(ActionType.CONDITION, property, prdCondition.getEntity(), ConditionOperator.tryParse(prdCondition.getOperator()), expression);
         } else if (prdCondition.getSingularity().equals("multiple")) {
             ret = getMultipleConditionSelection(prdCondition);
@@ -531,7 +531,7 @@ public class PRDConverter {
         if (prdCondition.getSingularity().equals("single")) {
             PropertyType type = getActionPropertyAndValueType(prdCondition.getProperty(), prdCondition.getEntity());
             Expression property = expressionConverter.createExpressionObject(prdCondition.getProperty(), type, prdCondition.getEntity());
-            value = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition);
+            value = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition, property.getType());
             ret = new SingleCondition(ActionType.CONDITION, property, prdCondition.getEntity(), secondaryEntity, thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getOperator()), value);
         } else if (prdCondition.getSingularity().equals("multiple")) {
             ret = getMultipleConditionObject(prdCondition, thenActions, elseActions, secondaryEntity);
@@ -589,7 +589,7 @@ public class PRDConverter {
         if (prdCondition.getSingularity().equals("single")) {
             PropertyType type = getActionPropertyAndValueType(prdCondition.getProperty(), prdCondition.getEntity());
             Expression property = expressionConverter.createExpressionObject(prdCondition.getProperty(), type, prdCondition.getEntity());
-            value = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition);
+            value = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition, property.getType());
             ret = new SingleCondition(ActionType.CONDITION, property, prdCondition.getEntity(), ConditionOperator.tryParse(prdCondition.getOperator()), value);
         } else if (prdCondition.getSingularity().equals("multiple")) {
             ret = getMultipleConditionObject(prdCondition, null, null, null);

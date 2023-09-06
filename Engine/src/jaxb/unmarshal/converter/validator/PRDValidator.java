@@ -376,7 +376,7 @@ public class PRDValidator extends Validator {
      * 4) That the condition is either a single condition or a multiple one.
      */
     private void validateCommonPRDConditionValues(PRDCondition prdCondition, Map<String, Entity> entities, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
-        validatePRDConditionEntityAndProperty(prdCondition, entities, ruleName);
+        validatePRDConditionEntity(prdCondition, entities, ruleName);
 
         if (prdCondition.getSingularity().equals("single")) {
             validatePRDConditionValueAndProperty(prdCondition, expressionAndValueValidator, ruleName);
@@ -495,19 +495,12 @@ public class PRDValidator extends Validator {
         return propertyType;
     }
 
-    private void validatePRDConditionEntityAndProperty(PRDCondition prdCondition, Map<String, Entity> entities, String ruleName) throws PRDObjectConversionException {
-        String entityName = prdCondition.getEntity(), propertyName;
+    private void validatePRDConditionEntity(PRDCondition prdCondition, Map<String, Entity> entities, String ruleName) throws PRDObjectConversionException {
+        String entityName = prdCondition.getEntity();
 
         if (prdCondition.getSingularity().equals("single")) {
             if (!entities.containsKey(entityName)) {
                 addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, "The given condition's entity doesn't exist.");
-            } else { // Can be done only if the given entity exists.
-                Map<String, Property> properties = entities.get(entityName).getProperties();
-                propertyName = prdCondition.getProperty();
-
-                if (!properties.containsKey(propertyName)) {
-                    addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, "The given action's entity doesn't possess this given property.");
-                }
             }
         }
     }

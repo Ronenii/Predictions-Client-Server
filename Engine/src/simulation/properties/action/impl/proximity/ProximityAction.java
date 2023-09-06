@@ -13,7 +13,7 @@ public class ProximityAction extends AbstractAction {
 
     private final ProximitySubActions proximityActions;
 
-    public ProximityAction(String property, String contextEntity,SecondaryEntity secondaryEntity, String targetEntityName, Expression depth, ProximitySubActions proximityActions) {
+    public ProximityAction(Expression property, String contextEntity,SecondaryEntity secondaryEntity, String targetEntityName, Expression depth, ProximitySubActions proximityActions) {
         super(ActionType.PROXIMITY, property, contextEntity, secondaryEntity);
         this.targetEntityName = targetEntityName;
         this.depth = depth;

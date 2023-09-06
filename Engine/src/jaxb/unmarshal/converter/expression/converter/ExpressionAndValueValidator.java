@@ -68,10 +68,8 @@ public class ExpressionAndValueValidator {
             valueType = getExpressionType(prdValueStr, prdCondition.getEntity(),true);
         }
 
-        // In case of side method "Ticks", there is no need to invoke 'compareActionValueToGivenPropertyValue'.
-        if (!valueType.equals("Ticks")) {
-            compareActionValueToGivenPropertyValue(prdAction, prdCondition, valueType, propertyType);
-        }
+        compareActionValueToGivenPropertyValue(prdAction, prdCondition, valueType, propertyType);
+
     }
 
     public String isPropertyExpressionIsValid(String valueStr, String entityName, boolean isSingleConditionProperty) throws ExpressionConversionException {
@@ -141,7 +139,7 @@ public class ExpressionAndValueValidator {
                         ret = "DECIMAL";
                         break;
                     case EVALUATE:
-                        ret = getPropertyParamType(prdValueStr);
+                        ret = getPropertyParamType(param);
                         break;
                     case PERCENT:
                         ret = getTwoParamsType(prdValueStr, entityName);
@@ -150,13 +148,8 @@ public class ExpressionAndValueValidator {
                         // Try to validate the given properties, in this case, their type doesn't matter for the validation, only their existence.
                         // The use of 'getPropertyParamType' is to catch exceptions. Therefore, the result from 'getPropertyParamType' ignored,
                         // and the return value will be "Ticks" in order to stop the validation progress.
-                        getPropertyParamType(prdValueStr);
-                        if(isNotPropertyExpression){
-                            ret = "Ticks";
-                        }
-                        else {
-                            ret = "DECIMAL";
-                        }
+                        getPropertyParamType(param);
+                        ret = "DECIMAL";
                         break;
                 }
             } catch (Exception e) {
@@ -196,7 +189,7 @@ public class ExpressionAndValueValidator {
 
         if (dotIndex != -1) {
             entityName = valueStr.substring(0, dotIndex);
-            propertyName = valueStr.substring(dotIndex + 1, valueStr.length() - 1);
+            propertyName = valueStr.substring(dotIndex + 1, valueStr.length());
             property = entities.get(entityName).getProperties().get(propertyName);
             if (property == null) {
                 throw new Exception();

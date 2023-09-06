@@ -22,7 +22,7 @@ public class TicksExpression extends AbstractExpression {
 
     @Override
     public PropertyType getType() {
-        return property.getType();
+        return PropertyType.DECIMAL;
     }
 
     @Override

@@ -49,8 +49,7 @@ public class ExpressionConverter {
     /**
      * Invoke 'createExpressionObject' from PRDCondition object
      */
-    public Expression getExpressionObjectFromPRDCondition(PRDCondition prdCondition) {
-        PropertyType type = entities.get(prdCondition.getEntity()).getProperties().get(prdCondition.getProperty()).getType();
+    public Expression getExpressionObjectFromPRDCondition(PRDCondition prdCondition, PropertyType type) {
         return createExpressionObject(prdCondition.getValue(), type, prdCondition.getEntity());
     }
 
@@ -122,7 +121,7 @@ public class ExpressionConverter {
         String entityName, propertyName;
         int dotIndex = valueStr.indexOf(".");
         entityName = valueStr.substring(0,dotIndex);
-        propertyName = valueStr.substring(dotIndex + 1, valueStr.length() - 1);
+        propertyName = valueStr.substring(dotIndex + 1, valueStr.length());
         return entities.get(entityName).getProperties().get(propertyName);
     }
 
@@ -201,21 +200,21 @@ public class ExpressionConverter {
 
         switch (type) {
             case DECIMAL:
-                ret = new RegularValueExpression(PropertyType.DECIMAL, Integer.parseInt(valueStr));
+                ret = new RegularValueExpression(PropertyType.DECIMAL, Integer.parseInt(valueStr), PropertyType.DECIMAL);
                 break;
             case FLOAT:
-                ret = new RegularValueExpression(PropertyType.FLOAT, Double.parseDouble(valueStr));
+                ret = new RegularValueExpression(PropertyType.FLOAT, Double.parseDouble(valueStr), PropertyType.FLOAT);
                 break;
             case BOOLEAN:
                 if(valueStr.equals("true")){
-                    ret = new RegularValueExpression(PropertyType.BOOLEAN,true);
+                    ret = new RegularValueExpression(PropertyType.BOOLEAN,true, PropertyType.BOOLEAN);
                 }
                 else {
-                    ret = new RegularValueExpression(PropertyType.BOOLEAN,false);;
+                    ret = new RegularValueExpression(PropertyType.BOOLEAN,false, PropertyType.BOOLEAN);;
                 }
                 break;
             case STRING:
-                ret = new RegularValueExpression(PropertyType.STRING, valueStr);
+                ret = new RegularValueExpression(PropertyType.STRING, valueStr, PropertyType.FLOAT);
                 break;
         }
 

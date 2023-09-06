@@ -3,13 +3,14 @@ package simulation.properties.action.impl.replace;
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
+import simulation.properties.action.expression.api.Expression;
 
 public class ReplaceAction extends AbstractAction {
     private final String newEntityName;
 
     private final ReplaceActionType replaceType;
 
-    public ReplaceAction(String property, String contextEntity, String newEntityName,SecondaryEntity secondaryEntity, ReplaceActionType replaceType) {
+    public ReplaceAction(Expression property, String contextEntity, String newEntityName, SecondaryEntity secondaryEntity, ReplaceActionType replaceType) {
         super(ActionType.REPLACE, property, contextEntity, secondaryEntity);
         this.newEntityName = newEntityName;
         this.replaceType = replaceType;
