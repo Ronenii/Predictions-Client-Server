@@ -5,18 +5,18 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="gui.error.popup.popupErrorWindowController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.error.popup.PopupErrorWindowController">
   <columnConstraints>
     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
-    <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="400.0" />
+    <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity" prefWidth="400.0" />
       <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
-    <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
+    <RowConstraints minHeight="-Infinity" vgrow="ALWAYS" />
     <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <TextArea fx:id="taErrorDisplay" minHeight="200.0" minWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextArea fx:id="taErrorDisplay" editable="false" minHeight="200.0" minWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
    </children>
 </GridPane>

@@ -4,6 +4,7 @@ import gui.error.ErrorBarComponentController;
 import gui.header.component.HeaderComponentController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import manager.EngineAgent;
 
@@ -15,6 +16,8 @@ public class AppController {
 
     @FXML private GridPane errorBarComponent;
     @FXML private ErrorBarComponentController errorBarComponentController;
+
+    @FXML private AnchorPane anchorDisplay;
 
     public EngineAgent engineAgent;
 
@@ -28,5 +31,8 @@ public class AppController {
         }
     }
 
-
+    public void showErrorMessage(String errorMessage){
+        anchorDisplay.visibleProperty().set(true);
+        errorBarComponentController.setLblErrorText(errorMessage);
+    }
 }

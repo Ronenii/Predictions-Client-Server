@@ -60,8 +60,7 @@ public class HeaderComponentController {
             pathTF.setText(fileToLoad.getPath());
             currentLoadedFilePath = fileToLoad.getPath();
         }catch (IllegalArgumentException e){
-            // TODO: Change this to a graphical user notification
-            System.out.println(e);
+            mainController.showErrorMessage(e.getMessage());
         }
     }
 

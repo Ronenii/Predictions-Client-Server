@@ -35,7 +35,11 @@
             </GridPane>
          </center>
          <bottom>
-            <fx:include source="../error/ErrorBarComponent.fxml" />
+            <AnchorPane fx:id="anchorDisplay" visible="false" BorderPane.alignment="CENTER">
+               <children>
+                  <fx:include fx:id="errorBarComponent" source="../error/ErrorBarComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
          </bottom>
       </BorderPane>
    </content>
