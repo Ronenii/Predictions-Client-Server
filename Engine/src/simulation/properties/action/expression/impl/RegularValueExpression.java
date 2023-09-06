@@ -14,6 +14,11 @@ public class RegularValueExpression extends AbstractExpression {
     }
 
     @Override
+    public PropertyType getType() {
+        return null;
+    }
+
+    @Override
     public Object evaluate() {
         return value;
     }

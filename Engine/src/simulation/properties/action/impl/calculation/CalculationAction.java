@@ -42,6 +42,8 @@ public class CalculationAction extends OneEntAction implements Serializable {
             return;
         }
 
+        updateExpression(entityInstance, arg1);
+        updateExpression(entityInstance, arg2);
         switch (type){
             case MULTIPLY:
                 multiplyAndSetPropertyValue(toSet, lastChangeTickCount);

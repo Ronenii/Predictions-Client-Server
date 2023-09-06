@@ -35,6 +35,7 @@ public class DecreaseAction extends OneEntAction implements Serializable {
             return;
         }
 
+        updateExpression(entityInstance, value);
         switch (toDecrease.getType())
         {
             case DECIMAL:

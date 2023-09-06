@@ -14,6 +14,11 @@ public class EnvironmentExpression extends AbstractExpression {
     }
 
     @Override
+    public PropertyType getType() {
+        return envProperty.getType();
+    }
+
+    @Override
     public Object evaluate() {
         return envProperty.getValue();
     }

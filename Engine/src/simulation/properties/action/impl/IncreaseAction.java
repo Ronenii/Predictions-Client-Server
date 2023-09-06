@@ -35,6 +35,7 @@ public class IncreaseAction extends OneEntAction implements Serializable {
             return;
         }
 
+        updateExpression(entityInstance, value);
         switch (toIncrease.getType())
         {
             case DECIMAL:

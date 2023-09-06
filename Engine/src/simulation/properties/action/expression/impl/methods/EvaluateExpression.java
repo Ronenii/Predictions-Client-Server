@@ -5,11 +5,20 @@ import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
 
 public class EvaluateExpression extends AbstractExpression {
-    private final Property property;
+    private Property property;
 
     public EvaluateExpression(PropertyType returnValueType, Property property) {
         super(returnValueType);
         this.property = property;
+    }
+
+    public void setProperty(Property property) {
+        this.property = property;
+    }
+
+    @Override
+    public PropertyType getType() {
+        return property.getType();
     }
 
     @Override

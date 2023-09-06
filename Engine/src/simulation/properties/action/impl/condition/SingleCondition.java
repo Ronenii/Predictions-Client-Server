@@ -28,20 +28,14 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
     @Override
     public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         Object valueToCompare;
-        if(contextProperty instanceof PropertyValueExpression) {
-            String propertyName = ((Property)getContextProperty().evaluate()).getName();
-            valueToCompare = entityInstance.getPropertyByName(propertyName).getValue();
-        }
-        else {
-            // TODO: the expression method should be invoke on the instance's property, not on the Entity definition property.
-            valueToCompare = contextProperty.evaluate();
-        }
 
-
+        updateExpression(entityInstance, contextProperty);
+        valueToCompare = contextProperty.evaluate();
         if (valueToCompare == null) {
             return;
         }
 
+        updateExpression(entityInstance, value);
         switch (operator) {
             // These 2 operators don;t require casting for comparison
             case EQUALS:
@@ -61,28 +55,28 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
                 // For Lt & Bt we do require casting, it is handled in these funcs.
                 // We don't use generics since it doesn't allow these operators.
             default:
-                switch (toCompare.getType()){
+                switch (contextProperty.getType()){
                     case DECIMAL:
-                        compareInequalityByInteger(toCompare, entityInstance, lastChangeTickCount);
+                        compareInequalityByInteger(valueToCompare, entityInstance, lastChangeTickCount);
                         break;
                     case FLOAT:
-                        compareInequalityByFloat(toCompare, entityInstance, lastChangeTickCount);
+                        compareInequalityByFloat(valueToCompare, entityInstance, lastChangeTickCount);
                         break;
                 }
         }
     }
 
-    private void compareInequalityByInteger(Property toCompare, EntityInstance entityInstance, int lastChangTickCount){
+    private void compareInequalityByInteger(Object toCompare, EntityInstance entityInstance, int lastChangTickCount){
         switch (operator) {
             case BIGGER_THAN:
-                if ((int) toCompare.getValue() > (int) getValue()) {
+                if ((int) toCompare > (int) getValue()) {
                     invokeThenActions(entityInstance, lastChangTickCount);
                 } else {
                     invokeElseActions(entityInstance, lastChangTickCount);
                 }
                 break;
             case LESSER_THAN:
-                if ((int) toCompare.getValue() < (int) getValue()) {
+                if ((int) toCompare < (int) getValue()) {
                     invokeThenActions(entityInstance, lastChangTickCount);
                 } else {
                     invokeElseActions(entityInstance, lastChangTickCount);
@@ -91,17 +85,17 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
         }
     }
 
-    private void compareInequalityByFloat(Property toCompare, EntityInstance entityInstance, int lastChangTickCount){
+    private void compareInequalityByFloat(Object toCompare, EntityInstance entityInstance, int lastChangTickCount){
         switch (operator) {
             case BIGGER_THAN:
-                if ((double) toCompare.getValue() > (double) getValue()) {
+                if ((double) toCompare > (double) getValue()) {
                     invokeThenActions(entityInstance, lastChangTickCount);
                 } else {
                     invokeElseActions(entityInstance, lastChangTickCount);
                 }
                 break;
             case LESSER_THAN:
-                if ((double) toCompare.getValue() < (double) getValue()) {
+                if ((double) toCompare < (double) getValue()) {
                     invokeThenActions(entityInstance, lastChangTickCount);
                 } else {
                     invokeElseActions(entityInstance, lastChangTickCount);
