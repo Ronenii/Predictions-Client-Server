@@ -1,5 +1,6 @@
 package simulation.objects.world;
 import engine2ui.simulation.result.ResultData;
+import jaxb.event.FileLoadedEvent;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
@@ -12,6 +13,7 @@ import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ public class World implements Serializable {
     private long startingTime;
     private final int threadCount;
     private final Grid grid;
+    private List<EventListener> listeners;
 
     public World(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
         this.environmentProperties = environmentProperties;
@@ -37,6 +40,17 @@ public class World implements Serializable {
         this.timePassed = -1;
         this.threadCount = threadCount;
         this.grid = grid;
+    }
+
+    public void addListeners(List<EventListener> listeners){
+        this.listeners = listeners;
+    }
+
+    public void invokeListeners(){
+        for(EventListener f: listeners){
+            FileLoadedEvent fileLoadedEvent = (FileLoadedEvent) f;
+            fileLoadedEvent.onFileLoaded();
+        }
     }
 
     public Map<String, Property> getEnvironmentProperties() {

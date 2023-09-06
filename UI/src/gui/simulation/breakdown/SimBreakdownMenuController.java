@@ -1,12 +1,11 @@
 package gui.simulation.breakdown;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
-import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
-import engine2ui.simulation.genral.impl.properties.DTOGridAndThread;
 import engine2ui.simulation.genral.impl.properties.DTORule;
 import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
+import gui.api.HasFileLoadedListeners;
 import gui.simulation.breakdown.details.DisplayComponentController;
 import gui.simulation.breakdown.details.entity.property.PropertyDetailsController;
 import gui.simulation.breakdown.details.envrionment.EnvironmentVarDetailsController;
@@ -19,13 +18,13 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 
-
 import java.io.IOException;
 import java.net.URL;
+import java.util.EventListener;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class SimBreakdownMenuController implements Initializable {
+public class SimBreakdownMenuController implements Initializable, HasFileLoadedListeners {
 
     private SubMenusController mainController;
     private PreviewData previewData;
@@ -186,4 +185,9 @@ public class SimBreakdownMenuController implements Initializable {
 
     }
 
+    @Override
+    public List<EventListener> getAllFileLoadedListeners() {
+        //TODO: Get all file loaded listeners to from sub components
+        return null;
+    }
 }

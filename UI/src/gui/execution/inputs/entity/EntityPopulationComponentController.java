@@ -7,8 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import jaxb.event.FileLoadedEvent;
 
-public class EntityPopulationComponentController {
+public class EntityPopulationComponentController implements FileLoadedEvent {
 
     private InputsController mainController;
     @FXML
@@ -37,4 +38,8 @@ public class EntityPopulationComponentController {
 
     }
 
+    @Override
+    public void onFileLoaded() {
+
+    }
 }

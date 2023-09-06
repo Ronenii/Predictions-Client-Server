@@ -7,8 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import jaxb.event.FileLoadedEvent;
 
-public class EnvironmentVariablesComponentController {
+public class EnvironmentVariablesComponentController implements FileLoadedEvent {
 
     private InputsController mainController;
     @FXML
@@ -40,4 +41,8 @@ public class EnvironmentVariablesComponentController {
 
     }
 
+    @Override
+    public void onFileLoaded() {
+
+    }
 }

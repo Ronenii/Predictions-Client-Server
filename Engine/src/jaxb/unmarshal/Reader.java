@@ -16,8 +16,6 @@ import java.io.InputStream;
  * A class designated to read the XML file data and convert it to program objects we can work with.
  */
 public class Reader {
-
-
     /**
      * Given an XML file, reads the world settings in it and returns the world object.
      * Reads the XML world into an intermediate class from the given schema and converts the intermediate Object to an object used in the program.
@@ -52,8 +50,8 @@ public class Reader {
     }
 
     /**
+     * validates that the file exists and that is an .xml file, otherwise throws exception.
      * @param path a path to a world configuration xml file.
-     * @return true if the file exists and that is an .xml file, false otherwise.
      */
     public static void validatePath(String path) {
         File filePath = new File(path);
