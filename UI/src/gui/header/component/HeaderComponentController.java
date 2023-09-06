@@ -1,12 +1,14 @@
 package gui.header.component;
 
 import gui.app.AppController;
+import gui.header.component.queue.manager.QueueManagerComponentController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import jaxb.event.FileLoadedEvent;
 import java.io.File;
@@ -15,8 +17,12 @@ public class HeaderComponentController implements FileLoadedEvent {
     private AppController mainController;
     @FXML
     private Button loadFileBTN;
+
     @FXML
-    private Button queueManBTN;
+    private GridPane QueueManagerComponent;
+
+    @FXML private QueueManagerComponentController queueManagerComponentController;
+
     @FXML
     private TextField pathTF;
     @FXML
@@ -27,6 +33,12 @@ public class HeaderComponentController implements FileLoadedEvent {
     public void setMainController(AppController mainController) {
         this.mainController = mainController;
         currentLoadedFilePath = "";
+    }
+
+    public void initialize() {
+        if(queueManagerComponentController != null) {
+            queueManagerComponentController.setMainController(this);
+        }
     }
 
     /**
@@ -45,17 +57,17 @@ public class HeaderComponentController implements FileLoadedEvent {
 
         File selectedFile = fileChooser.showOpenDialog(null);
 
-        if(selectedFile != null){
+        if (selectedFile != null) {
             loadFileAndUpdateHeader(selectedFile);
         }
     }
 
-    private void loadFileAndUpdateHeader(File fileToLoad){
+    private void loadFileAndUpdateHeader(File fileToLoad) {
         try {
             mainController.engineAgent.loadSimulationFromFile(fileToLoad, mainController.getAllFileLoadedListeners());
             pathTF.setText(fileToLoad.getPath());
             currentLoadedFilePath = fileToLoad.getPath();
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             // TODO: Change this to a graphical user notification
             System.out.println(e.getMessage());
         }
@@ -63,16 +75,11 @@ public class HeaderComponentController implements FileLoadedEvent {
 
     @FXML
     void loadFileTextFieldListener(ActionEvent event) {
-        if(!pathTF.getText().equals(currentLoadedFilePath)){
+        if (!pathTF.getText().equals(currentLoadedFilePath)) {
             File file = new File(pathTF.getText());
 
             loadFileAndUpdateHeader(file);
         }
-    }
-
-    @FXML
-    void queueManButtonActionListener(ActionEvent event) {
-
     }
 
     @FXML
@@ -85,8 +92,8 @@ public class HeaderComponentController implements FileLoadedEvent {
         resetTextFieldIfNotFocused();
     }
 
-    private void resetTextFieldIfNotFocused(){
-        if(!pathTF.isFocused()){
+    private void resetTextFieldIfNotFocused() {
+        if (!pathTF.isFocused()) {
             pathTF.setText(currentLoadedFilePath);
         }
     }
