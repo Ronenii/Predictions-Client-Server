@@ -1,14 +1,18 @@
 package gui.sub.menus;
 
 import engine2ui.simulation.prview.PreviewData;
+import gui.api.HasFileLoadedListeners;
 import gui.app.AppController;
 import gui.execution.NewExecutionComponentController;
 import gui.result.ResultComponentController;
 import gui.simulation.breakdown.SimBreakdownMenuController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
+import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.List;
 
-public class SubMenusController {
+public class SubMenusController implements HasFileLoadedListeners {
     private AppController mainController;
     @FXML private GridPane simBreakdownMenu;
     @FXML private SimBreakdownMenuController simBreakdownMenuController;
@@ -34,4 +38,11 @@ public class SubMenusController {
         simBreakdownMenuController.setPreviewData(previewData);
     }
 
+    @Override
+    public List<EventListener> getAllFileLoadedListeners() {
+        List<EventListener> listeners = new ArrayList<>();
+        listeners.addAll(simBreakdownMenuController.getAllFileLoadedListeners());
+        listeners.addAll(newExecutionComponentController.getAllFileLoadedListeners());
+        return listeners;
+    }
 }

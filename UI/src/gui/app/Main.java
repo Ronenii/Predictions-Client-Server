@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 
-public class Main extends Application{
+public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -24,6 +24,6 @@ public class Main extends Application{
 
     public static void main(String[] args) {
         Thread.currentThread().setName("mainGUI");
-        launch(args);;
+        launch(args);
     }
 }

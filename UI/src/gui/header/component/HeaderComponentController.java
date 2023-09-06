@@ -8,14 +8,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
-import manager.EngineAgent;
-import manager.EngineInterface;
-
-import javax.swing.*;
-import java.awt.*;
+import jaxb.event.FileLoadedEvent;
 import java.io.File;
 
-public class HeaderComponentController {
+public class HeaderComponentController implements FileLoadedEvent {
     private AppController mainController;
     @FXML
     private Button loadFileBTN;
@@ -56,12 +52,12 @@ public class HeaderComponentController {
 
     private void loadFileAndUpdateHeader(File fileToLoad){
         try {
-            mainController.engineAgent.loadSimulationFromFile(fileToLoad);
+            mainController.engineAgent.loadSimulationFromFile(fileToLoad, mainController.getAllFileLoadedListeners());
             pathTF.setText(fileToLoad.getPath());
             currentLoadedFilePath = fileToLoad.getPath();
         }catch (IllegalArgumentException e){
             // TODO: Change this to a graphical user notification
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -79,7 +75,6 @@ public class HeaderComponentController {
 
     }
 
-
     @FXML
     void resetTextOnMouseEnteredTextFieldListener(MouseEvent event) {
         resetTextFieldIfNotFocused();
@@ -96,4 +91,8 @@ public class HeaderComponentController {
         }
     }
 
+    @Override
+    public void onFileLoaded() {
+
+    }
 }

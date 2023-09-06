@@ -8,7 +8,7 @@ import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.result.ResultData;
 import engine2ui.simulation.result.ResultInfo;
 import manager.exception.SimulationNotLoadedException;
-import ui2engine.simulation.func1.DTOFirstFunction;
+import ui2engine.simulation.load.DTOLoadFile;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.start.StartData;
 import input.Input;
@@ -48,8 +48,8 @@ public class EngineAgent {
      * prompts the user to input a path to a simulation XML config file and loads it
      * into the system.
      */
-    public void loadSimulationFromFile(File file) {
-        DTOLoadSucceed dtoLoadSucceed = engine.loadSimulationFromFile(new DTOFirstFunction(file));
+    public void loadSimulationFromFile(File file, List<EventListener> listeners) {
+        DTOLoadSucceed dtoLoadSucceed = engine.loadSimulationFromFile(new DTOLoadFile(file, listeners));
 
         /* If we succeeded in creating the simulation we want to reset the engine.
          If a simulation was loaded beforehand and the creation failed we don't want
@@ -129,7 +129,7 @@ public class EngineAgent {
 
         while (valueIsNotValid) {
             // If after an error the user decide to random initialize the value.
-            if (value.equals("")) {
+            if (value.isEmpty()) {
                 break;
             }
 
@@ -186,23 +186,25 @@ public class EngineAgent {
         Console.showShortDetailsOfAllPastSimulations(pastSimulationsResultData);
 
         // Break out if there is no sim data to display.
-        if (pastSimulationsResultData.length == 0) {
+        if (pastSimulationsResultData.length != 0) {
+            if (pastSimulationsResultData.length == 1) {
+                Console.println("Only one result to display.\n");
+                chooseHowToDisplayResult(pastSimulationsResultData[0]);
+            }
+
+            // Get user input for the simulation run he wants to display.
+            // Get user input on how he wants to display it.
+            // Display the user chosen simulation run, in the way he chose it.
+            else {
+                int simResultNumber = Input.getIntInputForListedItem("Choose the simulation you wish to display", pastSimulationsResultData.length);
+                chooseHowToDisplayResult((pastSimulationsResultData[simResultNumber - 1]));
+            }
         }
 
         // If there is only one simulation, there is no need to ask the user what simulation
         // he wants to display.
-        else if (pastSimulationsResultData.length == 1) {
-            Console.println("Only one result to display.\n");
-            chooseHowToDisplayResult(pastSimulationsResultData[0]);
-        }
 
-        // Get user input for the simulation run he wants to display.
-        // Get user input on how he wants to display it.
-        // Display the user chosen simulation run, in the way he chose it.
-        else {
-            int simResultNumber = Input.getIntInputForListedItem("Choose the simulation you wish to display", pastSimulationsResultData.length);
-            chooseHowToDisplayResult((pastSimulationsResultData[simResultNumber - 1]));
-        }
+
     }
 
     /**
