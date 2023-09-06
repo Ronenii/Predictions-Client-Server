@@ -1,7 +1,7 @@
 package simulation.properties.action.api;
 
 import simulation.objects.entity.EntityInstance;
-
+import simulation.properties.action.expression.api.Expression;
 
 
 public interface Action {
@@ -9,7 +9,7 @@ public interface Action {
 
     String getContextEntity();
 
-    String getContextProperty();
+    Expression getContextProperty();
 
     Object getValue();
 

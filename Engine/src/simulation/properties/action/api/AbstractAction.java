@@ -1,14 +1,16 @@
 package simulation.properties.action.api;
 
+import simulation.properties.action.expression.api.Expression;
+
 public abstract class AbstractAction implements Action {
 
     private final ActionType type;
-    private final String contextProperty;
+    protected final Expression contextProperty;
     private final String contextEntity;
 
     private final SecondaryEntity secondaryEntity;
 
-    public AbstractAction(ActionType type, String contextProperty, String contextEntity, SecondaryEntity secondaryEntity) {
+    public AbstractAction(ActionType type, Expression contextProperty, String contextEntity, SecondaryEntity secondaryEntity) {
         this.type = type;
         this.contextEntity = contextEntity;
         this.contextProperty = contextProperty;
@@ -21,7 +23,7 @@ public abstract class AbstractAction implements Action {
     }
 
     @Override
-    public String getContextProperty() {
+    public Expression getContextProperty() {
         return contextProperty;
     }
 

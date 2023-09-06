@@ -11,8 +11,8 @@ import java.io.Serializable;
 public class DecreaseAction extends OneEntAction implements Serializable {
     private final Expression value;
 
-    public DecreaseAction(String property, String contextEntity,SecondaryEntity secondaryEntity, Expression value) {
-        super(ActionType.DECREASE, property, contextEntity, secondaryEntity);
+    public DecreaseAction(ActionType type, Expression contextProperty, String contextEntity, SecondaryEntity secondaryEntity, Expression value) {
+        super(type, contextProperty, contextEntity, secondaryEntity);
         this.value = value;
     }
 
@@ -28,7 +28,8 @@ public class DecreaseAction extends OneEntAction implements Serializable {
      */
     @Override
     public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
-        Property toDecrease = entityInstance.getPropertyByName(getContextProperty());
+        String propertyName = ((Property)getContextProperty().evaluate()).getName();
+        Property toDecrease = entityInstance.getPropertyByName(propertyName);
 
         if(toDecrease == null){
             return;

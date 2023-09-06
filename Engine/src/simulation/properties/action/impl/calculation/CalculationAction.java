@@ -13,8 +13,8 @@ public class CalculationAction extends OneEntAction implements Serializable {
     private Expression arg2;
     private final CalculationType type;
 
-    public CalculationAction(String property, String contextEntity, SecondaryEntity secondaryEntity,Expression arg1, Expression arg2, CalculationType type1) {
-        super(ActionType.CALCULATION, property, contextEntity, secondaryEntity);
+    public CalculationAction(ActionType type, Expression contextProperty, String contextEntity, SecondaryEntity secondaryEntity, Expression arg1, Expression arg2, CalculationType type1) {
+        super(type, contextProperty, contextEntity, secondaryEntity);
         this.arg1 = arg1;
         this.arg2 = arg2;
         this.type = type1;
@@ -35,7 +35,8 @@ public class CalculationAction extends OneEntAction implements Serializable {
 
     @Override
     public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
-        Property toSet = entityInstance.getPropertyByName(getContextProperty());
+        String propertyName = ((Property)getContextProperty().evaluate()).getName();
+        Property toSet = entityInstance.getPropertyByName(propertyName);
 
         if(toSet == null){
             return;
