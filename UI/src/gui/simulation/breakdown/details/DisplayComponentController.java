@@ -26,8 +26,7 @@ public class DisplayComponentController implements FileLoadedEvent {
     }
 
     public Object loadFXMLComponent(String fxmlFileName) throws IOException {
-        String currentDirectory = System.getProperty("user.dir");
-        FXMLLoader loader = new FXMLLoader(DisplayComponentController.class.getResource(fxmlFileName));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
         clearGridPaneCell();
         grdDisplay.add(loader.load(),1, 3);
 

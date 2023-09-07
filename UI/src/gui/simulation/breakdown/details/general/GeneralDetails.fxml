@@ -44,8 +44,8 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label id="lbl-EndingConditionDetails-Ticks" fx:id="lblEndingTicks" text="Placeholder" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-      <Label id="lbl-EndingConditionDetails-Seconds" fx:id="lblEndingSeconds" text="Placeholder" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+      <Label id="lbl-EndingConditionDetails-Ticks" fx:id="lblEndingTicks" text="-" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+      <Label id="lbl-EndingConditionDetails-Seconds" fx:id="lblEndingSeconds" text="-" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
       <Label text="Ending By" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1">
          <font>
             <Font name="System Bold" size="15.0" />
