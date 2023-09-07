@@ -20,6 +20,12 @@ public class SetAction extends OneEntAction implements Serializable {
     public Object getValue() {
         return value.evaluate();
     }
+
+    @Override
+    public Expression getValueExpression() {
+        return value;
+    }
+
     @Override
     public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         String propertyName = ((Property)getContextProperty().evaluate()).getName();

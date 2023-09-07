@@ -21,6 +21,11 @@ public class IncreaseAction extends OneEntAction implements Serializable {
         return value;
     }
 
+    @Override
+    public Expression getValueExpression() {
+        return value;
+    }
+
     /**
      * Increases the value of a property based on the property's type.
      * Increases actions can only take place on decimal or floats.

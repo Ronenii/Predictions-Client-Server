@@ -59,6 +59,11 @@ public abstract class AbstractConditionAction extends OneEntAction implements Se
         return value.evaluate();
     }
 
+    @Override
+    public Expression getValueExpression() {
+        return value;
+    }
+
     /**
      * Invokes all "thenActions" on the given entity instance.
      * If this is activated then this condition must be true.

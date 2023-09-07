@@ -18,6 +18,11 @@ public class KillAction extends OneEntAction implements Serializable {
     }
 
     @Override
+    public Expression getValueExpression() {
+        return null;
+    }
+
+    @Override
     public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         entityInstance.kill();
     }

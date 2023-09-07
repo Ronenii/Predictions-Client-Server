@@ -43,6 +43,6 @@ public class DisplayComponentController implements FileLoadedEvent {
 
     @Override
     public void onFileLoaded(PreviewData previewData) {
-
+        lblTitle.setText("The simulation creation has completed successfully");
     }
 }
