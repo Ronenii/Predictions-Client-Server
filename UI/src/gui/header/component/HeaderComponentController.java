@@ -12,6 +12,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import jaxb.event.FileLoadedEvent;
 import java.io.File;
+import java.util.EventListener;
+import java.util.List;
 
 public class HeaderComponentController implements FileLoadedEvent {
     private AppController mainController;

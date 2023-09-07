@@ -98,7 +98,7 @@ public class ExpressionConverter {
                     break;
                 case EVALUATE:
                     Property propertyForEvaluate = getProperty(param);
-                    ret = new EvaluateExpression(propertyForEvaluate.getType(), propertyForEvaluate);
+                    ret = new EvaluateExpression(propertyForEvaluate.getType(), propertyForEvaluate, getEntityName(param));
                     break;
                 case PERCENT:
                     twoParams = getTwoParams(valueStr);
@@ -106,7 +106,7 @@ public class ExpressionConverter {
                     break;
                 case TICKS:
                     Property propertyForTicks = getProperty(param);
-                    ret = new TicksExpression(propertyForTicks.getType(), propertyForTicks, ticksCounter);
+                    ret = new TicksExpression(propertyForTicks.getType(), propertyForTicks, ticksCounter, getEntityName(param));
                     break;
             }
         }
@@ -126,13 +126,22 @@ public class ExpressionConverter {
     }
 
     /**
+     * Receive string represent by this format: "<Entity>.<Property>", extract and return the entity's name if exists.
+     */
+    private String getEntityName(String valueStr) {
+        int dotIndex = valueStr.indexOf(".");
+
+        return valueStr.substring(0,dotIndex);
+    }
+
+    /**
      * Receive string which represent a call to the side method "Percent", extract the two parameters from the string
      * and create a "TwoParams" object with these two params.
      */
     private TwoParams getTwoParams(String valueStr) {
         int openParenIndex = valueStr.indexOf("(");
-        String argumentsStr = valueStr.substring(openParenIndex, valueStr.length() - 1);
-        String[] arguments = argumentsStr.split(", ");
+        String argumentsStr = valueStr.substring(openParenIndex + 1, valueStr.length() - 1);
+        String[] arguments = argumentsStr.split(",");
         return new TwoParams(arguments[0], arguments[1]);
     }
 

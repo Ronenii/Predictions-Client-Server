@@ -6,10 +6,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import jaxb.event.FileLoadedEvent;
 
 import java.io.IOException;
 
-public class DisplayComponentController {
+public class DisplayComponentController implements FileLoadedEvent {
 
     @FXML
     private GridPane grdDisplay;
@@ -37,5 +38,10 @@ public class DisplayComponentController {
                 break;
             }
         }
+    }
+
+    @Override
+    public void onFileLoaded() {
+
     }
 }

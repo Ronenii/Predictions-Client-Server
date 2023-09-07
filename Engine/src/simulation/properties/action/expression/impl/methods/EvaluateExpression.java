@@ -6,14 +6,20 @@ import simulation.properties.property.api.PropertyType;
 
 public class EvaluateExpression extends AbstractExpression {
     private Property property;
+    private final String entityName;
 
-    public EvaluateExpression(PropertyType returnValueType, Property property) {
+    public EvaluateExpression(PropertyType returnValueType, Property property, String entityName) {
         super(returnValueType);
         this.property = property;
+        this.entityName = entityName;
     }
 
     public void setProperty(Property property) {
         this.property = property;
+    }
+
+    public String getEntityName() {
+        return entityName;
     }
 
     @Override

@@ -9,11 +9,13 @@ public class TicksExpression extends AbstractExpression {
 
     private Property property;
     private final TicksCounter simulationTicks;
+    private final String entityName;
 
-    public TicksExpression(PropertyType returnValueType, Property property, TicksCounter simulationTicks) {
+    public TicksExpression(PropertyType returnValueType, Property property, TicksCounter simulationTicks, String entityName) {
         super(returnValueType);
         this.property = property;
         this.simulationTicks = simulationTicks;
+        this.entityName = entityName;
     }
 
     public void setProperty(Property property) {
@@ -23,6 +25,10 @@ public class TicksExpression extends AbstractExpression {
     @Override
     public PropertyType getType() {
         return PropertyType.DECIMAL;
+    }
+
+    public String getEntityName() {
+        return entityName;
     }
 
     @Override

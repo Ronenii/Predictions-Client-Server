@@ -207,7 +207,7 @@ public class DTOCreator {
 
     private DTOAction getDTOAction(Action action){
         DTOAction ret = null;
-        String type = action.getType().toString().toLowerCase(), mainEntity = action.getContextEntity(), secondaryEntity = null, property = action.getContextProperty();
+        String type = action.getType().toString().toLowerCase(), mainEntity = action.getContextEntity(), secondaryEntity = null, property = action.getContextProperty().toString();
 
         if(action.getSecondaryEntity() != null){
             secondaryEntity = action.getSecondaryEntity().getContextEntity();

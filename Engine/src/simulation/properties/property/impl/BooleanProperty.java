@@ -10,8 +10,8 @@ import java.io.Serializable;
 
 public class BooleanProperty extends AbstractProperty implements Serializable {
 
-    public BooleanProperty(String name, boolean isRandInit, Object value) {
-        super(name, isRandInit, PropertyType.BOOLEAN, value);
+    public BooleanProperty(String name, boolean isRandInit, Object value, String entityName) {
+        super(name, isRandInit, PropertyType.BOOLEAN, value, entityName);
     }
 
     /**
@@ -20,7 +20,7 @@ public class BooleanProperty extends AbstractProperty implements Serializable {
      */
     public BooleanProperty(String name)
     {
-        super(name, false, PropertyType.BOOLEAN, null);
+        super(name, false, PropertyType.BOOLEAN, null, null);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class BooleanProperty extends AbstractProperty implements Serializable {
 
     @Override
     public Property dupProperty() {
-        return new BooleanProperty(getName(),isRandInit(),getValue());
+        return new BooleanProperty(getName(),isRandInit(),getValue(), getEntityName());
     }
 
     @Override
@@ -46,6 +46,6 @@ public class BooleanProperty extends AbstractProperty implements Serializable {
         RandomValueGenerator<Boolean> randomValueGenerator = new BoolRndValueGen();
         value = randomValueGenerator.generateRandomValue();
 
-        return new BooleanProperty(getName(),isRandInit(), value);
+        return new BooleanProperty(getName(),isRandInit(), value, getEntityName());
     }
 }

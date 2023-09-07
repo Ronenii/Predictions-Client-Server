@@ -5,6 +5,7 @@ import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.expression.impl.PropertyValueExpression;
 import simulation.properties.action.expression.impl.RegularValueExpression;
 import simulation.properties.action.expression.impl.methods.EvaluateExpression;
+import simulation.properties.action.expression.impl.methods.PercentExpression;
 import simulation.properties.action.expression.impl.methods.TicksExpression;
 import simulation.properties.property.api.Property;
 
@@ -80,6 +81,52 @@ public abstract class AbstractAction implements Action {
                 ((EvaluateExpression)expression).setProperty(instanceProperty);
             }
         }
+    }
+
+    // Todo: find where to use this.
+    protected void updatePercentExpression(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, PercentExpression percentExpression) {
+        Expression exp1 = percentExpression.getArg1(), exp2 = percentExpression.getArg2();
+
+        if (exp1 instanceof PercentExpression){
+            updatePercentExpression(firstEntityInstance, secondEntityInstance, (PercentExpression)exp1);
+        }
+        else {
+            updateSubExpression(firstEntityInstance, secondEntityInstance, exp1);
+        }
+
+        if(exp2 instanceof PercentExpression){
+            updatePercentExpression(firstEntityInstance, secondEntityInstance, (PercentExpression)exp2);
+        }
+        else {
+            updateSubExpression(firstEntityInstance, secondEntityInstance, exp2);
+        }
+    }
+
+    private void updateSubExpression(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Expression expression){
+        String expressionEntityName = getEntityNameIfEvalOrTicksOrRegularProperty(expression);
+
+        if(expressionEntityName != null){
+            if(expressionEntityName.equals(firstEntityInstance.getInstanceEntityName())){
+                updateExpression(firstEntityInstance, expression);
+            }
+            else {
+                updateExpression(secondEntityInstance, expression);
+            }
+        }
+    }
+
+    private String getEntityNameIfEvalOrTicksOrRegularProperty(Expression expression) {
+        String expressionEntityName = null;
+
+        if(expression instanceof EvaluateExpression){
+            expressionEntityName = ((EvaluateExpression)expression).getEntityName();
+        } else if (expression instanceof TicksExpression) {
+            expressionEntityName = ((TicksExpression)expression).getEntityName();
+        } else if (expression instanceof PropertyValueExpression) {
+            expressionEntityName = ((PropertyValueExpression)expression).getPropertyEntityName();
+        }
+
+        return expressionEntityName;
     }
 
 }

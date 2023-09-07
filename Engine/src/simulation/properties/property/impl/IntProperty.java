@@ -13,8 +13,8 @@ public class IntProperty extends AbstractProperty implements RangedProperty, Ser
     private int from;
     private int to;
 
-    public IntProperty(String name, boolean isRandInit, Object value, int from, int to) {
-        super(name, isRandInit, PropertyType.DECIMAL, value);
+    public IntProperty(String name, boolean isRandInit, Object value, int from, int to, String entityName) {
+        super(name, isRandInit, PropertyType.DECIMAL, value, entityName);
         this.from = from;
         this.to = to;
     }
@@ -25,7 +25,7 @@ public class IntProperty extends AbstractProperty implements RangedProperty, Ser
      */
     public IntProperty(String name, int from, int to)
     {
-        super(name, false, PropertyType.DECIMAL, null);
+        super(name, false, PropertyType.DECIMAL, null, null);
         this.from = from;
         this.to = to;
     }
@@ -56,7 +56,7 @@ public class IntProperty extends AbstractProperty implements RangedProperty, Ser
 
     @Override
     public Property dupProperty() {
-        return new IntProperty(getName(),isRandInit(), getValue(), from, to);
+        return new IntProperty(getName(),isRandInit(), getValue(), from, to, getEntityName());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class IntProperty extends AbstractProperty implements RangedProperty, Ser
         RandomValueGenerator<Integer> randomValueGenerator = new IntRndValueGen(from, to);
         value = randomValueGenerator.generateRandomValue();
 
-        return new IntProperty(getName(),isRandInit(), value, from, to);
+        return new IntProperty(getName(),isRandInit(), value, from, to, getEntityName());
     }
 
 }
