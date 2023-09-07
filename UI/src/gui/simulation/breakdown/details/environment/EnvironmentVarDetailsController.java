@@ -1,4 +1,4 @@
-package gui.simulation.breakdown.details.envrionment;
+package gui.simulation.breakdown.details.environment;
 
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import javafx.fxml.FXML;

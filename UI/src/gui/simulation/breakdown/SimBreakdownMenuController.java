@@ -8,7 +8,7 @@ import engine2ui.simulation.start.DTOEnvironmentVariable;
 import gui.api.HasFileLoadedListeners;
 import gui.simulation.breakdown.details.DisplayComponentController;
 import gui.simulation.breakdown.details.entity.property.PropertyDetailsController;
-import gui.simulation.breakdown.details.envrionment.EnvironmentVarDetailsController;
+import gui.simulation.breakdown.details.environment.EnvironmentVarDetailsController;
 import gui.simulation.breakdown.details.general.GeneralDetailsController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
@@ -169,7 +169,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     }
 
     private void setEntitiesComponent(TreeItem<String> selectedItem, String entityName) throws IOException {
-        PropertyDetailsController propertyDetailsController = (PropertyDetailsController)displayComponentController.loadFXMLComponent("details/entity/property/PropertyDetails.fxml");
+        PropertyDetailsController propertyDetailsController = (PropertyDetailsController)displayComponentController.loadFXMLComponent("entity/property/PropertyDetails.fxml");
         displayComponentController.setLblTitle(selectedItem.getValue());
         for (DTOEntity entity : previewData.getEntities()) {
             if(entity.getName().equals(entityName)){
@@ -185,7 +185,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     }
 
     private void setGeneralComponent(TreeItem<String> selectedItem) throws IOException {
-        GeneralDetailsController generalDetailsController = (GeneralDetailsController)displayComponentController.loadFXMLComponent("details/general/GeneralDetails.fxml");
+        GeneralDetailsController generalDetailsController = (GeneralDetailsController)displayComponentController.loadFXMLComponent("general/GeneralDetails.fxml");
         displayComponentController.setLblTitle(selectedItem.getValue());
         generalDetailsController.setComponentDet(previewData.getEndingConditions(), previewData.getGridAndThread());
 
