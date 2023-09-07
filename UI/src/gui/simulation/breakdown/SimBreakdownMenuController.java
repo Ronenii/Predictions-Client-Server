@@ -123,40 +123,42 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     void selectItem(MouseEvent event) {
         TreeItem<String> selectedItem = simTreeView.getSelectionModel().getSelectedItem();
 
-        try {
-            if(selectedItem != null){
-                if(selectedItem.getValue().equals("General")) {
-                    setGeneralComponent(selectedItem);
-                }
-                else {
-                    String engineObjectType = selectedItem.getParent().getValue();
-                    if(engineObjectType.equals("Environment Variables")){
-                        setEnvVarsComponent(selectedItem);
+        if(selectedItem.isLeaf()){
+            try {
+                if(selectedItem != null){
+                    if(selectedItem.getValue().equals("General")) {
+                        setGeneralComponent(selectedItem);
                     }
                     else {
-                        engineObjectType = selectedItem.getParent().getParent().getValue();
-                        if(engineObjectType.equals("Entities")){
-                            setEntitiesComponent(selectedItem, selectedItem.getParent().getValue());
+                        String engineObjectType = selectedItem.getParent().getValue();
+                        if(engineObjectType.equals("Environment Variables")){
+                            setEnvVarsComponent(selectedItem);
                         }
                         else {
-                            engineObjectType = selectedItem.getParent().getParent().getParent().getValue();
-                            if(engineObjectType.equals("Rules")) {
-
+                            engineObjectType = selectedItem.getParent().getParent().getValue();
+                            if(engineObjectType.equals("Entities")){
+                                setEntitiesComponent(selectedItem, selectedItem.getParent().getValue());
                             }
                             else {
-                                //Todo: error occurred
+                                engineObjectType = selectedItem.getParent().getParent().getParent().getValue();
+                                if(engineObjectType.equals("Rules")) {
+
+                                }
+                                else {
+                                    //Todo: error occurred
+                                }
                             }
                         }
                     }
                 }
+            } catch (IOException e) {
+                //Todo: mashu
             }
-        } catch (IOException e) {
-            //Todo: mashu
         }
     }
 
     private void setEnvVarsComponent(TreeItem<String> selectedItem) throws IOException {
-        EnvironmentVarDetailsController environmentVariablesComponentController = (EnvironmentVarDetailsController)displayComponentController.loadFXMLComponent("details/environment/EnvironmentVarDetails.fxml");
+        EnvironmentVarDetailsController environmentVariablesComponentController = (EnvironmentVarDetailsController)displayComponentController.loadFXMLComponent("environment/EnvironmentVarDetails.fxml");
         displayComponentController.setLblTitle(selectedItem.getValue());
         for(DTOEnvironmentVariable environmentVariable : previewData.getEnvVariables()) {
             if(environmentVariable.getName().equals(selectedItem.getValue())) {

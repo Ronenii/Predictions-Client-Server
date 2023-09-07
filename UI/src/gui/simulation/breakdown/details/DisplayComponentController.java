@@ -10,6 +10,7 @@ import javafx.scene.layout.GridPane;
 import jaxb.event.FileLoadedEvent;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class DisplayComponentController implements FileLoadedEvent {
 
@@ -25,7 +26,8 @@ public class DisplayComponentController implements FileLoadedEvent {
     }
 
     public Object loadFXMLComponent(String fxmlFileName) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
+        String currentDirectory = System.getProperty("user.dir");
+        FXMLLoader loader = new FXMLLoader(DisplayComponentController.class.getResource(fxmlFileName));
         clearGridPaneCell();
         grdDisplay.add(loader.load(),1, 3);
 
