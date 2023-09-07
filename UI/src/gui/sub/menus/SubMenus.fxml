@@ -9,17 +9,14 @@
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.sub.menus.SubMenusController">
   <columnConstraints>
-    <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
-      <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
     <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <TabPane minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <TabPane minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
          <tabs>
             <Tab text="Details">
                <content>

@@ -1,6 +1,6 @@
 package gui.app;
 
-import gui.error.ErrorBarComponentController;
+import gui.notification.NotificationBarComponentController;
 import gui.header.component.HeaderComponentController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
@@ -14,25 +14,25 @@ public class AppController {
     @FXML private GridPane subMenus;
     @FXML private SubMenusController subMenusController;
 
-    @FXML private GridPane errorBarComponent;
-    @FXML private ErrorBarComponentController errorBarComponentController;
+    @FXML private GridPane notificationBarComponent;
+    @FXML private NotificationBarComponentController notificationBarComponentController;
 
-    @FXML private AnchorPane anchorDisplay;
+    @FXML private AnchorPane anchorNotification;
 
     public EngineAgent engineAgent;
 
     @FXML
     public void initialize() {
-        if(headerComponentController != null && subMenusController != null && errorBarComponentController != null) {
+        if(headerComponentController != null && subMenusController != null && notificationBarComponentController != null) {
             headerComponentController.setMainController(this);
             subMenusController.setMainController(this);
-            errorBarComponentController.setMainController(this);
+            notificationBarComponentController.setMainController(this);
             engineAgent = new EngineAgent();
         }
     }
 
-    public void showErrorMessage(String errorMessage){
-        anchorDisplay.visibleProperty().set(true);
-        errorBarComponentController.setLblErrorText(errorMessage);
+    public void showNotification(String notification){
+        anchorNotification.visibleProperty().set(true);
+        notificationBarComponentController.setLblNotificationText(notification);
     }
 }

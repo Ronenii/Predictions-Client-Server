@@ -6,8 +6,10 @@ package jaxb.unmarshal.converter.api;
  */
 abstract public class Validator {
     private final StringBuilder errorsList;
+    private int errorCount;
 
     public Validator() {
+        errorCount = 0;
         this.errorsList = new StringBuilder();
     }
 
@@ -20,7 +22,8 @@ abstract public class Validator {
      * @param error          the error that occurred
      */
     public void addErrorToList(Object operatingClass, String objectName, String error) {
-        errorsList.append(String.format("In %s: %s, ", operatingClass.getClass().getSimpleName(), objectName));
+        errorCount++;
+        errorsList.append(String.format("%s) In %s: %s, ",errorCount, operatingClass.getClass().getSimpleName(), objectName));
         errorsList.append(error);
         errorsList.append("\n");
     }
@@ -34,7 +37,8 @@ abstract public class Validator {
      * @param error          the error that occurred
      */
     public void addActionErrorToList(String ruleName, String actionName, int actionNumber, String error) {
-        errorsList.append(String.format("In rule: %s, action number %d, type: %s, ", ruleName, actionNumber, actionName));
+        errorCount++;
+        errorsList.append(String.format("%s) In rule: %s, action number %d, type: %s, ",errorCount, ruleName, actionNumber, actionName));
         errorsList.append(error);
         errorsList.append("\n");
     }
@@ -53,6 +57,7 @@ abstract public class Validator {
      * the rules and/or ending conditions values in the XML file stopped and the XML need to be fixed.
      */
     public void addRulesAndEndingConditionsCreationErrorMessage() {
+        errorCount++;
         errorsList.append("Due to the errors provided, the simulation's rules and/or ending conditions were not created and the conversion process stopped.\n")
                 .append("Please fix the provided XML file where the errors occurred and reload the file to ensure proper creation of the simulation.\n");
     }
@@ -61,10 +66,11 @@ abstract public class Validator {
      * @return returns true if the validator found any errors.
      */
     public boolean containsErrors() {
-        return errorsList.length() > 0;
+        return errorCount > 0;
     }
 
     public String getErrorList() {
+        errorsList.insert(0, String.format("%s error\\s while loading the file.\n", errorCount));
         return errorsList.toString();
     }
 }

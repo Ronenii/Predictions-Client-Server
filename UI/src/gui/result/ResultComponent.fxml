@@ -16,7 +16,7 @@
       <ColumnConstraints hgrow="NEVER" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
     <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="150.0" />
       <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="10.0" />
-    <ColumnConstraints hgrow="ALWAYS" maxWidth="1000.0" minWidth="-Infinity" prefWidth="600.0" />
+    <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity" prefWidth="600.0" />
       <ColumnConstraints hgrow="NEVER" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
   </columnConstraints>
   <rowConstraints>
@@ -54,7 +54,7 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <TabPane maxHeight="500.0" maxWidth="1300.0" prefHeight="116.0" prefWidth="681.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+            <TabPane maxHeight="500.0" prefHeight="116.0" prefWidth="681.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
               <tabs>
                 <Tab text="Histogram" />
                 <Tab text="Consistency" />

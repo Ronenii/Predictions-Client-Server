@@ -8,11 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
-import manager.EngineAgent;
-import manager.EngineInterface;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 
 public class HeaderComponentController {
@@ -59,8 +55,9 @@ public class HeaderComponentController {
             mainController.engineAgent.loadSimulationFromFile(fileToLoad);
             pathTF.setText(fileToLoad.getPath());
             currentLoadedFilePath = fileToLoad.getPath();
+            mainController.showNotification("File has been loaded successfully!");
         }catch (IllegalArgumentException e){
-            mainController.showErrorMessage(e.getMessage());
+            mainController.showNotification(e.getMessage());
         }
     }
 

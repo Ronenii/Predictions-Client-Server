@@ -52,7 +52,7 @@ public class PRDValidator extends Validator {
         ExpressionAndValueValidator expressionAndValueValidator = new ExpressionAndValueValidator(null, null);
 
         if (!expressionAndValueValidator.isPRDPropertyValueMatchItsType(prdProperty)) {
-            addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "The given property's value doesn't match the property type. aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "The given property's value doesn't match the property type.");
         }
     }
 

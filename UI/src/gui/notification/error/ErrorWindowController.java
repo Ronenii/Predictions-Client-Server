@@ -1,9 +1,9 @@
-package gui.error.popup;
+package gui.notification.error;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
-public class PopupErrorWindowController {
+public class ErrorWindowController {
 
     @FXML
     private TextArea taErrorDisplay;
