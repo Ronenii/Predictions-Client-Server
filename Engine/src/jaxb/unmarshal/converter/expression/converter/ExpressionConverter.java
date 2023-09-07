@@ -140,8 +140,8 @@ public class ExpressionConverter {
      */
     private TwoParams getTwoParams(String valueStr) {
         int openParenIndex = valueStr.indexOf("(");
-        String argumentsStr = valueStr.substring(openParenIndex, valueStr.length() - 1);
-        String[] arguments = argumentsStr.split(", ");
+        String argumentsStr = valueStr.substring(openParenIndex + 1, valueStr.length() - 1);
+        String[] arguments = argumentsStr.split(",");
         return new TwoParams(arguments[0], arguments[1]);
     }
 
