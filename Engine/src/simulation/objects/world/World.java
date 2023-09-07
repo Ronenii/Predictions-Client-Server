@@ -29,7 +29,6 @@ public class World implements Serializable {
     private long startingTime;
     private final int threadCount;
     private final Grid grid;
-    private List<EventListener> listeners;
 
     public World(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
         this.environmentProperties = environmentProperties;
@@ -42,16 +41,7 @@ public class World implements Serializable {
         this.grid = grid;
     }
 
-    public void addListeners(List<EventListener> listeners){
-        this.listeners = listeners;
-    }
 
-    public void invokeListeners(){
-        for(EventListener f: listeners){
-            FileLoadedEvent fileLoadedEvent = (FileLoadedEvent) f;
-            fileLoadedEvent.onFileLoaded();
-        }
-    }
 
     public Map<String, Property> getEnvironmentProperties() {
         return environmentProperties;

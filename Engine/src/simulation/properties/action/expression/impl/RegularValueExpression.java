@@ -24,4 +24,9 @@ public class RegularValueExpression extends AbstractExpression {
     public Object evaluate() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }

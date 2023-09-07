@@ -13,6 +13,8 @@ public interface Action {
 
     Object getValue();
 
+    Expression getValueExpression();
+
     AbstractAction.SecondaryEntity getSecondaryEntity();
 
 }

@@ -29,6 +29,10 @@ public class ReplaceAction extends AbstractAction {
         return null;
     }
 
+    @Override
+    public Expression getValueExpression() {
+        return null;
+    }
 
     public void invoke(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, int lastChangeTickCount) {
         if(replaceType == ReplaceActionType.DERIVED) {

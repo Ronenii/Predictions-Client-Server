@@ -30,4 +30,9 @@ public class PropertyValueExpression extends AbstractExpression {
     public Object evaluate() {
         return property.getValue();
     }
+
+    @Override
+    public String toString() {
+        return property.getName();
+    }
 }

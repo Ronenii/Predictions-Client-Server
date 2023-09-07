@@ -29,6 +29,11 @@ public class PercentExpression extends AbstractExpression {
     }
 
     @Override
+    public String toString() {
+        return String.format("Percent(%s,%s)", arg1.toString(), arg2.toString());
+    }
+
+    @Override
     public Object evaluate() {
         // ask aviad if the numbers must be int or double or both.
         Object ret;

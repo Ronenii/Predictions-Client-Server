@@ -24,6 +24,10 @@ public class CalculationAction extends OneEntAction implements Serializable {
         return arg1.evaluate();
     }
 
+    public Expression getArg1Expression(){return arg1;}
+
+    public Expression getArg2Expression(){return arg2;}
+
     public Object getArg2() {
         return arg2.evaluate();
     }
@@ -34,6 +38,11 @@ public class CalculationAction extends OneEntAction implements Serializable {
 
     @Override
     public Object getValue() {
+        return null;
+    }
+
+    @Override
+    public Expression getValueExpression() {
         return null;
     }
 

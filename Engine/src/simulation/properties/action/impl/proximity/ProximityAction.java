@@ -30,11 +30,22 @@ public class ProximityAction extends AbstractAction {
     }
 
     public String getDepthString() {
-        return (String)depth.evaluate();
+        return depth.toString();
+    }
+
+    @Override
+    public Expression getValueExpression() {
+        return null;
     }
 
     public int getSubActionsCount() {
-        return proximityActions.getSubActionsCount();
+        int ret = 0;
+
+        if(proximityActions != null) {
+            ret = proximityActions.getSubActionsCount();
+        }
+
+        return ret;
     }
 
     public void invoke(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Grid grid, int lastChangeTickCount) {

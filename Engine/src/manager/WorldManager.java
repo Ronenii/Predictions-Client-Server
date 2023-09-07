@@ -8,6 +8,7 @@ import engine2ui.simulation.result.ResultInfo;
 import engine2ui.simulation.result.generator.IdGenerator;
 import engine2ui.simulation.start.DTOEnvironmentVariable;
 import engine2ui.simulation.start.StartData;
+import jaxb.event.FileLoadedEvent;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.world.World;
@@ -55,8 +56,7 @@ public class WorldManager implements EngineInterface, Serializable {
         return isSimulationLoaded;
     }
 
-    @Override
-    public PreviewData getCurrentSimulationDetails() {
+    private PreviewData getCurrentSimulationDetails() {
         DTOCreator dtoCreator = new DTOCreator();
 
         return dtoCreator.createSimulationPreviewDataObject(world.getEnvironmentProperties(), world.getEntities(), world.getRules(), world.getEndingConditions(), world.getGrid(), world.getThreadCount());
@@ -88,12 +88,20 @@ public class WorldManager implements EngineInterface, Serializable {
         this.world = Reader.readWorldFromXML(dto.getFile());
         if (this.world != null) {
             dtoLoadSucceed = new DTOLoadSucceed(true);
-            world.addListeners(dto.getListeners());
-            world.invokeListeners();
+            invokeSuccessLoadListeners(dto.getListeners());
         }
 
         isSimulationLoaded = true;
         return dtoLoadSucceed;
+    }
+
+    private void invokeSuccessLoadListeners(List<EventListener> listeners) {
+        PreviewData previewData = getCurrentSimulationDetails();
+
+        for(EventListener f: listeners){
+            FileLoadedEvent fileLoadedEvent = (FileLoadedEvent) f;
+            fileLoadedEvent.onFileLoaded(previewData);
+        }
     }
 
     @Override

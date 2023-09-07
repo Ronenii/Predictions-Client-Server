@@ -21,6 +21,11 @@ public class DecreaseAction extends OneEntAction implements Serializable {
         return value.evaluate();
     }
 
+    @Override
+    public Expression getValueExpression() {
+        return value;
+    }
+
     /**
      * Decreases the value of a property based on the property's type.
      * Decrease actions can only take place on decimal or floats.

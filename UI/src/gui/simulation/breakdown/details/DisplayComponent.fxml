@@ -26,7 +26,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
               </rowConstraints>
                <children>
-                  <Label id="lbl-DisplayItem-Title" fx:id="lblTitle" minHeight="-Infinity" minWidth="-Infinity" text="Title" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                  <Label id="lbl-DisplayItem-Title" fx:id="lblTitle" minHeight="-Infinity" minWidth="-Infinity" text="No simulation has been loaded into the system" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
