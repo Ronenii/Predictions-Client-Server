@@ -88,8 +88,7 @@ public class WorldManager implements EngineInterface, Serializable {
         this.world = Reader.readWorldFromXML(dto.getFile());
         if (this.world != null) {
             dtoLoadSucceed = new DTOLoadSucceed(true);
-            List<EventListener> meow = dto.getListeners();
-            invokeSuccessLoadListeners(meow);
+            invokeSuccessLoadListeners(dto.getListeners());
         }
 
         isSimulationLoaded = true;

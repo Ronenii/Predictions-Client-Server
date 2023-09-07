@@ -238,9 +238,6 @@ public class DTOCreator {
             ret = new DTOReplace(type,mainEntity, secondaryEntity, property, replaceAction.getNewEntityName(), replaceAction.getReplaceType().toString().toLowerCase());
         } else if (action instanceof ProximityAction) {
             ProximityAction proximityAction = (ProximityAction)action;
-            String meow1 = proximityAction.getTargetEntityName();
-            String meow2 = proximityAction.getDepthString();
-            int meow3 = proximityAction.getSubActionsCount();
             ret = new DTOProximity(type, mainEntity, secondaryEntity, property, proximityAction.getTargetEntityName(), proximityAction.getDepthString(), proximityAction.getSubActionsCount());
         }
 
