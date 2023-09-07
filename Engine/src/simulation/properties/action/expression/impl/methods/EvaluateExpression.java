@@ -23,6 +23,11 @@ public class EvaluateExpression extends AbstractExpression {
     }
 
     @Override
+    public String toString() {
+        return String.format("Evaluate(%s.%s)",entityName, property.getName());
+    }
+
+    @Override
     public PropertyType getType() {
         return property.getType();
     }

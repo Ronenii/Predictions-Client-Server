@@ -19,6 +19,11 @@ public class EnvironmentExpression extends AbstractExpression {
     }
 
     @Override
+    public String toString() {
+        return String.format("Environment(%s)", envProperty.getName());
+    }
+
+    @Override
     public Object evaluate() {
         return envProperty.getValue();
     }

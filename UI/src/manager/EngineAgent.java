@@ -41,7 +41,7 @@ public class EngineAgent {
         if (!engine.getIsSimulationLoaded()) {
             throw new SimulationNotLoadedException("There is no simulation loaded in the system.");
         }
-        Console.showSimulationDetails(engine.getCurrentSimulationDetails());
+        //Console.showSimulationDetails(engine.getCurrentSimulationDetails());
     }
 
     /**

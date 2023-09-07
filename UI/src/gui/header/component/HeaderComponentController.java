@@ -1,5 +1,6 @@
 package gui.header.component;
 
+import engine2ui.simulation.prview.PreviewData;
 import gui.app.AppController;
 import gui.header.component.queue.manager.QueueManagerComponentController;
 import javafx.event.ActionEvent;
@@ -101,7 +102,7 @@ public class HeaderComponentController implements FileLoadedEvent {
     }
 
     @Override
-    public void onFileLoaded() {
+    public void onFileLoaded(PreviewData previewData) {
 
     }
 }

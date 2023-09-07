@@ -36,9 +36,23 @@ public abstract class AbstractConditionAction extends OneEntAction implements Se
         return elseActions;
     }
 
-    public int getThenActionsCount(){return thenActions.getActionsCount();}
+    public int getThenActionsCount(){
+        int ret = 0;
 
-    public int getElseActionsCount(){return elseActions.getActionsCount();}
+        if(thenActions != null){
+            ret = thenActions.getActionsCount();
+        }
+        return ret;
+    }
+
+    public int getElseActionsCount(){
+        int ret = 0;
+
+        if(elseActions != null){
+            ret = elseActions.getActionsCount();
+        }
+        return ret;
+    }
 
     @Override
     public Object getValue() {

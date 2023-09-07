@@ -17,6 +17,7 @@ import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
+import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.impl.DecreaseAction;
 import simulation.properties.action.impl.IncreaseAction;
 import simulation.properties.action.impl.KillAction;
@@ -207,14 +208,17 @@ public class DTOCreator {
 
     private DTOAction getDTOAction(Action action){
         DTOAction ret = null;
-        String type = action.getType().toString().toLowerCase(), mainEntity = action.getContextEntity(), secondaryEntity = null, property = action.getContextProperty().toString();
+        String type = action.getType().toString().toLowerCase(), mainEntity = action.getContextEntity(), secondaryEntity = null, property = null;
 
+        if(action.getContextProperty() != null){
+            property = action.getContextProperty().toString();
+        }
         if(action.getSecondaryEntity() != null){
             secondaryEntity = action.getSecondaryEntity().getContextEntity();
         }
 
         if(action instanceof IncreaseAction || action instanceof DecreaseAction){
-            ret = new DTOIncreaseOrDecrease(type, mainEntity, secondaryEntity, property, (String)action.getValue());
+            ret = new DTOIncreaseOrDecrease(type, mainEntity, secondaryEntity, property, action.getValue().toString());
         } else if (action instanceof CalculationAction) {
             CalculationAction calculationAction = (CalculationAction)action;
             ret = new DTOCalculation(type, mainEntity, secondaryEntity, property, (String)calculationAction.getArg1(), (String)calculationAction.getArg2(), calculationAction.getCalculationType().toString().toLowerCase());
@@ -225,7 +229,7 @@ public class DTOCreator {
             MultipleCondition multipleCondition = (MultipleCondition)action;
             ret = new DTOMultipleCondition(type, mainEntity, secondaryEntity, property, multipleCondition.getThenActionsCount(),multipleCondition.getElseActionsCount(), multipleCondition.getLogical().toString().toLowerCase(), multipleCondition.getSubConditions().size());
         } else if (action instanceof SetAction) {
-            ret = new DTOSet(type, mainEntity, secondaryEntity, property, (String)action.getValue());
+            ret = new DTOSet(type, mainEntity, secondaryEntity, property, action.getValue().toString());
         } else if (action instanceof KillAction) {
             ret = new DTOKill(type, mainEntity, secondaryEntity, property);
         } else if (action instanceof ReplaceAction) {

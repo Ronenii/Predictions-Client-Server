@@ -1,5 +1,6 @@
 package gui.execution.inputs.env.var;
 
+import engine2ui.simulation.prview.PreviewData;
 import gui.execution.inputs.InputsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -42,7 +43,7 @@ public class EnvironmentVariablesComponentController implements FileLoadedEvent 
     }
 
     @Override
-    public void onFileLoaded() {
+    public void onFileLoaded(PreviewData previewData) {
 
     }
 }

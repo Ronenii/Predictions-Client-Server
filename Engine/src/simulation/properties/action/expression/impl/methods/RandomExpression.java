@@ -23,4 +23,9 @@ public class RandomExpression extends AbstractExpression {
         Random random = new Random();
         return random.nextInt(range + 1);
     }
+
+    @Override
+    public String toString() {
+        return String.format("Random(%d)", range);
+    }
 }

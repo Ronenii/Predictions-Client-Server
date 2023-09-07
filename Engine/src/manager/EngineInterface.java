@@ -10,7 +10,6 @@ import engine2ui.simulation.result.ResultData;
 import ui2engine.simulation.load.DTOLoadFile;
 
 public interface EngineInterface {
-    PreviewData getCurrentSimulationDetails();
 
     String getSimulationDetailsById(int simId);
 

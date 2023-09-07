@@ -1,5 +1,6 @@
 package gui.execution.inputs.entity;
 
+import engine2ui.simulation.prview.PreviewData;
 import gui.execution.inputs.InputsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,7 +40,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent {
     }
 
     @Override
-    public void onFileLoaded() {
+    public void onFileLoaded(PreviewData previewData) {
 
     }
 }

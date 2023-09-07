@@ -32,6 +32,11 @@ public class TicksExpression extends AbstractExpression {
     }
 
     @Override
+    public String toString() {
+        return String.format("Ticks(%s.%s)", entityName, property.getName());
+    }
+
+    @Override
     public Object evaluate() {
         return simulationTicks.getTicks() - property.getLastChangeTickCount();
     }

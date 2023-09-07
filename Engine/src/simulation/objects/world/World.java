@@ -42,16 +42,16 @@ public class World implements Serializable {
         this.grid = grid;
     }
 
-    public void addListeners(List<EventListener> listeners){
-        this.listeners = listeners;
-    }
-
-    public void invokeListeners(){
-        for(EventListener f: listeners){
-            FileLoadedEvent fileLoadedEvent = (FileLoadedEvent) f;
-            fileLoadedEvent.onFileLoaded();
-        }
-    }
+//    public void addListeners(List<EventListener> listeners){
+//        this.listeners = listeners;
+//    }
+//
+//    public void invokeListeners(){
+//        for(EventListener f: listeners){
+//            FileLoadedEvent fileLoadedEvent = (FileLoadedEvent) f;
+//            fileLoadedEvent.onFileLoaded();
+//        }
+//    }
 
     public Map<String, Property> getEnvironmentProperties() {
         return environmentProperties;

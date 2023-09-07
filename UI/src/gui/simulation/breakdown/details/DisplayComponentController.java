@@ -1,5 +1,6 @@
 package gui.simulation.breakdown.details;
 
+import engine2ui.simulation.prview.PreviewData;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -41,7 +42,7 @@ public class DisplayComponentController implements FileLoadedEvent {
     }
 
     @Override
-    public void onFileLoaded() {
+    public void onFileLoaded(PreviewData previewData) {
 
     }
 }
