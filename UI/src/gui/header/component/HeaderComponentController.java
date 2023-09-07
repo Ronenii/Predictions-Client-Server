@@ -46,11 +46,16 @@ public class HeaderComponentController {
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if(selectedFile != null){
-            loadFileAndUpdateHeader(selectedFile);
+            loadFile(selectedFile);
         }
     }
 
-    private void loadFileAndUpdateHeader(File fileToLoad){
+    /**
+     * Tries to load a simulation file. If successful sets it as the header text field text
+     * And notifies the user that the load succeeded. Otherwise notifies that the load failed
+     * and displays the errors.
+     */
+    private void loadFile(File fileToLoad){
         try {
             mainController.engineAgent.loadSimulationFromFile(fileToLoad);
             pathTF.setText(fileToLoad.getPath());
@@ -66,7 +71,7 @@ public class HeaderComponentController {
         if(!pathTF.getText().equals(currentLoadedFilePath)){
             File file = new File(pathTF.getText());
 
-            loadFileAndUpdateHeader(file);
+            loadFile(file);
         }
     }
 

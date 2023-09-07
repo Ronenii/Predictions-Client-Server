@@ -70,7 +70,7 @@ abstract public class Validator {
     }
 
     public String getErrorList() {
-        errorsList.insert(0, String.format("%s error\\s while loading the file.\n", errorCount));
+        errorsList.insert(0, String.format("%s error/s while loading the file.\n", errorCount));
         return errorsList.toString();
     }
 }
