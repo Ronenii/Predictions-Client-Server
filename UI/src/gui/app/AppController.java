@@ -1,6 +1,8 @@
 package gui.app;
 
+import gui.api.HasFileLoadedListeners;
 import gui.header.component.HeaderComponentController;
+import gui.notification.NotificationBarComponentController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;

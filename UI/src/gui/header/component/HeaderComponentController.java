@@ -72,7 +72,7 @@ public class HeaderComponentController implements FileLoadedEvent {
      */
     private void loadFile(File fileToLoad){
         try {
-            mainController.engineAgent.loadSimulationFromFile(fileToLoad);
+            mainController.engineAgent.loadSimulationFromFile(fileToLoad,mainController.getAllFileLoadedListeners());
             pathTF.setText(fileToLoad.getPath());
             currentLoadedFilePath = fileToLoad.getPath();
             mainController.showNotification("File has been loaded successfully!");
