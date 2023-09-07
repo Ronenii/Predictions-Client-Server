@@ -33,16 +33,12 @@ public class NotificationBarComponentController {
         this.mainController = mainController;
     }
 
-    public void initialize() {
-    }
-
     /**
      * Sets the notification bar text.
      * If the text is longer than the width of the screen or if there are multiple lines
      * in the notification, shows a hyperlink which allows the user to expand and see
      * the entire message.
      */
-    //TODO: Add the option to open a new window when a text prompt is clicked
     public void setLblNotificationText(String errMessage) {
         String[] lines = errMessage.split("\n");
 
