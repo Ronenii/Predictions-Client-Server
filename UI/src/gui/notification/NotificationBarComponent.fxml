@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane fx:id="grdParent" maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.notification.NotificationBarComponentController">  <columnConstraints>
+    <ColumnConstraints fillWidth="false" hgrow="ALWAYS" />
+      <ColumnConstraints hgrow="NEVER" minWidth="70.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="-Infinity" valignment="TOP" vgrow="NEVER" />
+  </rowConstraints>
+   <children>
+    <HBox fx:id="hBoxExpand" prefHeight="21.0" prefWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" />
+      <Label fx:id="lblNotification" text="placeholder" GridPane.hgrow="ALWAYS" />
+   </children>
+</GridPane>

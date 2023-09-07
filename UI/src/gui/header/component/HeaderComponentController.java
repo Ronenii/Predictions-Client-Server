@@ -60,19 +60,24 @@ public class HeaderComponentController implements FileLoadedEvent {
 
         File selectedFile = fileChooser.showOpenDialog(null);
 
-        if (selectedFile != null) {
-            loadFileAndUpdateHeader(selectedFile);
+        if(selectedFile != null){
+            loadFile(selectedFile);
         }
     }
 
-    private void loadFileAndUpdateHeader(File fileToLoad) {
+    /**
+     * Tries to load a simulation file. If successful sets it as the header text field text
+     * And notifies the user that the load succeeded. Otherwise notifies that the load failed
+     * and displays the errors.
+     */
+    private void loadFile(File fileToLoad){
         try {
-            mainController.engineAgent.loadSimulationFromFile(fileToLoad, mainController.getAllFileLoadedListeners());
+            mainController.engineAgent.loadSimulationFromFile(fileToLoad);
             pathTF.setText(fileToLoad.getPath());
             currentLoadedFilePath = fileToLoad.getPath();
-        } catch (IllegalArgumentException e) {
-            // TODO: Change this to a graphical user notification
-            System.out.println(e.getMessage());
+            mainController.showNotification("File has been loaded successfully!");
+        }catch (IllegalArgumentException e){
+            mainController.showNotification(e.getMessage());
         }
     }
 
@@ -81,7 +86,7 @@ public class HeaderComponentController implements FileLoadedEvent {
         if (!pathTF.getText().equals(currentLoadedFilePath)) {
             File file = new File(pathTF.getText());
 
-            loadFileAndUpdateHeader(file);
+            loadFile(file);
         }
     }
 
