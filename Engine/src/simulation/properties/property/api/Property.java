@@ -9,6 +9,8 @@ package simulation.properties.property.api;
 public interface Property {
     String getName();
 
+    String getEntityName();
+
     PropertyType getType();
 
     Object getValue();

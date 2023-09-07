@@ -179,7 +179,7 @@ public class PRDConverter {
         Property propertyToAdd;
 
         for (PRDProperty property : prdEntityProperties) {
-            propertyToAdd = PRDProperty2Property(property, entityProperties);
+            propertyToAdd = PRDProperty2Property(property, entityProperties, prdEntity.getName());
             if (propertyToAdd != null) {
                 entityProperties.put(property.getPRDName(), propertyToAdd);
             }
@@ -260,7 +260,7 @@ public class PRDConverter {
      * @param prdProperty the given prdProperty generated from reading the XML file
      * @return a Property representation of prdProperty.
      */
-    private Property PRDProperty2Property(PRDProperty prdProperty, Map<String, Property> entityProperties) {
+    private Property PRDProperty2Property(PRDProperty prdProperty, Map<String, Property> entityProperties, String entityName) {
         try {
             validator.validatePRDProperty(prdProperty, entityProperties);
         } catch (PRDObjectConversionException e) {
@@ -285,16 +285,16 @@ public class PRDConverter {
         try {
             switch (type) {
                 case DECIMAL:
-                    ret = new IntProperty(name, isRandomInit, parseValue(type, value, isRandomInit, from, to), (int) from.doubleValue(), (int) to.doubleValue());
+                    ret = new IntProperty(name, isRandomInit, parseValue(type, value, isRandomInit, from, to), (int) from.doubleValue(), (int) to.doubleValue(), entityName);
                     break;
                 case FLOAT:
-                    ret = new DoubleProperty(name, isRandomInit, parseValue(type, value, isRandomInit, from, to), from, to);
+                    ret = new DoubleProperty(name, isRandomInit, parseValue(type, value, isRandomInit, from, to), from, to, entityName);
                     break;
                 case BOOLEAN:
-                    ret = new BooleanProperty(name, isRandomInit, parseValue(type, value, isRandomInit, from, to));
+                    ret = new BooleanProperty(name, isRandomInit, parseValue(type, value, isRandomInit, from, to), entityName);
                     break;
                 case STRING:
-                    ret = new StringProperty(name, isRandomInit, parseValue(type, value, isRandomInit, from, to));
+                    ret = new StringProperty(name, isRandomInit, parseValue(type, value, isRandomInit, from, to), entityName);
                     break;
             }
         } catch (IllegalArgumentException e) {

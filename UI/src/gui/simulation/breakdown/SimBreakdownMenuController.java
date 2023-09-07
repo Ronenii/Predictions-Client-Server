@@ -17,14 +17,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import jaxb.event.FileLoadedEvent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class SimBreakdownMenuController implements Initializable, HasFileLoadedListeners {
+public class SimBreakdownMenuController implements Initializable, HasFileLoadedListeners, FileLoadedEvent {
 
     private SubMenusController mainController;
     private PreviewData previewData;
@@ -188,6 +190,15 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     @Override
     public List<EventListener> getAllFileLoadedListeners() {
         //TODO: Get all file loaded listeners to from sub components
-        return null;
+        List<EventListener> listeners = new ArrayList<>();
+        listeners.add(this);
+        listeners.add(displayComponentController);
+
+        return listeners;
+    }
+
+    @Override
+    public void onFileLoaded() {
+
     }
 }

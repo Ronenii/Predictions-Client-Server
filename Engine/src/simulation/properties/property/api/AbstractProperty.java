@@ -4,14 +4,16 @@ import java.io.Serializable;
 
 public abstract class AbstractProperty implements Property, Serializable {
     private final String name;
+    private final String entityName;
     private boolean isRandInit;
     private final PropertyType type;
     protected Object value;
     protected int lastChangeTickCount;
 
 
-    public AbstractProperty(String name, boolean isRandInit, PropertyType type, Object value) {
+    public AbstractProperty(String name, boolean isRandInit, PropertyType type, Object value, String entityName) {
         this.name = name;
+        this.entityName = entityName;
         this.isRandInit = isRandInit;
         this.type = type;
         this.value = value;
@@ -26,6 +28,11 @@ public abstract class AbstractProperty implements Property, Serializable {
     @Override
     public PropertyType getType() {
         return type;
+    }
+
+    @Override
+    public String getEntityName() {
+        return entityName;
     }
 
     @Override

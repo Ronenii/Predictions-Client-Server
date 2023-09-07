@@ -11,8 +11,8 @@ import java.io.Serializable;
 
 public class StringProperty extends AbstractProperty implements Serializable {
 
-    public StringProperty(String name, boolean isRandInit, Object value) {
-        super(name, isRandInit, PropertyType.STRING, value);
+    public StringProperty(String name, boolean isRandInit, Object value, String entityName) {
+        super(name, isRandInit, PropertyType.STRING, value, entityName);
     }
 
     /**
@@ -20,7 +20,7 @@ public class StringProperty extends AbstractProperty implements Serializable {
      * @param name the property's name
      */
     public StringProperty(String name) {
-        super(name, false, PropertyType.STRING, null);
+        super(name, false, PropertyType.STRING, null, null);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class StringProperty extends AbstractProperty implements Serializable {
 
     @Override
     public Property dupProperty() {
-        return new StringProperty(getName(),isRandInit(), getValue());
+        return new StringProperty(getName(),isRandInit(), getValue(), getEntityName());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class StringProperty extends AbstractProperty implements Serializable {
         RandomValueGenerator<String> randomValueGenerator = new StringRndValueGen();
         value = randomValueGenerator.generateRandomValue();
 
-        return new StringProperty(getName(),isRandInit(), value);
+        return new StringProperty(getName(),isRandInit(), value, getEntityName());
     }
 
 }

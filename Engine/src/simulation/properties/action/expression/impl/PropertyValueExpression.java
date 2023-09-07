@@ -17,6 +17,10 @@ public class PropertyValueExpression extends AbstractExpression {
         this.property = property;
     }
 
+    public String getPropertyEntityName(){
+        return property.getEntityName();
+    }
+
     @Override
     public PropertyType getType() {
         return property.getType();

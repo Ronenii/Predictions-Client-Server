@@ -98,7 +98,7 @@ public class ExpressionConverter {
                     break;
                 case EVALUATE:
                     Property propertyForEvaluate = getProperty(param);
-                    ret = new EvaluateExpression(propertyForEvaluate.getType(), propertyForEvaluate);
+                    ret = new EvaluateExpression(propertyForEvaluate.getType(), propertyForEvaluate, getEntityName(param));
                     break;
                 case PERCENT:
                     twoParams = getTwoParams(valueStr);
@@ -106,7 +106,7 @@ public class ExpressionConverter {
                     break;
                 case TICKS:
                     Property propertyForTicks = getProperty(param);
-                    ret = new TicksExpression(propertyForTicks.getType(), propertyForTicks, ticksCounter);
+                    ret = new TicksExpression(propertyForTicks.getType(), propertyForTicks, ticksCounter, getEntityName(param));
                     break;
             }
         }
@@ -123,6 +123,15 @@ public class ExpressionConverter {
         entityName = valueStr.substring(0,dotIndex);
         propertyName = valueStr.substring(dotIndex + 1, valueStr.length());
         return entities.get(entityName).getProperties().get(propertyName);
+    }
+
+    /**
+     * Receive string represent by this format: "<Entity>.<Property>", extract and return the entity's name if exists.
+     */
+    private String getEntityName(String valueStr) {
+        int dotIndex = valueStr.indexOf(".");
+
+        return valueStr.substring(0,dotIndex);
     }
 
     /**

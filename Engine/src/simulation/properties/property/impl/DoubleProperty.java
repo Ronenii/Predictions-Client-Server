@@ -13,8 +13,8 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty, 
     private double from;
     private double to;
 
-    public DoubleProperty(String name, boolean isRandInit, Object value, double from, double to) {
-        super(name, isRandInit, PropertyType.FLOAT, value);
+    public DoubleProperty(String name, boolean isRandInit, Object value, double from, double to, String entityName) {
+        super(name, isRandInit, PropertyType.FLOAT, value, entityName);
         this.from = from;
         this.to = to;
     }
@@ -25,7 +25,7 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty, 
      */
     public DoubleProperty(String name, double from, double to)
     {
-        super(name, false, PropertyType.FLOAT, null);
+        super(name, false, PropertyType.FLOAT, null, null);
         this.from = from;
         this.to = to;
     }
@@ -57,7 +57,7 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty, 
 
     @Override
     public Property dupProperty() {
-        return new DoubleProperty(getName(),isRandInit(), getValue(), from, to);
+        return new DoubleProperty(getName(),isRandInit(), getValue(), from, to, getEntityName());
     }
 
     @Override
@@ -67,6 +67,6 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty, 
         RandomValueGenerator<Double> randomValueGenerator = new DoubleRndValueGen(from, to);
         value = randomValueGenerator.generateRandomValue();
 
-        return new DoubleProperty(getName(),isRandInit(), value, from, to);
+        return new DoubleProperty(getName(),isRandInit(), value, from, to, getEntityName());
     }
 }
