@@ -7,7 +7,7 @@ import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 import engine2ui.simulation.genral.impl.properties.property.impl.RangedDTOProperty;
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.result.ResultInfo;
-import engine2ui.simulation.start.DTOEnvironmentVariable;
+import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import engine2ui.simulation.result.ResultData;
 import simulation.properties.property.api.PropertyType;
 

@@ -1,5 +1,6 @@
 package gui.notification;
 
+import gui.api.event.ErrorEvent;
 import gui.app.AppController;
 import gui.notification.window.NotificationWindowController;
 import javafx.fxml.FXML;
@@ -16,8 +17,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.EventListener;
 
-public class NotificationBarComponentController {
+public class NotificationBarComponentController implements ErrorEvent {
 
     private AppController mainController;
     @FXML
@@ -105,5 +107,9 @@ public class NotificationBarComponentController {
     }
 
 
+    @Override
+    public void onErrorEvent(String error) {
+        showNotificationWindow(error);
+    }
 }
 

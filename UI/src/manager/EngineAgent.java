@@ -9,11 +9,11 @@ import engine2ui.simulation.result.ResultData;
 import engine2ui.simulation.result.ResultInfo;
 import manager.exception.SimulationNotLoadedException;
 import ui2engine.simulation.load.DTOLoadFile;
-import engine2ui.simulation.start.DTOEnvironmentVariable;
-import engine2ui.simulation.start.StartData;
+import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
+import engine2ui.simulation.genral.impl.properties.StartData;
 import input.Input;
 import manager.options.ResultDisplayOptions;
-import ui2engine.simulation.func3.DTOThirdFunction;
+import ui2engine.simulation.func3.DTOExecutionData;
 import validator.ui.exceptions.IllegalBooleanValueException;
 import validator.ui.exceptions.IllegalStringValueException;
 import validator.ui.exceptions.OutOfRangeException;
@@ -74,9 +74,9 @@ public class EngineAgent {
         }
 
         StartData startData = engine.getSimulationStartData();
-        DTOThirdFunction dtoThirdFunction = createDTOThirdFunctionObject(startData);
+        DTOExecutionData dtoExecutionData = createDTOThirdFunctionObject(startData);
 
-        ResultInfo resultInfo = engine.runSimulation(dtoThirdFunction);
+        ResultInfo resultInfo = engine.runSimulation(dtoExecutionData);
         Console.printSimulationResultInfo(resultInfo);
     }
 
@@ -86,9 +86,9 @@ public class EngineAgent {
      * @param startData The DTO object from the engine that contains information about the environment properties.
      * @return a DTOThirdFunction object to send to the engine.
      */
-    private DTOThirdFunction createDTOThirdFunctionObject(StartData startData) {
+    private DTOExecutionData createDTOThirdFunctionObject(StartData startData) {
         List<DTOEnvironmentVariable> environmentVariables = startData.getEnvironmentVariables();
-        DTOThirdFunction ret = new DTOThirdFunction();
+        DTOExecutionData ret = new DTOExecutionData();
         Object valueToSend;
         String input;
 

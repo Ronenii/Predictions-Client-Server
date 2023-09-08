@@ -6,12 +6,13 @@ import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.result.ResultData;
 import engine2ui.simulation.result.ResultInfo;
 import engine2ui.simulation.result.generator.IdGenerator;
-import engine2ui.simulation.start.DTOEnvironmentVariable;
-import engine2ui.simulation.start.StartData;
+import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
+import engine2ui.simulation.genral.impl.properties.StartData;
 import jaxb.event.FileLoadedEvent;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.world.World;
+import ui2engine.simulation.func3.user.input.EnvPropertyUserInput;
 import ui2engine.simulation.load.DTOLoadFile;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
@@ -22,8 +23,7 @@ import simulation.properties.property.random.value.impl.BoolRndValueGen;
 import simulation.properties.property.random.value.impl.DoubleRndValueGen;
 import simulation.properties.property.random.value.impl.IntRndValueGen;
 import simulation.properties.property.random.value.impl.StringRndValueGen;
-import ui2engine.simulation.func3.DTOThirdFunction;
-import ui2engine.simulation.func3.user.input.EnvPropertyUserInput;
+import ui2engine.simulation.func3.DTOExecutionData;
 
 import java.io.*;
 import java.util.HashMap;
@@ -105,12 +105,12 @@ public class WorldManager implements EngineInterface, Serializable {
     }
 
     @Override
-    public ResultInfo runSimulation(DTOThirdFunction dtoThirdFunction) {
+    public ResultInfo runSimulation(DTOExecutionData dtoExecutionData) {
         // Resets all entities in this world
         world.resetWorld();
 
         // fetch the user data input into the simulation's environment properties.
-        fetchDTOThirdFunctionObject(dtoThirdFunction);
+        fetchDTOThirdFunctionObject(dtoExecutionData);
 
         // TODO: implement function to fetch '
 
@@ -134,14 +134,14 @@ public class WorldManager implements EngineInterface, Serializable {
     /**
      * Get the third function's DTO object, extract the user input from this object and update the simulation's environment variables.
      *
-     * @param dtoThirdFunction the third function's DTO object
+     * @param dtoExecutionData the third function's DTO object
      */
-    private void fetchDTOThirdFunctionObject(DTOThirdFunction dtoThirdFunction) {
-        Set<EnvPropertyUserInput> envPropertyUserInputs = dtoThirdFunction.getEnvPropertyUserInputs();
+    private void fetchDTOThirdFunctionObject(DTOExecutionData dtoExecutionData) {
+        Map<String, EnvPropertyUserInput> envPropertyUserInputs = dtoExecutionData.getEnvPropertyUserInputs();
         Map<String, Property> environmentProperties = this.world.getEnvironmentProperties();
         Property envProperty;
 
-        for (EnvPropertyUserInput envPropertyUserInput : envPropertyUserInputs) {
+        for (EnvPropertyUserInput envPropertyUserInput : envPropertyUserInputs.values()) {
             envProperty = environmentProperties.get(envPropertyUserInput.getName());
             if (envPropertyUserInput.isRandomInit()) {
                 envProperty.updateValueAndIsRandomInit(getRandomValueByType(envProperty), envPropertyUserInput.isRandomInit());

@@ -1,4 +1,4 @@
-package engine2ui.simulation.start;
+package engine2ui.simulation.genral.impl.properties;
 
 public class DTOEnvironmentVariable {
     private final String name;

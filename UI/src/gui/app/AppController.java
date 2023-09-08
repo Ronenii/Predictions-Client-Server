@@ -1,6 +1,7 @@
 package gui.app;
 
-import gui.api.HasFileLoadedListeners;
+import gui.api.event.handler.BarNotifier;
+import gui.api.event.handler.HasFileLoadedListeners;
 import gui.header.component.HeaderComponentController;
 import gui.notification.NotificationBarComponentController;
 import gui.sub.menus.SubMenusController;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
-public class AppController implements HasFileLoadedListeners {
+public class AppController implements HasFileLoadedListeners, BarNotifier {
     @FXML private GridPane headerComponent;
     @FXML private HeaderComponentController headerComponentController;
     @FXML private GridPane subMenus;
@@ -48,8 +49,14 @@ public class AppController implements HasFileLoadedListeners {
     /**
      * Shows the given string on the notification bar.
      */
+    @Override
     public void showNotification(String notification){
         anchorNotification.visibleProperty().set(true);
         notificationBarComponentController.setLblNotificationText(notification);
+    }
+
+    @Override
+    public BarNotifier getNotificationBarParent() {
+        return  this;
     }
 }
