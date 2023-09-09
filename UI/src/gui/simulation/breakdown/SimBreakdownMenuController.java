@@ -10,6 +10,7 @@ import gui.simulation.breakdown.details.DisplayComponentController;
 import gui.simulation.breakdown.details.entity.property.PropertyDetailsController;
 import gui.simulation.breakdown.details.environment.EnvironmentVarDetailsController;
 import gui.simulation.breakdown.details.general.GeneralDetailsController;
+import gui.simulation.breakdown.details.rule.activation.ActivationDetailsController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -138,6 +139,9 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
                             engineObjectType = selectedItem.getParent().getParent().getValue();
                             if(engineObjectType.equals("Entities")){
                                 setEntitiesComponent(selectedItem, selectedItem.getParent().getValue());
+                            } else if (engineObjectType.equals("Rules")) {
+                                // The item is a rule's activation
+                                setRulesActivationComponent(selectedItem, selectedItem.getParent().getValue());
                             }
                             else {
                                 engineObjectType = selectedItem.getParent().getParent().getParent().getValue();
@@ -184,11 +188,21 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
         }
     }
 
+    private void setRulesActivationComponent(TreeItem<String> selectedItem, String ruleName) throws IOException {
+        ActivationDetailsController activationDetailsController = (ActivationDetailsController)displayComponentController.loadFXMLComponent("rule/activation/ActivationDetails.fxml");
+        displayComponentController.setLblTitle(String.format("Activation (%s)", selectedItem.getParent().getValue()));
+        for(DTORule rule : previewData.getRules()) {
+            if(rule.getName().equals(ruleName)){
+                activationDetailsController.setComponentDet(rule);
+                break;
+            }
+        }
+    }
+
     private void setGeneralComponent(TreeItem<String> selectedItem) throws IOException {
         GeneralDetailsController generalDetailsController = (GeneralDetailsController)displayComponentController.loadFXMLComponent("general/GeneralDetails.fxml");
         displayComponentController.setLblTitle(selectedItem.getValue());
         generalDetailsController.setComponentDet(previewData.getEndingConditions(), previewData.getGridAndThread());
-
     }
 
     @Override
