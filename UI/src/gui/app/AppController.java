@@ -1,7 +1,8 @@
 package gui.app;
 
-import gui.api.event.handler.BarNotifier;
-import gui.api.event.handler.HasFileLoadedListeners;
+import gui.api.BarNotifier;
+import gui.api.EngineCommunicator;
+import gui.api.HasFileLoadedListeners;
 import gui.header.component.HeaderComponentController;
 import gui.notification.NotificationBarComponentController;
 import gui.sub.menus.SubMenusController;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
-public class AppController implements HasFileLoadedListeners, BarNotifier {
+public class AppController implements HasFileLoadedListeners, BarNotifier, EngineCommunicator {
     @FXML private GridPane headerComponent;
     @FXML private HeaderComponentController headerComponentController;
     @FXML private GridPane subMenus;
@@ -29,11 +30,11 @@ public class AppController implements HasFileLoadedListeners, BarNotifier {
 
     @FXML
     public void initialize() {
+        engineAgent = new EngineAgent();
         if(headerComponentController != null && subMenusController != null && notificationBarComponentController != null) {
             headerComponentController.setMainController(this);
             subMenusController.setMainController(this);
             notificationBarComponentController.setMainController(this);
-            engineAgent = new EngineAgent();
         }
     }
 
@@ -56,7 +57,12 @@ public class AppController implements HasFileLoadedListeners, BarNotifier {
     }
 
     @Override
-    public BarNotifier getNotificationBarParent() {
-        return  this;
+    public BarNotifier getNotificationBar() {
+        return this;
+    }
+
+    @Override
+    public EngineAgent getEngineAgent() {
+        return engineAgent;
     }
 }

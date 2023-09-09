@@ -1,5 +1,6 @@
 package manager;
 
+import engine2ui.simulation.execution.SetResponse;
 import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.prview.PreviewData;
@@ -12,7 +13,8 @@ import jaxb.event.FileLoadedEvent;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.world.World;
-import ui2engine.simulation.func3.user.input.EnvPropertyUserInput;
+import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
+import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
 import ui2engine.simulation.load.DTOLoadFile;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
@@ -23,7 +25,7 @@ import simulation.properties.property.random.value.impl.BoolRndValueGen;
 import simulation.properties.property.random.value.impl.DoubleRndValueGen;
 import simulation.properties.property.random.value.impl.IntRndValueGen;
 import simulation.properties.property.random.value.impl.StringRndValueGen;
-import ui2engine.simulation.func3.DTOExecutionData;
+import ui2engine.simulation.execution.DTOExecutionData;
 
 import java.io.*;
 import java.util.HashMap;
@@ -256,6 +258,16 @@ public class WorldManager implements EngineInterface, Serializable {
         }catch (IOException e){
             throw new IllegalArgumentException(e);
         }
+    }
+
+    @Override
+    public SetResponse setEntityPopulation(EntityPopulationUserInput input) {
+        return world.setEntityInput(input);
+    }
+
+    @Override
+    public SetResponse setEnvironmentVariable(EnvPropertyUserInput input) {
+        return null;
     }
 
 

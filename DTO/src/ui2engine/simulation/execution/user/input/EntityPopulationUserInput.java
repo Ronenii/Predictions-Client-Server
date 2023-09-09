@@ -1,4 +1,4 @@
-package ui2engine.simulation.func3.user.input;
+package ui2engine.simulation.execution.user.input;
 
 public class EntityPopulationUserInput {
     private final String name;

@@ -1,21 +1,22 @@
 package gui.sub.menus;
 
 import engine2ui.simulation.prview.PreviewData;
-import gui.api.event.ErrorEvent;
-import gui.api.event.handler.BarNotifier;
-import gui.api.event.handler.HasFileLoadedListeners;
+import gui.api.BarNotifier;
+import gui.api.EngineCommunicator;
+import gui.api.HasFileLoadedListeners;
 import gui.app.AppController;
 import gui.execution.NewExecutionComponentController;
-import gui.notification.NotificationBarComponentController;
 import gui.result.ResultComponentController;
 import gui.simulation.breakdown.SimBreakdownMenuController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
+import manager.EngineAgent;
+
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
-public class SubMenusController implements HasFileLoadedListeners, BarNotifier {
+public class SubMenusController implements HasFileLoadedListeners, BarNotifier, EngineCommunicator {
     private AppController mainController;
     @FXML private GridPane simBreakdownMenu;
     @FXML private SimBreakdownMenuController simBreakdownMenuController;
@@ -50,7 +51,12 @@ public class SubMenusController implements HasFileLoadedListeners, BarNotifier {
     }
 
     @Override
-    public BarNotifier getNotificationBarParent() {
-        return mainController.getNotificationBarParent();
+    public BarNotifier getNotificationBar() {
+        return mainController.getNotificationBar();
+    }
+
+    @Override
+    public EngineAgent getEngineAgent() {
+        return mainController.getEngineAgent();
     }
 }

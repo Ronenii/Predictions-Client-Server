@@ -1,6 +1,7 @@
 package gui.header.component;
 
 import engine2ui.simulation.prview.PreviewData;
+import gui.api.EngineCommunicator;
 import gui.app.AppController;
 import gui.header.component.queue.manager.QueueManagerComponentController;
 import javafx.event.ActionEvent;
@@ -12,11 +13,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import jaxb.event.FileLoadedEvent;
-import java.io.File;
-import java.util.EventListener;
-import java.util.List;
+import manager.EngineAgent;
 
-public class HeaderComponentController implements FileLoadedEvent {
+import java.io.File;
+
+public class HeaderComponentController implements FileLoadedEvent, EngineCommunicator {
     private AppController mainController;
     @FXML
     private Button loadFileBTN;
@@ -67,15 +68,13 @@ public class HeaderComponentController implements FileLoadedEvent {
 
     /**
      * Tries to load a simulation file. If successful sets it as the header text field text
-     * And notifies the user that the load succeeded. Otherwise notifies that the load failed
+     * And notifies the user that the load succeeded. Otherwise, notifies that the load failed
      * and displays the errors.
      */
     private void loadFile(File fileToLoad){
         try {
-            mainController.engineAgent.loadSimulationFromFile(fileToLoad,mainController.getAllFileLoadedListeners());
-            pathTF.setText(fileToLoad.getPath());
+            getEngineAgent().loadSimulationFromFile(fileToLoad,mainController.getAllFileLoadedListeners());
             currentLoadedFilePath = fileToLoad.getPath();
-            mainController.showNotification("File has been loaded successfully!");
         }catch (IllegalArgumentException e){
             mainController.showNotification(e.getMessage());
         }
@@ -108,6 +107,12 @@ public class HeaderComponentController implements FileLoadedEvent {
 
     @Override
     public void onFileLoaded(PreviewData previewData) {
+        pathTF.setText(currentLoadedFilePath);
+        mainController.showNotification("File has been loaded successfully!");
+    }
 
+    @Override
+    public EngineAgent getEngineAgent() {
+        return mainController.getEngineAgent();
     }
 }

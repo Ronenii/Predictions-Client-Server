@@ -1,6 +1,7 @@
 package manager;
 
 import display.Console;
+import engine2ui.simulation.execution.SetResponse;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.objects.DTOEntityInstance;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
@@ -8,12 +9,14 @@ import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.result.ResultData;
 import engine2ui.simulation.result.ResultInfo;
 import manager.exception.SimulationNotLoadedException;
+import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
+import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
 import ui2engine.simulation.load.DTOLoadFile;
 import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import engine2ui.simulation.genral.impl.properties.StartData;
 import input.Input;
 import manager.options.ResultDisplayOptions;
-import ui2engine.simulation.func3.DTOExecutionData;
+import ui2engine.simulation.execution.DTOExecutionData;
 import validator.ui.exceptions.IllegalBooleanValueException;
 import validator.ui.exceptions.IllegalStringValueException;
 import validator.ui.exceptions.OutOfRangeException;
@@ -203,8 +206,6 @@ public class EngineAgent {
 
         // If there is only one simulation, there is no need to ask the user what simulation
         // he wants to display.
-
-
     }
 
     /**
@@ -301,7 +302,14 @@ public class EngineAgent {
                 Console.println("The file was saved successfully.");
             }
         }
+    }
 
+    public SetResponse sendPopulationData(EntityPopulationUserInput input){
+        return engine.setEntityPopulation(input);
+    }
+
+    public SetResponse sendEnvironmentVariableData(EnvPropertyUserInput input){
+        return engine.setEnvironmentVariable(input);
     }
 
     private static boolean isValidFilename(String filename) {

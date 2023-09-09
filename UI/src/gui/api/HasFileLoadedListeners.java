@@ -1,4 +1,4 @@
-package gui.api.event.handler;
+package gui.api;
 import java.util.EventListener;
 import java.util.List;
 

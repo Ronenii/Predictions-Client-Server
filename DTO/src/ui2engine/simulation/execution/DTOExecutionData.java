@@ -1,7 +1,6 @@
-package ui2engine.simulation.func3;
+package ui2engine.simulation.execution;
 
-import ui2engine.simulation.func3.user.input.EntityPopulationUserInput;
-import ui2engine.simulation.func3.user.input.EnvPropertyUserInput;
+import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
 
 import java.util.HashMap;
 import java.util.Map;

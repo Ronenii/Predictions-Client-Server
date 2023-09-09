@@ -5,7 +5,7 @@ import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
-import gui.api.event.handler.HasFileLoadedListeners;
+import gui.api.HasFileLoadedListeners;
 import gui.simulation.breakdown.details.DisplayComponentController;
 import gui.simulation.breakdown.details.entity.property.PropertyDetailsController;
 import gui.simulation.breakdown.details.environment.EnvironmentVarDetailsController;
