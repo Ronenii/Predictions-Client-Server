@@ -67,7 +67,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
 
     @FXML
     void populationTextFieldActionListener(ActionEvent event) {
-
+        setButtonActionListener(event);
     }
 
     /**
@@ -106,7 +106,27 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
 
     @Override
     public void onFileLoaded(PreviewData previewData) {
-        entitiesLV.getItems().addAll(previewData.getEntities());
+        enableComponent();
+        addItemsToListView(previewData.getEntities());
+        initEntityPopulations(previewData.getEntities());
+    }
+
+    private void initEntityPopulations(List<DTOEntity> entities){
+        for (DTOEntity e:entities
+        ) {
+            getEngineAgent().sendPopulationData(new EntityPopulationUserInput(e.getName(),0));
+            entityPopulations.put(e, 0);
+        }
+    }
+
+    private void enableComponent(){
+        setBTN.disableProperty().set(false);
+        entitiesLV.disableProperty().set(false);
+        populationTF.disableProperty().set(false);
+    }
+
+    private void addItemsToListView(List<DTOEntity> entities){
+        entitiesLV.getItems().addAll(entities);
         entitiesLV.setCellFactory(new Callback<ListView<DTOEntity>, ListCell<DTOEntity>>() {
             @Override
             public ListCell<DTOEntity> call(ListView<DTOEntity> listView) {
@@ -124,16 +144,6 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
                 };
             }
         });
-
-        initEntityPopulations(previewData.getEntities());
-    }
-
-    private void initEntityPopulations(List<DTOEntity> entities){
-        for (DTOEntity e:entities
-        ) {
-            getEngineAgent().sendPopulationData(new EntityPopulationUserInput(e.getName(),0));
-            entityPopulations.put(e, 0);
-        }
     }
 
     @Override
