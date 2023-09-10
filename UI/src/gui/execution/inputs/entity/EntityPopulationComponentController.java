@@ -16,12 +16,12 @@ import manager.EngineAgent;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EntityPopulationComponentController implements FileLoadedEvent, BarNotifier, EngineCommunicator {
 
-    private static final int POPULATION_ERROR = -1;
-    private BarNotifier notificationBar;
+    private static final int POPULATION_ERROR = -1, NO_POPULATION = -1;
     private InputsController mainController;
 
     @FXML
@@ -42,6 +42,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
         this.mainController = mainController;
     }
 
+    @FXML
     public void initialize() {
         entityPopulations = new HashMap<>();
     }
@@ -77,21 +78,21 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
         DTOEntity selectedItem = entitiesLV.getSelectionModel().getSelectedItem();
 
         if (selectedItem != null) {
-            int population = getTextFieldInput();
+            int population = parseTextFieldInput();
 
             if (population != POPULATION_ERROR) {
                 SetResponse response = getEngineAgent().sendPopulationData(new EntityPopulationUserInput(selectedItem.getName(), population));
-                notificationBar.showNotification(response.getMessage());
+                getNotificationBar().showNotification(response.getMessage());
                 if (response.isSuccess()) {
                     entityPopulations.put(selectedItem, population);
                 }
             } else {
-                notificationBar.showNotification("The population value may only be a non negative Integer.");
+                getNotificationBar().showNotification("ERROR: The population value may only be a non negative Integer.");
             }
         }
     }
 
-    private int getTextFieldInput() {
+    private int parseTextFieldInput() {
         try {
             int result = Integer.parseInt(populationTF.getText());
             if (result < 0) {
@@ -106,7 +107,6 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     @Override
     public void onFileLoaded(PreviewData previewData) {
         entitiesLV.getItems().addAll(previewData.getEntities());
-
         entitiesLV.setCellFactory(new Callback<ListView<DTOEntity>, ListCell<DTOEntity>>() {
             @Override
             public ListCell<DTOEntity> call(ListView<DTOEntity> listView) {
@@ -122,9 +122,18 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
                         }
                     }
                 };
-
             }
         });
+
+        initEntityPopulations(previewData.getEntities());
+    }
+
+    private void initEntityPopulations(List<DTOEntity> entities){
+        for (DTOEntity e:entities
+        ) {
+            getEngineAgent().sendPopulationData(new EntityPopulationUserInput(e.getName(),0));
+            entityPopulations.put(e, 0);
+        }
     }
 
     @Override

@@ -1,11 +1,10 @@
 package gui.execution.inputs;
-
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.api.HasFileLoadedListeners;
 import gui.execution.NewExecutionComponentController;
 import gui.execution.inputs.entity.EntityPopulationComponentController;
-import gui.execution.inputs.env.var.EnvironmentVariablesComponentController;
+import gui.execution.inputs.env.var.EnvironmentVariableComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import manager.EngineAgent;
@@ -20,7 +19,7 @@ public class InputsController implements HasFileLoadedListeners, BarNotifier, En
     @FXML private GridPane entityPopulationComponent;
     @FXML private EntityPopulationComponentController entityPopulationComponentController;
     @FXML private GridPane environmentVariablesComponent;
-    @FXML private EnvironmentVariablesComponentController environmentVariablesComponentController;
+    @FXML private EnvironmentVariableComponentController environmentVariableComponentController;
 
     public DTOExecutionData executionData;
 
@@ -28,15 +27,19 @@ public class InputsController implements HasFileLoadedListeners, BarNotifier, En
         this.mainController = mainController;
     }
 
+    @FXML
     public void initialize(){
-        executionData = new DTOExecutionData();
+        if(environmentVariableComponentController != null && entityPopulationComponentController != null){
+            entityPopulationComponentController.setMainController(this);
+            environmentVariableComponentController.setMainController(this);
+        }
     }
 
     @Override
     public List<EventListener> getAllFileLoadedListeners() {
         List<EventListener> listeners = new ArrayList<>();
         listeners.add(entityPopulationComponentController);
-        listeners.add(environmentVariablesComponentController);
+        listeners.add(environmentVariableComponentController);
 
         return listeners;
     }

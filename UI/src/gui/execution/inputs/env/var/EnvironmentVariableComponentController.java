@@ -1,16 +1,18 @@
 package gui.execution.inputs.env.var;
 
-import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import engine2ui.simulation.prview.PreviewData;
+import gui.api.BarNotifier;
+import gui.api.EngineCommunicator;
 import gui.execution.inputs.InputsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 import jaxb.event.FileLoadedEvent;
+import manager.EngineAgent;
 
-public class EnvironmentVariablesComponentController implements FileLoadedEvent {
+public class EnvironmentVariableComponentController implements FileLoadedEvent, EngineCommunicator, BarNotifier {
 
     private InputsController mainController;
     @FXML
@@ -64,5 +66,15 @@ public class EnvironmentVariablesComponentController implements FileLoadedEvent 
 
             }
         });
+    }
+
+    @Override
+    public EngineAgent getEngineAgent() {
+        return mainController.getEngineAgent();
+    }
+
+    @Override
+    public BarNotifier getNotificationBar() {
+        return mainController.getNotificationBar();
     }
 }

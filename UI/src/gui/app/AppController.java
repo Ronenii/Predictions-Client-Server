@@ -43,8 +43,6 @@ public class AppController implements HasFileLoadedListeners, BarNotifier, Engin
         listeners.add(headerComponentController);
         listeners.addAll(subMenusController.getAllFileLoadedListeners());
         return listeners;
-
-
     }
 
     /**

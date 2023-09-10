@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.execution.inputs.env.var.EnvironmentVariablesComponentController">
+<GridPane minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.execution.inputs.env.var.EnvironmentVariableComponentController">
    <columnConstraints>
       <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="10.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="220.0" minWidth="-Infinity" prefWidth="180.0" />
