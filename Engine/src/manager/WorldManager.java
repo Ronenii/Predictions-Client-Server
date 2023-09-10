@@ -1,6 +1,7 @@
 package manager;
 
 import engine2ui.simulation.execution.SetResponse;
+import engine2ui.simulation.execution.StartResponse;
 import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.prview.PreviewData;
@@ -99,6 +100,18 @@ public class WorldManager implements EngineInterface, Serializable {
 
         isSimulationLoaded = true;
         return dtoLoadSucceed;
+    }
+
+    @Override
+    public StartResponse startSimulation() {
+
+
+        return null;
+    }
+
+    @Override
+    public void clearSimulation() {
+        world.resetWorld();
     }
 
     private void invokeSuccessLoadListeners(List<EventListener> listeners) {

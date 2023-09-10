@@ -1,6 +1,7 @@
 package manager;
 
 import engine2ui.simulation.execution.SetResponse;
+import engine2ui.simulation.execution.StartResponse;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.result.ResultInfo;
 import engine2ui.simulation.genral.impl.properties.StartData;
@@ -19,6 +20,10 @@ public interface EngineInterface {
 
     DTOLoadSucceed loadSimulationFromFile(DTOLoadFile dto);
 
+    StartResponse startSimulation();
+
+    void clearSimulation();
+
     ResultInfo runSimulation(DTOExecutionData dtoExecutionData);
 
     void resetEngine();
@@ -33,4 +38,6 @@ public interface EngineInterface {
 
     SetResponse setEntityPopulation(EntityPopulationUserInput input);
     SetResponse setEnvironmentVariable(EnvPropertyUserInput input);
+
+
 }
