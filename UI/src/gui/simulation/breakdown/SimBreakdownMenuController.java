@@ -126,9 +126,9 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     void selectItem(MouseEvent event) {
         TreeItem<String> selectedItem = simTreeView.getSelectionModel().getSelectedItem();
 
-        if(selectedItem.isLeaf()){
+        if(selectedItem != null){
             try {
-                if(selectedItem != null){
+                if(selectedItem.isLeaf() && previewData != null){
                     if(selectedItem.getValue().equals("General")) {
                         setGeneralComponent(selectedItem);
                     }
