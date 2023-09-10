@@ -37,7 +37,7 @@
             <Insets left="20.0" />
          </padding>
       </Label>
-      <ListView id="lv-NewExec-EnvVar" fx:id="envVarsLV" disable="true" maxHeight="500.0" maxWidth="400.0" onMouseClicked="#onMouseClickerdListenerLV" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS" />
+      <ListView id="lv-NewExec-EnvVar" fx:id="envVarsLV" disable="true" maxHeight="500.0" maxWidth="400.0" onMouseClicked="#onMouseClickedListenerLV" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS" />
       <Label id="lbl-NewExec-EnvironmentVariables" fx:id="envVarLabel" text="Environment Variables" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER">
          <font>
             <Font name="System Bold" size="15.0" />

@@ -1,4 +1,4 @@
-package validator.ui.exceptions;
+package manager.validator.exceptions;
 
 public class OutOfRangeException extends Exception{
 }

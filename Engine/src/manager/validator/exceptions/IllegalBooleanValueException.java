@@ -1,4 +1,4 @@
-package validator.ui.exceptions;
+package manager.validator.exceptions;
 
 public class IllegalBooleanValueException extends Exception{
 }

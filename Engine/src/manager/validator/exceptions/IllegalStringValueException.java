@@ -1,4 +1,4 @@
-package validator.ui.exceptions;
+package manager.validator.exceptions;
 
 public class IllegalStringValueException extends Exception {
     private String message;

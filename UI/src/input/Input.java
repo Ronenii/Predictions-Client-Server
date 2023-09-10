@@ -1,8 +1,7 @@
 package input;
 
-import manager.options.ResultDisplayOptions;
-import validator.ui.exceptions.OutOfRangeException;
-import validator.ui.validator.InputValidator;
+import manager.validator.exceptions.OutOfRangeException;
+import manager.validator.validator.InputValidator;
 
 import java.util.Scanner;
 

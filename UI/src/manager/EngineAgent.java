@@ -17,10 +17,10 @@ import engine2ui.simulation.genral.impl.properties.StartData;
 import input.Input;
 import manager.options.ResultDisplayOptions;
 import ui2engine.simulation.execution.DTOExecutionData;
-import validator.ui.exceptions.IllegalBooleanValueException;
-import validator.ui.exceptions.IllegalStringValueException;
-import validator.ui.exceptions.OutOfRangeException;
-import validator.ui.validator.InputValidator;
+import manager.validator.exceptions.IllegalBooleanValueException;
+import manager.validator.exceptions.IllegalStringValueException;
+import manager.validator.exceptions.OutOfRangeException;
+import manager.validator.validator.InputValidator;
 
 import java.io.File;
 import java.io.IOException;

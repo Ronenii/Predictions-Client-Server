@@ -12,6 +12,10 @@ import engine2ui.simulation.genral.impl.properties.StartData;
 import jaxb.event.FileLoadedEvent;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
+import manager.validator.exceptions.IllegalBooleanValueException;
+import manager.validator.exceptions.IllegalStringValueException;
+import manager.validator.exceptions.OutOfRangeException;
+import manager.validator.validator.InputValidator;
 import simulation.objects.world.World;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
@@ -46,7 +50,7 @@ public class WorldManager implements EngineInterface, Serializable {
         keysToSerialize = new HashSet<>();
     }
 
-    public void loadValuesFromDeserialization(WorldManager instance){
+    public void loadValuesFromDeserialization(WorldManager instance) {
         world = instance.world;
         pastSimulations = instance.pastSimulations;
         keysToSerialize = instance.keysToSerialize;
@@ -100,7 +104,7 @@ public class WorldManager implements EngineInterface, Serializable {
     private void invokeSuccessLoadListeners(List<EventListener> listeners) {
         PreviewData previewData = getCurrentSimulationDetails();
 
-        for(EventListener f: listeners){
+        for (EventListener f : listeners) {
             FileLoadedEvent fileLoadedEvent = (FileLoadedEvent) f;
             fileLoadedEvent.onFileLoaded(previewData);
         }
@@ -161,6 +165,7 @@ public class WorldManager implements EngineInterface, Serializable {
      */
     private Object getRandomValueByType(Property envProperty) {
         Object ret = null;
+
 
         switch (envProperty.getType()) {
             case DECIMAL:
@@ -226,7 +231,7 @@ public class WorldManager implements EngineInterface, Serializable {
         return new DTOEnvironmentVariable(name, type, from, to);
     }
 
-    public void saveState(String path){
+    public void saveState(String path) {
         File toSerialize = new File(path);
         keysToSerialize.addAll(IdGenerator.getGeneratedIds());
 
@@ -244,18 +249,18 @@ public class WorldManager implements EngineInterface, Serializable {
         }
     }
 
-    public void loadState(String path){
-        try{
+    public void loadState(String path) {
+        try {
             FileInputStream file = new FileInputStream(path);
             ObjectInputStream in = new ObjectInputStream(file);
-            loadValuesFromDeserialization((WorldManager)in.readObject());
+            loadValuesFromDeserialization((WorldManager) in.readObject());
             IdGenerator.setGeneratedIds(keysToSerialize);
             in.close();
             file.close();
 
-        }catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
     }
@@ -267,8 +272,68 @@ public class WorldManager implements EngineInterface, Serializable {
 
     @Override
     public SetResponse setEnvironmentVariable(EnvPropertyUserInput input) {
-        return null;
+
+        SetResponse response;
+        Map<String, Property> environmentProperties = this.world.getEnvironmentProperties();
+        Property envProperty = environmentProperties.get(input.getName());
+
+        if (input.isRandomInit()) {
+            envProperty.updateValueAndIsRandomInit(getRandomValueByType(envProperty), input.isRandomInit());
+            response = new SetResponse(true, String.format("%s's value was set to %s", input.getName(), input.getValue()));
+        } else {
+            response = validateEnvVarInitValue(envProperty, input.getValue());
+            if (response.isSuccess()) {
+                envProperty.updateValueAndIsRandomInit(input.getValue(), input.isRandomInit());
+            }
+        }
+
+        return response;
     }
 
+    /**
+     * Validates the given user input for the environment variable and returns a set response accordingly.
+     * Validates range\regex matching\value compatibility based on the type of the property.
+     * @param property The property we are comparing the value to
+     * @param inputValue The value we want to compare
+     * @return A Set response indicating if the set action has succeeded or failed with a custom message
+     */
+    private SetResponse validateEnvVarInitValue(Property property, Object inputValue) {
+        String successMessage = String.format("%s's value was successfully set to %s", property.getName(), inputValue.toString());
+        InputValidator inputValidator = new InputValidator();
+        try {
+            switch (property.getType()) {
+                case DECIMAL: {
 
+                    int value = Integer.parseInt(inputValue.toString());
+                    IntProperty intProperty = (IntProperty) property;
+
+                    inputValidator.isIntegerInRange(value, intProperty.getFrom(), intProperty.getTo());
+
+                    return new SetResponse(true, successMessage);
+                }
+                case FLOAT: {
+                    double value = Double.parseDouble(inputValue.toString());
+                    DoubleProperty doubleProperty = (DoubleProperty) property;
+
+                    inputValidator.isDoubleInRange(value, doubleProperty.getFrom(), doubleProperty.getTo());
+
+                    return new SetResponse(true, successMessage);
+                }
+                case BOOLEAN: {
+                    inputValidator.validateBoolean(inputValue.toString());
+                    return new SetResponse(true, successMessage);
+                }
+                case STRING:
+                    inputValidator.validateStringValue(inputValue.toString());
+                    return new SetResponse(true, successMessage);
+            }
+        } catch (NumberFormatException e) {
+            return new SetResponse(false, String.format("ERROR: Value provided is does not match %s's type (%s)", property.getName(), property.getType().toString()));
+        } catch(OutOfRangeException | IllegalBooleanValueException e) {
+            return new SetResponse(false, String.format("ERROR: Value given is not in %s's range.",property.getName()));
+        } catch (IllegalStringValueException e) {
+            return new SetResponse(false, "ERROR: String given does not meet the string guidelines.");
+        }
+        return null;
+    }
 }

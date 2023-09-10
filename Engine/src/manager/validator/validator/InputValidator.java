@@ -1,8 +1,9 @@
-package validator.ui.validator;
+package manager.validator.validator;
 
-import validator.ui.exceptions.IllegalBooleanValueException;
-import validator.ui.exceptions.IllegalStringValueException;
-import validator.ui.exceptions.OutOfRangeException;
+
+import manager.validator.exceptions.IllegalBooleanValueException;
+import manager.validator.exceptions.IllegalStringValueException;
+import manager.validator.exceptions.OutOfRangeException;
 
 public class InputValidator {
 
@@ -26,7 +27,7 @@ public class InputValidator {
         }
     }
 
-    public void validateBoolean(String value) throws IllegalBooleanValueException{
+    public void validateBoolean(String value) throws IllegalBooleanValueException {
         if(!value.equals("true") && !value.equals("false")){
             throw new IllegalBooleanValueException();
         }
@@ -39,9 +40,9 @@ public class InputValidator {
      *
      * @param value the user input
      */
-    public void validateStringValue(String value) throws IllegalStringValueException{
+    public void validateStringValue(String value) throws IllegalStringValueException {
         String pattern = "^[A-Za-z0-9().\\-_,?! ]+$";
-        if(!value.matches(pattern)){
+        if(!value.matches(pattern) || value.length() > 50){
             throw new IllegalStringValueException(value);
         }
     }
