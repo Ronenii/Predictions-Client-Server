@@ -3,21 +3,21 @@ package engine2ui.simulation.genral.impl.properties.action.impl;
 import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
 
 public class DTOMultipleCondition extends DTOAction {
-    private final int thenActionsCount;
+    private final int thenActionCount;
     private final int elseActionCount;
     private final String logic;
     private final int subConditionsCount;
 
     public DTOMultipleCondition(String type, String mainEntity, String secondaryEntity, String property, int thenActionsCount, int elseActionCount, String logic, int subConditionsCount) {
         super(type, mainEntity, secondaryEntity, property);
-        this.thenActionsCount = thenActionsCount;
+        this.thenActionCount = thenActionsCount;
         this.elseActionCount = elseActionCount;
         this.logic = logic;
         this.subConditionsCount = subConditionsCount;
     }
 
-    public int getThenActionsCount() {
-        return thenActionsCount;
+    public int getThenActionCount() {
+        return thenActionCount;
     }
 
     public int getElseActionCount() {

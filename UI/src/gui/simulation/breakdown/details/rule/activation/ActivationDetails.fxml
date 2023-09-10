@@ -28,7 +28,7 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+      <VBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
          <children>
             <Label text="Ticks:">
                <font>
@@ -42,7 +42,7 @@
             </Label>
          </children>
       </VBox>
-      <VBox alignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+      <VBox alignment="CENTER" spacing="15.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
          <children>
             <Label id="lbl-RuleDetails-TIcks" fx:id="lblTIcks" text="Placeholder" />
             <Label id="lbl-RuleDetails-Probability" fx:id="lblProbability" text="Placeholder" />

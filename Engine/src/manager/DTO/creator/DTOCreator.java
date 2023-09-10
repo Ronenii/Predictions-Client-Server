@@ -42,6 +42,7 @@ import java.util.*;
  * Responsible cor converting program objects to DTO objects.
  */
 public class DTOCreator {
+    private static int actionNumber = 1;
 
     public PreviewData createSimulationPreviewDataObject(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, Grid grid, int threadCount) {
         List<DTOEntity> entitiesList;
@@ -204,13 +205,16 @@ public class DTOCreator {
         List<Action> actions = rule.getActions();
 
         actions.forEach((value) -> dtoActions.add(getDTOAction(value)));
+        actionNumber = 1;
         return new DTORule(rule.getName(), rule.getActivation().getTicks(), rule.getActivation().getProbability(), dtoActions);
     }
 
     private DTOAction getDTOAction(Action action){
         DTOAction ret = null;
-        String type = action.getType().toString().toLowerCase(), mainEntity = action.getContextEntity(), secondaryEntity = null, property = null;
+        String type, mainEntity = action.getContextEntity(), secondaryEntity = null, property = null;
 
+        type = String.format("%s #%d",action.getType().toString().toLowerCase(), actionNumber);
+        actionNumber++;
         if(action.getContextProperty() != null){
             property = action.getContextProperty().toString();
         }

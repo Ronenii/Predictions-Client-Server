@@ -10,6 +10,7 @@ import gui.simulation.breakdown.details.DisplayComponentController;
 import gui.simulation.breakdown.details.entity.property.PropertyDetailsController;
 import gui.simulation.breakdown.details.environment.EnvironmentVarDetailsController;
 import gui.simulation.breakdown.details.general.GeneralDetailsController;
+import gui.simulation.breakdown.details.rule.action.ActionDetailsController;
 import gui.simulation.breakdown.details.rule.activation.ActivationDetailsController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
@@ -19,6 +20,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import jaxb.event.FileLoadedEvent;
+import jaxb.schema.generated.PRDAction;
 
 import java.io.IOException;
 import java.net.URL;
@@ -146,7 +148,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
                             else {
                                 engineObjectType = selectedItem.getParent().getParent().getParent().getValue();
                                 if(engineObjectType.equals("Rules")) {
-
+                                    setRulesActionComponent(selectedItem, selectedItem.getParent().getParent().getValue());
                                 }
                                 else {
                                     //Todo: error occurred
@@ -180,6 +182,22 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
                 for (DTOProperty property : entity.getProperties()) {
                     if(property.getName().equals(selectedItem.getValue())){
                         propertyDetailsController.setComponentDet(property);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    private void setRulesActionComponent(TreeItem<String> selectedItem, String ruleName) throws IOException {
+        ActionDetailsController actionDetailsController = (ActionDetailsController)displayComponentController.loadFXMLComponent("rule/action/ActionDetails.fxml");
+        displayComponentController.setLblTitle(selectedItem.getValue());
+        for (DTORule rule : previewData.getRules()){
+            if(rule.getName().equals(ruleName)) {
+                for (DTOAction action : rule.getActions()) {
+                    if(action.getType().equals(selectedItem.getValue())){
+                        actionDetailsController.setComponentDet(action);
                         break;
                     }
                 }
