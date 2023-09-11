@@ -23,16 +23,22 @@ public class ControlBarController implements BarNotifier, EngineCommunicator {
 
     @FXML
     void clearButtonActionListener(ActionEvent event) {
-        mainController.clearInputs();
+        if(getEngineAgent().isFileLoaded()){
+            mainController.clearInputs();
+            getNotificationBar().showNotification("Cleared all inputs from user.");
+        }
     }
 
     @FXML
     void startButtonActionListener(ActionEvent event) {
-        StartResponse response = getEngineAgent().startSimulation();
+        if(getEngineAgent().isFileLoaded())
+        {
+            StartResponse response = getEngineAgent().startSimulation();
 
-        showNotification(response.getMessage());
-        if(response.isSuccess()){
-            mainController.getMenusTabPane().getSelectionModel().selectLast();
+            showNotification(response.getMessage());
+            if(response.isSuccess()){
+                mainController.getMenusTabPane().getSelectionModel().selectLast();
+            }
         }
     }
 
