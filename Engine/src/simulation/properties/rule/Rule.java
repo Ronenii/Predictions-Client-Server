@@ -1,23 +1,17 @@
 package simulation.properties.rule;
 
 import simulation.objects.entity.Entity;
-import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.impl.condition.MultipleCondition;
 import simulation.properties.activition.Activation;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Rule implements Serializable {
     private final String name;
     private final Activation activation;
     private final List<Action> actions;
-
     private int simulationTickCount;
 
     public Rule(String name, Activation activation, List<Action> actions) {
@@ -82,7 +76,7 @@ public class Rule implements Serializable {
      * @param entities The world's entities that we invoke the rule on
      */
     public void invokeRuleOnWorldEntities(Collection<Entity> entities, int lastChangTickCount) {
-        if (willInvoke()) {
+        if (willInvokeByTicks()) {
             for (Entity e: entities
                  ) {
                 invokeActionsOnEntity(e, lastChangTickCount);
@@ -100,15 +94,35 @@ public class Rule implements Serializable {
         ) {
             if(a.getClass() == MultipleCondition.class || a.getContextEntity().equals(entity.getName()))
             {
-                entity.invokeActionOnAllInstances(a, activation.getProbability(), lastChangTickCount);
+                entity.invokeActionsOnAllInstances(a, activation.getProbability(), lastChangTickCount);
             }
         }
+    }
+
+    public List<Action> getActionsToInvoke() {
+        List<Action> actionsToInvoke = new ArrayList<>();
+
+        if(willInvokeByTicks() && willInvokeByProbability()) {
+            actionsToInvoke.addAll(actions);
+        }
+
+        return actionsToInvoke;
     }
 
     /**
      * @return true if the required amount of ticks has passed since last invoking the rule.
      */
-    private boolean willInvoke() {
+    private boolean willInvokeByTicks() {
         return (simulationTickCount++ % activation.getTicks()) == 0;
+    }
+
+    private boolean willInvokeByProbability() {
+        double min = 0.0;
+        double max = 1.0;
+        Random random = new Random();
+        // Generate a random double within the specified inclusive range
+        double randomValue = min + (max - min + Double.MIN_VALUE) * random.nextDouble();
+
+        return randomValue <= activation.getProbability();
     }
 }

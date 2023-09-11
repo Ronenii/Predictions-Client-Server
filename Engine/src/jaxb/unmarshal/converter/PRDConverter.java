@@ -474,7 +474,7 @@ public class PRDConverter {
     private int getCountFromPRDSecondaryEntity(PRDAction.PRDSecondaryEntity prdSecondaryEntity) {
         String count = prdSecondaryEntity.getPRDSelection().getCount();
         if (count.equals("ALL")) {
-            return entities.get(prdSecondaryEntity.getEntity()).getStartingPopulation();
+            return -1;
         }
 
         return Integer.parseInt(count);

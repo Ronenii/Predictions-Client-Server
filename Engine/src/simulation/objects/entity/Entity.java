@@ -94,6 +94,13 @@ public class Entity implements Serializable {
         return propertyMap;
     }
 
+    public EntityInstance createNewEntityInstance() {
+        EntityInstance ret = new EntityInstance(generateProperties(), this);
+
+        entityInstances.add(ret);
+        return ret;
+    }
+
     @Override
     public int hashCode() {
         return name.length() * startingPopulation * properties.size();
@@ -107,19 +114,36 @@ public class Entity implements Serializable {
      * @param action      The action to invoke on all instances.
      * @param probability The probability of this action to invoke on instances.
      */
-    public void invokeActionOnAllInstances(Action action, double probability, int lastChangTickCount) {
-        Random r = new Random();
-        for (EntityInstance e : entityInstances
-        ) {
-            if (r.nextDouble() <= probability && e.isAlive()) {
-                if (action.getClass().getSuperclass() == OneEntAction.class) {
-                    ((OneEntAction) action).invoke(e, lastChangTickCount);
-                } else {
-                    //Todo : implement this.
-                }
+//    public void invokeActionsOnAllInstances(List<Action> actionsToInvoke, int lastChangTickCount) {
+//        for (EntityInstance e : entityInstances) {
+//            if (e.isAlive()) {
+//                invokeActionsOnSingleInstance(e, actionsToInvoke, lastChangTickCount);
+//            }
+//        }
+//    }
+//
+//    private void invokeActionsOnSingleInstance(EntityInstance entityInstance, List<Action> actionsToInvoke, int lastChangTickCount) {
+//        for (Action action : actionsToInvoke){
+//            if(action.getContextEntity().equals(name)){
+//                if(action.getSecondaryEntity() != null) {
+//
+//                }
+//                else {
+//                    if (action.getClass().getSuperclass() == OneEntAction.class) {
+//                        ((OneEntAction) action).invoke(entityInstance, lastChangTickCount);
+//                    } else {
+//                        //Todo : implement this.
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-            }
-        }
+    public EntityInstance getRandomEntityInstance() {
+        Random random = new Random();
+        int randomIndex = random.nextInt(entityInstances.size());
+
+        return entityInstances.get(randomIndex);
     }
 
     @Override

@@ -8,6 +8,13 @@ import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
 import simulation.objects.world.ticks.counter.TicksCounter;
+import simulation.properties.action.api.AbstractAction;
+import simulation.properties.action.api.Action;
+import simulation.properties.action.api.OneEntAction;
+import simulation.properties.action.impl.condition.AbstractConditionAction;
+import simulation.properties.action.impl.condition.SingleCondition;
+import simulation.properties.action.impl.proximity.ProximityAction;
+import simulation.properties.action.impl.replace.ReplaceAction;
 import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.rule.Rule;
 import simulation.properties.ending.conditions.EndingCondition;
@@ -135,7 +142,8 @@ public class World implements Serializable {
      * @return The result data of this simulation run.
      */
     public ResultData runSimulation() {
-        grid.moveAllEntities();
+        List<Action> actionsToInvoke = new ArrayList<>();
+        // TODO: reset grid.
         // Set the starting time to calculate later for 'ending by seconds'
         if (endingConditions.containsKey(EndingConditionType.SECONDS)) {
             startingTime = System.currentTimeMillis();
@@ -143,16 +151,110 @@ public class World implements Serializable {
 
         // Try to invoke all rules on all entities.
         do {
-            for (Rule r : rules.values()
-            ) {
-                r.invokeRuleOnWorldEntities(entities.values(), ticks.getTicks());
+            grid.moveAllEntities();
+            for (Rule r : rules.values()) {
+                actionsToInvoke.addAll(r.getActionsToInvoke());
+            }
+
+            for (Entity entity : entities.values()) {
+
             }
         } while ((!endingConditionsMet()));
-
 
         DTOCreator dtoCreator = new DTOCreator();
         return new ResultData(dtoCreator.convertEntities2DTOEntities(entities));
     }
+
+    private void invokeActionsOnAllInstances(List<EntityInstance> entityInstances, List<Action> actionsToInvoke, int lastChangTickCount) {
+        for (EntityInstance e : entityInstances) {
+            if (e.isAlive()) {
+                invokeActionsOnSingleInstance(e, actionsToInvoke, lastChangTickCount);
+            }
+        }
+    }
+
+    private void invokeActionsOnSingleInstance(EntityInstance entityInstance, List<Action> actionsToInvoke, int lastChangTickCount) {
+        for (Action action : actionsToInvoke){
+            if(action.getContextEntity().equals(entityInstance.getInstanceEntityName())){
+                if(action.getSecondaryEntity() != null) {
+                    //TODO: implement this.
+                }
+                else {
+                  invokeAnAction(entityInstance, action, lastChangTickCount);
+                }
+            }
+        }
+    }
+
+    private void invokeAnAction(EntityInstance entityInstance, Action action, int lastChangTickCount) {
+        if (action.getClass().getSuperclass() == OneEntAction.class) {
+            ((OneEntAction) action).invoke(entityInstance, lastChangTickCount);
+        } else if (action instanceof ReplaceAction) {
+            ReplaceAction replaceAction = (ReplaceAction)action;
+            replaceAction.invoke(entityInstance, createReplaceNewEntityInstance(replaceAction.getNewEntityName()), lastChangTickCount);
+        } else if (action instanceof ProximityAction) {
+            ProximityAction proximityAction = (ProximityAction)action;
+            proximityAction.invoke(entityInstance, getProximitySecondEntityInstance(proximityAction.getTargetEntityName()), grid, lastChangTickCount);
+        }
+    }
+
+    private void invokeActionsWithSecondaryEntity(AbstractAction.SecondaryEntity secondaryEntity, Action actionToInvoke) {
+        List<EntityInstance> secondaryInstances = getSecondaryInstances(secondaryEntity);
+
+        for(EntityInstance entityInstance : secondaryInstances) {
+            //TODO : implement for Action a method which invoke the action with secondary instance.
+        }
+    }
+
+    private List<EntityInstance> getSecondaryInstances(AbstractAction.SecondaryEntity secondaryEntity) {
+        List<EntityInstance> entityInstances = new ArrayList<>();
+        AbstractConditionAction conditionAction = (AbstractConditionAction)secondaryEntity.getCondition();
+        Entity secondaryEntityRef = entities.get(secondaryEntity.getContextEntity());
+        int count = secondaryEntity.getCount();
+
+        if(count == -1){
+            entityInstances.addAll(secondaryEntityRef.getEntityInstances());
+        }
+        else {
+            if(count > secondaryEntityRef.getCurrentPopulation()){
+                count = secondaryEntityRef.getCurrentPopulation();
+            }
+
+            int i = 0;
+            while (i < count) {
+                if(conditionAction != null) {
+                    EntityInstance entityInstanceToAdd = secondaryEntityRef.getRandomEntityInstance();
+                    if(conditionAction.getConditionResult(entityInstanceToAdd)) {
+                        entityInstances.add(entityInstanceToAdd);
+                        i++;
+                    }
+                }
+                else {
+                    entityInstances.add(secondaryEntityRef.getRandomEntityInstance());
+                    i++;
+                }
+            }
+        }
+
+        return entityInstances;
+    }
+
+    private EntityInstance getProximitySecondEntityInstance(String entityName) {
+        EntityInstance ret;
+
+        Entity entity = entities.get(entityName);
+        ret = entity.getRandomEntityInstance();
+        return ret;
+    }
+
+    private EntityInstance createReplaceNewEntityInstance(String entityName) {
+        EntityInstance ret;
+
+        Entity entity = entities.get(entityName);
+        ret = entity.createNewEntityInstance();
+        return ret;
+    }
+
 
     public void resetWorld() {
         ticks.resetTicks();

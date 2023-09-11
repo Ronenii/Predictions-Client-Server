@@ -87,4 +87,9 @@ public abstract class AbstractConditionAction extends OneEntAction implements Se
         }
         isTrue = false;
     }
+
+    public Boolean getConditionResult(EntityInstance entityInstance) {
+        this.invoke(entityInstance, 0);
+        return isTrue;
+    }
 }

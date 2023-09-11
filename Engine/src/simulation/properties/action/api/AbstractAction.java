@@ -46,7 +46,7 @@ public abstract class AbstractAction implements Action {
 
     public static class SecondaryEntity{
         protected final String contextEntity;
-        private final int count;
+        private final int count; // If count value is -1 -> Got 'All' from the PRDSelection.
         private final Action Condition;
 
         public SecondaryEntity(String contextEntity, int count, Action condition) {
