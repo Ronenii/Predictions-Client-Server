@@ -82,10 +82,12 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
             int population = parseTextFieldInput();
 
             if (population != POPULATION_ERROR) {
-                SetResponse response = getEngineAgent().sendPopulationData(new EntityPopulationUserInput(selectedItem.getName(), population));
-                getNotificationBar().showNotification(response.getMessage());
-                if (response.isSuccess()) {
-                    entityPopulations.put(selectedItem, population);
+                if (population != entityPopulations.get(selectedItem)) {
+                    SetResponse response = getEngineAgent().sendPopulationData(new EntityPopulationUserInput(selectedItem.getName(), population));
+                    getNotificationBar().showNotification(response.getMessage());
+                    if (response.isSuccess()) {
+                        entityPopulations.put(selectedItem, population);
+                    }
                 }
             } else {
                 getNotificationBar().showNotification("ERROR: The population value may only be a non negative Integer.");
@@ -110,7 +112,6 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
 
     @Override
     public void onFileLoaded(PreviewData previewData) {
-        clearListView();
         enableComponent();
         addItemsToListView(previewData.getEntities());
         initEntityPopulations(previewData.getEntities());
@@ -119,27 +120,24 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     /**
      * Sets all entity populations to 0.
      * Both in the UI and in the
+     *
      * @param entities
      */
-    private void initEntityPopulations(List<DTOEntity> entities){
-        for (DTOEntity e:entities
+    private void initEntityPopulations(List<DTOEntity> entities) {
+        for (DTOEntity e : entities
         ) {
-            getEngineAgent().sendPopulationData(new EntityPopulationUserInput(e.getName(),0));
+            getEngineAgent().sendPopulationData(new EntityPopulationUserInput(e.getName(), 0));
             entityPopulations.put(e, 0);
         }
     }
 
-    private void enableComponent(){
+    private void enableComponent() {
         setBTN.disableProperty().set(false);
         entitiesLV.disableProperty().set(false);
         populationTF.disableProperty().set(false);
     }
 
-    private void clearListView(){
-        entitiesLV.getItems().clear();
-    }
-
-    private void addItemsToListView(List<DTOEntity> entities){
+    private void addItemsToListView(List<DTOEntity> entities) {
         entitiesLV.getItems().addAll(entities);
         entitiesLV.setCellFactory(new Callback<ListView<DTOEntity>, ListCell<DTOEntity>>() {
             @Override
@@ -163,7 +161,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     /**
      * Sets all entity populations in the engine to 0 and resets accordingly the entity populations map.
      */
-    public void clearInputs(){
+    public void clearInputs() {
         entityPopulations.replaceAll((e, v) -> 0);
         initEntityPopulations(new ArrayList<>(entityPopulations.keySet()));
         resetListView();
@@ -172,7 +170,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     /**
      * Deselects the listview and clears the TF.
      */
-    private void resetListView(){
+    private void resetListView() {
         entitiesLV.getSelectionModel().clearSelection();
         populationTF.setText("");
     }
