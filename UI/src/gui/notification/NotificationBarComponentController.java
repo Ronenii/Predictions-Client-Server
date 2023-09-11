@@ -33,6 +33,10 @@ public class NotificationBarComponentController {
 
     private StringBuilder logs;
 
+    Stage logWindow;
+
+    @FXML private LogWindowController logWindowController;
+
     public void setMainController(AppController mainController) {
         this.mainController = mainController;
     }
@@ -43,14 +47,21 @@ public class NotificationBarComponentController {
     }
 
 
-
+    /**
+     * Displays the firs line of the notification on the screen. Adds the date and time this notification is displayed at.
+     * Also adds it to the program logs.
+     */
     public void addNotification(String notification){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         addExpandHyperLinkToLabel(notification);
         LocalDateTime ldt = LocalDateTime.now();
         String toDisplay = ldt.format(dtf) + "- " + notification + "\n\n";
-        logs.append(toDisplay);
+        logs.insert(0,toDisplay);
         setLblNotificationText(toDisplay);
+
+        if(logWindow != null && logWindowController != null){
+            logWindowController.changeTextAreaText(logs.toString());
+        }
     }
 
     /**
@@ -90,16 +101,16 @@ public class NotificationBarComponentController {
      */
     private void showLogWindow(String logs) {
         try {
-            Stage stage = new Stage();
-            stage.setTitle("Program logs");
+            logWindow = new Stage();
+            logWindow.setTitle("Program logs");
             FXMLLoader fxmlLoader = new FXMLLoader();
             URL url = getClass().getResource("window/LogWindow.fxml");
             Parent root = fxmlLoader.load(url.openStream());
-            LogWindowController controller = fxmlLoader.getController();
-            controller.initialize(logs);
+            logWindowController = fxmlLoader.getController();
+            logWindowController.initialize(logs);
             Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
+            logWindow.setScene(scene);
+            logWindow.show();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

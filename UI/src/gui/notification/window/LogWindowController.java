@@ -13,4 +13,8 @@ public class LogWindowController {
         taNotificationDisplay.setText(text);
     }
 
+    public void changeTextAreaText(String text){
+        taNotificationDisplay.setText(text);
+    }
+
 }
