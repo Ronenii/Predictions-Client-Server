@@ -21,9 +21,9 @@ public interface Property {
 
     void updateValueAndIsRandomInit(Object value, boolean isRandomInit);
 
-    public Property dupProperty();
+    Property dupProperty();
 
-    public Property generateRandomValueProperty();
+    Property generateRandomValueProperty();
 
     int getLastChangeTickCount();
 

@@ -1,7 +1,6 @@
 package gui.execution.inputs.env.var;
 
 import engine2ui.simulation.execution.SetResponse;
-import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import engine2ui.simulation.prview.PreviewData;
 import gui.api.BarNotifier;

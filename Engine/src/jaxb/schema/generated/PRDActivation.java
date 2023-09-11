@@ -44,7 +44,7 @@ public class PRDActivation {
     protected Double probability;
 
     /**
-     * Gets the value of the ticks property.
+     * Gets the value of the ticks' property.
      * 
      * @return
      *     possible object is
@@ -56,7 +56,7 @@ public class PRDActivation {
     }
 
     /**
-     * Sets the value of the ticks property.
+     * Sets the value of the ticks' property.
      * 
      * @param value
      *     allowed object is

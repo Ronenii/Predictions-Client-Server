@@ -1,18 +1,11 @@
 package engine2ui.simulation.result;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
-import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
-import engine2ui.simulation.genral.impl.properties.property.impl.NonRangedDTOProperty;
-import engine2ui.simulation.genral.impl.properties.property.impl.RangedDTOProperty;
 import engine2ui.simulation.result.generator.IdGenerator;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Holds the data of a simulation run after it ended.

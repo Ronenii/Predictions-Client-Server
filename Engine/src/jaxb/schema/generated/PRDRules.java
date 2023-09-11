@@ -70,7 +70,7 @@ public class PRDRules {
      */
     public List<PRDRule> getPRDRule() {
         if (prdRule == null) {
-            prdRule = new ArrayList<PRDRule>();
+            prdRule = new ArrayList<>();
         }
         return this.prdRule;
     }

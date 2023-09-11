@@ -3,8 +3,6 @@ package simulation.properties.action.impl.condition;
 import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
-import simulation.properties.action.expression.impl.PropertyValueExpression;
-import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
 

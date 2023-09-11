@@ -4,14 +4,13 @@ import simulation.properties.property.api.AbstractProperty;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
 import simulation.properties.property.random.value.api.RandomValueGenerator;
-import simulation.properties.property.random.value.impl.DoubleRndValueGen;
 import simulation.properties.property.random.value.impl.IntRndValueGen;
 
 import java.io.Serializable;
 
 public class IntProperty extends AbstractProperty implements RangedProperty, Serializable {
-    private int from;
-    private int to;
+    private final int from;
+    private final int to;
 
     public IntProperty(String name, boolean isRandInit, Object value, int from, int to, String entityName) {
         super(name, isRandInit, PropertyType.DECIMAL, value, entityName);

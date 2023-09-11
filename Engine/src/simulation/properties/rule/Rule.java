@@ -1,17 +1,12 @@
 package simulation.properties.rule;
 
 import simulation.objects.entity.Entity;
-import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.impl.condition.MultipleCondition;
 import simulation.properties.activition.Activation;
-
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
 
 public class Rule implements Serializable {
     private final String name;

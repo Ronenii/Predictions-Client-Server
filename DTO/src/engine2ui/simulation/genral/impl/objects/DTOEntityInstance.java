@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 public class DTOEntityInstance implements Serializable {
-    private Map<String, DTOProperty> properties;
+    private final Map<String, DTOProperty> properties;
 
     public DTOEntityInstance(Map<String, DTOProperty> properties){
         this.properties = properties;
