@@ -37,7 +37,13 @@ public class ActionDetailsController {
 
     public void setComponentDet(DTOAction action) throws IOException {
         lblType.setText(extractActionType(action.getType()));
-        lblPrimeEntity.setText(action.getMainEntity());
+        if(action instanceof DTOMultipleCondition){
+            lblPrimeEntity.setText("-");
+        }
+        else {
+            lblPrimeEntity.setText(action.getMainEntity());
+        }
+
         if(action.getSecondaryEntity() != null){
             lblHasSecondEntity.setText("Yes");
             loadSecondaryEntityComponent(action);

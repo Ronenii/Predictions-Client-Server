@@ -51,7 +51,7 @@ public class AppController implements HasFileLoadedListeners, BarNotifier, Engin
     @Override
     public void showNotification(String notification){
         anchorNotification.visibleProperty().set(true);
-        notificationBarComponentController.setLblNotificationText(notification);
+        notificationBarComponentController.addNotification(notification);
     }
 
     @Override
