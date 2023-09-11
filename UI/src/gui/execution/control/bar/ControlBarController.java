@@ -1,5 +1,6 @@
 package gui.execution.control.bar;
 
+import engine2ui.simulation.execution.StartResponse;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.execution.NewExecutionComponentController;
@@ -27,7 +28,12 @@ public class ControlBarController implements BarNotifier, EngineCommunicator {
 
     @FXML
     void startButtonActionListener(ActionEvent event) {
+        StartResponse response = getEngineAgent().startSimulation();
 
+        showNotification(response.getMessage());
+        if(response.isSuccess()){
+            mainController.getMenusTabPane().getSelectionModel().selectLast();
+        }
     }
 
     @Override

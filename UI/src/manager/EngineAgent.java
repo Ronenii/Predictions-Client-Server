@@ -2,6 +2,7 @@ package manager;
 
 import display.Console;
 import engine2ui.simulation.execution.SetResponse;
+import engine2ui.simulation.execution.StartResponse;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.objects.DTOEntityInstance;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
@@ -383,5 +384,9 @@ public class EngineAgent {
 
         // This makes a new map with its keys sorted.
         return new TreeMap<>(unsortedMap);
+    }
+
+    public StartResponse startSimulation(){
+        return engine.startSimulation();
     }
 }

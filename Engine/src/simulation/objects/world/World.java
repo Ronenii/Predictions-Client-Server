@@ -1,6 +1,7 @@
 package simulation.objects.world;
 
 import engine2ui.simulation.execution.SetResponse;
+import engine2ui.simulation.execution.StartResponse;
 import engine2ui.simulation.result.ResultData;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.entity.Entity;
@@ -234,7 +235,7 @@ public class World implements Serializable {
      * @param input The entity input from the user.
      * @return A response with an appropriate message.
      */
-    public SetResponse setEntityInput(EntityPopulationUserInput input) {
+    public SetResponse setEntityPopulation(EntityPopulationUserInput input) {
         int gridSize = grid.getColumns() * grid.getRows();
         if (entities.containsKey(input.getName())) {
             if (totalPopulation - entities.get(input.getName()).getStartingPopulation() + input.getPopulation() > gridSize) {
@@ -259,5 +260,23 @@ public class World implements Serializable {
         return new SetResponse(false, String.format("ERROR: You are trying to set more entities than the grid size allows.\n" +
                 "You can only add %s entity instances at most.\n" +
                 "The maximum allowed number of entities is %s.", gridSize - totalPopulation, gridSize));
+    }
+
+    /**
+     * In func we add the simulation to the threadpool. If the simulation has no population
+     * at all it will send back a response indicating the simulation was not added.
+     */
+    public StartResponse startSimulation(){
+        int populationCount = 0;
+        for (Entity e: entities.values()
+             ) {
+            populationCount += e.getStartingPopulation();
+        }
+
+        if(populationCount == 0){
+            return new StartResponse(false, "ERROR: Could not start simulation. You need to have at least one entity with a population larger than 0.");
+        }
+
+        return new StartResponse(true, "Simulation was added to the queue successfully.");
     }
 }

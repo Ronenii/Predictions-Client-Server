@@ -104,11 +104,12 @@ public class WorldManager implements EngineInterface, Serializable {
 
     @Override
     public StartResponse startSimulation() {
-
-
-        return null;
+        return world.startSimulation();
     }
 
+    /**
+     * Invokes all listeners for a successful load of a file.
+     */
     private void invokeSuccessLoadListeners(List<EventListener> listeners) {
         PreviewData previewData = getCurrentSimulationDetails();
 
@@ -118,6 +119,9 @@ public class WorldManager implements EngineInterface, Serializable {
         }
     }
 
+    /**
+     * TODO: Adjust to aviad's model. We also need to implement it with threads.
+     */
     @Override
     public ResultInfo runSimulation(DTOExecutionData dtoExecutionData) {
         // Resets all entities in this world
@@ -146,7 +150,7 @@ public class WorldManager implements EngineInterface, Serializable {
     }
 
     /**
-     * Get the third function's DTO object, extract the user input from this object and update the simulation's environment variables.
+     * TODO: Delete this once we delete the console display classes.
      *
      * @param dtoExecutionData the third function's DTO object
      */
@@ -275,7 +279,7 @@ public class WorldManager implements EngineInterface, Serializable {
 
     @Override
     public SetResponse setEntityPopulation(EntityPopulationUserInput input) {
-        return world.setEntityInput(input);
+        return world.setEntityPopulation(input);
     }
 
     @Override

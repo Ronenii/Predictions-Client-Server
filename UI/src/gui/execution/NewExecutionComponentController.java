@@ -7,6 +7,7 @@ import gui.execution.control.bar.ControlBarController;
 import gui.execution.inputs.InputsController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import manager.EngineAgent;
 import ui2engine.simulation.execution.DTOExecutionData;
@@ -20,8 +21,6 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
     @FXML private InputsController inputsController;
     @FXML private GridPane controlBar;
     @FXML private ControlBarController controlBarController;
-
-    public EngineAgent engineAgent;
 
     public void setMainController(SubMenusController mainController) {
         this.mainController = mainController;
@@ -45,10 +44,6 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
         return mainController.getNotificationBar();
     }
 
-    public DTOExecutionData getExecutionData(){
-        return inputsController.executionData;
-    }
-
     @Override
     public EngineAgent getEngineAgent() {
         return mainController.getEngineAgent();
@@ -56,5 +51,12 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
 
     public void clearInputs(){
         inputsController.clearInputs();
+    }
+
+    /**
+     * @return The tab pane component of the menus
+     */
+    public TabPane getMenusTabPane(){
+        return mainController.getMenusTabPane();
     }
 }

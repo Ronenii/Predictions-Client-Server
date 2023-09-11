@@ -40,7 +40,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
     @FXML
     private Label envVarLabel;
 
-    private Map<DTOEnvironmentVariable, String> environmentVariableMap;
+    private Map<DTOEnvironmentVariable, String> environmentVariableMap; // Used for updating the TF values.
 
     public void setMainController(InputsController mainController) {
         this.mainController = mainController;
@@ -120,6 +120,9 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
         }
     }
 
+    /**
+     * Makes the text field to activate the set button if enter was pressed while text field is selected.
+     */
     @FXML
     void valueTextFieldActionListener(ActionEvent event) {
         setButtonActionListener(event);
@@ -186,11 +189,17 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
     }
 
 
+    /**
+     * Deselects the listview and sets the valueTF to be empty.
+     */
     private void resetListView(){
         envVarsLV.getSelectionModel().clearSelection();
         valueTF.setText("");
     }
 
+    /**
+     * Assigns all env vars random values and resets the map.
+     */
     public void clearInputs(){
         environmentVariableMap.replaceAll((e, v) -> "");
         initEnvironmentVariables(new ArrayList<>(environmentVariableMap.keySet()));

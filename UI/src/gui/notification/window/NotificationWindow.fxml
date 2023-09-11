@@ -17,6 +17,6 @@
     <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <TextArea fx:id="taNotificationDisplay" editable="false" minHeight="200.0" minWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextArea fx:id="taNotificationDisplay" editable="false" minHeight="200.0" minWidth="300.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
    </children>
 </GridPane>

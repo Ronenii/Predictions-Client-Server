@@ -9,6 +9,8 @@ import gui.execution.NewExecutionComponentController;
 import gui.result.ResultComponentController;
 import gui.simulation.breakdown.SimBreakdownMenuController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import manager.EngineAgent;
 
@@ -18,6 +20,11 @@ import java.util.List;
 
 public class SubMenusController implements HasFileLoadedListeners, BarNotifier, EngineCommunicator {
     private AppController mainController;
+    @FXML private TabPane menusTabPane;
+    @FXML private Tab detailsTab;
+    @FXML private Tab newExecTab;
+    @FXML private Tab resultTab;
+
     @FXML private GridPane simBreakdownMenu;
     @FXML private SimBreakdownMenuController simBreakdownMenuController;
     @FXML private GridPane newExecutionComponent;
@@ -58,5 +65,9 @@ public class SubMenusController implements HasFileLoadedListeners, BarNotifier, 
     @Override
     public EngineAgent getEngineAgent() {
         return mainController.getEngineAgent();
+    }
+
+    public TabPane getMenusTabPane(){
+        return menusTabPane;
     }
 }

@@ -37,7 +37,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     @FXML
     private Label entityLabel;
 
-    private Map<DTOEntity, Integer> entityPopulations;
+    private Map<DTOEntity, Integer> entityPopulations; // Used for updating the TF values.
 
     public void setMainController(InputsController mainController) {
         this.mainController = mainController;
@@ -93,6 +93,9 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
         }
     }
 
+    /**
+     * Checks if the given input is in fact a non negative integer.
+     */
     private int parseTextFieldInput() {
         try {
             int result = Integer.parseInt(populationTF.getText());
@@ -152,12 +155,18 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
         });
     }
 
+    /**
+     * Sets all entity populations in the engine to 0 and resets accordingly the entity populations map.
+     */
     public void clearInputs(){
         entityPopulations.replaceAll((e, v) -> 0);
         initEntityPopulations(new ArrayList<>(entityPopulations.keySet()));
         resetListView();
     }
 
+    /**
+     * Deselects the listview and clears the TF.
+     */
     private void resetListView(){
         entitiesLV.getSelectionModel().clearSelection();
         populationTF.setText("");
