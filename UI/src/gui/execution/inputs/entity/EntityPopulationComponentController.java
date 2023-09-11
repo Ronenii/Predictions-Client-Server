@@ -112,6 +112,11 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
         initEntityPopulations(previewData.getEntities());
     }
 
+    /**
+     * Sets all entity populations to 0.
+     * Both in the UI and in the
+     * @param entities
+     */
     private void initEntityPopulations(List<DTOEntity> entities){
         for (DTOEntity e:entities
         ) {
