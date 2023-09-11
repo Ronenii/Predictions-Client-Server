@@ -34,8 +34,15 @@ import java.util.*;
 public class EngineAgent {
     private final EngineInterface engine;
 
+    private boolean isFileLoaded;
+
     public EngineAgent() {
+        isFileLoaded = false;
         this.engine = new WorldManager();
+    }
+
+    public boolean isFileLoaded() {
+        return isFileLoaded;
     }
 
     /**
@@ -61,6 +68,7 @@ public class EngineAgent {
 
         // TODO: Change this to a graphical user notification
         if (dtoLoadSucceed.isSucceed()) {
+            isFileLoaded = true;
             Console.println("The simulation creation has completed successfully");
             engine.resetEngine();
         } else {

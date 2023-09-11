@@ -101,7 +101,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
         DTOEnvironmentVariable selectedItem = envVarsLV.getSelectionModel().getSelectedItem();
 
         // If there is in fact, a selected item in the list view.
-        if (selectedItem != null) {
+        if (selectedItem != null && !valueTF.getText().equals(environmentVariableMap.get(selectedItem))) {
             SetResponse response;
 
             // If the text field is empty then the environment variable is randomly initialized
