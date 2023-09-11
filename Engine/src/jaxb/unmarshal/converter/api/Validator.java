@@ -57,7 +57,6 @@ abstract public class Validator {
      * the rules and/or ending conditions values in the XML file stopped and the XML need to be fixed.
      */
     public void addRulesAndEndingConditionsCreationErrorMessage() {
-        errorCount++;
         errorsList.append("Due to the errors provided, the simulation's rules and/or ending conditions were not created and the conversion process stopped.\n")
                 .append("Please fix the provided XML file where the errors occurred and reload the file to ensure proper creation of the simulation.\n");
     }

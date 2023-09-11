@@ -22,7 +22,7 @@ public class ControlBarController implements BarNotifier, EngineCommunicator {
 
     @FXML
     void clearButtonActionListener(ActionEvent event) {
-        getEngineAgent().
+        //getEngineAgent().
     }
 
     @FXML
