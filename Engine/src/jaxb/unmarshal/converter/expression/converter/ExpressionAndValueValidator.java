@@ -57,7 +57,7 @@ public class ExpressionAndValueValidator {
      * @param prdAction    the given PRDTAction generated from reading the XML file, if the purpose is to create the value from the prdCondition, this param will set to null
      * @param prdValueStr  the given value name from the given PRDTAction generated from reading the XML file.
      * @param prdCondition the given PRDCondition generated from reading the XML file, if the purpose is to create the value from the prdAction, this param will set to null
-     *                     The name sent separately in order to analyze the two arguments of 'Calculation' action too..
+     *                     The name sent separately in order to analyze the two arguments of 'Calculation' action too.
      */
     public void isPRDActionValueMatchItsPropertyType(PRDAction prdAction, PRDCondition prdCondition, String prdValueStr, String propertyType) throws ExpressionConversionException {
         String valueType;
@@ -90,7 +90,7 @@ public class ExpressionAndValueValidator {
      *
      * @param valueStr   the given value name from the given PRDTAction generated from reading the XML file.
      * @param entityName the given entity name from the given PRDTAction generated from reading the XML file.
-     *                   The name sent separately in order to analyze the two arguments of 'Calculation' action too..
+     *                   The name sent separately in order to analyze the two arguments of 'Calculation' action too.
      */
     public void isPRDProximityDepthIsNumber(String valueStr, String entityName) throws ExpressionConversionException {
         String valueType = getExpressionType(valueStr, entityName,true);

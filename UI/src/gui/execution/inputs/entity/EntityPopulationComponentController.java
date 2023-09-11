@@ -94,7 +94,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     }
 
     /**
-     * Checks if the given input is in fact a non negative integer.
+     * Checks if the given input is in fact a non-negative integer.
      */
     private int parseTextFieldInput() {
         try {

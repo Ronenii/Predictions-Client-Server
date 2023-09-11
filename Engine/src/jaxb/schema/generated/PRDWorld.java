@@ -234,7 +234,7 @@ public class PRDWorld {
         protected int rows;
 
         /**
-         * Gets the value of the columns property.
+         * Gets the value of the column's property.
          * 
          */
         public int getColumns() {
@@ -242,7 +242,7 @@ public class PRDWorld {
         }
 
         /**
-         * Sets the value of the columns property.
+         * Sets the value of the column's property.
          * 
          */
         public void setColumns(int value) {
@@ -250,7 +250,7 @@ public class PRDWorld {
         }
 
         /**
-         * Gets the value of the rows property.
+         * Gets the value of the row's property.
          * 
          */
         public int getRows() {
@@ -258,7 +258,7 @@ public class PRDWorld {
         }
 
         /**
-         * Sets the value of the rows property.
+         * Sets the value of the row's property.
          * 
          */
         public void setRows(int value) {
