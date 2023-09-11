@@ -63,9 +63,9 @@ public class ExpressionAndValueValidator {
         String valueType;
 
         if (prdAction != null) {
-            valueType = getExpressionType(prdValueStr, prdAction.getEntity(),true);
+            valueType = getExpressionType(prdValueStr, prdAction.getEntity(),false);
         } else {
-            valueType = getExpressionType(prdValueStr, prdCondition.getEntity(),true);
+            valueType = getExpressionType(prdValueStr, prdCondition.getEntity(),false);
         }
 
         compareActionValueToGivenPropertyValue(prdAction, prdCondition, valueType, propertyType);
@@ -93,7 +93,7 @@ public class ExpressionAndValueValidator {
      *                   The name sent separately in order to analyze the two arguments of 'Calculation' action too.
      */
     public void isPRDProximityDepthIsNumber(String valueStr, String entityName) throws ExpressionConversionException {
-        String valueType = getExpressionType(valueStr, entityName,true);
+        String valueType = getExpressionType(valueStr, entityName, false);
 
         if (!valueType.equals("DECIMAL") && !valueType.equals("FLOAT")) {
             errorMessage = "The depth value type is not a number";
@@ -102,15 +102,15 @@ public class ExpressionAndValueValidator {
     }
 
     /**
-     * 'isNotPropertyExpression' - true if we validate action's value, false if we validate action's property.
+     * 'isSingleConditionProperty' - true if we validate action's value, false if we validate action's property.
      */
-    public String getExpressionType(String valueStr, String entityName, boolean isNotPropertyExpression) throws ExpressionConversionException {
+    public String getExpressionType(String valueStr, String entityName, boolean isSingleConditionProperty) throws ExpressionConversionException {
         String valueType;
-        valueType = getObjectTypeIfFunction(valueStr, entityName, isNotPropertyExpression);
+        valueType = getObjectTypeIfFunction(valueStr, entityName);
         if (valueType == null) {
             valueType = getTypeIfProperty(entityName, valueStr);
         }
-        if (isNotPropertyExpression && valueType == null) {
+        if (!isSingleConditionProperty && valueType == null) {
             valueType = parseValueType(valueStr);
         }
 
@@ -124,7 +124,7 @@ public class ExpressionAndValueValidator {
      * @param prdValueStr the PRDAction value string.
      * @return the return value type from the function if exists.
      */
-    private String getObjectTypeIfFunction(String prdValueStr, String entityName, boolean isNotPropertyExpression) throws ExpressionConversionException {
+    private String getObjectTypeIfFunction(String prdValueStr, String entityName) throws ExpressionConversionException {
         String functionName = getFucntionName(prdValueStr);
         String ret = null;
         if (functionName != null) {
@@ -153,7 +153,7 @@ public class ExpressionAndValueValidator {
                         break;
                 }
             } catch (Exception e) {
-                errorMessage = "The value function's param doesn't match to the function.";
+                errorMessage = "The function's param doesn't match to the function.";
                 throw new ExpressionConversionException();
             }
         }
@@ -211,8 +211,8 @@ public class ExpressionAndValueValidator {
         String argumentsStr = valueStr.substring(openParenIndex + 1, valueStr.length() - 1), argOneType, argTwoType;
         String[] arguments = argumentsStr.split("\\s*,\\s*");
 
-        argOneType = getExpressionType(arguments[0], entityName, true);
-        argTwoType = getExpressionType(arguments[1], entityName, true);
+        argOneType = getExpressionType(arguments[0], entityName, false);
+        argTwoType = getExpressionType(arguments[1], entityName, false);
 
         if ((!argOneType.equals("DECIMAL") && !argOneType.equals("FLOAT")) || (!argTwoType.equals("DECIMAL") && !argTwoType.equals("FLOAT"))) {
             throw new ExpressionConversionException();

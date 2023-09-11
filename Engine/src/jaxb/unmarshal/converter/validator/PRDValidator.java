@@ -30,8 +30,6 @@ public class PRDValidator extends Validator {
         if (prdWorld.getPRDThreadCount() <= 0) {
             addErrorToListAndThrowException(prdWorld, "world", "The given world's thread count must be at least 1.");
         }
-
-
     }
 
     public void validatePRDGridSize(PRDWorld.PRDGrid prdGrid) throws PRDObjectConversionException {
@@ -83,6 +81,10 @@ public class PRDValidator extends Validator {
      */
     private void validatePRDEnvPropertyRange(PRDEnvProperty prdEnvProperty) throws PRDObjectConversionException {
         if (prdEnvProperty.getType().equals("decimal") || prdEnvProperty.getType().equals("float")) {
+            if(prdEnvProperty.getPRDRange() == null){
+                addErrorToListAndThrowException(prdEnvProperty, prdEnvProperty.getPRDName(), "Environment variable type 'decimal' or 'float' must contain a range.");
+            }
+
             double from = prdEnvProperty.getPRDRange().getFrom();
             double to = prdEnvProperty.getPRDRange().getTo();
 
@@ -118,6 +120,10 @@ public class PRDValidator extends Validator {
      */
     private void validatePRDPropertyRange(PRDProperty prdProperty) throws PRDObjectConversionException {
         if (prdProperty.getType().equals("decimal") || prdProperty.getType().equals("float")) {
+            if(prdProperty.getPRDRange() == null){
+                addErrorToListAndThrowException(prdProperty, prdProperty.getPRDName(), "Property type 'decimal' or 'float' must contain a range.");
+            }
+
             double from = prdProperty.getPRDRange().getFrom();
             double to = prdProperty.getPRDRange().getTo();
 
@@ -257,7 +263,7 @@ public class PRDValidator extends Validator {
                     expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdAction.getValue(), propertyType);
                 }
             } catch (ExpressionConversionException e) {
-                addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, expressionAndValueValidator.getErrorMessage());
+                addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, String.format("For the value expression: %s",expressionAndValueValidator.getErrorMessage()));
             }
         }
     }
@@ -315,11 +321,18 @@ public class PRDValidator extends Validator {
     }
 
     private void validatePRDConditionValueAndProperty(PRDCondition prdCondition, ExpressionAndValueValidator expressionAndValueValidator, String ruleName) throws PRDObjectConversionException {
+        String propertyType = null;
         try {
-            String propertyType = expressionAndValueValidator.isPropertyExpressionIsValid(prdCondition.getProperty(), prdCondition.getEntity(), true);
+            propertyType = expressionAndValueValidator.isPropertyExpressionIsValid(prdCondition.getProperty(), prdCondition.getEntity(), true);
+
+        } catch (ExpressionConversionException e) {
+            addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, String.format("For the property expression: %s",expressionAndValueValidator.getErrorMessage()));
+        }
+        // Two try-catch blocks in order to indicate whether errors occurred in the property expression or in the value expression.
+        try {
             expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(null, prdCondition, prdCondition.getValue(), propertyType);
         } catch (ExpressionConversionException e) {
-            addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, expressionAndValueValidator.getErrorMessage());
+            addActionErrorToListAndThrowException(ruleName, "condition", actionNumber, String.format("For the value expression: %s",expressionAndValueValidator.getErrorMessage()));
         }
     }
 
@@ -347,7 +360,7 @@ public class PRDValidator extends Validator {
                 expressionAndValueValidator.isPRDActionValueMatchItsPropertyType(prdAction, null, prdMultiply.getArg2(), propertyType);
             }
         } catch (ExpressionConversionException e) {
-            addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, expressionAndValueValidator.getErrorMessage());
+            addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, String.format("For the value expression: %s",expressionAndValueValidator.getErrorMessage()));
         }
     }
 
@@ -487,7 +500,7 @@ public class PRDValidator extends Validator {
                 try {
                     propertyType = expressionAndValueValidator.isPropertyExpressionIsValid(propertyName,entityName, false);
                 } catch (ExpressionConversionException e) {
-                    addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, expressionAndValueValidator.getErrorMessage());
+                    addActionErrorToListAndThrowException(ruleName, prdAction.getType(), actionNumber, String.format("For the property expression: %s",expressionAndValueValidator.getErrorMessage()));
                 }
             }
         }
