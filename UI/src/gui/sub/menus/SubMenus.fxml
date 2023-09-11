@@ -16,9 +16,9 @@
     <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TabPane minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
+      <TabPane fx:id="menusTabPane" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
          <tabs>
-            <Tab text="Details">
+            <Tab fx:id="detailsTab" text="Details">
                <content>
                   <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                      <children>
@@ -27,7 +27,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab text="New Execution">
+            <Tab fx:id="newExecTab" text="New Execution">
                <content>
                   <AnchorPane>
                      <children>
@@ -36,7 +36,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab text="Result">
+            <Tab fx:id="resultTab" text="Result">
                <content>
                   <AnchorPane minHeight="-Infinity" minWidth="-Infinity">
                      <children>

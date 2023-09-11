@@ -1,5 +1,7 @@
 package gui.app;
 
+import gui.api.BarNotifier;
+import gui.api.EngineCommunicator;
 import gui.api.HasFileLoadedListeners;
 import gui.header.component.HeaderComponentController;
 import gui.notification.NotificationBarComponentController;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
-public class AppController implements HasFileLoadedListeners {
+public class AppController implements HasFileLoadedListeners, BarNotifier, EngineCommunicator {
     @FXML private GridPane headerComponent;
     @FXML private HeaderComponentController headerComponentController;
     @FXML private GridPane subMenus;
@@ -28,11 +30,11 @@ public class AppController implements HasFileLoadedListeners {
 
     @FXML
     public void initialize() {
+        engineAgent = new EngineAgent();
         if(headerComponentController != null && subMenusController != null && notificationBarComponentController != null) {
             headerComponentController.setMainController(this);
             subMenusController.setMainController(this);
             notificationBarComponentController.setMainController(this);
-            engineAgent = new EngineAgent();
         }
     }
 
@@ -41,15 +43,24 @@ public class AppController implements HasFileLoadedListeners {
         listeners.add(headerComponentController);
         listeners.addAll(subMenusController.getAllFileLoadedListeners());
         return listeners;
-
-
     }
 
     /**
      * Shows the given string on the notification bar.
      */
+    @Override
     public void showNotification(String notification){
         anchorNotification.visibleProperty().set(true);
         notificationBarComponentController.setLblNotificationText(notification);
+    }
+
+    @Override
+    public BarNotifier getNotificationBar() {
+        return this;
+    }
+
+    @Override
+    public EngineAgent getEngineAgent() {
+        return engineAgent;
     }
 }

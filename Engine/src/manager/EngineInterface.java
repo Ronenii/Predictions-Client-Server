@@ -1,12 +1,15 @@
 package manager;
 
+import engine2ui.simulation.execution.SetResponse;
+import engine2ui.simulation.execution.StartResponse;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
-import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.result.ResultInfo;
-import engine2ui.simulation.start.StartData;
-import ui2engine.simulation.func3.DTOThirdFunction;
+import engine2ui.simulation.genral.impl.properties.StartData;
+import ui2engine.simulation.execution.DTOExecutionData;
 
 import engine2ui.simulation.result.ResultData;
+import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
+import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
 import ui2engine.simulation.load.DTOLoadFile;
 
 public interface EngineInterface {
@@ -17,7 +20,9 @@ public interface EngineInterface {
 
     DTOLoadSucceed loadSimulationFromFile(DTOLoadFile dto);
 
-    ResultInfo runSimulation(DTOThirdFunction dtoThirdFunction);
+    StartResponse startSimulation();
+
+    ResultInfo runSimulation(DTOExecutionData dtoExecutionData);
 
     void resetEngine();
 
@@ -28,4 +33,9 @@ public interface EngineInterface {
     void saveState(String path);
 
     void loadState(String path);
+
+    SetResponse setEntityPopulation(EntityPopulationUserInput input);
+    SetResponse setEnvironmentVariable(EnvPropertyUserInput input);
+
+
 }

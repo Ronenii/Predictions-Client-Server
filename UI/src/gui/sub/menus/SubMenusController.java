@@ -1,19 +1,30 @@
 package gui.sub.menus;
 
 import engine2ui.simulation.prview.PreviewData;
+import gui.api.BarNotifier;
+import gui.api.EngineCommunicator;
 import gui.api.HasFileLoadedListeners;
 import gui.app.AppController;
 import gui.execution.NewExecutionComponentController;
 import gui.result.ResultComponentController;
 import gui.simulation.breakdown.SimBreakdownMenuController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
+import manager.EngineAgent;
+
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
-public class SubMenusController implements HasFileLoadedListeners {
+public class SubMenusController implements HasFileLoadedListeners, BarNotifier, EngineCommunicator {
     private AppController mainController;
+    @FXML private TabPane menusTabPane;
+    @FXML private Tab detailsTab;
+    @FXML private Tab newExecTab;
+    @FXML private Tab resultTab;
+
     @FXML private GridPane simBreakdownMenu;
     @FXML private SimBreakdownMenuController simBreakdownMenuController;
     @FXML private GridPane newExecutionComponent;
@@ -44,5 +55,19 @@ public class SubMenusController implements HasFileLoadedListeners {
         listeners.addAll(simBreakdownMenuController.getAllFileLoadedListeners());
         listeners.addAll(newExecutionComponentController.getAllFileLoadedListeners());
         return listeners;
+    }
+
+    @Override
+    public BarNotifier getNotificationBar() {
+        return mainController.getNotificationBar();
+    }
+
+    @Override
+    public EngineAgent getEngineAgent() {
+        return mainController.getEngineAgent();
+    }
+
+    public TabPane getMenusTabPane(){
+        return menusTabPane;
     }
 }

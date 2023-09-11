@@ -29,9 +29,9 @@
       <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
    </rowConstraints>
    <children>
-      <TextField id="tf-NewExec-EntPopValue" fx:id="populationTF" maxWidth="250.0" minWidth="50.0" onAction="#populationTextFieldActionListener" prefWidth="120.0" promptText="Population" scaleShape="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
-      <Button id="btn-NewExec-SetEntPop" fx:id="setBTN" mnemonicParsing="false" onAction="#setButtonActionListener" text="Set" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-      <ListView id="lv-NewExec-Entities" fx:id="entitiesLW" maxHeight="500.0" maxWidth="400.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS" />
+      <TextField id="tf-NewExec-EntPopValue" fx:id="populationTF" disable="true" maxWidth="250.0" minWidth="50.0" onAction="#populationTextFieldActionListener" prefWidth="120.0" promptText="Population" scaleShape="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+      <Button id="btn-NewExec-SetEntPop" fx:id="setBTN" disable="true" mnemonicParsing="false" onAction="#setButtonActionListener" text="Set" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+      <ListView id="lv-NewExec-Entities" fx:id="entitiesLV" disable="true" maxHeight="500.0" maxWidth="400.0" onMouseClicked="#onMouseClickedListenerLV" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS" />
       <Label id="lbl-NewExec-Entity" fx:id="entityLabel" text="Entity" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER">
          <font>
             <Font name="System Bold" size="15.0" />

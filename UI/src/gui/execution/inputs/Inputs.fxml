@@ -9,7 +9,7 @@
   <columnConstraints>
     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="500.0" minWidth="-Infinity" />
-      <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="500.0" minWidth="-Infinity" />
       <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
   </columnConstraints>
@@ -21,7 +21,7 @@
    <children>
       <AnchorPane GridPane.columnIndex="3" GridPane.rowIndex="1">
          <children>
-            <fx:include fx:id="environmentVariablesComponent" source="env/var/EnvironmentVariablesComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <fx:include fx:id="environmentVariableComponent" source="env/var/EnvironmentVariableComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
          </children>
       </AnchorPane>
       <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="1">

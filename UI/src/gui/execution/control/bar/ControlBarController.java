@@ -1,11 +1,15 @@
 package gui.execution.control.bar;
 
+import engine2ui.simulation.execution.StartResponse;
+import gui.api.BarNotifier;
+import gui.api.EngineCommunicator;
 import gui.execution.NewExecutionComponentController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import manager.EngineAgent;
 
-public class ControlBarController {
+public class ControlBarController implements BarNotifier, EngineCommunicator {
     private NewExecutionComponentController mainController;
     @FXML
     private Button startBTN;
@@ -19,12 +23,26 @@ public class ControlBarController {
 
     @FXML
     void clearButtonActionListener(ActionEvent event) {
-
+        mainController.clearInputs();
     }
 
     @FXML
     void startButtonActionListener(ActionEvent event) {
+        StartResponse response = getEngineAgent().startSimulation();
 
+        showNotification(response.getMessage());
+        if(response.isSuccess()){
+            mainController.getMenusTabPane().getSelectionModel().selectLast();
+        }
     }
 
+    @Override
+    public BarNotifier getNotificationBar() {
+        return mainController.getNotificationBar();
+    }
+
+    @Override
+    public EngineAgent getEngineAgent() {
+        return mainController.getEngineAgent();
+    }
 }

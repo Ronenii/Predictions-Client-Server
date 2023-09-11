@@ -1,6 +1,8 @@
 package manager;
 
 import display.Console;
+import engine2ui.simulation.execution.SetResponse;
+import engine2ui.simulation.execution.StartResponse;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.objects.DTOEntityInstance;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
@@ -8,16 +10,18 @@ import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.result.ResultData;
 import engine2ui.simulation.result.ResultInfo;
 import manager.exception.SimulationNotLoadedException;
+import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
+import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
 import ui2engine.simulation.load.DTOLoadFile;
-import engine2ui.simulation.start.DTOEnvironmentVariable;
-import engine2ui.simulation.start.StartData;
+import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
+import engine2ui.simulation.genral.impl.properties.StartData;
 import input.Input;
 import manager.options.ResultDisplayOptions;
-import ui2engine.simulation.func3.DTOThirdFunction;
-import validator.ui.exceptions.IllegalBooleanValueException;
-import validator.ui.exceptions.IllegalStringValueException;
-import validator.ui.exceptions.OutOfRangeException;
-import validator.ui.validator.InputValidator;
+import ui2engine.simulation.execution.DTOExecutionData;
+import manager.validator.exceptions.IllegalBooleanValueException;
+import manager.validator.exceptions.IllegalStringValueException;
+import manager.validator.exceptions.OutOfRangeException;
+import manager.validator.validator.InputValidator;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,9 +78,9 @@ public class EngineAgent {
         }
 
         StartData startData = engine.getSimulationStartData();
-        DTOThirdFunction dtoThirdFunction = createDTOThirdFunctionObject(startData);
+        DTOExecutionData dtoExecutionData = createDTOThirdFunctionObject(startData);
 
-        ResultInfo resultInfo = engine.runSimulation(dtoThirdFunction);
+        ResultInfo resultInfo = engine.runSimulation(dtoExecutionData);
         Console.printSimulationResultInfo(resultInfo);
     }
 
@@ -86,9 +90,9 @@ public class EngineAgent {
      * @param startData The DTO object from the engine that contains information about the environment properties.
      * @return a DTOThirdFunction object to send to the engine.
      */
-    private DTOThirdFunction createDTOThirdFunctionObject(StartData startData) {
+    private DTOExecutionData createDTOThirdFunctionObject(StartData startData) {
         List<DTOEnvironmentVariable> environmentVariables = startData.getEnvironmentVariables();
-        DTOThirdFunction ret = new DTOThirdFunction();
+        DTOExecutionData ret = new DTOExecutionData();
         Object valueToSend;
         String input;
 
@@ -203,8 +207,6 @@ public class EngineAgent {
 
         // If there is only one simulation, there is no need to ask the user what simulation
         // he wants to display.
-
-
     }
 
     /**
@@ -301,7 +303,14 @@ public class EngineAgent {
                 Console.println("The file was saved successfully.");
             }
         }
+    }
 
+    public SetResponse sendPopulationData(EntityPopulationUserInput input){
+        return engine.setEntityPopulation(input);
+    }
+
+    public SetResponse sendEnvironmentVariableData(EnvPropertyUserInput input){
+        return engine.setEnvironmentVariable(input);
     }
 
     private static boolean isValidFilename(String filename) {
@@ -375,5 +384,9 @@ public class EngineAgent {
 
         // This makes a new map with its keys sorted.
         return new TreeMap<>(unsortedMap);
+    }
+
+    public StartResponse startSimulation(){
+        return engine.startSimulation();
     }
 }

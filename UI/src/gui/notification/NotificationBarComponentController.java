@@ -103,7 +103,5 @@ public class NotificationBarComponentController {
             System.out.println(e.getMessage());
         }
     }
-
-
 }
 

@@ -9,8 +9,8 @@ import simulation.properties.property.api.Property;
 import java.io.Serializable;
 
 public class CalculationAction extends OneEntAction implements Serializable {
-    private Expression arg1;
-    private Expression arg2;
+    private final Expression arg1;
+    private final Expression arg2;
     private final CalculationType type;
 
     public CalculationAction(ActionType type, Expression contextProperty, String contextEntity, SecondaryEntity secondaryEntity, Expression arg1, Expression arg2, CalculationType type1) {

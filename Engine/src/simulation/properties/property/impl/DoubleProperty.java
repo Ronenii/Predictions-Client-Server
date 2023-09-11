@@ -10,8 +10,8 @@ import simulation.properties.property.random.value.impl.DoubleRndValueGen;
 import java.io.Serializable;
 
 public class DoubleProperty extends AbstractProperty implements RangedProperty, Serializable {
-    private double from;
-    private double to;
+    private final double from;
+    private final double to;
 
     public DoubleProperty(String name, boolean isRandInit, Object value, double from, double to, String entityName) {
         super(name, isRandInit, PropertyType.FLOAT, value, entityName);

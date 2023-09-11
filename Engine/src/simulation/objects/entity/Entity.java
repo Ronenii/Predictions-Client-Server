@@ -9,7 +9,7 @@ import java.util.*;
 
 public class Entity implements Serializable {
 
-    private final int startingPopulation;
+    private int startingPopulation;
     private final String name;
     private final Map<String, Property> properties;
     private final List<EntityInstance> entityInstances;
@@ -23,6 +23,10 @@ public class Entity implements Serializable {
 
     public int getStartingPopulation() {
         return startingPopulation;
+    }
+
+    public void setStartingPopulation(int startingPopulation) {
+        this.startingPopulation = startingPopulation;
     }
 
     public String getName() {
@@ -52,7 +56,9 @@ public class Entity implements Serializable {
         return entityToString.toString();
     }
 
-    public List<EntityInstance> getEntityInstances(){ return entityInstances;}
+    public List<EntityInstance> getEntityInstances() {
+        return entityInstances;
+    }
 
     public int getCurrentPopulation() {
         int aliveCount = 0;
@@ -63,10 +69,10 @@ public class Entity implements Serializable {
             }
         }
 
-        return  aliveCount;
+        return aliveCount;
     }
 
-    public void resetPopulation(){
+    public void resetPopulation() {
         entityInstances.clear();
 
         for (int i = 0; i < this.startingPopulation; i++) {
@@ -74,14 +80,13 @@ public class Entity implements Serializable {
         }
     }
 
-    public Map <String, Property> generateProperties() {
-        Map <String, Property> propertyMap = new HashMap<>();
+    public Map<String, Property> generateProperties() {
+        Map<String, Property> propertyMap = new HashMap<>();
 
-        for(Property property : properties.values()) {
-            if(property.isRandInit()) {
+        for (Property property : properties.values()) {
+            if (property.isRandInit()) {
                 propertyMap.put(property.getName(), property.generateRandomValueProperty());
-            }
-            else {
+            } else {
                 propertyMap.put(property.getName(), property.dupProperty());
             }
         }
@@ -107,11 +112,9 @@ public class Entity implements Serializable {
         for (EntityInstance e : entityInstances
         ) {
             if (r.nextDouble() <= probability && e.isAlive()) {
-                if(action.getClass().getSuperclass() == OneEntAction.class)
-                {
-                    ((OneEntAction)action).invoke(e, lastChangTickCount);
-                }
-                else {
+                if (action.getClass().getSuperclass() == OneEntAction.class) {
+                    ((OneEntAction) action).invoke(e, lastChangTickCount);
+                } else {
                     //Todo : implement this.
                 }
 

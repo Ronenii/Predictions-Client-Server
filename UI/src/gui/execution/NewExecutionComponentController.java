@@ -1,15 +1,21 @@
 package gui.execution;
 
+import gui.api.BarNotifier;
+import gui.api.EngineCommunicator;
 import gui.api.HasFileLoadedListeners;
 import gui.execution.control.bar.ControlBarController;
 import gui.execution.inputs.InputsController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
+import manager.EngineAgent;
+import ui2engine.simulation.execution.DTOExecutionData;
+
 import java.util.EventListener;
 import java.util.List;
 
-public class NewExecutionComponentController implements HasFileLoadedListeners {
+public class NewExecutionComponentController implements HasFileLoadedListeners, BarNotifier, EngineCommunicator {
     private SubMenusController mainController;
     @FXML private GridPane inputs;
     @FXML private InputsController inputsController;
@@ -31,5 +37,26 @@ public class NewExecutionComponentController implements HasFileLoadedListeners {
     @Override
     public List<EventListener> getAllFileLoadedListeners() {
         return inputsController.getAllFileLoadedListeners();
+    }
+
+    @Override
+    public BarNotifier getNotificationBar() {
+        return mainController.getNotificationBar();
+    }
+
+    @Override
+    public EngineAgent getEngineAgent() {
+        return mainController.getEngineAgent();
+    }
+
+    public void clearInputs(){
+        inputsController.clearInputs();
+    }
+
+    /**
+     * @return The tab pane component of the menus
+     */
+    public TabPane getMenusTabPane(){
+        return mainController.getMenusTabPane();
     }
 }
