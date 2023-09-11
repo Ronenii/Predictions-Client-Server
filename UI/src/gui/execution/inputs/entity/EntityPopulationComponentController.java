@@ -110,6 +110,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
 
     @Override
     public void onFileLoaded(PreviewData previewData) {
+        clearListView();
         enableComponent();
         addItemsToListView(previewData.getEntities());
         initEntityPopulations(previewData.getEntities());
@@ -132,6 +133,10 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
         setBTN.disableProperty().set(false);
         entitiesLV.disableProperty().set(false);
         populationTF.disableProperty().set(false);
+    }
+
+    private void clearListView(){
+        entitiesLV.getItems().clear();
     }
 
     private void addItemsToListView(List<DTOEntity> entities){
