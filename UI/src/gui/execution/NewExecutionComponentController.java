@@ -53,4 +53,8 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
     public EngineAgent getEngineAgent() {
         return mainController.getEngineAgent();
     }
+
+    public void clearInputs(){
+        inputsController.clearInputs();
+    }
 }

@@ -53,4 +53,9 @@ public class InputsController implements HasFileLoadedListeners, BarNotifier, En
     public EngineAgent getEngineAgent() {
         return mainController.getEngineAgent();
     }
+
+    public void clearInputs(){
+        entityPopulationComponentController.clearInputs();
+        environmentVariableComponentController.clearInputs();
+    }
 }

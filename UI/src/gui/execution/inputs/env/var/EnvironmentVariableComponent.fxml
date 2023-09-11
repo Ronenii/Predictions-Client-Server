@@ -32,7 +32,7 @@
    <children>
       <TextField id="tf-NewExec-EnvVarValue" fx:id="valueTF" disable="true" minWidth="100.0" onAction="#valueTextFieldActionListener" promptText="Value" scaleShape="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
       <Button id="btn-NewExec-SetEnvVar" fx:id="setBTN" disable="true" mnemonicParsing="false" onAction="#setButtonActionListener" text="Set" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-      <Label id="lbl-NewExec-Explanation" fx:id="explanationLabel" disable="true" minWidth="220.0" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP">
+      <Label id="lbl-NewExec-Explanation" fx:id="explanationLabel" disable="true" minWidth="230.0" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP">
          <padding>
             <Insets left="20.0" />
          </padding>

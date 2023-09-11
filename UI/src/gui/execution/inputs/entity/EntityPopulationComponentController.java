@@ -15,6 +15,7 @@ import jaxb.event.FileLoadedEvent;
 import manager.EngineAgent;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,6 +145,17 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
                 };
             }
         });
+    }
+
+    public void clearInputs(){
+        entityPopulations.replaceAll((e, v) -> 0);
+        initEntityPopulations(new ArrayList<>(entityPopulations.keySet()));
+        resetListView();
+    }
+
+    private void resetListView(){
+        entitiesLV.getSelectionModel().clearSelection();
+        populationTF.setText("");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package gui.execution.inputs.env.var;
 
 import engine2ui.simulation.execution.SetResponse;
+import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import engine2ui.simulation.prview.PreviewData;
 import gui.api.BarNotifier;
@@ -16,6 +17,7 @@ import manager.EngineAgent;
 import simulation.properties.property.api.PropertyType;
 import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -181,5 +183,17 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
     @Override
     public BarNotifier getNotificationBar() {
         return mainController.getNotificationBar();
+    }
+
+
+    private void resetListView(){
+        envVarsLV.getSelectionModel().clearSelection();
+        valueTF.setText("");
+    }
+
+    public void clearInputs(){
+        environmentVariableMap.replaceAll((e, v) -> "");
+        initEnvironmentVariables(new ArrayList<>(environmentVariableMap.keySet()));
+        resetListView();
     }
 }

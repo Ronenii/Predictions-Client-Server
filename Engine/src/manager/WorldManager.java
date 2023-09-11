@@ -109,11 +109,6 @@ public class WorldManager implements EngineInterface, Serializable {
         return null;
     }
 
-    @Override
-    public void clearSimulation() {
-        world.resetWorld();
-    }
-
     private void invokeSuccessLoadListeners(List<EventListener> listeners) {
         PreviewData previewData = getCurrentSimulationDetails();
 

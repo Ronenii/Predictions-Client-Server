@@ -2,7 +2,6 @@ package simulation.objects.world;
 
 import engine2ui.simulation.execution.SetResponse;
 import engine2ui.simulation.result.ResultData;
-import jaxb.event.FileLoadedEvent;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
@@ -16,7 +15,6 @@ import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
 
