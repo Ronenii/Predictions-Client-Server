@@ -96,7 +96,7 @@ public class ActionDetailsController {
     }
 
     private String extractActionType(String type) {
-        int spaceIndex = type.indexOf(" ");
-        return type.substring(0,spaceIndex);
+        int hashTagIndex = type.indexOf("#");
+        return type.substring(0,hashTagIndex - 1);
     }
 }

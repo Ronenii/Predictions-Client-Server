@@ -63,12 +63,18 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
         world.getChildren().addAll(envVarsItem, entitiesItem, rulesItem, generalItem);
     }
 
+    /**
+     * Update the tree view items with the loaded XML file's data.
+     */
     public void updateSimTreeView() {
         updateEnvVarsInTreeView(previewData.getEnvVariables());
         updateEntitiesInTreeView(previewData.getEntities());
         updateRulesInTreeView(previewData.getRules());
     }
 
+    /**
+     * 'updateSimTreeView' helper - add the environment vars to the tree view.
+     */
     private void updateEnvVarsInTreeView(List<DTOEnvironmentVariable> envVariables) {
         TreeItem<String> envVarItem;
 
@@ -78,6 +84,9 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
         }
     }
 
+    /**
+     * 'updateSimTreeView' helper - add the entities to the tree view.
+     */
     private void updateEntitiesInTreeView(List<DTOEntity> entities) {
         TreeItem<String> entityItem;
 
@@ -88,6 +97,9 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
         }
     }
 
+    /**
+     * 'updateSimTreeView' helper - add entity's properties to the tree view.
+     */
     private void updateEntityPropertiesInTreeView(TreeItem<String> entityItem, DTOProperty[] entityProp) {
         TreeItem<String> propertyItem;
 
@@ -97,6 +109,9 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
         }
     }
 
+    /**
+     * 'updateSimTreeView' helper - add the rules to the tree view.
+     */
     private void updateRulesInTreeView(List<DTORule> rules) {
         TreeItem<String> ruleItem;
 
@@ -105,11 +120,13 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
             updateRuleActionsInTreeView(ruleItem, rule.getActions());
             TreeItem<String> activationItem = new TreeItem<>("Activation");
             ruleItem.getChildren().add(activationItem);
-            //Todo: assign activationItem its detail component.
             rulesItem.getChildren().add(ruleItem);
         }
     }
 
+    /**
+     * 'updateSimTreeView' helper - add the rules actions to the tree view.
+     */
     private void updateRuleActionsInTreeView(TreeItem<String> ruleItem, List<DTOAction> actions) {
         TreeItem<String> actionsItem = new TreeItem<>("Actions");
 
@@ -128,6 +145,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
 
         if(selectedItem != null){
             try {
+                // Check if preview data is not null to avoid nullptr exceptions.
                 if(selectedItem.isLeaf() && previewData != null){
                     if(selectedItem.getValue().equals("General")) {
                         setGeneralComponent(selectedItem);
@@ -148,10 +166,8 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
                             else {
                                 engineObjectType = selectedItem.getParent().getParent().getParent().getValue();
                                 if(engineObjectType.equals("Rules")) {
+                                    // The item is a rule's actions
                                     setRulesActionComponent(selectedItem, selectedItem.getParent().getParent().getValue());
-                                }
-                                else {
-                                    //Todo: error occurred
                                 }
                             }
                         }
@@ -223,9 +239,20 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
         generalDetailsController.setComponentDet(previewData.getEndingConditions(), previewData.getGridAndThread());
     }
 
+    private void clearTreeView() {
+        if(!envVarsItem.isLeaf()) {
+            envVarsItem.getChildren().clear();
+        }
+        if(!entitiesItem.isLeaf()) {
+            entitiesItem.getChildren().clear();
+        }
+        if(!rulesItem.isLeaf()) {
+            rulesItem.getChildren().clear();
+        }
+    }
+
     @Override
     public List<EventListener> getAllFileLoadedListeners() {
-        //TODO: Get all file loaded listeners to from sub components
         List<EventListener> listeners = new ArrayList<>();
         listeners.add(this);
         listeners.add(displayComponentController);
@@ -235,6 +262,8 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
 
     @Override
     public void onFileLoaded(PreviewData previewData) {
+        clearTreeView();
+        displayComponentController.clearGridPaneCell();
         this.previewData = previewData;
         updateSimTreeView();
     }

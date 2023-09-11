@@ -228,9 +228,11 @@ public class DTOCreator {
             CalculationAction calculationAction = (CalculationAction)action;
             ret = new DTOCalculation(type, mainEntity, secondaryEntity, property, calculationAction.getArg1Expression().toString(), calculationAction.getArg2Expression().toString(), calculationAction.getCalculationType().toString().toLowerCase());
         } else if (action instanceof SingleCondition) {
+            type = String.format("single condition #%d",actionNumber);
             SingleCondition singleCondition = (SingleCondition)action;
             ret = new DTOSingleCondition(type, mainEntity, secondaryEntity, property,singleCondition.getThenActionsCount(), singleCondition.getElseActionsCount(), singleCondition.getValueExpression().toString(), singleCondition.getOperator().toString().toLowerCase(), property);
         } else if (action instanceof MultipleCondition) {
+            type = String.format("multiple condition #%d",actionNumber);
             MultipleCondition multipleCondition = (MultipleCondition)action;
             ret = new DTOMultipleCondition(type, mainEntity, secondaryEntity, property, multipleCondition.getThenActionsCount(),multipleCondition.getElseActionsCount(), multipleCondition.getLogical().toString().toLowerCase(), multipleCondition.getSubConditions().size());
         } else if (action instanceof SetAction) {
