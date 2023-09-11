@@ -33,7 +33,7 @@ public class DisplayComponentController implements FileLoadedEvent {
         return loader.getController();
     }
 
-    private void clearGridPaneCell() {
+    public void clearGridPaneCell() {
         for (Node node : grdDisplay.getChildren()) {
             if (GridPane.getRowIndex(node) == 3 && GridPane.getColumnIndex(node) == 1) {
                 grdDisplay.getChildren().remove(node);

@@ -42,6 +42,7 @@ import java.util.*;
  * Responsible cor converting program objects to DTO objects.
  */
 public class DTOCreator {
+    private static int actionNumber = 1;
 
     public PreviewData createSimulationPreviewDataObject(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, Grid grid, int threadCount) {
         List<DTOEntity> entitiesList;
@@ -204,13 +205,16 @@ public class DTOCreator {
         List<Action> actions = rule.getActions();
 
         actions.forEach((value) -> dtoActions.add(getDTOAction(value)));
+        actionNumber = 1;
         return new DTORule(rule.getName(), rule.getActivation().getTicks(), rule.getActivation().getProbability(), dtoActions);
     }
 
     private DTOAction getDTOAction(Action action){
         DTOAction ret = null;
-        String type = action.getType().toString().toLowerCase(), mainEntity = action.getContextEntity(), secondaryEntity = null, property = null;
+        String type, mainEntity = action.getContextEntity(), secondaryEntity = null, property = null;
 
+        type = String.format("%s #%d",action.getType().toString().toLowerCase(), actionNumber);
+        actionNumber++;
         if(action.getContextProperty() != null){
             property = action.getContextProperty().toString();
         }
@@ -224,9 +228,11 @@ public class DTOCreator {
             CalculationAction calculationAction = (CalculationAction)action;
             ret = new DTOCalculation(type, mainEntity, secondaryEntity, property, calculationAction.getArg1Expression().toString(), calculationAction.getArg2Expression().toString(), calculationAction.getCalculationType().toString().toLowerCase());
         } else if (action instanceof SingleCondition) {
+            type = String.format("single condition #%d",actionNumber);
             SingleCondition singleCondition = (SingleCondition)action;
             ret = new DTOSingleCondition(type, mainEntity, secondaryEntity, property,singleCondition.getThenActionsCount(), singleCondition.getElseActionsCount(), singleCondition.getValueExpression().toString(), singleCondition.getOperator().toString().toLowerCase(), property);
         } else if (action instanceof MultipleCondition) {
+            type = String.format("multiple condition #%d",actionNumber);
             MultipleCondition multipleCondition = (MultipleCondition)action;
             ret = new DTOMultipleCondition(type, mainEntity, secondaryEntity, property, multipleCondition.getThenActionsCount(),multipleCondition.getElseActionsCount(), multipleCondition.getLogical().toString().toLowerCase(), multipleCondition.getSubConditions().size());
         } else if (action instanceof SetAction) {

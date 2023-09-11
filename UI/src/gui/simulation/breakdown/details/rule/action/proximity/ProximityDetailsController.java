@@ -1,5 +1,6 @@
 package gui.simulation.breakdown.details.rule.action.proximity;
 
+import engine2ui.simulation.genral.impl.properties.action.impl.DTOProximity;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -14,4 +15,9 @@ public class ProximityDetailsController {
     @FXML
     private Label lblNumOfActions;
 
+    public void setComponentDet(DTOProximity proximity) {
+        lblSrcEntity.setText(proximity.getTargetEntity());
+        lblEnvDepth.setText(proximity.getDepth());
+        lblNumOfActions.setText(String.valueOf(proximity.getSubActionsCount()));
+    }
 }

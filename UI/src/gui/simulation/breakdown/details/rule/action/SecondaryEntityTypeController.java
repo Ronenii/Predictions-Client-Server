@@ -8,4 +8,8 @@ public class SecondaryEntityTypeController {
     @FXML
     private Label lblSecondaryEntityType;
 
+    public void setComponentDet(String lblDet){
+        lblSecondaryEntityType.setText(lblDet);
+    }
+
 }

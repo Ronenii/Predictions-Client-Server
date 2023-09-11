@@ -7,45 +7,44 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.simulation.breakdown.details.rule.action.ActionDetailsController">
-  <columnConstraints>
-    <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
-    <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" prefWidth="120.0" />
-      <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
-      <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" />
-      <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints minHeight="10.0" prefHeight="10.0" valignment="CENTER" vgrow="NEVER" />
-    <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="10.0" valignment="CENTER" vgrow="NEVER" />
-      <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
-      <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
-      <RowConstraints minHeight="42.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="37.0" minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="37.0" minHeight="10.0" prefHeight="34.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="18.0" minHeight="-Infinity" prefHeight="10.0" valignment="CENTER" vgrow="NEVER" />
-      <RowConstraints maxHeight="0.0" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
-  </rowConstraints>
+
+<VBox fx:id="actionVB" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="233.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.simulation.breakdown.details.rule.action.ActionDetailsController">
    <children>
-      <Label text="Type:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <Label text="Primary entity:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblType" text="Placeholder" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-      <Label fx:id="lblPrimeEntity" text="Placeholder" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-      <Label minHeight="-Infinity" text="Has secondary entity:" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="5" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblHasSecondEntity" text="Placeholder" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-      <VBox fx:id="vboxExtras" alignment="CENTER" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="7" />
+      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+         <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" prefWidth="120.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="10.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="10.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
+            <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
+            <RowConstraints minHeight="42.0" vgrow="NEVER" />
+            <RowConstraints maxHeight="37.0" minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
+         </rowConstraints>
+         <children>
+            <Label text="Type:" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Primary entity:" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblType" text="Placeholder" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+            <Label fx:id="lblPrimeEntity" text="Placeholder" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+            <Label minHeight="-Infinity" text="Has secondary entity:" textAlignment="CENTER" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="5" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblHasSecondEntity" text="Placeholder" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+         </children>
+      </GridPane>
    </children>
-</GridPane>
+</VBox>

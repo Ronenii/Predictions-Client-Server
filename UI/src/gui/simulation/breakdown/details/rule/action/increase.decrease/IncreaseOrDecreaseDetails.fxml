@@ -9,18 +9,18 @@
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.simulation.breakdown.details.rule.action.increase.decrease.IncreaseOrDecreaseDetailsController">
   <columnConstraints>
     <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="120.0" />
-    <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
-      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+    <ColumnConstraints hgrow="NEVER" maxWidth="9.0" minWidth="0.0" prefWidth="9.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="110.0" minWidth="-Infinity" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Label text="By:" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <Label text="By:" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label fx:id="lblValue" text="placeholder" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+      <Label fx:id="lblValue" text="placeholder" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
    </children>
 </GridPane>
