@@ -3,7 +3,7 @@ package gui.notification.window;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
-public class NotificationWindowController {
+public class LogWindowController {
 
     @FXML
     private TextArea taNotificationDisplay;

@@ -24,6 +24,7 @@ public class ControlBarController implements BarNotifier, EngineCommunicator {
     @FXML
     void clearButtonActionListener(ActionEvent event) {
         mainController.clearInputs();
+        getNotificationBar().showNotification("Cleared all inputs from user.");
     }
 
     @FXML

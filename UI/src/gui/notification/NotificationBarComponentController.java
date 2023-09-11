@@ -1,7 +1,7 @@
 package gui.notification;
 
 import gui.app.AppController;
-import gui.notification.window.NotificationWindowController;
+import gui.notification.window.LogWindowController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -16,6 +16,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class NotificationBarComponentController {
 
@@ -29,8 +31,26 @@ public class NotificationBarComponentController {
     @FXML
     private GridPane grdParent;
 
+    private StringBuilder logs;
+
     public void setMainController(AppController mainController) {
         this.mainController = mainController;
+    }
+
+    @FXML
+    public void initialize() {
+        logs = new StringBuilder();
+    }
+
+
+
+    public void addNotification(String notification){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        addExpandHyperLinkToLabel(notification);
+        LocalDateTime ldt = LocalDateTime.now();
+        String toDisplay = ldt.format(dtf) + "- " + notification + "\n\n";
+        logs.append(toDisplay);
+        setLblNotificationText(toDisplay);
     }
 
     /**
@@ -39,29 +59,10 @@ public class NotificationBarComponentController {
      * in the notification, shows a hyperlink which allows the user to expand and see
      * the entire message.
      */
-    public void setLblNotificationText(String errMessage) {
-        String[] lines = errMessage.split("\n");
+    private void setLblNotificationText(String notification) {
+        String[] lines = notification.split("\n");
 
-        // Creates an image of the given text, this is done to compare the width of the text with the width of the label.
-        Text textNode = new Text(lines[0] + " expand");
-        textNode.snapshot(null,null);
         lblNotification.setText(lines[0]);
-
-        if ((textNode.getLayoutBounds().getWidth() - 70 > grdParent.getWidth()) || lines.length > 1) {
-            addExpandHyperLinkToLabel(errMessage);
-        }
-        else{
-            removeExpandLabel();
-        }
-    }
-
-    /**
-     * Removes the expand hyperLink from the screen if it exists.
-     */
-    private void removeExpandLabel(){
-        if(!hBoxExpand.getChildren().isEmpty()){
-            hBoxExpand.getChildren().remove(0);
-        }
     }
 
     /**
@@ -71,7 +72,7 @@ public class NotificationBarComponentController {
         // Create the hyperlink that creates the error window when clicked.
         Hyperlink expandLink = new Hyperlink("expand");
         expandLink.minWidth(expandLink.getWidth());
-        expandLink.setOnAction(event -> showNotificationWindow(text));
+        expandLink.setOnAction(event -> showLogWindow(logs.toString()));
         VBox vBox = new VBox(expandLink);
         VBox.setMargin(expandLink, new Insets(5, 0, 0, 0));
         // Set a bit of space between the label and the hyperlink
@@ -87,15 +88,15 @@ public class NotificationBarComponentController {
     /**
      * Opens a window containing the entire given notification
      */
-    private void showNotificationWindow(String notification) {
+    private void showLogWindow(String logs) {
         try {
             Stage stage = new Stage();
-            stage.setTitle("Notification");
+            stage.setTitle("Program logs");
             FXMLLoader fxmlLoader = new FXMLLoader();
-            URL url = getClass().getResource("window/NotificationWindow.fxml");
+            URL url = getClass().getResource("window/LogWindow.fxml");
             Parent root = fxmlLoader.load(url.openStream());
-            NotificationWindowController controller = fxmlLoader.getController();
-            controller.initialize(notification);
+            LogWindowController controller = fxmlLoader.getController();
+            controller.initialize(logs);
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
