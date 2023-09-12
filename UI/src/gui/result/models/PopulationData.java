@@ -2,9 +2,12 @@ package gui.result.models;
 
 import javafx.beans.property.SimpleIntegerProperty;
 
+/**
+ * Used for the entity count component.
+ */
 public class PopulationData {
-    private String name;
-    private SimpleIntegerProperty population;
+    private final String name;
+    private final SimpleIntegerProperty population;
 
     public PopulationData(String name, SimpleIntegerProperty population) {
         this.name = name;

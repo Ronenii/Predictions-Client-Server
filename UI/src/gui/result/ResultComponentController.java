@@ -14,13 +14,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import manager.EngineAgent;
-import manager.event.SimulationUpdatedEvent;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
 
-public class ResultComponentController implements EngineCommunicator, BarNotifier, SimulationUpdatedEvent {
+public class ResultComponentController implements EngineCommunicator, BarNotifier {
     private SubMenusController mainController;
     @FXML
     private Label exeListLabel;
@@ -30,7 +27,8 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
     private GridPane executionDetailsComponent;
     @FXML
     private ExecutionDetailsComponentController executionDetailsComponentController;
-    Map<String, SimulationRunData> simulationRunDataMap;
+
+    Map<String, SimulationRunData> simulationRunDataMap; // used to access simulation run data with the simulation ID.
 
     public void setMainController(SubMenusController mainController) {
         this.mainController = mainController;
@@ -54,17 +52,14 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
         return mainController.getEngineAgent();
     }
 
-    @Override
-    public void onSimulationUpdated(SimulationRunData runData) {
-        executionDetailsComponentController.onSimulationUpdated(runData);
-        executionsQueueTV.refresh();
-    }
-
     public void addSimulationToQueue(SimulationRunData simulationRunData) {
         executionsQueueTV.getItems().add(new StatusData(simulationRunData.getSimId(), simulationRunData.status));
         simulationRunDataMap.put(simulationRunData.getSimId(), simulationRunData);
     }
 
+    /**
+     * Using the simulation ID of the current selected item in the table view, returns the simulationRunData.
+     */
     public SimulationRunData getCurrentSelectedSimulation() {
         StatusData selected = executionsQueueTV.getSelectionModel().getSelectedItem();
         if (selected != null) {
@@ -74,6 +69,9 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
         }
     }
 
+    /**
+     * Updates the execution component based on the currently selected table view component.
+     */
     @FXML
     private void onMouseClickedTV(ActionEvent event) {
         SimulationRunData selected = getCurrentSelectedSimulation();

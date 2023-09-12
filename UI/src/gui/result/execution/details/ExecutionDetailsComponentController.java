@@ -11,14 +11,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
-import manager.event.SimulationUpdatedEvent;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
-public class ExecutionDetailsComponentController implements SimulationUpdatedEvent {
+public class ExecutionDetailsComponentController {
     private ResultComponentController mainController;
     @FXML
     private TableView<PopulationData> entitiesTV;
@@ -39,8 +38,6 @@ public class ExecutionDetailsComponentController implements SimulationUpdatedEve
     @FXML
     private ExecutionDetailsControlBarController executionDetailsControlBarController;
 
-    private Map<DTOEntity, Integer> entityIndexes;
-
     public void setMainController(ResultComponentController mainController) {
         this.mainController = mainController;
     }
@@ -50,12 +47,6 @@ public class ExecutionDetailsComponentController implements SimulationUpdatedEve
         if (executionDetailsControlBarController != null) {
             executionDetailsControlBarController.setMainController(this);
         }
-        entityIndexes = new HashMap<>();
-    }
-
-    @Override
-    public void onSimulationUpdated(SimulationRunData runData) {
-
     }
 
     public void updateToChosenSimulation(SimulationRunData runData){

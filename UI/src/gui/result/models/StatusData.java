@@ -2,6 +2,9 @@ package gui.result.models;
 
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ * Used for the execution queue component.
+ */
 public class StatusData {
     private final String simId;
     private final SimpleStringProperty status;
