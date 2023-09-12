@@ -106,7 +106,7 @@ public class PRDTermination {
      */
     public List<Object> getPRDBySecondOrPRDByTicks() {
         if (prdBySecondOrPRDByTicks == null) {
-            prdBySecondOrPRDByTicks = new ArrayList<Object>();
+            prdBySecondOrPRDByTicks = new ArrayList<>();
         }
         return this.prdBySecondOrPRDByTicks;
     }

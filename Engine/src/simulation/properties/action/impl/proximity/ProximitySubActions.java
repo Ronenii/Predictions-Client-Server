@@ -6,7 +6,7 @@ import simulation.properties.action.api.Action;
 import java.util.List;
 
 public class ProximitySubActions {
-    private List<Action> actionsToInvoke;
+    private final List<Action> actionsToInvoke;
 
     public ProximitySubActions(List<Action> actionsToInvoke) {
         this.actionsToInvoke = actionsToInvoke;

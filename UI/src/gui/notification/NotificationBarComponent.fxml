@@ -15,6 +15,6 @@
   </rowConstraints>
    <children>
     <HBox fx:id="hBoxExpand" prefHeight="21.0" prefWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" />
-      <Label fx:id="lblNotification" text="placeholder" GridPane.hgrow="ALWAYS" />
+      <Label fx:id="lblNotification" text="placeholder" wrapText="true" GridPane.hgrow="ALWAYS" />
    </children>
 </GridPane>

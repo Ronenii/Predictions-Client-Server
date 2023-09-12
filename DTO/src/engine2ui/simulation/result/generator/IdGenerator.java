@@ -1,6 +1,5 @@
 package engine2ui.simulation.result.generator;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;

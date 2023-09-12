@@ -4,7 +4,6 @@ import simulation.properties.property.api.AbstractProperty;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
 import simulation.properties.property.random.value.api.RandomValueGenerator;
-import simulation.properties.property.random.value.impl.BoolRndValueGen;
 import simulation.properties.property.random.value.impl.DoubleRndValueGen;
 
 import java.io.Serializable;

@@ -125,7 +125,7 @@ public class ExpressionAndValueValidator {
      * @return the return value type from the function if exists.
      */
     private String getObjectTypeIfFunction(String prdValueStr, String entityName) throws ExpressionConversionException {
-        String functionName = getFucntionName(prdValueStr);
+        String functionName = getFunctionName(prdValueStr);
         String ret = null;
         if (functionName != null) {
             try {
@@ -183,7 +183,7 @@ public class ExpressionAndValueValidator {
      * If not, or if the string doesn't match the given format, throw an exception.
      */
     private String getPropertyParamType(String valueStr) throws Exception {
-        String entityName, propertyName, ret = null;
+        String entityName, propertyName, ret;
         Property property;
         int dotIndex = valueStr.indexOf(".");
 
@@ -308,7 +308,7 @@ public class ExpressionAndValueValidator {
      * @param prdValueStr the given value from the given PRDTAction generated from reading the XML file
      * @return the function name in the given string.
      */
-    private String getFucntionName(String prdValueStr) {
+    private String getFunctionName(String prdValueStr) {
         String ret = null;
         int openParenIndex = prdValueStr.indexOf("(");
 
@@ -327,7 +327,7 @@ public class ExpressionAndValueValidator {
      * @return the functions params in the given string.
      */
     private String getFunctionParam(String prdValueStr) throws Exception {
-        String ret = null;
+        String ret;
         int openParenIndex = prdValueStr.indexOf("(");
         int closeParenIndex = prdValueStr.indexOf(")");
 

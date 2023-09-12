@@ -70,7 +70,7 @@ public class PRDThen {
      */
     public List<PRDAction> getPRDAction() {
         if (prdAction == null) {
-            prdAction = new ArrayList<PRDAction>();
+            prdAction = new ArrayList<>();
         }
         return this.prdAction;
     }

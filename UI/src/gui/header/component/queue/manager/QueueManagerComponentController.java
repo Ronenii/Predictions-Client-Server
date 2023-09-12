@@ -1,7 +1,6 @@
 package gui.header.component.queue.manager;
 
 import gui.header.component.HeaderComponentController;
-import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

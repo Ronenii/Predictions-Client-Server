@@ -5,12 +5,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import jaxb.event.FileLoadedEvent;
-
 import java.io.IOException;
-import java.net.URL;
 
 public class DisplayComponentController implements FileLoadedEvent {
 

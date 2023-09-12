@@ -1,6 +1,4 @@
 package simulation.properties.action.api;
-
-import simulation.objects.entity.EntityInstance;
 import simulation.properties.action.expression.api.Expression;
 
 

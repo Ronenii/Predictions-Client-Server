@@ -10,8 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import manager.EngineAgent;
-import ui2engine.simulation.execution.DTOExecutionData;
-
 import java.util.EventListener;
 import java.util.List;
 

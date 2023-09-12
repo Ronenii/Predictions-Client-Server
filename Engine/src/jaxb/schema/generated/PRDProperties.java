@@ -51,7 +51,7 @@ public class PRDProperties {
      * 
      * <p>
      * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
+     * not a snapshot. Therefore, any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the prdProperty property.
      * 
@@ -70,7 +70,7 @@ public class PRDProperties {
      */
     public List<PRDProperty> getPRDProperty() {
         if (prdProperty == null) {
-            prdProperty = new ArrayList<PRDProperty>();
+            prdProperty = new ArrayList<>();
         }
         return this.prdProperty;
     }

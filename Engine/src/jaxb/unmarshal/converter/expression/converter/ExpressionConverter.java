@@ -83,7 +83,7 @@ public class ExpressionConverter {
      * @return the return value from the function if exists.
      */
     private Expression getExpressionIfFunction(String valueStr, PropertyType type, String entityName){
-        String functionName = getFucntionName(valueStr), param;
+        String functionName = getFunctionName(valueStr), param;
         TwoParams twoParams;
         Expression ret = null;
         if(functionName != null) {
@@ -152,7 +152,7 @@ public class ExpressionConverter {
      * @param valueStr the given value from the given PRDTAction generated from reading the XML file
      * @return the function name in the given string.
      */
-    private String getFucntionName(String valueStr){
+    private String getFunctionName(String valueStr){
         String ret = null;
         int openParenIndex = valueStr.indexOf("(");
 
@@ -219,7 +219,7 @@ public class ExpressionConverter {
                     ret = new RegularValueExpression(PropertyType.BOOLEAN,true, PropertyType.BOOLEAN);
                 }
                 else {
-                    ret = new RegularValueExpression(PropertyType.BOOLEAN,false, PropertyType.BOOLEAN);;
+                    ret = new RegularValueExpression(PropertyType.BOOLEAN,false, PropertyType.BOOLEAN);
                 }
                 break;
             case STRING:
