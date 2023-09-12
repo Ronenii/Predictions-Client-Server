@@ -14,27 +14,26 @@
 <GridPane minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.result.execution.details.ExecutionDetailsComponentController">
    <columnConstraints>
       <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
-      <ColumnConstraints hgrow="NEVER" maxWidth="174.0" minWidth="150.0" prefWidth="171.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="220.0" minWidth="150.0" prefWidth="220.0" />
       <ColumnConstraints hgrow="NEVER" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-      <ColumnConstraints hgrow="ALWAYS" maxWidth="700.0" minWidth="400.0" prefWidth="480.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="500.0" minWidth="-Infinity" />
       <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="10.0" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
       <RowConstraints minHeight="150.0" prefHeight="200.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="100.0" minHeight="-Infinity" prefHeight="10.0" vgrow="ALWAYS" />
       <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
    </rowConstraints>
    <children>
-      <TableView fx:id="entitiesTV" prefHeight="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.rowSpan="2">
+      <TableView fx:id="entitiesTV" maxWidth="700.0" prefHeight="200.0" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="1">
          <columns>
-            <TableColumn prefWidth="75.0" text="C1" />
-            <TableColumn prefWidth="75.0" text="C2" />
+            <TableColumn prefWidth="156.0" resizable="false" text="Entity" />
+            <TableColumn minWidth="1.0" prefWidth="120.0" resizable="false" text="Quantity" />
          </columns>
       </TableView>
-      <AnchorPane GridPane.columnIndex="3" GridPane.rowIndex="4">
+      <AnchorPane GridPane.columnIndex="3" GridPane.rowIndex="3">
          <children>
             <fx:include fx:id="executionDetailsControlBar" source="control/bar/ExecutionDetailsControlBar.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>

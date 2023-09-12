@@ -1,13 +1,15 @@
 package gui.result.execution.details;
 
+import engine2ui.simulation.runtime.SimulationRunData;
 import gui.result.ResultComponentController;
 import gui.result.execution.details.control.bar.ExecutionDetailsControlBarController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
+import manager.event.SimulationUpdatedEvent;
 
-public class ExecutionDetailsComponentController {
+public class ExecutionDetailsComponentController implements SimulationUpdatedEvent {
     private ResultComponentController mainController;
     @FXML
     private TableView<?> entitiesTV;
@@ -39,4 +41,8 @@ public class ExecutionDetailsComponentController {
         }
     }
 
+    @Override
+    public void onSimulationUpdated(SimulationRunData runData) {
+
+    }
 }

@@ -274,9 +274,9 @@ public class World implements Serializable {
         }
 
         if(populationCount == 0){
-            return new StartResponse(false, "ERROR: Could not start simulation. You need to have at least one entity with a population larger than 0.");
+            return new StartResponse(false, "ERROR: Could not start simulation. You need to have at least one entity with a population larger than 0.", simID, startTime);
         }
 
-        return new StartResponse(true, "Simulation was added to the queue successfully.");
+        return new StartResponse(true, "Simulation was added to the queue successfully.", simID, startTime);
     }
 }

@@ -1,6 +1,7 @@
 package gui.sub.menus;
 
 import engine2ui.simulation.prview.PreviewData;
+import engine2ui.simulation.start.SimulationStartData;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.api.HasFileLoadedListeners;
@@ -69,5 +70,9 @@ public class SubMenusController implements HasFileLoadedListeners, BarNotifier, 
 
     public TabPane getMenusTabPane(){
         return menusTabPane;
+    }
+
+    public void addSimulationToQueue(SimulationStartData simulationStartData){
+        resultComponentController.addSimulationToQueue(simulationStartData);
     }
 }
