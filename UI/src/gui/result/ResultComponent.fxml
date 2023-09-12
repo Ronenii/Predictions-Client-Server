@@ -45,7 +45,7 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <TableView fx:id="executionsQueueTV" disable="true">
+            <TableView fx:id="executionsQueueTV" disable="true" onMouseClicked="#onMouseClickedTV">
               <columns>
                 <TableColumn prefWidth="120.0" text="Simulation ID" />
                 <TableColumn prefWidth="79.0" text="Status" />
