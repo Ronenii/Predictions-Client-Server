@@ -39,8 +39,8 @@ public class World implements Serializable {
     private long startingTime;
     private final int threadCount;
     private final Grid grid;
-
     private int totalPopulation;
+    private final int constAll = -1;
 
     public World(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
         this.environmentProperties = environmentProperties;
@@ -157,16 +157,24 @@ public class World implements Serializable {
             for (Rule r : rules.values()) {
                 actionsToInvoke.addAll(r.getActionsToInvoke());
             }
-
+            // Invoke actions on the simulation entities.
             for (Entity entity : entities.values()) {
                 invokeActionsOnAllInstances(entity.getEntityInstances(), actionsToInvoke);
             }
+
+
         } while ((!endingConditionsMet()));
 
         DTOCreator dtoCreator = new DTOCreator();
         return new ResultData(dtoCreator.convertEntities2DTOEntities(entities));
     }
 
+    /**
+     * Invoke the given actions on each entity instance of a specific entity.
+     *
+     * @param entityInstances A specific entity instances
+     * @param actionsToInvoke List of invokable actions.
+     */
     private void invokeActionsOnAllInstances(List<EntityInstance> entityInstances, List<Action> actionsToInvoke) {
         for (EntityInstance e : entityInstances) {
             if (e.isAlive()) {
@@ -175,6 +183,9 @@ public class World implements Serializable {
         }
     }
 
+    /**
+     * 'invokeActionsOnAllInstances' helper, invoke the list of action on a specific entity instance.
+     */
     private void invokeActionsOnSingleInstance(EntityInstance entityInstance, List<Action> actionsToInvoke) {
         for (Action action : actionsToInvoke){
             if(action.getContextEntity().equals(entityInstance.getInstanceEntityName())){
@@ -206,6 +217,9 @@ public class World implements Serializable {
         }
     }
 
+    /**
+     * Getting the secondary entity instances list and invoke the action on each secondary entity instance and the primary entity instance.
+     */
     private void invokeActionsWithSecondaryEntity(EntityInstance entityInstance, Action actionToInvoke) {
         List<EntityInstance> secondaryInstances = getSecondaryInstances(actionToInvoke.getSecondaryEntity());
 
@@ -229,13 +243,16 @@ public class World implements Serializable {
         }
     }
 
+    /**
+     * Calculate the secondary entity instances create a list with the instances and return this list.
+     */
     private List<EntityInstance> getSecondaryInstances(AbstractAction.SecondaryEntity secondaryEntity) {
         List<EntityInstance> entityInstances = new ArrayList<>();
         AbstractConditionAction conditionAction = (AbstractConditionAction)secondaryEntity.getCondition();
         Entity secondaryEntityRef = entities.get(secondaryEntity.getContextEntity());
         int count = secondaryEntity.getCount();
 
-        if(count == -1){
+        if(count == constAll){
             entityInstances.addAll(secondaryEntityRef.getEntityInstances());
         }
         else {
