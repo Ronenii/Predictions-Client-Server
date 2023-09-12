@@ -1,6 +1,7 @@
 package simulation.properties.action.impl.condition;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.impl.proximity.ProximityAction;
@@ -20,21 +21,35 @@ public class ThenOrElse implements Serializable {
         return actionsToInvoke.size();
     }
 
-    public void invoke(EntityInstance entityInstance, int lastChangTickCount){
-        for (Action a: actionsToInvoke
-             ) {
-            // TODO: Find a way to implement this.
-            if(a instanceof OneEntAction){
-                OneEntAction action = (OneEntAction)a;
-                //action.invoke();
+    public void invoke(EntityInstance entityInstance, Grid grid, int lastChangTickCount){
+        for (Action a: actionsToInvoke) {
+            invokeAnAction(a, entityInstance, grid, lastChangTickCount);
+        }
+    }
+
+    private void invokeAnAction(Action action, EntityInstance entityInstance, Grid grid, int lastChangTickCount) {
+        if(action instanceof OneEntAction){
+            OneEntAction oneEntAction = (OneEntAction)action;
+            oneEntAction.invoke(entityInstance, lastChangTickCount);
+        } else if (action instanceof AbstractConditionAction) {
+            AbstractConditionAction abstractConditionAction = (AbstractConditionAction) action;
+            abstractConditionAction.invoke(entityInstance, grid, lastChangTickCount);
+        } else if(action instanceof ProximityAction) {
+            ProximityAction proximityAction = (ProximityAction)action;
+            proximityAction.invoke(entityInstance, grid, lastChangTickCount);
+        } else if(action instanceof ReplaceAction) {
+            ReplaceAction replaceAction = (ReplaceAction)action;
+            replaceAction.invoke(entityInstance, grid, lastChangTickCount);
+        }
+    }
+
+    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount) {
+        for (Action a: actionsToInvoke) {
+            if(a.getContextEntity().equals(primaryInstance.getInstanceEntityName())) {
+                invokeAnAction(a, primaryInstance, grid, lastChangeTickCount);
             }
-            if(a instanceof ProximityAction){
-                ProximityAction action = (ProximityAction)a;
-                //action.invoke();
-            }
-            if(a instanceof ReplaceAction){
-                ReplaceAction action = (ReplaceAction)a;
-                //action.invoke();
+            else {
+                invokeAnAction(a, secondaryInstance, grid, lastChangeTickCount);
             }
         }
     }

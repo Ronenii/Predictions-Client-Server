@@ -2,6 +2,7 @@ package simulation.properties.action.impl.condition;
 
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 
@@ -42,11 +43,11 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
      * @param entityInstance The given instance to invoke the condition action on.
      */
     @Override
-    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, Grid grid, int lastChangeTickCount) {
         boolean isFirst = true;
-        for (AbstractConditionAction a : subConditions
-        ) {
-            a.invoke(entityInstance, lastChangeTickCount);
+
+        for (AbstractConditionAction a : subConditions) {
+            a.invoke(entityInstance, grid, lastChangeTickCount);
             if(isFirst){
                 isTrue = a.isTrue;
                 isFirst = false;
@@ -60,13 +61,48 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
                         isTrue |= a.isTrue;
                         break;
                 }
-
             }
         }
+
         if(isTrue){
-            invokeThenActions(entityInstance, lastChangeTickCount);
+            invokeThenActions(entityInstance, grid, lastChangeTickCount);
         }else{
-            invokeElseActions(entityInstance, lastChangeTickCount);
+            invokeElseActions(entityInstance, grid, lastChangeTickCount);
+        }
+    }
+
+    @Override
+    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount) {
+        boolean isFirst = true;
+
+        for (AbstractConditionAction a : subConditions) {
+            if(a.getContextEntity().equals(primaryInstance.getInstanceEntityName())) {
+                a.invoke(primaryInstance, grid, lastChangeTickCount);
+            }
+            else {
+                a.invoke(secondaryInstance,grid, lastChangeTickCount);
+            }
+
+            if(isFirst){
+                isTrue = a.isTrue;
+                isFirst = false;
+            }
+            else{
+                switch (logical) {
+                    case AND:
+                        isTrue &= a.isTrue;
+                        break;
+                    case OR:
+                        isTrue |= a.isTrue;
+                        break;
+                }
+            }
+        }
+
+        if(isTrue){
+            invokeThenActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+        }else{
+            invokeElseActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
         }
     }
 }

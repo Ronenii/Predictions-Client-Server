@@ -37,4 +37,5 @@ public class SetAction extends OneEntAction implements Serializable {
         updateExpression(entityInstance, value);
         toSet.setValue(value.evaluate(), lastChangeTickCount);
     }
+
 }

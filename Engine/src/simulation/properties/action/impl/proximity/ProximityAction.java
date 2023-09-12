@@ -48,7 +48,7 @@ public class ProximityAction extends AbstractAction {
         return ret;
     }
 
-    public void invoke(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Grid grid, int lastChangeTickCount) {
+    public void invoke(EntityInstance firstEntityInstance, Grid grid, int lastChangeTickCount) {
         int depthValue = (int) depth.evaluate();
 
         for (int i = -depthValue; i <= depthValue; i++) {
@@ -56,9 +56,9 @@ public class ProximityAction extends AbstractAction {
                 int x = adjustCoordinate((firstEntityInstance.row + i), grid.getRows());
                 int y = adjustCoordinate((firstEntityInstance.column + j), grid.getColumns());
 
-                if (grid.getInstance(x,y) == secondEntityInstance) {
+                if (grid.getInstance(x,y) != null && grid.getInstance(x,y).getInstanceEntityName().equals(targetEntityName)) {
                     // Target entity found within the circle
-                    proximityActions.invoke(firstEntityInstance, secondEntityInstance, lastChangeTickCount);
+                    proximityActions.invoke(firstEntityInstance, grid.getInstance(x,y), lastChangeTickCount);
                     break;
                 }
             }

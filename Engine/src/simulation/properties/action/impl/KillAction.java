@@ -26,4 +26,7 @@ public class KillAction extends OneEntAction implements Serializable {
     public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
         entityInstance.kill();
     }
+
+
 }
+

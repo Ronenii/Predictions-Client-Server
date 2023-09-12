@@ -68,36 +68,6 @@ public class Rule implements Serializable {
         return toCompare.name.equals(this.name) && toCompare.activation.equals(this.activation) && toCompare.actions.equals(actions);
     }
 
-    /**
-     * Invokes this rule on all world entities.
-     * Checks if the required amount of ticks has passed.
-     * Will then try to invoke all of this rule's actions on each entity.
-     *
-     * @param entities The world's entities that we invoke the rule on
-     */
-    public void invokeRuleOnWorldEntities(Collection<Entity> entities, int lastChangTickCount) {
-        if (willInvokeByTicks()) {
-            for (Entity e: entities
-                 ) {
-                invokeActionsOnEntity(e, lastChangTickCount);
-            }
-        }
-    }
-
-    /**
-     * Iterates through all actions in the list, if the given entity is an entity that the action
-     * is designed for then invoke said action on all instances of this entity.
-     * @param entity the given entity to invoke the actions upon.
-     */
-    private void invokeActionsOnEntity(Entity entity, int lastChangTickCount){
-        for (Action a: actions
-        ) {
-            if(a.getClass() == MultipleCondition.class || a.getContextEntity().equals(entity.getName()))
-            {
-                entity.invokeActionsOnAllInstances(a, activation.getProbability(), lastChangTickCount);
-            }
-        }
-    }
 
     public List<Action> getActionsToInvoke() {
         List<Action> actionsToInvoke = new ArrayList<>();

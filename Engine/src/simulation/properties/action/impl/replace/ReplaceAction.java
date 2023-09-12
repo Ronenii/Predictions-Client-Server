@@ -1,24 +1,22 @@
 package simulation.properties.action.impl.replace;
 
+import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 
 public class ReplaceAction extends AbstractAction {
-    private final String newEntityName;
-
+    private final Entity newEntity;
     private final ReplaceActionType replaceType;
 
-    public ReplaceAction(Expression property, String contextEntity, String newEntityName, SecondaryEntity secondaryEntity, ReplaceActionType replaceType) {
+    public ReplaceAction(Expression property, String contextEntity, Entity newEntity, SecondaryEntity secondaryEntity, ReplaceActionType replaceType) {
         super(ActionType.REPLACE, property, contextEntity, secondaryEntity);
-        this.newEntityName = newEntityName;
+        this.newEntity = newEntity;
         this.replaceType = replaceType;
     }
 
-    public String getNewEntityName() {
-        return newEntityName;
-    }
 
     public ReplaceActionType getReplaceType() {
         return replaceType;
@@ -34,11 +32,14 @@ public class ReplaceAction extends AbstractAction {
         return null;
     }
 
-    public void invoke(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance firstEntityInstance, Grid grid, int lastChangeTickCount) {
+        EntityInstance newInstance = newEntity.createNewEntityInstance();
+
         if(replaceType == ReplaceActionType.DERIVED) {
-            secondEntityInstance.updateDerivedEntityInstance(firstEntityInstance, lastChangeTickCount);
+            newInstance.updateDerivedEntityInstance(firstEntityInstance, lastChangeTickCount);
         }
 
+        grid.setInstanceInGrid(firstEntityInstance.row, firstEntityInstance.column, newInstance);
         firstEntityInstance.kill();
     }
 }

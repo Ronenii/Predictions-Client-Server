@@ -418,7 +418,7 @@ public class PRDConverter {
                     ret = new KillAction(ActionType.KILL, null, prdAction.getEntity(), secondaryEntity); // Secondary entity will always be null in this case
                     break;
                 case REPLACE:
-                    ret = new ReplaceAction(null, prdAction.getKill(), prdAction.getCreate(), secondaryEntity, ReplaceActionType.valueOf(prdAction.getMode().toUpperCase()));
+                    ret = new ReplaceAction(null, prdAction.getKill(), entities.get(prdAction.getCreate()), secondaryEntity, ReplaceActionType.valueOf(prdAction.getMode().toUpperCase()));
                     break;
                 case PROXIMITY:
                     ret = getProximityActionObject(prdAction, secondaryEntity);

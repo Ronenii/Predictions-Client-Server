@@ -87,4 +87,5 @@ public class CalculationAction extends OneEntAction implements Serializable {
                 break;
         }
     }
+
 }

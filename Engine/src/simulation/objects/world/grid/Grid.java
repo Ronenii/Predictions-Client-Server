@@ -31,6 +31,10 @@ public class Grid {
         return columns;
     }
 
+    public void setInstanceInGrid(int row, int column, EntityInstance instance) {
+        grid[row][column] = instance;
+    }
+
     /**
      * Iterates through the grid and tries to move around all entities.
      */

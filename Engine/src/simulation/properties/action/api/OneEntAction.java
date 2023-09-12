@@ -13,4 +13,5 @@ public abstract class OneEntAction extends AbstractAction implements Action, Ser
     }
 
     abstract public void invoke(EntityInstance entityInstance, int lastChangeTickCount);
+
 }

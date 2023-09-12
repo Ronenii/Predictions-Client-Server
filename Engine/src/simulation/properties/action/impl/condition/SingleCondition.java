@@ -1,6 +1,7 @@
 package simulation.properties.action.impl.condition;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.expression.impl.PropertyValueExpression;
@@ -30,7 +31,7 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
     }
 
     @Override
-    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, Grid grid, int lastChangeTickCount) {
         Object valueToCompare;
 
         updateExpression(entityInstance, contextProperty);
@@ -44,16 +45,16 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
             // These 2 operators don;t require casting for comparison
             case EQUALS:
                 if (valueToCompare == getValue()) {
-                    invokeThenActions(entityInstance, lastChangeTickCount);
+                    invokeThenActions(entityInstance, grid, lastChangeTickCount);
                 } else {
-                    invokeElseActions(entityInstance, lastChangeTickCount);
+                    invokeElseActions(entityInstance, grid, lastChangeTickCount);
                 }
                 break;
             case NOT_EQUALS:
                 if (valueToCompare != getValue()) {
-                    invokeThenActions(entityInstance, lastChangeTickCount);
+                    invokeThenActions(entityInstance, grid, lastChangeTickCount);
                 } else {
-                    invokeElseActions(entityInstance, lastChangeTickCount);
+                    invokeElseActions(entityInstance, grid, lastChangeTickCount);
                 }
                 break;
                 // For Lt & Bt we do require casting, it is handled in these funcs.
@@ -61,50 +62,55 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
             default:
                 switch (contextProperty.getType()){
                     case DECIMAL:
-                        compareInequalityByInteger(valueToCompare, entityInstance, lastChangeTickCount);
+                        compareInequalityByInteger(valueToCompare, entityInstance, grid, lastChangeTickCount);
                         break;
                     case FLOAT:
-                        compareInequalityByFloat(valueToCompare, entityInstance, lastChangeTickCount);
+                        compareInequalityByFloat(valueToCompare, entityInstance, grid, lastChangeTickCount);
                         break;
                 }
         }
     }
 
-    private void compareInequalityByInteger(Object toCompare, EntityInstance entityInstance, int lastChangTickCount){
+    private void compareInequalityByInteger(Object toCompare, EntityInstance entityInstance, Grid grid, int lastChangTickCount){
         switch (operator) {
             case BIGGER_THAN:
                 if ((int) toCompare > (int) getValue()) {
-                    invokeThenActions(entityInstance, lastChangTickCount);
+                    invokeThenActions(entityInstance, grid, lastChangTickCount);
                 } else {
-                    invokeElseActions(entityInstance, lastChangTickCount);
+                    invokeElseActions(entityInstance, grid, lastChangTickCount);
                 }
                 break;
             case LESSER_THAN:
                 if ((int) toCompare < (int) getValue()) {
-                    invokeThenActions(entityInstance, lastChangTickCount);
+                    invokeThenActions(entityInstance, grid, lastChangTickCount);
                 } else {
-                    invokeElseActions(entityInstance, lastChangTickCount);
+                    invokeElseActions(entityInstance, grid, lastChangTickCount);
                 }
                 break;
         }
     }
 
-    private void compareInequalityByFloat(Object toCompare, EntityInstance entityInstance, int lastChangTickCount){
+    private void compareInequalityByFloat(Object toCompare, EntityInstance entityInstance, Grid grid, int lastChangTickCount){
         switch (operator) {
             case BIGGER_THAN:
                 if ((double) toCompare > (double) getValue()) {
-                    invokeThenActions(entityInstance, lastChangTickCount);
+                    invokeThenActions(entityInstance, grid, lastChangTickCount);
                 } else {
-                    invokeElseActions(entityInstance, lastChangTickCount);
+                    invokeElseActions(entityInstance, grid, lastChangTickCount);
                 }
                 break;
             case LESSER_THAN:
                 if ((double) toCompare < (double) getValue()) {
-                    invokeThenActions(entityInstance, lastChangTickCount);
+                    invokeThenActions(entityInstance, grid, lastChangTickCount);
                 } else {
-                    invokeElseActions(entityInstance, lastChangTickCount);
+                    invokeElseActions(entityInstance, grid, lastChangTickCount);
                 }
                 break;
         }
+    }
+
+    @Override
+    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount) {
+
     }
 }

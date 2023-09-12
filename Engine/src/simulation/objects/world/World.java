@@ -149,15 +149,16 @@ public class World implements Serializable {
             startingTime = System.currentTimeMillis();
         }
 
-        // Try to invoke all rules on all entities.
+        // Simulation main loop
         do {
             grid.moveAllEntities();
+            // Get the invokable actions (by ticks and probability)
             for (Rule r : rules.values()) {
                 actionsToInvoke.addAll(r.getActionsToInvoke());
             }
 
             for (Entity entity : entities.values()) {
-
+                invokeActionsOnAllInstances(entity.getEntityInstances(), actionsToInvoke);
             }
         } while ((!endingConditionsMet()));
 
@@ -165,44 +166,53 @@ public class World implements Serializable {
         return new ResultData(dtoCreator.convertEntities2DTOEntities(entities));
     }
 
-    private void invokeActionsOnAllInstances(List<EntityInstance> entityInstances, List<Action> actionsToInvoke, int lastChangTickCount) {
+    private void invokeActionsOnAllInstances(List<EntityInstance> entityInstances, List<Action> actionsToInvoke) {
         for (EntityInstance e : entityInstances) {
             if (e.isAlive()) {
-                invokeActionsOnSingleInstance(e, actionsToInvoke, lastChangTickCount);
+                invokeActionsOnSingleInstance(e, actionsToInvoke);
             }
         }
     }
 
-    private void invokeActionsOnSingleInstance(EntityInstance entityInstance, List<Action> actionsToInvoke, int lastChangTickCount) {
+    private void invokeActionsOnSingleInstance(EntityInstance entityInstance, List<Action> actionsToInvoke) {
         for (Action action : actionsToInvoke){
             if(action.getContextEntity().equals(entityInstance.getInstanceEntityName())){
                 if(action.getSecondaryEntity() != null) {
-                    //TODO: implement this.
+                    invokeActionsWithSecondaryEntity(entityInstance, action);
                 }
                 else {
-                  invokeAnAction(entityInstance, action, lastChangTickCount);
+                    invokeAnAction(entityInstance, action);
                 }
             }
         }
     }
 
-    private void invokeAnAction(EntityInstance entityInstance, Action action, int lastChangTickCount) {
+    private void invokeAnAction(EntityInstance entityInstance, Action action) {
         if (action.getClass().getSuperclass() == OneEntAction.class) {
-            ((OneEntAction) action).invoke(entityInstance, lastChangTickCount);
+            ((OneEntAction) action).invoke(entityInstance, ticks.getTicks());
+        } else if (action instanceof AbstractConditionAction) {
+            AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
+            abstractConditionAction.invoke(entityInstance, grid, ticks.getTicks());
         } else if (action instanceof ReplaceAction) {
             ReplaceAction replaceAction = (ReplaceAction)action;
-            replaceAction.invoke(entityInstance, createReplaceNewEntityInstance(replaceAction.getNewEntityName()), lastChangTickCount);
+            replaceAction.invoke(entityInstance, grid, ticks.getTicks());
         } else if (action instanceof ProximityAction) {
             ProximityAction proximityAction = (ProximityAction)action;
-            proximityAction.invoke(entityInstance, getProximitySecondEntityInstance(proximityAction.getTargetEntityName()), grid, lastChangTickCount);
+            proximityAction.invoke(entityInstance, grid, ticks.getTicks());
         }
     }
 
-    private void invokeActionsWithSecondaryEntity(AbstractAction.SecondaryEntity secondaryEntity, Action actionToInvoke) {
-        List<EntityInstance> secondaryInstances = getSecondaryInstances(secondaryEntity);
+    private void invokeActionsWithSecondaryEntity(EntityInstance entityInstance, Action actionToInvoke) {
+        List<EntityInstance> secondaryInstances = getSecondaryInstances(actionToInvoke.getSecondaryEntity());
 
-        for(EntityInstance entityInstance : secondaryInstances) {
-            //TODO : implement for Action a method which invoke the action with secondary instance.
+        for(EntityInstance secondaryEntityInstance : secondaryInstances) {
+            if(actionToInvoke instanceof AbstractConditionAction) {
+                AbstractConditionAction abstractConditionAction = (AbstractConditionAction)actionToInvoke;
+                abstractConditionAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticks.getTicks());
+            }
+            else {
+                //Todo: implement after Aviad's response.
+            }
         }
     }
 
@@ -237,22 +247,6 @@ public class World implements Serializable {
         }
 
         return entityInstances;
-    }
-
-    private EntityInstance getProximitySecondEntityInstance(String entityName) {
-        EntityInstance ret;
-
-        Entity entity = entities.get(entityName);
-        ret = entity.getRandomEntityInstance();
-        return ret;
-    }
-
-    private EntityInstance createReplaceNewEntityInstance(String entityName) {
-        EntityInstance ret;
-
-        Entity entity = entities.get(entityName);
-        ret = entity.createNewEntityInstance();
-        return ret;
     }
 
 

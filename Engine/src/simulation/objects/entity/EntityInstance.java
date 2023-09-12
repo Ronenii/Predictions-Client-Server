@@ -43,6 +43,8 @@ public class EntityInstance implements Serializable {
     public void updateDerivedEntityInstance(EntityInstance killedInstance, int lastChangeTickCount) {
         Property newInstanceProperty;
 
+        row = killedInstance.row;
+        column = killedInstance.column;
         for (Property killedInstanceProperty : killedInstance.getProperties().values()) {
             newInstanceProperty = properties.get(killedInstanceProperty.getName());
             if(newInstanceProperty != null && newInstanceProperty.getType() == killedInstanceProperty.getType()) {
