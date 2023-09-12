@@ -1,9 +1,13 @@
 package simulation.properties.action.impl;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
+import simulation.properties.action.expression.impl.methods.EvaluateExpression;
+import simulation.properties.action.expression.impl.methods.PercentExpression;
+import simulation.properties.action.expression.impl.methods.TicksExpression;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
@@ -32,7 +36,7 @@ public class DecreaseAction extends OneEntAction implements Serializable {
      * @param entityInstance The given entity to decrease the value of the action's property from.
      */
     @Override
-    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, boolean isExpressionUpdated, int lastChangeTickCount) {
         String propertyName = ((Property)getContextProperty().evaluate()).getName();
         Property toDecrease = entityInstance.getPropertyByName(propertyName);
 
@@ -40,7 +44,10 @@ public class DecreaseAction extends OneEntAction implements Serializable {
             return;
         }
 
-        updateExpression(entityInstance, value);
+        if (!isExpressionUpdated){
+            updateExpression(entityInstance, value);
+        }
+
         switch (toDecrease.getType())
         {
             case DECIMAL:
@@ -52,5 +59,19 @@ public class DecreaseAction extends OneEntAction implements Serializable {
         }
     }
 
+    @Override
+    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, int lastChangeTickCount) {
+        EntityInstance instanceForInvoke;
+        boolean isExpressionUpdated;
 
+        if(getContextEntity().equals(primaryInstance.getInstanceEntityName())){
+            instanceForInvoke = primaryInstance;
+        }
+        else {
+            instanceForInvoke = secondaryInstance;
+        }
+
+        isExpressionUpdated = updateExpressionWithSecondary(primaryInstance, secondaryInstance, value);
+        invoke(instanceForInvoke, isExpressionUpdated, lastChangeTickCount);
+    }
 }

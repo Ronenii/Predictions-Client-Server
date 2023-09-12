@@ -79,30 +79,94 @@ public abstract class AbstractAction implements Action {
                 ((TicksExpression)expression).setProperty(instanceProperty);
             } else if (expression instanceof EvaluateExpression) {
                 ((EvaluateExpression)expression).setProperty(instanceProperty);
+            } else if (expression instanceof PercentExpression) {
+                updatePercentExpressionWithOneInstance(entityInstance, (PercentExpression)expression);
             }
         }
     }
 
-    // Todo: find where to use this.
-    protected void updatePercentExpression(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, PercentExpression percentExpression) {
+    /**
+     * The method return true if the expression updated, if not, return false.
+     */
+    protected boolean updateExpressionWithSecondary(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Expression expression) {
+        String propertyName;
+        Property instanceProperty;
+        boolean ret = false;
+
+        if(expression instanceof PercentExpression) {
+            updatePercentExpressionWithSecondInstance(firstEntityInstance, secondEntityInstance, (PercentExpression)expression);
+            ret = true;
+        } else if (expression instanceof EvaluateExpression) {
+            EvaluateExpression evaluateExpression = (EvaluateExpression)expression;
+            if(evaluateExpression.getEntityName().equals(firstEntityInstance.getInstanceEntityName())) {
+                propertyName = ((Property)getContextProperty().evaluate()).getName();
+                instanceProperty = firstEntityInstance.getPropertyByName(propertyName);
+                evaluateExpression.setProperty(instanceProperty);
+                ret = true;
+            }
+            else {
+                propertyName = ((Property)getContextProperty().evaluate()).getName();
+                instanceProperty = secondEntityInstance.getPropertyByName(propertyName);
+                evaluateExpression.setProperty(instanceProperty);
+                ret = true;
+            }
+        } else if (expression instanceof TicksExpression) {
+            TicksExpression ticksExpression = (TicksExpression)expression;
+            if(ticksExpression.getEntityName().equals(firstEntityInstance.getInstanceEntityName())) {
+                propertyName = ((Property)getContextProperty().evaluate()).getName();
+                instanceProperty = firstEntityInstance.getPropertyByName(propertyName);
+                ticksExpression.setProperty(instanceProperty);
+                ret = true;
+            }
+            else {
+                propertyName = ((Property)getContextProperty().evaluate()).getName();
+                instanceProperty = secondEntityInstance.getPropertyByName(propertyName);
+                ticksExpression.setProperty(instanceProperty);
+                ret = true;
+            }
+        }
+
+        return ret;
+    }
+
+    protected void updatePercentExpressionWithOneInstance(EntityInstance entityInstance, PercentExpression percentExpression) {
         Expression exp1 = percentExpression.getArg1(), exp2 = percentExpression.getArg2();
 
         if (exp1 instanceof PercentExpression){
-            updatePercentExpression(firstEntityInstance, secondEntityInstance, (PercentExpression)exp1);
+            updatePercentExpressionWithOneInstance(entityInstance, (PercentExpression)exp1);
         }
         else {
-            updateSubExpression(firstEntityInstance, secondEntityInstance, exp1);
+            updateExpression(entityInstance, exp1);
         }
 
         if(exp2 instanceof PercentExpression){
-            updatePercentExpression(firstEntityInstance, secondEntityInstance, (PercentExpression)exp2);
+            updatePercentExpressionWithOneInstance(entityInstance, (PercentExpression)exp2);
         }
         else {
-            updateSubExpression(firstEntityInstance, secondEntityInstance, exp2);
+            updateExpression(entityInstance, exp2);
         }
     }
 
-    private void updateSubExpression(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Expression expression){
+    // Todo: find where to use this.
+    protected void updatePercentExpressionWithSecondInstance(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, PercentExpression percentExpression) {
+        Expression exp1 = percentExpression.getArg1(), exp2 = percentExpression.getArg2();
+
+        if (exp1 instanceof PercentExpression){
+            updatePercentExpressionWithSecondInstance(firstEntityInstance, secondEntityInstance, (PercentExpression)exp1);
+        }
+        else {
+            updateSubExpressionWithSecondInstance(firstEntityInstance, secondEntityInstance, exp1);
+        }
+
+        if(exp2 instanceof PercentExpression){
+            updatePercentExpressionWithSecondInstance(firstEntityInstance, secondEntityInstance, (PercentExpression)exp2);
+        }
+        else {
+            updateSubExpressionWithSecondInstance(firstEntityInstance, secondEntityInstance, exp2);
+        }
+    }
+
+    private void updateSubExpressionWithSecondInstance(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Expression expression){
         String expressionEntityName = getEntityNameIfEvalOrTicksOrRegularProperty(expression);
 
         if(expressionEntityName != null){

@@ -42,4 +42,13 @@ public class ReplaceAction extends AbstractAction {
         grid.setInstanceInGrid(firstEntityInstance.row, firstEntityInstance.column, newInstance);
         firstEntityInstance.kill();
     }
+
+    public void invokeWithSecondary(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Grid grid, int lastChangeTickCount) {
+        if(getContextEntity().equals(firstEntityInstance.getInstanceEntityName())) {
+            invoke(firstEntityInstance, grid, lastChangeTickCount);
+        }
+        else {
+            invoke(secondEntityInstance, grid, lastChangeTickCount);
+        }
+    }
 }

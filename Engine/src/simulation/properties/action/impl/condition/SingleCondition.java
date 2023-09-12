@@ -5,6 +5,7 @@ import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.expression.impl.PropertyValueExpression;
+import simulation.properties.action.expression.impl.methods.PercentExpression;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
@@ -90,20 +91,58 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
         }
     }
 
-    private void compareInequalityByFloat(Object toCompare, EntityInstance entityInstance, Grid grid, int lastChangTickCount){
+    private void compareInequalityByIntegerWithSecondary(Object toCompare, EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount){
+        switch (operator) {
+            case BIGGER_THAN:
+                if ((int) toCompare > (int) getValue()) {
+                    invokeThenActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                } else {
+                    invokeElseActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                }
+                break;
+            case LESSER_THAN:
+                if ((int) toCompare < (int) getValue()) {
+                    invokeThenActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                } else {
+                    invokeElseActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                }
+                break;
+        }
+    }
+
+    private void compareInequalityByFloat(Object toCompare, EntityInstance entityInstance, Grid grid, int lastChangeTickCount){
         switch (operator) {
             case BIGGER_THAN:
                 if ((double) toCompare > (double) getValue()) {
-                    invokeThenActions(entityInstance, grid, lastChangTickCount);
+                    invokeThenActions(entityInstance, grid, lastChangeTickCount);
                 } else {
-                    invokeElseActions(entityInstance, grid, lastChangTickCount);
+                    invokeElseActions(entityInstance, grid, lastChangeTickCount);
                 }
                 break;
             case LESSER_THAN:
                 if ((double) toCompare < (double) getValue()) {
-                    invokeThenActions(entityInstance, grid, lastChangTickCount);
+                    invokeThenActions(entityInstance, grid, lastChangeTickCount);
                 } else {
-                    invokeElseActions(entityInstance, grid, lastChangTickCount);
+                    invokeElseActions(entityInstance, grid, lastChangeTickCount);
+                }
+                break;
+        }
+    }
+
+    private void compareInequalityByFloatWithSecondary(Object toCompare, EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount){
+        switch (operator) {
+            case BIGGER_THAN:
+                if ((double) toCompare > (double) getValue()) {
+                    invokeThenActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                } else {
+                    invokeElseActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                }
+                break;
+            case LESSER_THAN:
+                if ((double) toCompare < (double) getValue()) {
+                    invokeThenActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                } else {
+                    invokeElseActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
                 }
                 break;
         }
@@ -111,6 +150,48 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
 
     @Override
     public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount) {
+        Object valueToCompare;
+        // Try to update property with one of the entities.
+        if(!updateExpressionWithSecondary(primaryInstance, secondaryInstance, contextProperty)){
+            updateExpression(primaryInstance, contextProperty);
+        }
 
+        valueToCompare = contextProperty.evaluate();
+        if (valueToCompare == null) {
+            return;
+        }
+        // Try to update value with one of the entities.
+        if(!updateExpressionWithSecondary(primaryInstance, secondaryInstance, value)) {
+            updateExpression(primaryInstance, value);
+        }
+
+        switch (operator) {
+            // These 2 operators don;t require casting for comparison
+            case EQUALS:
+                if (valueToCompare == getValue()) {
+                    invokeThenActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                } else {
+                    invokeElseActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                }
+                break;
+            case NOT_EQUALS:
+                if (valueToCompare != getValue()) {
+                    invokeThenActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                } else {
+                    invokeElseActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                }
+                break;
+            // For Lt & Bt we do require casting, it is handled in these funcs.
+            // We don't use generics since it doesn't allow these operators.
+            default:
+                switch (contextProperty.getType()){
+                    case DECIMAL:
+                        compareInequalityByIntegerWithSecondary(valueToCompare, primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                        break;
+                    case FLOAT:
+                        compareInequalityByFloatWithSecondary(valueToCompare, primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+                        break;
+                }
+        }
     }
 }

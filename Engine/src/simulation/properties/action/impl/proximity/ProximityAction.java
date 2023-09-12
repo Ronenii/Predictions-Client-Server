@@ -48,20 +48,29 @@ public class ProximityAction extends AbstractAction {
         return ret;
     }
 
-    public void invoke(EntityInstance firstEntityInstance, Grid grid, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, Grid grid, int lastChangeTickCount) {
         int depthValue = (int) depth.evaluate();
 
         for (int i = -depthValue; i <= depthValue; i++) {
             for (int j = -depthValue; j <= depthValue; j++) {
-                int x = adjustCoordinate((firstEntityInstance.row + i), grid.getRows());
-                int y = adjustCoordinate((firstEntityInstance.column + j), grid.getColumns());
+                int x = adjustCoordinate((entityInstance.row + i), grid.getRows());
+                int y = adjustCoordinate((entityInstance.column + j), grid.getColumns());
 
                 if (grid.getInstance(x,y) != null && grid.getInstance(x,y).getInstanceEntityName().equals(targetEntityName)) {
                     // Target entity found within the circle
-                    proximityActions.invoke(firstEntityInstance, grid.getInstance(x,y), lastChangeTickCount);
+                    proximityActions.invoke(entityInstance, grid.getInstance(x,y), grid, lastChangeTickCount);
                     break;
                 }
             }
+        }
+    }
+
+    public void invokeWithSecondary(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Grid grid, int lastChangeTickCount) {
+        if(getContextEntity().equals(firstEntityInstance.getInstanceEntityName())) {
+            invoke(firstEntityInstance, grid, lastChangeTickCount);
+        }
+        else {
+            invoke(secondEntityInstance, grid, lastChangeTickCount);
         }
     }
 

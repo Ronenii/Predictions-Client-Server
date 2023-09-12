@@ -1,14 +1,17 @@
 package simulation.properties.action.impl.calculation;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.grid.Grid;
+import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
+import simulation.properties.action.expression.impl.methods.PercentExpression;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
 
-public class CalculationAction extends OneEntAction implements Serializable {
+public class CalculationAction extends AbstractAction implements Serializable {
     private final Expression arg1;
     private final Expression arg2;
     private final CalculationType type;
@@ -46,8 +49,7 @@ public class CalculationAction extends OneEntAction implements Serializable {
         return null;
     }
 
-    @Override
-    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, boolean isArg1Updated, boolean isArg2Updated, int lastChangeTickCount) {
         String propertyName = ((Property)getContextProperty().evaluate()).getName();
         Property toSet = entityInstance.getPropertyByName(propertyName);
 
@@ -55,8 +57,14 @@ public class CalculationAction extends OneEntAction implements Serializable {
             return;
         }
 
-        updateExpression(entityInstance, arg1);
-        updateExpression(entityInstance, arg2);
+        if(!isArg1Updated) {
+            updateExpression(entityInstance, arg1);
+        }
+
+        if(!isArg2Updated) {
+            updateExpression(entityInstance, arg2);
+        }
+
         switch (type){
             case MULTIPLY:
                 multiplyAndSetPropertyValue(toSet, lastChangeTickCount);
@@ -65,6 +73,22 @@ public class CalculationAction extends OneEntAction implements Serializable {
                 divideAndSetPropertyValue(toSet, lastChangeTickCount);
                 break;
         }
+    }
+
+    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, int lastChangeTickCount) {
+        EntityInstance instanceForInvoke;
+        boolean isArg1Updated, isArg2Updated;
+
+        if(getContextEntity().equals(primaryInstance.getInstanceEntityName())){
+            instanceForInvoke = primaryInstance;
+        }
+        else {
+            instanceForInvoke = secondaryInstance;
+        }
+
+        isArg1Updated = updateExpressionWithSecondary(primaryInstance, secondaryInstance, arg1);
+        isArg2Updated = updateExpressionWithSecondary(primaryInstance, secondaryInstance, arg2);
+        invoke(instanceForInvoke, isArg1Updated, isArg2Updated, lastChangeTickCount);
     }
 
     private void multiplyAndSetPropertyValue(Property toSet, int lastChangTickCount){

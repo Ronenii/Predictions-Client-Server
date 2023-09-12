@@ -1,6 +1,7 @@
 package simulation.properties.action.impl;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
@@ -23,10 +24,22 @@ public class KillAction extends OneEntAction implements Serializable {
     }
 
     @Override
-    public void invoke(EntityInstance entityInstance, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, boolean isExpressionUpdated, int lastChangeTickCount) {
         entityInstance.kill();
     }
 
+    @Override
+    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, int lastChangeTickCount) {
+        EntityInstance instanceForInvoke;
 
+        if(getContextEntity().equals(primaryInstance.getInstanceEntityName())){
+            instanceForInvoke = primaryInstance;
+        }
+        else {
+            instanceForInvoke = secondaryInstance;
+        }
+
+        invoke(instanceForInvoke, true, lastChangeTickCount);
+    }
 }
 

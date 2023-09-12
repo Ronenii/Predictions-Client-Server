@@ -11,6 +11,7 @@ import simulation.objects.world.ticks.counter.TicksCounter;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
+import simulation.properties.action.impl.calculation.CalculationAction;
 import simulation.properties.action.impl.condition.AbstractConditionAction;
 import simulation.properties.action.impl.condition.SingleCondition;
 import simulation.properties.action.impl.proximity.ProximityAction;
@@ -189,7 +190,10 @@ public class World implements Serializable {
 
     private void invokeAnAction(EntityInstance entityInstance, Action action) {
         if (action.getClass().getSuperclass() == OneEntAction.class) {
-            ((OneEntAction) action).invoke(entityInstance, ticks.getTicks());
+            ((OneEntAction) action).invoke(entityInstance, false, ticks.getTicks());
+        } else if (action instanceof CalculationAction) {
+            CalculationAction calculationAction = (CalculationAction)action;
+            calculationAction.invoke(entityInstance, false, false, ticks.getTicks());
         } else if (action instanceof AbstractConditionAction) {
             AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
             abstractConditionAction.invoke(entityInstance, grid, ticks.getTicks());
@@ -206,12 +210,21 @@ public class World implements Serializable {
         List<EntityInstance> secondaryInstances = getSecondaryInstances(actionToInvoke.getSecondaryEntity());
 
         for(EntityInstance secondaryEntityInstance : secondaryInstances) {
-            if(actionToInvoke instanceof AbstractConditionAction) {
-                AbstractConditionAction abstractConditionAction = (AbstractConditionAction)actionToInvoke;
+            if(actionToInvoke instanceof OneEntAction){
+                OneEntAction oneEntAction = (OneEntAction)actionToInvoke;
+                oneEntAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, ticks.getTicks());
+            } else if (actionToInvoke instanceof CalculationAction) {
+                CalculationAction calculationAction = (CalculationAction)actionToInvoke;
+                calculationAction.invokeWithSecondary(entityInstance,secondaryEntityInstance, ticks.getTicks());
+            } else if (actionToInvoke instanceof AbstractConditionAction) {
+                AbstractConditionAction abstractConditionAction = (AbstractConditionAction) actionToInvoke;
                 abstractConditionAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticks.getTicks());
-            }
-            else {
-                //Todo: implement after Aviad's response.
+            } else if(actionToInvoke instanceof ProximityAction) {
+                ProximityAction proximityAction = (ProximityAction)actionToInvoke;
+                proximityAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticks.getTicks());
+            } else if(actionToInvoke instanceof ReplaceAction) {
+                ReplaceAction replaceAction = (ReplaceAction)actionToInvoke;
+                replaceAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticks.getTicks());
             }
         }
     }
