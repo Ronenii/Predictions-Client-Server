@@ -27,18 +27,18 @@
       <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
    </rowConstraints>
    <children>
-      <TableView fx:id="entitiesTV" maxWidth="700.0" prefHeight="200.0" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="1">
+      <TableView fx:id="entitiesTV" disable="true" maxWidth="700.0" prefHeight="200.0" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="1">
          <columns>
             <TableColumn prefWidth="156.0" resizable="false" text="Entity" />
             <TableColumn minWidth="1.0" prefWidth="120.0" resizable="false" text="Quantity" />
          </columns>
       </TableView>
-      <AnchorPane GridPane.columnIndex="3" GridPane.rowIndex="3">
+      <AnchorPane fx:id="controlBarAnchorPane" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="3">
          <children>
             <fx:include fx:id="executionDetailsControlBar" source="control/bar/ExecutionDetailsControlBar.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
-      <VBox prefHeight="200.0" prefWidth="100.0" spacing="13.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <VBox fx:id="execDetailsVBox" disable="true" prefHeight="200.0" prefWidth="100.0" spacing="13.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
             <Label fx:id="executionDetLabel" text="Execution Details" textAlignment="CENTER">
                <font>

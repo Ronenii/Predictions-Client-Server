@@ -31,7 +31,7 @@
    <children>
       <VBox GridPane.columnIndex="3" GridPane.rowIndex="2">
          <children>
-            <AnchorPane disable="true" maxHeight="370.0" VBox.vgrow="ALWAYS">
+            <AnchorPane maxHeight="370.0" VBox.vgrow="ALWAYS">
                <children>
                   <fx:include fx:id="executionDetailsComponent" minHeight="100.0" minWidth="100.0" source="execution/details/ExcecutionDetailsComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
@@ -55,12 +55,12 @@
       </VBox>
       <VBox GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="4" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
          <children>
-            <Label disable="true" text="Excecution Result" VBox.vgrow="NEVER">
+            <Label fx:id="executionResultLabel" disable="true" text="Excecution Result" VBox.vgrow="NEVER">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <TabPane disable="true" maxHeight="500.0" prefHeight="116.0" prefWidth="681.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+            <TabPane fx:id="executionResultTP" disable="true" maxHeight="500.0" prefHeight="116.0" prefWidth="681.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
               <tabs>
                 <Tab text="Histogram" />
                 <Tab text="Consistency" />

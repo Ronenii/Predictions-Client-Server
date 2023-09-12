@@ -10,12 +10,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import simulation.objects.world.status.SimulationStatus;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Observable;
+
 
 public class ExecutionDetailsComponentController {
     private ResultComponentController mainController;
@@ -37,6 +38,10 @@ public class ExecutionDetailsComponentController {
     private GridPane executionDetailsControlBar;
     @FXML
     private ExecutionDetailsControlBarController executionDetailsControlBarController;
+    @FXML
+    private VBox execDetailsVBox;
+    @FXML
+    private AnchorPane controlBarAnchorPane;
 
     public void setMainController(ResultComponentController mainController) {
         this.mainController = mainController;
@@ -49,7 +54,8 @@ public class ExecutionDetailsComponentController {
         }
     }
 
-    public void updateToChosenSimulation(SimulationRunData runData){
+    public void updateToChosenSimulation(SimulationRunData runData) {
+        enableComponent();
         simulationIdDetLabel.setText(runData.getSimId());
         currentTickDetLabel.setText(runData.getCurrentTick().getValue());
         durationDetLabel.setText(runData.getCurrentElapsedTime().getValue());
@@ -57,15 +63,25 @@ public class ExecutionDetailsComponentController {
         setListeners(runData);
     }
 
-    private void updateEntitiesTV(List<DTOEntity> dtoEntities){
+    private void updateEntitiesTV(List<DTOEntity> dtoEntities) {
         ObservableList<PopulationData> populationList = FXCollections.observableArrayList();
 
-        for (DTOEntity e: dtoEntities
-             ) {
+        for (DTOEntity e : dtoEntities
+        ) {
             populationList.add(new PopulationData(e.getName(), e.instanceQuantityProperty()));
         }
 
         entitiesTV.setItems(populationList);
+    }
+
+    public void enableComponent() {
+        execDetailsVBox.disableProperty().set(false);
+        entitiesTV.disableProperty().set(false);
+    }
+
+    public void disableComponent() {
+        execDetailsVBox.disableProperty().set(true);
+        entitiesTV.disableProperty().set(true);
     }
 
     public void setListeners(SimulationRunData runData) {
@@ -79,13 +95,19 @@ public class ExecutionDetailsComponentController {
                 durationDetLabel.setText(newValue);
             }
         }));
-        for (DTOEntity e : runData.getEntities()
-        ) {
-            e.instanceQuantityProperty().addListener(((observable, oldValue, newValue) -> {
-                if (mainController.getCurrentSelectedSimulation().equals(runData)) {
-                    entitiesTV.refresh();
+
+        runData.getStatus().addListener((observable -> {
+            if (mainController.getCurrentSelectedSimulation().equals(runData)) {
+                switch (SimulationStatus.valueOf(observable.toString().toUpperCase())){
+                    case WAITING:
+                    case COMPLETED:
+                        controlBarAnchorPane.disableProperty().set(false);
+                        break;
+                    case ONGOING:
+                        controlBarAnchorPane.disableProperty().set(true);
+                        break;
                 }
-            }));
-        }
+            }
+        }));
     }
 }

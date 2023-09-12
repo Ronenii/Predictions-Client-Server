@@ -12,12 +12,15 @@ public class SimulationRunData {
     private final SimpleStringProperty currentElapsedTime;
     private final List<DTOEntity> entities;
 
+    public boolean isCompleted;
+
     public SimulationRunData(String simId, String currentTick, String currentElapsedTime, List<DTOEntity> entities, String status) {
         this.simId = simId;
         this.entities = entities;
         this.currentTick = new SimpleStringProperty(currentTick);
         this.currentElapsedTime = new SimpleStringProperty(currentElapsedTime);
         this.status = new SimpleStringProperty(status);
+        isCompleted = false;
     }
 
     public String getSimId() {
