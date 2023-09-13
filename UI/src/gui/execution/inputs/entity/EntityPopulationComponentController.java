@@ -102,11 +102,16 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
         }
     }
 
+    /**
+     * Checks if the entity we updated already has a population, if so then updates the counter with the new population value given.
+     * @param entity The entity we update/
+     * @param population The population we added. This is given after validation so there is no need to validate it.
+     */
     private void updateEntityCounter(DTOEntity entity, int population){
         if(entityPopulations.containsKey(entity)){
             entitiesLeftToAdd += entityPopulations.get(entity);
-            entitiesLeftToAdd -= population;
         }
+        entitiesLeftToAdd -= population;
         entitiesLeftLbl.setText(String.valueOf(entitiesLeftToAdd));
     }
 
