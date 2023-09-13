@@ -5,6 +5,7 @@ import engine2ui.simulation.execution.StartResponse;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.result.ResultInfo;
 import engine2ui.simulation.genral.impl.properties.StartData;
+import engine2ui.simulation.runtime.SimulationRunData;
 import ui2engine.simulation.execution.DTOExecutionData;
 
 import engine2ui.simulation.result.ResultData;
@@ -37,5 +38,5 @@ public interface EngineInterface {
     SetResponse setEntityPopulation(EntityPopulationUserInput input);
     SetResponse setEnvironmentVariable(EnvPropertyUserInput input);
 
-
+    SimulationRunData getRunDataById(String simId);
 }

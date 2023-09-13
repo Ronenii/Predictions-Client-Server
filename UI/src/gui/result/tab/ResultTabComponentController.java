@@ -37,7 +37,6 @@ public class ResultTabComponentController {
         }
     }
 
-
     // TODO: Implement both of these
     private void loadResultComponent(ResultData resultData) {
         unloadResultComponent();

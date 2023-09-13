@@ -8,7 +8,6 @@ import gui.result.models.StatusData;
 import gui.result.queue.ExecutionQueueComponentController;
 import gui.result.tab.ResultTabComponentController;
 import gui.sub.menus.SubMenusController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -79,14 +78,14 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
         }
     }
 
-    public void updateToChosenSimulation(SimulationRunData simulationRunData){
+    public void updateSimulationRunDataMap(String simId, SimulationRunData newData){
+        simulationRunDataMap.put(simId, newData);
+    }
+
+    public void updateGuiToChosenSimulation(SimulationRunData simulationRunData){
         executionDetailsComponentController.updateToChosenSimulation(simulationRunData);
         resultTabComponentController.updateToChosenSimulation(simulationRunData);
     }
-
-
-
-
 }
 
 

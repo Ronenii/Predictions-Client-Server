@@ -312,6 +312,13 @@ public class SimulationManager implements EngineInterface, Serializable {
         return response;
     }
 
+
+    // TODO: Fetch simulation run data from simulation with this ID
+    @Override
+    public SimulationRunData getRunDataById(String simId) {
+        return null;
+    }
+
     /**
      * Validates the given user input for the environment variable and returns a set response accordingly.
      * Validates range\regex matching\value compatibility based on the type of the property.
