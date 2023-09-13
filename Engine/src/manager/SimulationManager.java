@@ -107,7 +107,7 @@ public class SimulationManager implements EngineInterface, Serializable {
     public StartResponse startSimulation() {
         if (simulation.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
-            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(), dtoCreator.getDTOEntityList(simulation.getEntities()), "ONGOING");
+            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0f, dtoCreator.getDTOEntityList(simulation.getEntities()), "ONGOING", false);
             addSimulationToQueue();
             // TODO : add simulation to thread pool.
             return new StartResponse(true, "Simulation was added to the queue successfully.", simulationRunData);

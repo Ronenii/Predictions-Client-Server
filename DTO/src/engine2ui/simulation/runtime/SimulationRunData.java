@@ -11,18 +11,17 @@ public class SimulationRunData {
     private final int tick;
     private final float time;
     private final List<DTOEntity> entities;
-
-    public boolean isCompleted;
-
     private ResultData resultData;
 
-    public SimulationRunData(String simId, List<DTOEntity> entities, String status) {
+    private final boolean isCompleted;
+
+    public SimulationRunData(String simId, int tick, float time, List<DTOEntity> entities, String status, boolean isCompleted) {
         this.simId = simId;
         this.entities = entities;
         this.tick = 0;
         this.time = 0f;
         this.status = status;
-        isCompleted = false;
+        this.isCompleted = isCompleted;
     }
 
     public String getSimId() {
@@ -51,5 +50,9 @@ public class SimulationRunData {
 
     public ResultData getResultData() {
         return resultData;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
     }
 }

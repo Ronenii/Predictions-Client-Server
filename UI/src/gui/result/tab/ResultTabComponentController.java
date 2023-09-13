@@ -28,7 +28,7 @@ public class ResultTabComponentController {
     }
 
     public void updateToChosenSimulation(SimulationRunData simulationRunData){
-        if (simulationRunData.isCompleted) {
+        if (simulationRunData.isCompleted()) {
             enableResultComponent();
             loadResultComponent(simulationRunData.getResultData());
         } else {

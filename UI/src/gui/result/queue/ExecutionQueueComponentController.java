@@ -34,7 +34,12 @@ public class ExecutionQueueComponentController {
     void onMouseClickedTV(MouseEvent event) {
         SimulationRunData selected = mainController.getCurrentSelectedSimulation();
         if (selected != null) {
-            mainController.updateToChosenSimulation(selected);
+            if(selected.isCompleted()){
+                mainController.updateToChosenSimulation(selected);
+            }
+            else{
+                // TODO: create task
+            }
 
         }
     }
