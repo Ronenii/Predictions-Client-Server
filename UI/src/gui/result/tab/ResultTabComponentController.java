@@ -1,5 +1,7 @@
 package gui.result.tab;
 
+import engine2ui.simulation.result.ResultData;
+import engine2ui.simulation.runtime.SimulationRunData;
 import gui.result.ResultComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -18,19 +20,28 @@ public class ResultTabComponentController {
     }
 
     public void enableResultComponent() {
-        executionResultLabel.disableProperty().set(false);
         executionResultTP.disableProperty().set(false);
     }
 
     public void disableResultComponent() {
-        executionResultLabel.disableProperty().set(true);
         executionResultTP.disableProperty().set(true);
+    }
+
+    public void updateToChosenSimulation(SimulationRunData simulationRunData){
+        if (simulationRunData.isCompleted) {
+            enableResultComponent();
+            loadResultComponent(simulationRunData.getResultData());
+        } else {
+            disableResultComponent();
+            unloadResultComponent();
+        }
     }
 
 
     // TODO: Implement both of these
-    private void loadResultComponent() {
+    private void loadResultComponent(ResultData resultData) {
         unloadResultComponent();
+
     }
 
     private void unloadResultComponent() {

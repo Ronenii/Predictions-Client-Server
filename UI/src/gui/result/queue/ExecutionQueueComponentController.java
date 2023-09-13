@@ -3,6 +3,7 @@ package gui.result.queue;
 import engine2ui.simulation.runtime.SimulationRunData;
 import gui.result.ResultComponentController;
 import gui.result.models.StatusData;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -31,7 +32,11 @@ public class ExecutionQueueComponentController {
 
     @FXML
     void onMouseClickedTV(MouseEvent event) {
+        SimulationRunData selected = mainController.getCurrentSelectedSimulation();
+        if (selected != null) {
+            mainController.updateToChosenSimulation(selected);
 
+        }
     }
 
     public void setMainController(ResultComponentController mainController) {
@@ -39,7 +44,7 @@ public class ExecutionQueueComponentController {
     }
 
     public void addSimulationToQueue(SimulationRunData simulationRunData){
-        executionsQueueTV.getItems().add(new StatusData(simulationRunData.getSimId(), simulationRunData.getStatus()));
+        executionsQueueTV.getItems().add(new StatusData(simulationRunData.getSimId(), new SimpleStringProperty(simulationRunData.getStatus())));
         executionsQueueTV.refresh();
     }
 

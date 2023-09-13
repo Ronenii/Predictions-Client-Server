@@ -105,14 +105,13 @@ public class SimulationManager implements EngineInterface, Serializable {
 
     @Override
     public StartResponse startSimulation() {
-        if(simulation.isStartable()) {
+        if (simulation.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
-            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),"0", "0",dtoCreator.getDTOEntityList(simulation.getEntities()), "ONGOING");
+            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(), dtoCreator.getDTOEntityList(simulation.getEntities()), "ONGOING");
             addSimulationToQueue();
             // TODO : add simulation to thread pool.
             return new StartResponse(true, "Simulation was added to the queue successfully.", simulationRunData);
-        }
-        else {
+        } else {
             return new StartResponse(false, "ERROR: Could not start simulation. You need to have at least one entity with a population larger than 0.");
         }
 
@@ -316,7 +315,8 @@ public class SimulationManager implements EngineInterface, Serializable {
     /**
      * Validates the given user input for the environment variable and returns a set response accordingly.
      * Validates range\regex matching\value compatibility based on the type of the property.
-     * @param property The property we are comparing the value to
+     *
+     * @param property   The property we are comparing the value to
      * @param inputValue The value we want to compare
      * @return A Set response indicating if the set action has succeeded or failed with a custom message
      */
@@ -352,8 +352,8 @@ public class SimulationManager implements EngineInterface, Serializable {
             }
         } catch (NumberFormatException e) {
             return new SetResponse(false, String.format("ERROR: Value provided is does not match %s's type (%s)", property.getName(), property.getType().toString()));
-        } catch(OutOfRangeException | IllegalBooleanValueException e) {
-            return new SetResponse(false, String.format("ERROR: Value given is not in %s's range.",property.getName()));
+        } catch (OutOfRangeException | IllegalBooleanValueException e) {
+            return new SetResponse(false, String.format("ERROR: Value given is not in %s's range.", property.getName()));
         } catch (IllegalStringValueException e) {
             return new SetResponse(false, "ERROR: String given does not meet the string guidelines.");
         }

@@ -2,27 +2,26 @@ package engine2ui.simulation.runtime;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.result.ResultData;
-import javafx.beans.property.SimpleStringProperty;
 
 import java.util.List;
 
 public class SimulationRunData {
     private final String simId;
-    public final SimpleStringProperty status;
-    private final SimpleStringProperty currentTick;
-    private final SimpleStringProperty currentElapsedTime;
+    public final String status;
+    private final int tick;
+    private final float time;
     private final List<DTOEntity> entities;
 
     public boolean isCompleted;
 
     private ResultData resultData;
 
-    public SimulationRunData(String simId, String currentTick, String currentElapsedTime, List<DTOEntity> entities, String status) {
+    public SimulationRunData(String simId, List<DTOEntity> entities, String status) {
         this.simId = simId;
         this.entities = entities;
-        this.currentTick = new SimpleStringProperty(currentTick);
-        this.currentElapsedTime = new SimpleStringProperty(currentElapsedTime);
-        this.status = new SimpleStringProperty(status);
+        this.tick = 0;
+        this.time = 0f;
+        this.status = status;
         isCompleted = false;
     }
 
@@ -30,19 +29,27 @@ public class SimulationRunData {
         return simId;
     }
 
-    public SimpleStringProperty getCurrentTick() {
-        return currentTick;
+    public int getTick() {
+        return tick;
     }
 
-    public SimpleStringProperty getCurrentElapsedTime() {
-        return currentElapsedTime;
+    public float getTime() {
+        return time;
     }
 
     public List<DTOEntity> getEntities() {
         return entities;
     }
 
-    public SimpleStringProperty getStatus() {
+    public String getStatus() {
         return status;
+    }
+
+    public void setResultData(ResultData resultData) {
+        this.resultData = resultData;
+    }
+
+    public ResultData getResultData() {
+        return resultData;
     }
 }
