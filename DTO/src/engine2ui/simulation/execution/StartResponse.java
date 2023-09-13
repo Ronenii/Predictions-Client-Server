@@ -15,6 +15,12 @@ public class StartResponse {
         this.simulationRunData = simRunData;
     }
 
+    public StartResponse(boolean success, String message) {
+        this.message = message;
+        this.success = success;
+        this.simulationRunData = null;
+    }
+
     public boolean isSuccess() {
         return success;
     }

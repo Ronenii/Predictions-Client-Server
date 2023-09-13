@@ -38,7 +38,7 @@ public class EngineAgent {
 
     public EngineAgent() {
         isFileLoaded = false;
-        this.engine = new WorldManager();
+        this.engine = new SimulationManager();
     }
 
     public boolean isFileLoaded() {

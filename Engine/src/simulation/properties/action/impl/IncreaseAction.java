@@ -35,7 +35,7 @@ public class IncreaseAction extends OneEntAction implements Serializable {
      */
     @Override
     public void invoke(EntityInstance entityInstance, boolean isExpressionUpdated, int lastChangeTickCount) {
-        String propertyName = ((Property)getContextProperty().evaluate()).getName();
+        String propertyName = getContextProperty().getPropertyName();
         Property toIncrease = entityInstance.getPropertyByName(propertyName);
 
         if(toIncrease == null){

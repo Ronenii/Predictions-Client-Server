@@ -48,4 +48,9 @@ public class PercentExpression extends AbstractExpression {
 
         return ret;
     }
+
+    @Override
+    public String getPropertyName() {
+        return null;
+    }
 }

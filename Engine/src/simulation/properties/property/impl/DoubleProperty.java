@@ -31,7 +31,7 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty, 
 
     @Override
     public void setValue(Object value, int lastChangTickCount) {
-        double givenValue = (double)value;
+        double givenValue = getValueAsDouble(value);
 
         if(givenValue < from){
             this.value = from;
@@ -39,10 +39,23 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty, 
             this.value = to;
         }
         else {
-            this.value = value;
+            this.value = givenValue;
         }
 
         this.lastChangeTickCount = lastChangTickCount;
+    }
+
+    private double getValueAsDouble(Object value) {
+        double ret;
+
+        if(value instanceof Integer) {
+            int integerValue = (int)value;
+            ret = (double)integerValue;
+        }else {
+            ret = (double)value;
+        }
+
+        return ret;
     }
 
 

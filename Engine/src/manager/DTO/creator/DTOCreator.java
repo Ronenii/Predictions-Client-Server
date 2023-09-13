@@ -88,7 +88,7 @@ public class DTOCreator {
         return new DTOEnvironmentVariable(name, type, from, to);
     }
 
-    private List<DTOEntity> getDTOEntityList(Map<String, Entity> entities) {
+    public List<DTOEntity> getDTOEntityList(Map<String, Entity> entities) {
         List<DTOEntity> entitiesList = new ArrayList<>();
 
         entities.forEach((key, value) -> entitiesList.add(convertEntity2DTOEntity(value)));

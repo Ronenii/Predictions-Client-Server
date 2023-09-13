@@ -2,7 +2,7 @@ package jaxb.unmarshal;
 
 import jaxb.schema.generated.PRDWorld;
 import jaxb.unmarshal.converter.PRDConverter;
-import simulation.objects.world.World;
+import simulation.objects.world.SimulationInstance;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -23,7 +23,7 @@ public class Reader {
      * @param file The xml file to read the world from.
      * @return The world read from the xml file
      */
-    public static World readWorldFromXML(File file) {
+    public static SimulationInstance readWorldFromXML(File file) {
         PRDConverter prdConverter = new PRDConverter();
         try {
             InputStream inputStream = new FileInputStream(file);

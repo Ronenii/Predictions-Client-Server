@@ -27,4 +27,9 @@ public class EnvironmentExpression extends AbstractExpression {
     public Object evaluate() {
         return envProperty.getValue();
     }
+
+    @Override
+    public String getPropertyName() {
+        return null;
+    }
 }

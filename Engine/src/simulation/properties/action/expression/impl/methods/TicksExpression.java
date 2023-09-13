@@ -30,6 +30,8 @@ public class TicksExpression extends AbstractExpression {
     public String getEntityName() {
         return entityName;
     }
+    @Override
+    public String getPropertyName(){return property.getName();}
 
     @Override
     public String toString() {

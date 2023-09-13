@@ -70,7 +70,7 @@ public abstract class AbstractAction implements Action {
     
     protected void updateExpression(EntityInstance entityInstance, Expression expression){
         if(!(expression instanceof RegularValueExpression)){
-            String propertyName = ((Property)getContextProperty().evaluate()).getName();
+            String propertyName = expression.getPropertyName();
             Property instanceProperty = entityInstance.getPropertyByName(propertyName);
 
             if(expression instanceof PropertyValueExpression) {
@@ -99,13 +99,13 @@ public abstract class AbstractAction implements Action {
         } else if (expression instanceof EvaluateExpression) {
             EvaluateExpression evaluateExpression = (EvaluateExpression)expression;
             if(evaluateExpression.getEntityName().equals(firstEntityInstance.getInstanceEntityName())) {
-                propertyName = ((Property)getContextProperty().evaluate()).getName();
+                propertyName = expression.getPropertyName();
                 instanceProperty = firstEntityInstance.getPropertyByName(propertyName);
                 evaluateExpression.setProperty(instanceProperty);
                 ret = true;
             }
             else {
-                propertyName = ((Property)getContextProperty().evaluate()).getName();
+                propertyName = expression.getPropertyName();
                 instanceProperty = secondEntityInstance.getPropertyByName(propertyName);
                 evaluateExpression.setProperty(instanceProperty);
                 ret = true;
@@ -113,13 +113,13 @@ public abstract class AbstractAction implements Action {
         } else if (expression instanceof TicksExpression) {
             TicksExpression ticksExpression = (TicksExpression)expression;
             if(ticksExpression.getEntityName().equals(firstEntityInstance.getInstanceEntityName())) {
-                propertyName = ((Property)getContextProperty().evaluate()).getName();
+                propertyName = expression.getPropertyName();
                 instanceProperty = firstEntityInstance.getPropertyByName(propertyName);
                 ticksExpression.setProperty(instanceProperty);
                 ret = true;
             }
             else {
-                propertyName = ((Property)getContextProperty().evaluate()).getName();
+                propertyName = expression.getPropertyName();
                 instanceProperty = secondEntityInstance.getPropertyByName(propertyName);
                 ticksExpression.setProperty(instanceProperty);
                 ret = true;

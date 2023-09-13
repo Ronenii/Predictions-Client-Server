@@ -11,5 +11,7 @@ public interface Expression {
 
     Object evaluate();
 
+    String getPropertyName();
+
     PropertyType getType();
 }

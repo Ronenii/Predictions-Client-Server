@@ -22,6 +22,10 @@ public class ReplaceAction extends AbstractAction {
         return replaceType;
     }
 
+    public String getNewEntityName() {
+        return newEntity.getName();
+    }
+
     @Override
     public Object getValue() {
         return null;
