@@ -1,7 +1,6 @@
 package simulation.objects.world;
 
 import engine2ui.simulation.execution.SetResponse;
-import engine2ui.simulation.execution.StartResponse;
 import engine2ui.simulation.result.ResultData;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.entity.Entity;
@@ -13,7 +12,6 @@ import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.impl.calculation.CalculationAction;
 import simulation.properties.action.impl.condition.AbstractConditionAction;
-import simulation.properties.action.impl.condition.SingleCondition;
 import simulation.properties.action.impl.proximity.ProximityAction;
 import simulation.properties.action.impl.replace.ReplaceAction;
 import simulation.properties.ending.conditions.EndingConditionType;
@@ -27,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class World implements Serializable {
+public class SimulationInstance implements Serializable {
 
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
@@ -42,7 +40,7 @@ public class World implements Serializable {
     private int totalPopulation;
     private final int constAll = -1;
 
-    public World(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
+    public SimulationInstance(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
         this.environmentProperties = environmentProperties;
         this.entities = entities;
         this.rules = rules;
@@ -144,7 +142,7 @@ public class World implements Serializable {
      */
     public ResultData runSimulation() {
         List<Action> actionsToInvoke = new ArrayList<>();
-        // TODO: reset grid.
+        initSimulation();
         // Set the starting time to calculate later for 'ending by seconds'
         if (endingConditions.containsKey(EndingConditionType.SECONDS)) {
             startingTime = System.currentTimeMillis();
@@ -152,6 +150,7 @@ public class World implements Serializable {
 
         // Simulation main loop
         do {
+            actionsToInvoke.clear();
             grid.moveAllEntities();
             // Get the invokable actions (by ticks and probability)
             for (Rule r : rules.values()) {
@@ -161,7 +160,6 @@ public class World implements Serializable {
             for (Entity entity : entities.values()) {
                 invokeActionsOnAllInstances(entity.getEntityInstances(), actionsToInvoke);
             }
-
 
         } while ((!endingConditionsMet()));
 
@@ -351,7 +349,7 @@ public class World implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        World toCompare = (World) obj;
+        SimulationInstance toCompare = (SimulationInstance) obj;
         return (toCompare.endingConditions.equals(this.endingConditions)) && (toCompare.rules.equals(this.rules)) && (toCompare.entities.equals(entities)) && (toCompare.environmentProperties.equals(this.environmentProperties));
     }
 
@@ -392,17 +390,34 @@ public class World implements Serializable {
      * In func we add the simulation to the thread-pool. If the simulation has no population
      * at all it will send back a response indicating the simulation was not added.
      */
-    public StartResponse startSimulation(){
+    public boolean isStartable(){
         int populationCount = 0;
         for (Entity e: entities.values()
              ) {
             populationCount += e.getStartingPopulation();
         }
 
-        if(populationCount == 0){
-            return new StartResponse(false, "ERROR: Could not start simulation. You need to have at least one entity with a population larger than 0.", simID, startTime);
+        return populationCount > 0;
+    }
+
+    private void initGrid() {
+        List<EntityInstance> allEntityInstances = new ArrayList<>();
+        for(Entity entity : entities.values()) {
+            allEntityInstances.addAll(entity.getEntityInstances());
         }
 
-        return new StartResponse(true, "Simulation was added to the queue successfully.", simID, startTime);
+        grid.populateGrid(allEntityInstances);
     }
+
+    private void initInstances() {
+        for(Entity entity : entities.values()) {
+            entity.resetPopulation();
+        }
+    }
+
+    private void initSimulation() {
+        initInstances();
+        initGrid();
+    }
+
 }

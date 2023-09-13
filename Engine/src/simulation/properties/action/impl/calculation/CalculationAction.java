@@ -50,7 +50,7 @@ public class CalculationAction extends AbstractAction implements Serializable {
     }
 
     public void invoke(EntityInstance entityInstance, boolean isArg1Updated, boolean isArg2Updated, int lastChangeTickCount) {
-        String propertyName = ((Property)getContextProperty().evaluate()).getName();
+        String propertyName = getContextProperty().getPropertyName();
         Property toSet = entityInstance.getPropertyByName(propertyName);
 
         if(toSet == null){

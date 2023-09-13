@@ -39,10 +39,25 @@ public class Grid {
      * Iterates through the grid and tries to move around all entities.
      */
     public void moveAllEntities() {
+        EntityInstance instanceRef;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 if (grid[i][j] != null) {
+                    instanceRef = grid[i][j];
                     tryToMoveEntity(grid[i][j]);
+                    instanceRef.hasMoved = true;
+                }
+            }
+        }
+
+        resetInstancesHasMoved();
+    }
+
+    private void resetInstancesHasMoved() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (grid[i][j] != null) {
+                    grid[i][j].hasMoved = false;
                 }
             }
         }
@@ -74,7 +89,7 @@ public class Grid {
             directionSet.remove(direction);
         }
 
-        System.out.printf("%s has no where to move %s\n", entityInstance.getInstanceEntityName());
+        System.out.printf("%s has no where to move\n", entityInstance.getInstanceEntityName());
     }
 
     /**
@@ -184,13 +199,31 @@ public class Grid {
      * Converts the given x to a valid row in the grid.
      */
     private int toRow(int x) {
-        return x % rows;
+        int ret;
+
+        if(x < 0) {
+            ret = rows + x;
+        }
+        else {
+            ret = x % rows;
+        }
+
+        return ret;
     }
 
     /**
      * Converts the given y to a valid column in the grid.
      */
     private int toColumn(int y) {
-        return y % columns;
+        int ret;
+
+        if(y < 0) {
+            ret = columns + y;
+        }
+        else {
+            ret = y % columns;
+        }
+
+        return ret;
     }
 }

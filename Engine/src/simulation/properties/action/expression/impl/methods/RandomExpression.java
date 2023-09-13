@@ -28,4 +28,9 @@ public class RandomExpression extends AbstractExpression {
     public String toString() {
         return String.format("Random(%d)", range);
     }
+
+    @Override
+    public String getPropertyName() {
+        return null;
+    }
 }

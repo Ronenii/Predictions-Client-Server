@@ -37,7 +37,7 @@ public class DecreaseAction extends OneEntAction implements Serializable {
      */
     @Override
     public void invoke(EntityInstance entityInstance, boolean isExpressionUpdated, int lastChangeTickCount) {
-        String propertyName = ((Property)getContextProperty().evaluate()).getName();
+        String propertyName = getContextProperty().getPropertyName();
         Property toDecrease = entityInstance.getPropertyByName(propertyName);
 
         if(toDecrease == null){

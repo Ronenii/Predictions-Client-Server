@@ -22,7 +22,7 @@ import simulation.properties.action.impl.replace.ReplaceAction;
 import simulation.properties.action.impl.replace.ReplaceActionType;
 import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.rule.Rule;
-import simulation.objects.world.World;
+import simulation.objects.world.SimulationInstance;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.impl.DecreaseAction;
@@ -64,7 +64,7 @@ public class PRDConverter {
         ticksCounter = new TicksCounter();
     }
 
-    public World PRDWorld2World(PRDWorld prdWorld) {
+    public SimulationInstance PRDWorld2World(PRDWorld prdWorld) {
 
         Map<EndingConditionType, EndingCondition> endingConditions;
 
@@ -95,7 +95,7 @@ public class PRDConverter {
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
-        return new World(environmentProperties, entities, rules, endingConditions, ticksCounter, grid, prdWorld.getPRDThreadCount());
+        return new SimulationInstance(environmentProperties, entities, rules, endingConditions, ticksCounter, grid, prdWorld.getPRDThreadCount());
     }
 
     private Grid PRDGrid2Grid(PRDWorld.PRDGrid grid) {
@@ -462,7 +462,7 @@ public class PRDConverter {
             Expression expression = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition, property.getType());
             ret = new SingleCondition(ActionType.CONDITION, property, prdCondition.getEntity(), ConditionOperator.tryParse(prdCondition.getOperator()), expression);
         } else if (prdCondition.getSingularity().equals("multiple")) {
-            ret = getMultipleConditionSelection(prdCondition);
+            ret = getMultipleConditionSelection(prdCondition, null);
         }
 
         return ret;
@@ -534,7 +534,7 @@ public class PRDConverter {
             value = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition, property.getType());
             ret = new SingleCondition(ActionType.CONDITION, property, prdCondition.getEntity(), secondaryEntity, thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getOperator()), value);
         } else if (prdCondition.getSingularity().equals("multiple")) {
-            ret = getMultipleConditionObject(prdCondition, thenActions, elseActions, secondaryEntity);
+            ret = getMultipleConditionObject(prdCondition, thenActions, elseActions, secondaryEntity, prdAction.getEntity());
         }
 
         return ret;
@@ -545,34 +545,34 @@ public class PRDConverter {
      * This is used for a multiple condition which has some actions inside it needs to perform if
      * the condition is true.
      */
-    private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ThenOrElse thenActions, ThenOrElse elseActions, AbstractAction.SecondaryEntity secondaryEntity) {
-        List<AbstractConditionAction> objectSubConditions = getAllSubConditions(prdCondition);
+    private MultipleCondition getMultipleConditionObject(PRDCondition prdCondition, ThenOrElse thenActions, ThenOrElse elseActions, AbstractAction.SecondaryEntity secondaryEntity, String entityName) {
+        List<AbstractConditionAction> objectSubConditions = getAllSubConditions(prdCondition, entityName);
 
-        return new MultipleCondition(ActionType.CONDITION, null, prdCondition.getEntity(), secondaryEntity, null,  thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getLogical()), objectSubConditions);
+        return new MultipleCondition(ActionType.CONDITION, null, entityName, secondaryEntity, null,  thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getLogical()), objectSubConditions);
     }
 
     /**
      * The selection condition does not have then\else actions and therefore all we need is to get all the
      * sub conditions and create a multiple condition without any actions.
      */
-    private MultipleCondition getMultipleConditionSelection(PRDCondition prdCondition) {
+    private MultipleCondition getMultipleConditionSelection(PRDCondition prdCondition, String entityName) {
 
-        List<AbstractConditionAction> objectSubConditions = getAllSubConditions(prdCondition);
+        List<AbstractConditionAction> objectSubConditions = getAllSubConditions(prdCondition, entityName);
 
-        return new MultipleCondition(ActionType.CONDITION, null, prdCondition.getEntity(), ConditionOperator.tryParse(prdCondition.getLogical()), objectSubConditions, null);
+        return new MultipleCondition(ActionType.CONDITION, null, entityName, ConditionOperator.tryParse(prdCondition.getLogical()), objectSubConditions, null);
     }
 
     /**
      * Given a condition, iterates through all sub conditions, converts them from PRD to regular
      * and returns a list of said sub conditions.
      */
-    private List<AbstractConditionAction> getAllSubConditions(PRDCondition prdCondition) {
+    private List<AbstractConditionAction> getAllSubConditions(PRDCondition prdCondition, String entityName) {
         List<PRDCondition> prdSubConditions = prdCondition.getPRDCondition();
         List<AbstractConditionAction> objectSubConditions = new ArrayList<>();
         AbstractConditionAction conditionToAdd;
 
         for (PRDCondition prdSubCondition : prdSubConditions) {
-            conditionToAdd = getAbstractConditionToBuildMultiple(prdSubCondition);
+            conditionToAdd = getAbstractConditionToBuildMultiple(prdSubCondition, entityName);
             objectSubConditions.add(conditionToAdd);
         }
 
@@ -582,7 +582,7 @@ public class PRDConverter {
     /**
      * 'getMultipleConditionObject' helper, build any kind of the condition objects.
      */
-    private AbstractConditionAction getAbstractConditionToBuildMultiple(PRDCondition prdCondition) {
+    private AbstractConditionAction getAbstractConditionToBuildMultiple(PRDCondition prdCondition, String entityName) {
         AbstractConditionAction ret = null;
         Expression value;
 
@@ -592,7 +592,7 @@ public class PRDConverter {
             value = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition, property.getType());
             ret = new SingleCondition(ActionType.CONDITION, property, prdCondition.getEntity(), ConditionOperator.tryParse(prdCondition.getOperator()), value);
         } else if (prdCondition.getSingularity().equals("multiple")) {
-            ret = getMultipleConditionObject(prdCondition, null, null, null);
+            ret = getMultipleConditionObject(prdCondition, null, null, null, entityName);
         }
         return ret;
     }

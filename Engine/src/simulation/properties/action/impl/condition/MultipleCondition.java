@@ -76,10 +76,11 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
         boolean isFirst = true;
 
         for (AbstractConditionAction a : subConditions) {
-            if(a.getContextEntity().equals(primaryInstance.getInstanceEntityName())) {
+            if(a instanceof MultipleCondition) {
+                a.invokeWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
+            } else if(a.getContextEntity().equals(primaryInstance.getInstanceEntityName())) {
                 a.invoke(primaryInstance, grid, lastChangeTickCount);
-            }
-            else {
+            } else {
                 a.invoke(secondaryInstance,grid, lastChangeTickCount);
             }
 

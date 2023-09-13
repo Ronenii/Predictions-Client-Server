@@ -49,7 +49,7 @@ public class ProximityAction extends AbstractAction {
     }
 
     public void invoke(EntityInstance entityInstance, Grid grid, int lastChangeTickCount) {
-        int depthValue = (int) depth.evaluate();
+        int depthValue = getDepth();
 
         for (int i = -depthValue; i <= depthValue; i++) {
             for (int j = -depthValue; j <= depthValue; j++) {
@@ -59,10 +59,24 @@ public class ProximityAction extends AbstractAction {
                 if (grid.getInstance(x,y) != null && grid.getInstance(x,y).getInstanceEntityName().equals(targetEntityName)) {
                     // Target entity found within the circle
                     proximityActions.invoke(entityInstance, grid.getInstance(x,y), grid, lastChangeTickCount);
-                    break;
+                    return;
                 }
             }
         }
+    }
+
+    private int getDepth() {
+        Object depthObject = depth.evaluate();
+        int ret = 0;
+
+        if(depthObject instanceof Integer) {
+            ret = (int)depthObject;
+        } else if (depthObject instanceof Double) {
+            double doubleDepthObject = (double)depthObject;
+            ret = (int)doubleDepthObject;
+        }
+
+        return ret;
     }
 
     public void invokeWithSecondary(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Grid grid, int lastChangeTickCount) {

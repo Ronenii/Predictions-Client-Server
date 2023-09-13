@@ -11,11 +11,13 @@ public class EntityInstance implements Serializable {
     private boolean isAlive;
     public int row;
     public int column;
+    public boolean hasMoved;
 
     public EntityInstance(Map<String, Property> properties, Entity entityContext) {
         isAlive = true;
         this.properties = properties;
         this.contextEntity = entityContext;
+        hasMoved = false;
     }
 
     public String getInstanceEntityName(){

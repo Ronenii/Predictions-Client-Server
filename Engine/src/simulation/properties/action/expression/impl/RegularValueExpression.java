@@ -28,4 +28,9 @@ public class RegularValueExpression extends AbstractExpression {
     public String toString() {
         return value.toString();
     }
+
+    @Override
+    public String getPropertyName() {
+        return null;
+    }
 }
