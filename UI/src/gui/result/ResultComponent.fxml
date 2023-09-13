@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <GridPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.result.ResultComponentController">
   <columnConstraints>
@@ -33,40 +27,20 @@
          <children>
             <AnchorPane maxHeight="370.0" VBox.vgrow="ALWAYS">
                <children>
-                  <fx:include fx:id="executionDetailsComponent" minHeight="100.0" minWidth="100.0" source="execution/details/ExcecutionDetailsComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <fx:include fx:id="executionDetailsComponent" minHeight="100.0" minWidth="100.0" source="details/ExcecutionDetailsComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
          </children>
       </VBox>
-      <VBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS">
+      <AnchorPane GridPane.columnIndex="3" GridPane.rowIndex="4">
          <children>
-            <Label fx:id="exeListLabel" disable="true" text="Execution Queue">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-            </Label>
-            <TableView fx:id="executionsQueueTV" disable="true" onMouseClicked="#onMouseClickedTV">
-              <columns>
-                <TableColumn prefWidth="120.0" text="Simulation ID" />
-                <TableColumn prefWidth="79.0" text="Status" />
-              </columns>
-            </TableView>
+            <fx:include source="tab/ResultTabComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
-      </VBox>
-      <VBox GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="4" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
+      </AnchorPane>
+      <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="3">
          <children>
-            <Label fx:id="executionResultLabel" disable="true" text="Excecution Result" VBox.vgrow="NEVER">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-            </Label>
-            <TabPane fx:id="executionResultTP" disable="true" maxHeight="500.0" prefHeight="116.0" prefWidth="681.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-              <tabs>
-                <Tab text="Graph" />
-                <Tab text="Statistics" />
-              </tabs>
-            </TabPane>
+            <fx:include source="queue/ExecutionQueueComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
-      </VBox>
+      </AnchorPane>
    </children>
 </GridPane>

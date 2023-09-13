@@ -1,9 +1,9 @@
-package gui.result.execution.details;
+package gui.result.details;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.runtime.SimulationRunData;
 import gui.result.ResultComponentController;
-import gui.result.execution.details.control.bar.ExecutionDetailsControlBarController;
+import gui.result.details.control.bar.ExecutionDetailsControlBarController;
 import gui.result.models.PopulationData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,7 +55,7 @@ public class ExecutionDetailsComponentController {
     }
 
     public void updateToChosenSimulation(SimulationRunData runData) {
-        enableComponent();
+        clearExecutionDetails();
         simulationIdDetLabel.setText(runData.getSimId());
         currentTickDetLabel.setText(runData.getCurrentTick().getValue());
         durationDetLabel.setText(runData.getCurrentElapsedTime().getValue());
@@ -74,25 +74,15 @@ public class ExecutionDetailsComponentController {
         entitiesTV.setItems(populationList);
     }
 
-    public void enableComponent() {
-        execDetailsVBox.disableProperty().set(false);
-        entitiesTV.disableProperty().set(false);
-    }
-
-    public void disableComponent() {
-        execDetailsVBox.disableProperty().set(true);
-        entitiesTV.disableProperty().set(true);
-    }
-
     public void setListeners(SimulationRunData runData) {
         runData.getCurrentElapsedTime().addListener((observable, oldValue, newValue) -> {
             if (mainController.getCurrentSelectedSimulation().equals(runData)) {
-                currentTickDetLabel.setText(newValue);
+                durationDetLabel.setText(newValue);
             }
         });
         runData.getCurrentTick().addListener(((observable, oldValue, newValue) -> {
             if (mainController.getCurrentSelectedSimulation().equals(runData)) {
-                durationDetLabel.setText(newValue);
+                currentTickDetLabel.setText(newValue);
             }
         }));
 
@@ -109,5 +99,9 @@ public class ExecutionDetailsComponentController {
                 }
             }
         }));
+    }
+
+    public void clearExecutionDetails(){
+        entitiesTV.getItems().clear();
     }
 }
