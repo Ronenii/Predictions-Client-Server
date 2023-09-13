@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.result.queue.ExecutionQueueComponentController">
+   <children>
+      <Label fx:id="exeListLabel" text="Execution Queue">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <TableView fx:id="executionsQueueTV" onMouseClicked="#onMouseClickedTV">
+         <columns>
+            <TableColumn prefWidth="120.0" text="Simulation ID" />
+            <TableColumn prefWidth="79.0" text="Status" />
+         </columns>
+      </TableView>
+   </children>
+</VBox>

@@ -3,8 +3,10 @@ package gui.result;
 import engine2ui.simulation.runtime.SimulationRunData;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
-import gui.result.execution.details.ExecutionDetailsComponentController;
+import gui.result.details.ExecutionDetailsComponentController;
 import gui.result.models.StatusData;
+import gui.result.queue.ExecutionQueueComponentController;
+import gui.result.tab.ResultTabComponentController;
 import gui.sub.menus.SubMenusController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import manager.EngineAgent;
 
 import java.util.HashMap;
@@ -19,20 +22,21 @@ import java.util.Map;
 
 public class ResultComponentController implements EngineCommunicator, BarNotifier {
     private SubMenusController mainController;
+
     @FXML
-    private Label exeListLabel;
+    private VBox resultTabComponent;
     @FXML
-    private TableView<StatusData> executionsQueueTV;
+    private ResultTabComponentController resultTabComponentController;
+
+    @FXML
+    private VBox executionQueueComponent;
+    @FXML
+    private ExecutionQueueComponentController executionQueueComponentController;
+
     @FXML
     private GridPane executionDetailsComponent;
     @FXML
     private ExecutionDetailsComponentController executionDetailsComponentController;
-
-    @FXML
-    private TabPane executionResultTP;
-
-    @FXML
-    private Label executionResultLabel;
 
     Map<String, SimulationRunData> simulationRunDataMap; // used to access simulation run data with the simulation ID.
 
@@ -43,8 +47,10 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
 
     @FXML
     public void initialize() {
-        if (executionDetailsComponentController != null) {
+        if (executionDetailsComponentController != null && resultTabComponentController != null && executionQueueComponentController != null) {
             executionDetailsComponentController.setMainController(this);
+            resultTabComponentController.setMainController(this);
+            executionQueueComponentController.setMainController(this);
         }
         simulationRunDataMap = new HashMap<>();
     }
@@ -60,7 +66,7 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
     }
 
     public void addSimulationToQueue(SimulationRunData simulationRunData) {
-        executionsQueueTV.getItems().add(new StatusData(simulationRunData.getSimId(), simulationRunData.status));
+        executionQueueComponentController.addSimulationToQueue(simulationRunData);
         simulationRunDataMap.put(simulationRunData.getSimId(), simulationRunData);
     }
 
@@ -68,7 +74,7 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
      * Using the simulation ID of the current selected item in the table view, returns the simulationRunData.
      */
     public SimulationRunData getCurrentSelectedSimulation() {
-        StatusData selected = executionsQueueTV.getSelectionModel().getSelectedItem();
+        StatusData selected = executionQueueComponentController.getQueueSelectedItem();
         if (selected != null) {
             return simulationRunDataMap.get(selected.getSimId());
         } else {
@@ -85,35 +91,16 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
         if (selected != null) {
             executionDetailsComponentController.updateToChosenSimulation(selected);
             if (selected.isCompleted) {
-                enableResultComponent();
+                resultTabComponentController.enableResultComponent();
             } else {
-                disableResultComponent();
+                resultTabComponentController.disableResultComponent();
             }
         }
     }
 
-    private void enableResultComponent() {
-        executionResultLabel.disableProperty().set(false);
-        executionResultTP.disableProperty().set(false);
 
-        loadResultComponent();
-    }
 
-    private void disableResultComponent() {
-        executionResultLabel.disableProperty().set(true);
-        executionResultTP.disableProperty().set(true);
 
-        unloadResultComponent();
-    }
-
-    private void loadResultComponent(){
-        unloadResultComponent();
-    }
-
-    private void unloadResultComponent(){
-        executionsQueueTV.getItems().clear();
-        executionDetailsComponentController.clearExecutionDetails();
-    }
 }
 
 

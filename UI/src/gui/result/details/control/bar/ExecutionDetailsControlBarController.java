@@ -1,6 +1,6 @@
-package gui.result.execution.details.control.bar;
+package gui.result.details.control.bar;
 
-import gui.result.execution.details.ExecutionDetailsComponentController;
+import gui.result.details.ExecutionDetailsComponentController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

@@ -1,9 +1,9 @@
-package gui.result.execution.details;
+package gui.result.details;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.runtime.SimulationRunData;
 import gui.result.ResultComponentController;
-import gui.result.execution.details.control.bar.ExecutionDetailsControlBarController;
+import gui.result.details.control.bar.ExecutionDetailsControlBarController;
 import gui.result.models.PopulationData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
