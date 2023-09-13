@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -22,7 +23,7 @@
   <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
       <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="NEVER" />
-    <RowConstraints maxHeight="370.0" minHeight="-Infinity" prefHeight="220.0" vgrow="ALWAYS" />
+    <RowConstraints maxHeight="370.0" minHeight="-Infinity" prefHeight="220.0" vgrow="NEVER" />
       <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
       <RowConstraints maxHeight="350.0" minHeight="10.0" prefHeight="220.0" vgrow="ALWAYS" />
       <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
@@ -39,25 +40,30 @@
       </VBox>
       <VBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS">
          <children>
-            <Label fx:id="exeListLabel" text="Excecution List">
+            <Label fx:id="exeListLabel" disable="true" text="Execution Queue">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <ListView fx:id="executionsLV" maxHeight="540.0" VBox.vgrow="ALWAYS" />
+            <TableView fx:id="executionsQueueTV" disable="true" onMouseClicked="#onMouseClickedTV">
+              <columns>
+                <TableColumn prefWidth="120.0" text="Simulation ID" />
+                <TableColumn prefWidth="79.0" text="Status" />
+              </columns>
+            </TableView>
          </children>
       </VBox>
       <VBox GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="4" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
          <children>
-            <Label text="Excecution Result" VBox.vgrow="NEVER">
+            <Label fx:id="executionResultLabel" disable="true" text="Excecution Result" VBox.vgrow="NEVER">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <TabPane maxHeight="500.0" prefHeight="116.0" prefWidth="681.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+            <TabPane fx:id="executionResultTP" disable="true" maxHeight="500.0" prefHeight="116.0" prefWidth="681.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
               <tabs>
-                <Tab text="Histogram" />
-                <Tab text="Consistency" />
+                <Tab text="Graph" />
+                <Tab text="Statistics" />
               </tabs>
             </TabPane>
          </children>

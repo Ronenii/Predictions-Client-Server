@@ -1,5 +1,6 @@
 package gui.execution;
 
+import engine2ui.simulation.runtime.SimulationRunData;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.api.HasFileLoadedListeners;
@@ -56,5 +57,9 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
      */
     public TabPane getMenusTabPane(){
         return mainController.getMenusTabPane();
+    }
+
+    public void addSimulationToQueue(SimulationRunData simulationRunData){
+        mainController.addSimulationToQueue(simulationRunData);
     }
 }

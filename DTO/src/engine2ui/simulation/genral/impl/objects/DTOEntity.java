@@ -1,6 +1,8 @@
 package engine2ui.simulation.genral.impl.objects;
 
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 import java.io.Serializable;
 
 public class DTOEntity implements Serializable {
@@ -11,12 +13,16 @@ public class DTOEntity implements Serializable {
 
     private final DTOEntityInstance[] instances;
 
+    private final SimpleIntegerProperty instanceQuantity;
+
     public DTOEntity(String name, int StartingPopulation, int endingPopulation, DTOProperty[] properties, DTOEntityInstance[] instances) {
         this.name = name;
         this.startingPopulation = StartingPopulation;
         this.endingPopulation = endingPopulation;
         this.properties = properties;
         this.instances = instances;
+
+        this.instanceQuantity = new SimpleIntegerProperty(startingPopulation);
     }
 
     public String getName() {
@@ -45,5 +51,9 @@ public class DTOEntity implements Serializable {
                 String.format("Population: %s\n", startingPopulation) +
                 "Properties: \n";
         //TODO: add printing to properties array
+    }
+
+    public SimpleIntegerProperty instanceQuantityProperty() {
+        return instanceQuantity;
     }
 }
