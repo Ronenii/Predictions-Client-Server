@@ -361,6 +361,9 @@ public class SimulationManager implements EngineInterface, Serializable {
     }
 
     private void addSimulationToQueue() {
-        simulation.runSimulation();
+        new Thread(() -> {
+            simulation.runSimulation();
+        }).start();
+
     }
 }
