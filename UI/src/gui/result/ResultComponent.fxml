@@ -40,12 +40,12 @@
       </VBox>
       <VBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS">
          <children>
-            <Label fx:id="exeListLabel" disable="true" text="Execution Queue">
+            <Label fx:id="exeListLabel" text="Execution Queue">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <TableView fx:id="executionsQueueTV" disable="true" onMouseClicked="#onMouseClickedTV">
+            <TableView fx:id="executionsQueueTV" onMouseClicked="#onMouseClickedTV">
               <columns>
                 <TableColumn prefWidth="120.0" text="Simulation ID" />
                 <TableColumn prefWidth="79.0" text="Status" />
@@ -55,12 +55,12 @@
       </VBox>
       <VBox GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="4" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
          <children>
-            <Label fx:id="executionResultLabel" disable="true" text="Excecution Result" VBox.vgrow="NEVER">
+            <Label fx:id="executionResultLabel" text="Excecution Result" VBox.vgrow="NEVER">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <TabPane fx:id="executionResultTP" disable="true" maxHeight="500.0" prefHeight="116.0" prefWidth="681.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+            <TabPane fx:id="executionResultTP" maxHeight="500.0" prefHeight="116.0" prefWidth="681.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
               <tabs>
                 <Tab text="Graph" />
                 <Tab text="Statistics" />

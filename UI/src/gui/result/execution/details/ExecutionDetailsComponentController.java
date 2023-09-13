@@ -55,7 +55,7 @@ public class ExecutionDetailsComponentController {
     }
 
     public void updateToChosenSimulation(SimulationRunData runData) {
-        enableComponent();
+        clearExecutionDetails();
         simulationIdDetLabel.setText(runData.getSimId());
         currentTickDetLabel.setText(runData.getCurrentTick().getValue());
         durationDetLabel.setText(runData.getCurrentElapsedTime().getValue());
@@ -72,16 +72,6 @@ public class ExecutionDetailsComponentController {
         }
 
         entitiesTV.setItems(populationList);
-    }
-
-    public void enableComponent() {
-        execDetailsVBox.disableProperty().set(false);
-        entitiesTV.disableProperty().set(false);
-    }
-
-    public void disableComponent() {
-        execDetailsVBox.disableProperty().set(true);
-        entitiesTV.disableProperty().set(true);
     }
 
     public void setListeners(SimulationRunData runData) {
@@ -109,5 +99,9 @@ public class ExecutionDetailsComponentController {
                 }
             }
         }));
+    }
+
+    public void clearExecutionDetails(){
+        entitiesTV.getItems().clear();
     }
 }

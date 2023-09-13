@@ -36,7 +36,6 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
 
     Map<String, SimulationRunData> simulationRunDataMap; // used to access simulation run data with the simulation ID.
 
-    private boolean isEnabled;
 
     public void setMainController(SubMenusController mainController) {
         this.mainController = mainController;
@@ -48,7 +47,6 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
             executionDetailsComponentController.setMainController(this);
         }
         simulationRunDataMap = new HashMap<>();
-        isEnabled = false;
     }
 
     @Override
@@ -62,17 +60,8 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
     }
 
     public void addSimulationToQueue(SimulationRunData simulationRunData) {
-        if (!isEnabled) {
-            enableComponent();
-        }
         executionsQueueTV.getItems().add(new StatusData(simulationRunData.getSimId(), simulationRunData.status));
         simulationRunDataMap.put(simulationRunData.getSimId(), simulationRunData);
-    }
-
-    private void enableComponent() {
-        isEnabled = true;
-        exeListLabel.disableProperty().set(false);
-        executionsQueueTV.disableProperty().set(false);
     }
 
     /**
@@ -122,7 +111,8 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
     }
 
     private void unloadResultComponent(){
-
+        executionsQueueTV.getItems().clear();
+        executionDetailsComponentController.clearExecutionDetails();
     }
 }
 
