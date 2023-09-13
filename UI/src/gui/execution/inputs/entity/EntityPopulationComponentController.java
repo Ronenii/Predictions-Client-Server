@@ -2,6 +2,7 @@ package gui.execution.inputs.entity;
 
 import engine2ui.simulation.execution.SetResponse;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
+import engine2ui.simulation.genral.impl.properties.DTOGridAndThread;
 import engine2ui.simulation.prview.PreviewData;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
@@ -13,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import jaxb.event.FileLoadedEvent;
 import manager.EngineAgent;
+import simulation.objects.world.grid.Grid;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 
 import java.util.ArrayList;
@@ -36,6 +38,10 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
 
     @FXML
     private Label entityLabel;
+
+    @FXML private Label entitiesLeftLbl;
+
+    private int entitiesLeftToAdd;
 
     private Map<DTOEntity, Integer> entityPopulations; // Used for updating the TF values.
 
@@ -86,6 +92,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
                     SetResponse response = getEngineAgent().sendPopulationData(new EntityPopulationUserInput(selectedItem.getName(), population));
                     getNotificationBar().showNotification(response.getMessage());
                     if (response.isSuccess()) {
+                        updateEntityCounter(selectedItem, population);
                         entityPopulations.put(selectedItem, population);
                     }
                 }
@@ -93,6 +100,14 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
                 getNotificationBar().showNotification("ERROR: The population value may only be a non negative Integer.");
             }
         }
+    }
+
+    private void updateEntityCounter(DTOEntity entity, int population){
+        if(entityPopulations.containsKey(entity)){
+            entitiesLeftToAdd += entityPopulations.get(entity);
+            entitiesLeftToAdd -= population;
+        }
+        entitiesLeftLbl.setText(String.valueOf(entitiesLeftToAdd));
     }
 
     /**
@@ -112,9 +127,20 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
 
     @Override
     public void onFileLoaded(PreviewData previewData) {
+        clearListView();
         enableComponent();
         addItemsToListView(previewData.getEntities());
         initEntityPopulations(previewData.getEntities());
+        updateEntitiesLeft(calcGridCells(previewData.getGridAndThread()));
+    }
+
+    private void updateEntitiesLeft(int entityCount){
+        entitiesLeftToAdd = entityCount;
+        entitiesLeftLbl.setText(String.valueOf(entityCount));
+    }
+
+    private int calcGridCells(DTOGridAndThread grid){
+        return grid.getGridRows() * grid.getGridColumns();
     }
 
     /**
@@ -136,6 +162,11 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
         entitiesLV.disableProperty().set(false);
         populationTF.disableProperty().set(false);
     }
+
+    private void clearListView(){
+        entitiesLV.getItems().clear();
+    }
+
 
     private void addItemsToListView(List<DTOEntity> entities) {
         entitiesLV.getItems().addAll(entities);
