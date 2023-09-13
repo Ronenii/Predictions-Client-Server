@@ -1,7 +1,7 @@
 package engine2ui.simulation.result;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
-import engine2ui.simulation.result.generator.IdGenerator;
+import engine2ui.simulation.runtime.generator.IdGenerator;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -12,8 +12,6 @@ import java.time.format.DateTimeFormatter;
  */
 public class ResultData implements Serializable {
 
-    private final LocalDateTime dateTime;
-    private final String id;
     private final DTOEntity[] entities;
 
     /**
@@ -23,8 +21,6 @@ public class ResultData implements Serializable {
      * We also generate a unique ID for the simulation run.
      */
     public ResultData(DTOEntity [] entities){
-        dateTime = LocalDateTime.now();
-        id = IdGenerator.generateID();
         this.entities = entities;
     }
 
@@ -35,27 +31,7 @@ public class ResultData implements Serializable {
         IdGenerator.clearIds();
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public String getDateTimeString()
-    {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy | HH:mm:ss");
-        return dtf.format(dateTime);
-    }
-
     public DTOEntity[] getEntities() {
         return entities;
     }
-
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("ID: %s\n",id) + String.format("Date & Time: %s\n", getDateTimeString());
-    }
-
 }

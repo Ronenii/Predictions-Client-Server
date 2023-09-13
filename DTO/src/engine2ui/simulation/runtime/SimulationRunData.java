@@ -1,6 +1,7 @@
 package engine2ui.simulation.runtime;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
+import engine2ui.simulation.result.ResultData;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public class SimulationRunData {
     private final List<DTOEntity> entities;
 
     public boolean isCompleted;
+
+    private ResultData resultData;
 
     public SimulationRunData(String simId, String currentTick, String currentElapsedTime, List<DTOEntity> entities, String status) {
         this.simId = simId;

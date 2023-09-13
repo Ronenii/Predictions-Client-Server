@@ -62,8 +62,8 @@
             </Label>
             <TabPane fx:id="executionResultTP" disable="true" maxHeight="500.0" prefHeight="116.0" prefWidth="681.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
               <tabs>
-                <Tab text="Histogram" />
-                <Tab text="Consistency" />
+                <Tab text="Graph" />
+                <Tab text="Statistics" />
               </tabs>
             </TabPane>
          </children>

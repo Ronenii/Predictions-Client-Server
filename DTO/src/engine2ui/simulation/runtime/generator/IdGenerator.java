@@ -1,4 +1,4 @@
-package engine2ui.simulation.result.generator;
+package engine2ui.simulation.runtime.generator;
 
 import java.util.HashSet;
 import java.util.Set;

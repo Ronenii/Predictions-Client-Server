@@ -7,7 +7,7 @@ import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.result.ResultData;
 import engine2ui.simulation.result.ResultInfo;
-import engine2ui.simulation.result.generator.IdGenerator;
+import engine2ui.simulation.runtime.generator.IdGenerator;
 import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import engine2ui.simulation.genral.impl.properties.StartData;
 import jaxb.event.FileLoadedEvent;
