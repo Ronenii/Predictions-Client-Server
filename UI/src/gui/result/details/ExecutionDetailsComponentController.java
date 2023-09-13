@@ -77,12 +77,12 @@ public class ExecutionDetailsComponentController {
     public void setListeners(SimulationRunData runData) {
         runData.getCurrentElapsedTime().addListener((observable, oldValue, newValue) -> {
             if (mainController.getCurrentSelectedSimulation().equals(runData)) {
-                currentTickDetLabel.setText(newValue);
+                durationDetLabel.setText(newValue);
             }
         });
         runData.getCurrentTick().addListener(((observable, oldValue, newValue) -> {
             if (mainController.getCurrentSelectedSimulation().equals(runData)) {
-                durationDetLabel.setText(newValue);
+                currentTickDetLabel.setText(newValue);
             }
         }));
 
