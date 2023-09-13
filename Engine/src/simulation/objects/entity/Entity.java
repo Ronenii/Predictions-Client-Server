@@ -108,7 +108,7 @@ public class Entity implements Serializable {
 
     /**
      * Iterates on all entity instances, and tries to invoke the given action on them.
-     * The action invocation depends on the probability and if the current entity instnace
+     * The action invocation depends on the probability and if the current entity instance
      * is alive.
      *
      * @param action      The action to invoke on all instances.

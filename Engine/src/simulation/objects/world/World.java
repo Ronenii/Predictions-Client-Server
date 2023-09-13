@@ -389,7 +389,7 @@ public class World implements Serializable {
     }
 
     /**
-     * In func we add the simulation to the threadpool. If the simulation has no population
+     * In func we add the simulation to the thread-pool. If the simulation has no population
      * at all it will send back a response indicating the simulation was not added.
      */
     public StartResponse startSimulation(){

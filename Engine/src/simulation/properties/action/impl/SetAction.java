@@ -11,7 +11,7 @@ import simulation.properties.property.api.Property;
 import java.io.Serializable;
 
 public class SetAction extends OneEntAction implements Serializable {
-    private Expression value;
+    private final Expression value;
 
     public SetAction(ActionType type, Expression contextProperty, String contextEntity, SecondaryEntity secondaryEntity, Expression value) {
         super(type, contextProperty, contextEntity, secondaryEntity);

@@ -1,9 +1,9 @@
 package ui2engine.simulation.execution.user.input;
 
 public class EnvPropertyUserInput {
-    private String name;
-    private boolean isRandomInit;
-    private Object value;
+    private final String name;
+    private final boolean isRandomInit;
+    private final Object value;
 
     public EnvPropertyUserInput(String name, boolean isRandomInit, Object value) {
         this.name = name;

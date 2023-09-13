@@ -397,11 +397,11 @@ public class PRDConverter {
 
             switch (ActionType.valueOf(prdAction.getType().toUpperCase())) {
                 case INCREASE:
-                    propertyType = getActionPropertyAndValueType(prdAction.getProperty(), prdAction.getEntity());
+                    propertyType = getActionPropertyAndValueType(prdAction.getProperty(), prdAction.getEntity(), false);
                     ret = new IncreaseAction(ActionType.INCREASE, expressionConverter.createExpressionObject(prdAction.getProperty(),propertyType, prdAction.getEntity()), prdAction.getEntity(), secondaryEntity, expressionConverter.getExpressionObjectFromPRDAction(prdAction));
                     break;
                 case DECREASE:
-                    propertyType = getActionPropertyAndValueType(prdAction.getProperty(), prdAction.getEntity());
+                    propertyType = getActionPropertyAndValueType(prdAction.getProperty(), prdAction.getEntity(), false);
                     ret = new DecreaseAction(ActionType.DECREASE, expressionConverter.createExpressionObject(prdAction.getProperty(),propertyType, prdAction.getEntity()), prdAction.getEntity(), secondaryEntity, expressionConverter.getExpressionObjectFromPRDAction(prdAction));
                     break;
                 case CALCULATION:
@@ -411,7 +411,7 @@ public class PRDConverter {
                     ret = getSingleOrMultiple(prdAction);
                     break;
                 case SET:
-                    propertyType = getActionPropertyAndValueType(prdAction.getProperty(), prdAction.getEntity());
+                    propertyType = getActionPropertyAndValueType(prdAction.getProperty(), prdAction.getEntity(), false);
                     ret = new SetAction(ActionType.SET, expressionConverter.createExpressionObject(prdAction.getProperty(),propertyType, prdAction.getEntity()), prdAction.getEntity(), secondaryEntity, expressionConverter.getExpressionObjectFromPRDAction(prdAction));
                     break;
                 case KILL:
@@ -432,9 +432,9 @@ public class PRDConverter {
         return ret;
     }
 
-    private PropertyType getActionPropertyAndValueType(String propertyValue, String entityName) {
+    private PropertyType getActionPropertyAndValueType(String propertyValue, String entityName, boolean isSingleConditionProperty) {
         try {
-            return PropertyType.valueOf(expressionAndValueValidator.getExpressionType(propertyValue, entityName, false));
+            return PropertyType.valueOf(expressionAndValueValidator.getExpressionType(propertyValue, entityName, isSingleConditionProperty));
         } catch (ExpressionConversionException e) {
             return null;
         }
@@ -457,7 +457,7 @@ public class PRDConverter {
         AbstractConditionAction ret = null;
 
         if (prdCondition.getSingularity().equals("single")) {
-            PropertyType type = getActionPropertyAndValueType(prdCondition.getProperty(), prdCondition.getEntity());
+            PropertyType type = getActionPropertyAndValueType(prdCondition.getProperty(), prdCondition.getEntity(), true);
             Expression property = expressionConverter.createExpressionObject(prdCondition.getProperty(), type, prdCondition.getEntity());
             Expression expression = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition, property.getType());
             ret = new SingleCondition(ActionType.CONDITION, property, prdCondition.getEntity(), ConditionOperator.tryParse(prdCondition.getOperator()), expression);
@@ -490,7 +490,7 @@ public class PRDConverter {
         CalculationAction ret = null;
         PRDMultiply mul = prdAction.getPRDMultiply();
         PRDDivide div = prdAction.getPRDDivide();
-        PropertyType type = getActionPropertyAndValueType(prdAction.getResultProp(), prdAction.getEntity());
+        PropertyType type = getActionPropertyAndValueType(prdAction.getResultProp(), prdAction.getEntity(), false);
         Expression exp1, exp2;
         Expression property = expressionConverter.createExpressionObject(prdAction.getResultProp(), type, prdAction.getEntity());
 
@@ -529,7 +529,7 @@ public class PRDConverter {
         AbstractAction.SecondaryEntity secondaryEntity = getSecondaryEntityFromPRDAction(prdAction);
 
         if (prdCondition.getSingularity().equals("single")) {
-            PropertyType type = getActionPropertyAndValueType(prdCondition.getProperty(), prdCondition.getEntity());
+            PropertyType type = getActionPropertyAndValueType(prdCondition.getProperty(), prdCondition.getEntity(), true);
             Expression property = expressionConverter.createExpressionObject(prdCondition.getProperty(), type, prdCondition.getEntity());
             value = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition, property.getType());
             ret = new SingleCondition(ActionType.CONDITION, property, prdCondition.getEntity(), secondaryEntity, thenActions, elseActions, ConditionOperator.tryParse(prdCondition.getOperator()), value);
@@ -587,7 +587,7 @@ public class PRDConverter {
         Expression value;
 
         if (prdCondition.getSingularity().equals("single")) {
-            PropertyType type = getActionPropertyAndValueType(prdCondition.getProperty(), prdCondition.getEntity());
+            PropertyType type = getActionPropertyAndValueType(prdCondition.getProperty(), prdCondition.getEntity(), true);
             Expression property = expressionConverter.createExpressionObject(prdCondition.getProperty(), type, prdCondition.getEntity());
             value = expressionConverter.getExpressionObjectFromPRDCondition(prdCondition, property.getType());
             ret = new SingleCondition(ActionType.CONDITION, property, prdCondition.getEntity(), ConditionOperator.tryParse(prdCondition.getOperator()), value);

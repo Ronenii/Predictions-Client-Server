@@ -5,6 +5,7 @@ import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
+import gui.api.BarNotifier;
 import gui.api.HasFileLoadedListeners;
 import gui.simulation.breakdown.details.DisplayComponentController;
 import gui.simulation.breakdown.details.entity.property.PropertyDetailsController;
@@ -20,8 +21,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import jaxb.event.FileLoadedEvent;
-import jaxb.schema.generated.PRDAction;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ import java.util.EventListener;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class SimBreakdownMenuController implements Initializable, HasFileLoadedListeners, FileLoadedEvent {
+public class SimBreakdownMenuController implements Initializable, HasFileLoadedListeners, FileLoadedEvent, BarNotifier {
 
     private SubMenusController mainController;
     private PreviewData previewData;
@@ -174,7 +173,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
                     }
                 }
             } catch (IOException e) {
-                //Todo: mashu
+                getNotificationBar().showNotification(String.format("Error: %s", e.getMessage()));
             }
         }
     }
@@ -266,5 +265,10 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
         displayComponentController.clearGridPaneCell();
         this.previewData = previewData;
         updateSimTreeView();
+    }
+
+    @Override
+    public BarNotifier getNotificationBar() {
+        return mainController.getNotificationBar();
     }
 }

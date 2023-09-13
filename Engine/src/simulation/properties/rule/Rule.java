@@ -12,6 +12,7 @@ public class Rule implements Serializable {
     private final String name;
     private final Activation activation;
     private final List<Action> actions;
+
     private int simulationTickCount;
 
     public Rule(String name, Activation activation, List<Action> actions) {

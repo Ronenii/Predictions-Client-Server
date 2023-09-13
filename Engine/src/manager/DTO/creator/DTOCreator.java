@@ -150,10 +150,9 @@ public class DTOCreator {
         DTOEntityInstance[] dtoEntityInstances = new DTOEntityInstance[size];
         Map<String, DTOProperty> properties = new HashMap<>();
 
-        for (int i = 0; i < entityInstances.size(); i++) {
-            EntityInstance toAdd = entityInstances.get(i);
+        for (EntityInstance toAdd : entityInstances) {
             if (toAdd.isAlive()) {
-                dtoEntityInstances[entitiesAdded++] = new DTOEntityInstance(convertProperties2DTOPropertiesMap(entityInstances.get(i).getProperties()));
+                dtoEntityInstances[entitiesAdded++] = new DTOEntityInstance(convertProperties2DTOPropertiesMap(toAdd.getProperties()));
             }
         }
 

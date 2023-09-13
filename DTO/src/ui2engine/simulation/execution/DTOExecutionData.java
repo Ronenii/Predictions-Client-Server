@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DTOExecutionData {
-    private Map<String, EnvPropertyUserInput> envPropertyUserInputs;
+    private final Map<String, EnvPropertyUserInput> envPropertyUserInputs;
 
-    private Map<String, Integer> entityPopulationUserInputs;
+    private final Map<String, Integer> entityPopulationUserInputs;
 
     public DTOExecutionData() {
         envPropertyUserInputs = new HashMap<>();

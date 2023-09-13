@@ -13,8 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-
-import java.awt.*;
 import java.io.IOException;
 
 public class ActionDetailsController {
@@ -37,7 +35,13 @@ public class ActionDetailsController {
 
     public void setComponentDet(DTOAction action) throws IOException {
         lblType.setText(extractActionType(action.getType()));
-        lblPrimeEntity.setText(action.getMainEntity());
+        if(action instanceof DTOMultipleCondition){
+            lblPrimeEntity.setText("-");
+        }
+        else {
+            lblPrimeEntity.setText(action.getMainEntity());
+        }
+
         if(action.getSecondaryEntity() != null){
             lblHasSecondEntity.setText("Yes");
             loadSecondaryEntityComponent(action);

@@ -3,8 +3,8 @@ package simulation.properties.ending.conditions;
 import java.io.Serializable;
 
 public class EndingCondition implements Serializable {
-    private EndingConditionType type;
-    private int count;
+    private final EndingConditionType type;
+    private final int count;
 
     public static final int BY_TICKS = 0;
     public static final int BY_SECONDS = 0;

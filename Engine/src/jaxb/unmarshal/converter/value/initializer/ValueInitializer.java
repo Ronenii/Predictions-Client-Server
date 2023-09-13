@@ -3,11 +3,6 @@ package jaxb.unmarshal.converter.value.initializer;
 import jaxb.unmarshal.converter.expression.converter.exception.InvalidBooleanValueException;
 import jaxb.unmarshal.converter.expression.converter.exception.InvalidStringValueException;
 import jaxb.unmarshal.converter.expression.converter.exception.ValueOutOfRangeException;
-import simulation.properties.property.random.value.api.RandomValueGenerator;
-import simulation.properties.property.random.value.impl.BoolRndValueGen;
-import simulation.properties.property.random.value.impl.DoubleRndValueGen;
-import simulation.properties.property.random.value.impl.IntRndValueGen;
-import simulation.properties.property.random.value.impl.StringRndValueGen;
 
 /**
  * This class parse strings values or generate random values (according to the 'isRandomInit' flag) for the properties values.

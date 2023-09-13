@@ -5,8 +5,6 @@ import input.Input;
 import manager.exception.SimulationNotLoadedException;
 import manager.options.MenuOptions;
 
-import java.util.Scanner;
-
 /**
  * The class the controls the main program loop. handles getting input from user, sends it to the engineAgent to handle it.
  */
