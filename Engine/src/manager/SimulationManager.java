@@ -38,12 +38,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SimulationManager implements EngineInterface, Serializable {
     private SimulationInstance simulation;
     private Map<String, ResultData> pastSimulations;
     private Set<String> keysToSerialize;
     private boolean isSimulationLoaded;
+    private ExecutorService threadExecutor = null;
 
     public SimulationManager() {
         simulation = null;
@@ -97,6 +100,11 @@ public class SimulationManager implements EngineInterface, Serializable {
         if (this.simulation != null) {
             dtoLoadSucceed = new DTOLoadSucceed(true);
             invokeSuccessLoadListeners(dto.getListeners());
+            if (threadExecutor != null){
+                threadExecutor.shutdown();
+            }
+
+            threadExecutor = Executors.newFixedThreadPool(simulation.getThreadCount());
         }
 
         isSimulationLoaded = true;
@@ -361,9 +369,8 @@ public class SimulationManager implements EngineInterface, Serializable {
     }
 
     private void addSimulationToQueue() {
-        new Thread(() -> {
-            simulation.runSimulation();
-        }).start();
+        SimulationInstance simulationInstance = new SimulationInstance(simulation);
 
+        threadExecutor.execute(simulationInstance);
     }
 }

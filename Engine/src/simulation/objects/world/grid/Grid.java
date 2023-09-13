@@ -23,6 +23,12 @@ public class Grid {
         this.columns = width;
     }
 
+    public Grid(Grid gridToDup) {
+        this.grid = new EntityInstance[gridToDup.rows][gridToDup.columns];
+        this.rows = gridToDup.rows;
+        this.columns = gridToDup.columns;
+    }
+
     public int getRows() {
         return rows;
     }

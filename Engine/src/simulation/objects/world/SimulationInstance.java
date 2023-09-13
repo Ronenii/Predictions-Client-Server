@@ -21,11 +21,9 @@ import simulation.properties.property.api.Property;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class SimulationInstance implements Serializable {
+public class SimulationInstance implements Serializable, Runnable {
 
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
@@ -49,6 +47,18 @@ public class SimulationInstance implements Serializable {
         this.timePassed = -1;
         this.threadCount = threadCount;
         this.grid = grid;
+        totalPopulation = 0;
+    }
+
+    public SimulationInstance(SimulationInstance simulationInstance){
+        this.environmentProperties = simulationInstance.dupEnvVarsMap();
+        this.entities = simulationInstance.dupEntitiesMap();
+        this.rules = simulationInstance.dupRules();
+        this.endingConditions = simulationInstance.getEndingConditions();
+        this.ticks = simulationInstance.ticks;
+        this.timePassed = -1;
+        this.threadCount = simulationInstance.threadCount;
+        this.grid = new Grid(simulationInstance.grid);
         totalPopulation = 0;
     }
 
@@ -130,6 +140,41 @@ public class SimulationInstance implements Serializable {
 
         worldToString.append('}');
         return worldToString.toString();
+    }
+
+    public Map<String, Property> dupEnvVarsMap() {
+        Map<String, Property> ret = new HashMap<>();
+
+        for(Property property : environmentProperties.values()) {
+            ret.put(property.getName(), property.dupProperty());
+        }
+
+        return ret;
+    }
+
+    public Map<String, Entity> dupEntitiesMap() {
+        Map<String, Entity> ret = new HashMap<>();
+
+        for (Entity entity : entities.values()) {
+            ret.put(entity.getName(), entity.dupEntity());
+        }
+
+        return ret;
+    }
+
+    public Map<String, Rule> dupRules() {
+        Map<String, Rule> ret = new LinkedHashMap<>();
+
+        for (Rule rule : rules.values()) {
+            ret.put(rule.getName(), rule.dupRule());
+        }
+
+        return ret;
+    }
+
+    @Override
+    public void run() {
+        runSimulation();
     }
 
     /**
@@ -415,9 +460,43 @@ public class SimulationInstance implements Serializable {
         }
     }
 
+    private void fetchReplaceActions() {
+        Entity entityForReplace;
+
+        for (Rule rule : rules.values()) {
+            for (Action action : rule.getActions()) {
+                if(action instanceof ReplaceAction) {
+                    ReplaceAction replaceAction = (ReplaceAction)action;
+                    entityForReplace = entities.get(replaceAction.getNewEntityName());
+                    replaceAction.setNewEntity(entityForReplace);
+                } else if (action instanceof AbstractConditionAction) {
+                    AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
+                    checkForReplaceInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
+                    checkForReplaceInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
+                } else if (action instanceof ProximityAction) {
+                    ProximityAction proximityAction = (ProximityAction)action;
+                    checkForReplaceInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
+                }
+            }
+        }
+    }
+
+    private void checkForReplaceInSubActions(List<Action> subActions) {
+        Entity entityForReplace;
+
+        for (Action action : subActions) {
+            if(action instanceof ReplaceAction) {
+                ReplaceAction replaceAction = (ReplaceAction) action;
+                entityForReplace = entities.get(replaceAction.getNewEntityName());
+                replaceAction.setNewEntity(entityForReplace);
+            }
+        }
+    }
+
     private void initSimulation() {
         initInstances();
         initGrid();
+        fetchReplaceActions();
     }
 
 }

@@ -2,6 +2,7 @@ package simulation.properties.action.impl.condition;
 
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
+import simulation.properties.action.api.Action;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.expression.impl.PropertyValueExpression;
@@ -193,5 +194,29 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
                         break;
                 }
         }
+    }
+
+    @Override
+    public Action dupAction() {
+        Expression dupProperty = null, dupValue = null;
+        ThenOrElse thenDup = null, elseDup = null;
+
+        if(getContextEntity() != null) {
+            dupProperty = getContextProperty().dupExpression();
+        }
+
+        if (value != null) {
+            dupValue = value.dupExpression();
+        }
+
+        if (thenActions != null) {
+            thenDup = thenActions.dupThenOrElse();
+        }
+
+        if (elseActions != null) {
+            elseDup = elseActions.dupThenOrElse();
+        }
+
+        return new SingleCondition(getType(), dupProperty, getContextEntity(), getSecondaryEntity(), thenDup, elseDup, operator, dupValue);
     }
 }

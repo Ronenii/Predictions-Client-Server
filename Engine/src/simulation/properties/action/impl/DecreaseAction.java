@@ -2,6 +2,7 @@ package simulation.properties.action.impl;
 
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
+import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
@@ -73,5 +74,20 @@ public class DecreaseAction extends OneEntAction implements Serializable {
 
         isExpressionUpdated = updateExpressionWithSecondary(primaryInstance, secondaryInstance, value);
         invoke(instanceForInvoke, isExpressionUpdated, lastChangeTickCount);
+    }
+
+    @Override
+    public Action dupAction() {
+        Expression dupProperty = null, dupValue = null;
+
+        if(getContextEntity() != null) {
+            dupProperty = getContextProperty().dupExpression();
+        }
+
+        if (value != null) {
+            dupValue = value.dupExpression();
+        }
+
+        return new DecreaseAction(getType(), dupProperty, getContextEntity(), getSecondaryEntity(), dupValue);
     }
 }

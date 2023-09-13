@@ -8,6 +8,7 @@ import simulation.properties.action.impl.calculation.CalculationAction;
 import simulation.properties.action.impl.condition.AbstractConditionAction;
 import simulation.properties.action.impl.replace.ReplaceAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProximitySubActions {
@@ -15,6 +16,10 @@ public class ProximitySubActions {
 
     public ProximitySubActions(List<Action> actionsToInvoke) {
         this.actionsToInvoke = actionsToInvoke;
+    }
+
+    public List<Action> getActionsToInvoke() {
+        return actionsToInvoke;
     }
 
     public int getSubActionsCount(){
@@ -40,5 +45,15 @@ public class ProximitySubActions {
                 replaceAction.invokeWithSecondary(sourceEntityInstance, targetEntityInstance, grid, lastChangTickCount);
             }
         }
+    }
+
+    public ProximitySubActions dupProximitySubActions() {
+        List<Action> actionsToInvokeDup = new ArrayList<>();
+
+        for (Action action : actionsToInvoke) {
+            actionsToInvokeDup.add(action.dupAction());
+        }
+
+        return new ProximitySubActions(actionsToInvokeDup);
     }
 }

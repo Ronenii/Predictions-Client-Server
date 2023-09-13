@@ -14,4 +14,6 @@ public interface Expression {
     String getPropertyName();
 
     PropertyType getType();
+
+    Expression dupExpression();
 }

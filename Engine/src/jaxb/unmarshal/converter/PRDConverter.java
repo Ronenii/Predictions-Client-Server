@@ -60,7 +60,7 @@ public class PRDConverter {
         validator = new PRDValidator();
         environmentProperties = new HashMap<>();
         entities = new HashMap<>();
-        rules = new HashMap<>();
+        rules = new LinkedHashMap<>();
         ticksCounter = new TicksCounter();
     }
 
