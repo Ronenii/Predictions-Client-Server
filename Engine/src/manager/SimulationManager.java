@@ -5,7 +5,7 @@ import engine2ui.simulation.execution.StartResponse;
 import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.prview.PreviewData;
-import engine2ui.simulation.result.ResultData;
+import engine2ui.simulation.runtime.ResultData;
 import engine2ui.simulation.result.ResultInfo;
 import engine2ui.simulation.runtime.SimulationRunData;
 import engine2ui.simulation.runtime.generator.IdGenerator;
@@ -156,7 +156,7 @@ public class SimulationManager implements EngineInterface, Serializable {
      */
     public void resetEngine() {
         pastSimulations.clear();
-        ResultData.clearIds();
+        IdGenerator.clearIds();
     }
 
     /**

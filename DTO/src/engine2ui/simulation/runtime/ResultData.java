@@ -1,16 +1,19 @@
-package engine2ui.simulation.result;
+package engine2ui.simulation.runtime;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
-import engine2ui.simulation.runtime.generator.IdGenerator;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Holds the data of a simulation run after it ended.
  */
 public class ResultData implements Serializable {
+
+    private Map<Integer, List<DTOEntity>> graphData;
 
     private final DTOEntity[] entities;
 
@@ -22,13 +25,6 @@ public class ResultData implements Serializable {
      */
     public ResultData(DTOEntity [] entities){
         this.entities = entities;
-    }
-
-    /**
-     * Clears all IDs generated in the ID generator of the result data.
-     */
-    public static void clearIds(){
-        IdGenerator.clearIds();
     }
 
     public DTOEntity[] getEntities() {

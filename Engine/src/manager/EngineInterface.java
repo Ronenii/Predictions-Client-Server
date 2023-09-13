@@ -8,7 +8,7 @@ import engine2ui.simulation.genral.impl.properties.StartData;
 import engine2ui.simulation.runtime.SimulationRunData;
 import ui2engine.simulation.execution.DTOExecutionData;
 
-import engine2ui.simulation.result.ResultData;
+import engine2ui.simulation.runtime.ResultData;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
 import ui2engine.simulation.load.DTOLoadFile;

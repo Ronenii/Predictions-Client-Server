@@ -1,6 +1,6 @@
 package gui.result.tab;
 
-import engine2ui.simulation.result.ResultData;
+import engine2ui.simulation.runtime.ResultData;
 import engine2ui.simulation.runtime.SimulationRunData;
 import gui.result.ResultComponentController;
 import javafx.fxml.FXML;

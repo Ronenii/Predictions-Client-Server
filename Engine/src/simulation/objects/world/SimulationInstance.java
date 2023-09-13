@@ -1,7 +1,7 @@
 package simulation.objects.world;
 
 import engine2ui.simulation.execution.SetResponse;
-import engine2ui.simulation.result.ResultData;
+import engine2ui.simulation.runtime.ResultData;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;

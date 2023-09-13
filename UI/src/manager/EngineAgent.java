@@ -7,7 +7,7 @@ import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.objects.DTOEntityInstance;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
-import engine2ui.simulation.result.ResultData;
+import engine2ui.simulation.runtime.ResultData;
 import engine2ui.simulation.result.ResultInfo;
 import engine2ui.simulation.runtime.SimulationRunData;
 import manager.exception.SimulationNotLoadedException;

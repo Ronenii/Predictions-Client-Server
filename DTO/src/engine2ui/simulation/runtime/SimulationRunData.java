@@ -1,7 +1,6 @@
 package engine2ui.simulation.runtime;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
-import engine2ui.simulation.result.ResultData;
 
 import java.util.List;
 
