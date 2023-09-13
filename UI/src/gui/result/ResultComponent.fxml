@@ -34,12 +34,12 @@
       </VBox>
       <AnchorPane GridPane.columnIndex="3" GridPane.rowIndex="4">
          <children>
-            <fx:include source="tab/ResultTabComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <fx:include fx:id="resultTabComponent" source="tab/ResultTabComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
       <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="3">
          <children>
-            <fx:include source="queue/ExecutionQueueComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <fx:include fx:id="executionQueueComponent" source="queue/ExecutionQueueComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
    </children>

@@ -15,8 +15,8 @@
       </Label>
       <TableView fx:id="executionsQueueTV" onMouseClicked="#onMouseClickedTV">
          <columns>
-            <TableColumn prefWidth="120.0" text="Simulation ID" />
-            <TableColumn prefWidth="79.0" text="Status" />
+            <TableColumn fx:id="simIdCol" prefWidth="120.0" text="Simulation ID" />
+            <TableColumn fx:id="simStatusCol" prefWidth="79.0" text="Status" />
          </columns>
       </TableView>
    </children>

@@ -368,14 +368,14 @@ public class SimulationInstance implements Serializable {
                 totalPopulation -= entities.get(input.getName()).getStartingPopulation();
                 entities.get(input.getName()).setStartingPopulation(input.getPopulation());
                 totalPopulation += input.getPopulation();
-                return new SetResponse(true, String.format("You have successfully changed %s's starting population to %s. You have %s more instances you can add.", entities.get(input.getName()).getName(), input.getPopulation(), gridSize - totalPopulation));
+                return new SetResponse(true, String.format("You have successfully changed %s's starting population to %s.", entities.get(input.getName()).getName(), input.getPopulation()));
             }
         } else {
             if (totalPopulation + input.getPopulation() > gridSize) {
                 return populationErrorMessage(gridSize);
             } else {
                 totalPopulation += input.getPopulation();
-                return new SetResponse(true, String.format("You have successfully set %s's starting population to %s. You have %s more instances you can add.", entities.get(input.getName()).getName(), input.getPopulation(), gridSize - totalPopulation));
+                return new SetResponse(true, String.format("You have successfully set %s's starting population to %s.", entities.get(input.getName()).getName(), input.getPopulation()));
             }
         }
     }
