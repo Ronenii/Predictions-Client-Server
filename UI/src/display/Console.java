@@ -56,7 +56,6 @@ public class Console {
             return;
         }
         // Sort the Result data by date time
-        Arrays.sort(pastSimulationsData, Comparator.comparing(ResultData::getDateTime));
 
         printTitle("PREVIOUS SIMULATION RUNS");
         System.out.println();
@@ -64,7 +63,7 @@ public class Console {
         int counter = 1;
         for (ResultData r : pastSimulationsData
         ) {
-            System.out.printf("#%-21s%-22s%-22s\n", counter++, r.getId(), r.getDateTimeString());
+            //System.out.printf("#%-21s%-22s%-22s\n", counter++, r.getId(), r.getDateTimeString());
         }
         println();
     }
