@@ -25,6 +25,9 @@ public class ResultData implements Serializable {
         populationChartData = new ArrayList<>();
     }
 
+    /**
+     * To be used at the end of a simulation run. Sets the entities to the entities at the end of a simulation run.
+     */
     public void setEntities(DTOEntity[] entities){
         this.entities = entities;
     }
@@ -33,6 +36,10 @@ public class ResultData implements Serializable {
         return entities;
     }
 
+    /**
+     * Each index in the list represents the tick, the content within each index is the total living population at that tick.
+     * This function adds the population to the list creating another tick documentation.
+     */
     public void setNextTickPopulation(int population){
         populationChartData.add(population);
     }
