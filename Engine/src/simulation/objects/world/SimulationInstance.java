@@ -151,6 +151,9 @@ public class SimulationInstance implements Serializable, Runnable {
         return worldToString.toString();
     }
 
+    /**
+     * The 3 following methods duplicate the environment variables, entities and rules maps.
+     */
     public Map<String, Property> dupEnvVarsMap() {
         Map<String, Property> ret = new HashMap<>();
 

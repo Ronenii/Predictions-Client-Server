@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * This class possesses the program's thread pool and a map of simulations that have been added to the thread pool's queue.
+ */
 public class ExecutionManager {
     private ExecutorService threadExecutor = null;
     private final Map<String, SimulationInstance> simulations;
