@@ -141,6 +141,7 @@ public class SimulationInstance implements Serializable {
      * @return The result data of this simulation run.
      */
     public ResultData runSimulation() {
+        ResultData resultData = new ResultData();
         List<Action> actionsToInvoke = new ArrayList<>();
         initSimulation();
         // Set the starting time to calculate later for 'ending by seconds'
@@ -161,10 +162,22 @@ public class SimulationInstance implements Serializable {
                 invokeActionsOnAllInstances(entity.getEntityInstances(), actionsToInvoke);
             }
 
+            resultData.setNextTickPopulation(calculateRemainingInstances());
         } while ((!endingConditionsMet()));
 
         DTOCreator dtoCreator = new DTOCreator();
-        return new ResultData(dtoCreator.convertEntities2DTOEntities(entities));
+        resultData.setEntities(dtoCreator.convertEntities2DTOEntities(entities));
+        return resultData;
+    }
+
+    private int calculateRemainingInstances(){
+        int remainingInstances = 0;
+
+        for (Entity e: entities.values()
+             ) {
+            remainingInstances += e.getCurrentPopulation();
+        }
+        return remainingInstances;
     }
 
     /**

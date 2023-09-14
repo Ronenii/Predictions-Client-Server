@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -13,9 +14,16 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TabPane fx:id="executionResultTP" disable="true" maxHeight="500.0" prefHeight="116.0" prefWidth="681.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+      <TabPane fx:id="executionResultTP" disable="true" maxHeight="500.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
          <tabs>
-            <Tab text="Graph" />
+            <Tab text="Chart">
+               <content>
+                  <AnchorPane>
+                     <children>
+                        <fx:include fx:id="chartComponent" source="chart/ChartComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </content></Tab>
             <Tab text="Statistics" />
          </tabs>
       </TabPane>

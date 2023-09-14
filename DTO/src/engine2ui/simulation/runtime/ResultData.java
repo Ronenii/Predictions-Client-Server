@@ -3,19 +3,17 @@ package engine2ui.simulation.runtime;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Holds the data of a simulation run after it ended.
  */
 public class ResultData implements Serializable {
 
-    private Map<Integer, List<DTOEntity>> graphData;
+    private List<Integer> populationChartData;
 
-    private final DTOEntity[] entities;
+    private DTOEntity[] entities;
 
     /**
      * A ResultData Object will be generated once a simulation run is complete.
@@ -23,11 +21,23 @@ public class ResultData implements Serializable {
      * so we save this time as a string according to the required format.
      * We also generate a unique ID for the simulation run.
      */
-    public ResultData(DTOEntity [] entities){
+    public ResultData(){
+        populationChartData = new ArrayList<>();
+    }
+
+    public void setEntities(DTOEntity[] entities){
         this.entities = entities;
     }
 
     public DTOEntity[] getEntities() {
         return entities;
+    }
+
+    public void setNextTickPopulation(int population){
+        populationChartData.add(population);
+    }
+
+    public List<Integer> getPopulationChartData(){
+        return populationChartData;
     }
 }

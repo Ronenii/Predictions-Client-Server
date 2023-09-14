@@ -4,6 +4,7 @@ import engine2ui.simulation.runtime.SimulationRunData;
 import gui.api.EngineCommunicator;
 import gui.result.ResultComponentController;
 import gui.result.models.StatusData;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -61,6 +62,9 @@ public class ExecutionQueueComponentController implements EngineCommunicator {
             }
         };
 
+        Thread thread = new Thread(task);
+        thread.setDaemon(true); // Mark the thread as a daemon to allow application exit
+        thread.start();
     }
 
     public void setMainController(ResultComponentController mainController) {

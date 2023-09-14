@@ -3,12 +3,21 @@ package gui.result.tab;
 import engine2ui.simulation.runtime.ResultData;
 import engine2ui.simulation.runtime.SimulationRunData;
 import gui.result.ResultComponentController;
+import gui.result.tab.chart.ChartComponentController;
 import javafx.fxml.FXML;
+import javafx.scene.chart.Chart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 
 public class ResultTabComponentController {
     private ResultComponentController mainController;
+
+    @FXML
+    private Chart chartComponent;
+
+    @FXML
+    private ChartComponentController chartComponentController;
+
     @FXML
     private Label executionResultLabel;
 
@@ -40,10 +49,10 @@ public class ResultTabComponentController {
     // TODO: Implement both of these
     private void loadResultComponent(ResultData resultData) {
         unloadResultComponent();
-
+        chartComponentController.showPopulationData(resultData.getPopulationChartData());
     }
 
     private void unloadResultComponent() {
-
+        chartComponentController.clearChart();
     }
 }
