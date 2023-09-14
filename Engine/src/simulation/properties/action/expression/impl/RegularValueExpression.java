@@ -1,6 +1,7 @@
 package simulation.properties.action.expression.impl;
 
 import simulation.properties.action.expression.api.AbstractExpression;
+import simulation.properties.action.expression.api.Expression;
 import simulation.properties.property.api.PropertyType;
 
 public class RegularValueExpression extends AbstractExpression {
@@ -32,5 +33,10 @@ public class RegularValueExpression extends AbstractExpression {
     @Override
     public String getPropertyName() {
         return null;
+    }
+
+    @Override
+    public Expression dupExpression() {
+        return new RegularValueExpression(getReturnValueType(), value, type);
     }
 }

@@ -21,6 +21,13 @@ public class Entity implements Serializable {
         this.entityInstances = new ArrayList<>();
     }
 
+    public Entity(String name, Map<String, Property> properties, int startingPopulation) {
+        this.startingPopulation = startingPopulation;
+        this.name = name;
+        this.properties = properties;
+        this.entityInstances = new ArrayList<>();
+    }
+
     public int getStartingPopulation() {
         return startingPopulation;
     }
@@ -106,38 +113,14 @@ public class Entity implements Serializable {
         return name.length() * startingPopulation * properties.size();
     }
 
-    /**
-     * Iterates on all entity instances, and tries to invoke the given action on them.
-     * The action invocation depends on the probability and if the current entity instance
-     * is alive.
-     *
-     * @param action      The action to invoke on all instances.
-     * @param probability The probability of this action to invoke on instances.
-     */
-//    public void invokeActionsOnAllInstances(List<Action> actionsToInvoke, int lastChangTickCount) {
-//        for (EntityInstance e : entityInstances) {
-//            if (e.isAlive()) {
-//                invokeActionsOnSingleInstance(e, actionsToInvoke, lastChangTickCount);
-//            }
-//        }
-//    }
-//
-//    private void invokeActionsOnSingleInstance(EntityInstance entityInstance, List<Action> actionsToInvoke, int lastChangTickCount) {
-//        for (Action action : actionsToInvoke){
-//            if(action.getContextEntity().equals(name)){
-//                if(action.getSecondaryEntity() != null) {
-//
-//                }
-//                else {
-//                    if (action.getClass().getSuperclass() == OneEntAction.class) {
-//                        ((OneEntAction) action).invoke(entityInstance, lastChangTickCount);
-//                    } else {
-//                        //Todo : implement this.
-//                    }
-//                }
-//            }
-//        }
-//    }
+    public Entity dupEntity() {
+        Map<String, Property> propertyMap = new HashMap<>();
+
+        for (Property property : properties.values()) {
+            propertyMap.put(property.getName(), property.dupProperty());
+        }
+        return new Entity(name, propertyMap, startingPopulation);
+    }
 
     public EntityInstance getRandomEntityInstance() {
         Random random = new Random();

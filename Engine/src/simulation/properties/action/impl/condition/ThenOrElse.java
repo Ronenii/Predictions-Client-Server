@@ -9,6 +9,7 @@ import simulation.properties.action.impl.proximity.ProximityAction;
 import simulation.properties.action.impl.replace.ReplaceAction;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ThenOrElse implements Serializable {
@@ -16,6 +17,10 @@ public class ThenOrElse implements Serializable {
 
     public ThenOrElse(List<Action> actionsToInvoke) {
         this.actionsToInvoke = actionsToInvoke;
+    }
+
+    public List<Action> getActionsToInvoke() {
+        return actionsToInvoke;
     }
 
     public int getActionsCount(){
@@ -62,5 +67,15 @@ public class ThenOrElse implements Serializable {
                 replaceAction.invokeWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
             }
         }
+    }
+
+    public ThenOrElse dupThenOrElse() {
+        List<Action> actionsToInvokeDup = new ArrayList<>();
+
+        for (Action action : actionsToInvoke) {
+            actionsToInvokeDup.add(action.dupAction());
+        }
+
+        return new ThenOrElse(actionsToInvokeDup);
     }
 }

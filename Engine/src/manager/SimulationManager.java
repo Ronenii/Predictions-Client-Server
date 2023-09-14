@@ -14,6 +14,7 @@ import engine2ui.simulation.genral.impl.properties.StartData;
 import jaxb.event.FileLoadedEvent;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
+import manager.execution.ExecutionManager;
 import manager.validator.exceptions.IllegalBooleanValueException;
 import manager.validator.exceptions.IllegalStringValueException;
 import manager.validator.exceptions.OutOfRangeException;
@@ -38,22 +39,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SimulationManager implements EngineInterface, Serializable {
-    private SimulationInstance simulation;
+    private SimulationInstance simulationDefinition;
     private Map<String, ResultData> pastSimulations;
     private Set<String> keysToSerialize;
     private boolean isSimulationLoaded;
+    private ExecutionManager executionManager = null;
 
     public SimulationManager() {
-        simulation = null;
+        simulationDefinition = null;
         pastSimulations = new HashMap<>();
         isSimulationLoaded = false;
         keysToSerialize = new HashSet<>();
     }
 
     public void loadValuesFromDeserialization(SimulationManager instance) {
-        simulation = instance.simulation;
+        simulationDefinition = instance.simulationDefinition;
         pastSimulations = instance.pastSimulations;
         keysToSerialize = instance.keysToSerialize;
         isSimulationLoaded = instance.isSimulationLoaded;
@@ -67,7 +71,7 @@ public class SimulationManager implements EngineInterface, Serializable {
     private PreviewData getCurrentSimulationDetails() {
         DTOCreator dtoCreator = new DTOCreator();
 
-        return dtoCreator.createSimulationPreviewDataObject(simulation.getEnvironmentProperties(), simulation.getEntities(), simulation.getRules(), simulation.getEndingConditions(), simulation.getGrid(), simulation.getThreadCount());
+        return dtoCreator.createSimulationPreviewDataObject(simulationDefinition.getEnvironmentProperties(), simulationDefinition.getEntities(), simulationDefinition.getRules(), simulationDefinition.getEndingConditions(), simulationDefinition.getGrid(), simulationDefinition.getThreadCount());
     }
 
     @Override
@@ -93,10 +97,15 @@ public class SimulationManager implements EngineInterface, Serializable {
         DTOLoadSucceed dtoLoadSucceed = new DTOLoadSucceed(false);
         Reader.validatePath(dto.getFile().getPath());
 
-        this.simulation = Reader.readWorldFromXML(dto.getFile());
-        if (this.simulation != null) {
+        this.simulationDefinition = Reader.readWorldFromXML(dto.getFile());
+        if (this.simulationDefinition != null) {
             dtoLoadSucceed = new DTOLoadSucceed(true);
             invokeSuccessLoadListeners(dto.getListeners());
+            if (executionManager != null){
+                executionManager.shutdownThreadPool();
+            }
+
+            executionManager = new ExecutionManager(simulationDefinition.getThreadCount());
         }
 
         isSimulationLoaded = true;
@@ -105,10 +114,11 @@ public class SimulationManager implements EngineInterface, Serializable {
 
     @Override
     public StartResponse startSimulation() {
-        if (simulation.isStartable()) {
+        if(simulationDefinition.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
             SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0f, dtoCreator.getDTOEntityList(simulation.getEntities()), "ONGOING", false);
-            addSimulationToQueue();
+            addSimulationToQueue(simulationRunData.getSimId());
+
             // TODO : add simulation to thread pool.
             return new StartResponse(true, "Simulation was added to the queue successfully.", simulationRunData);
         } else {
@@ -135,7 +145,7 @@ public class SimulationManager implements EngineInterface, Serializable {
     @Override
     public ResultInfo runSimulation(DTOExecutionData dtoExecutionData) {
         // Resets all entities in this world
-        simulation.resetWorld();
+        simulationDefinition.resetWorld();
 
         // fetch the user data input into the simulation's environment properties.
         fetchDTOThirdFunctionObject(dtoExecutionData);
@@ -143,11 +153,11 @@ public class SimulationManager implements EngineInterface, Serializable {
         // TODO: implement function to fetch '
 
         // run the simulation.
-        ResultData result = this.simulation.runSimulation();
+        ResultData result = this.simulationDefinition.runSimulation();
         //this.pastSimulations.put(result.getId(), result);
 
         // Sent to the UI the termination cause.
-        DTOEndingCondition dtoEndingCondition = new DTOEndingCondition(simulation.getTerminateCondition().getType().toString(), simulation.getTerminateCondition().getCount());
+        DTOEndingCondition dtoEndingCondition = new DTOEndingCondition(simulationDefinition.getTerminateCondition().getType().toString(), simulationDefinition.getTerminateCondition().getCount());
         return null;
     }
 
@@ -166,7 +176,7 @@ public class SimulationManager implements EngineInterface, Serializable {
      */
     private void fetchDTOThirdFunctionObject(DTOExecutionData dtoExecutionData) {
         Map<String, EnvPropertyUserInput> envPropertyUserInputs = dtoExecutionData.getEnvPropertyUserInputs();
-        Map<String, Property> environmentProperties = this.simulation.getEnvironmentProperties();
+        Map<String, Property> environmentProperties = this.simulationDefinition.getEnvironmentProperties();
         Property envProperty;
 
         for (EnvPropertyUserInput envPropertyUserInput : envPropertyUserInputs.values()) {
@@ -222,7 +232,7 @@ public class SimulationManager implements EngineInterface, Serializable {
     @Override
     public StartData getSimulationStartData() {
         List<DTOEnvironmentVariable> environmentVariables = new ArrayList<>();
-        Map<String, Property> environmentProperties = this.simulation.getEnvironmentProperties();
+        Map<String, Property> environmentProperties = this.simulationDefinition.getEnvironmentProperties();
         Property valueFromTheMap;
 
         for (Map.Entry<String, Property> entry : environmentProperties.entrySet()) {
@@ -289,14 +299,14 @@ public class SimulationManager implements EngineInterface, Serializable {
 
     @Override
     public SetResponse setEntityPopulation(EntityPopulationUserInput input) {
-        return simulation.setEntityPopulation(input);
+        return simulationDefinition.setEntityPopulation(input);
     }
 
     @Override
     public SetResponse setEnvironmentVariable(EnvPropertyUserInput input) {
 
         SetResponse response;
-        Map<String, Property> environmentProperties = this.simulation.getEnvironmentProperties();
+        Map<String, Property> environmentProperties = this.simulationDefinition.getEnvironmentProperties();
         Property envProperty = environmentProperties.get(input.getName());
 
         if (input.isRandomInit()) {
@@ -367,10 +377,9 @@ public class SimulationManager implements EngineInterface, Serializable {
         return null;
     }
 
-    private void addSimulationToQueue() {
-        new Thread(() -> {
-            simulation.runSimulation();
-        }).start();
-
+    private void addSimulationToQueue(String simId) {
+        SimulationInstance simulationInstance = new SimulationInstance(simulationDefinition);
+        simulationInstance.setSimulationId(simId);
+        executionManager.addSimulationToQueue(simulationInstance);
     }
 }

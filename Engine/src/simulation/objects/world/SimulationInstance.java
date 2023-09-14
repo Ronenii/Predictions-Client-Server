@@ -21,12 +21,10 @@ import simulation.properties.property.api.Property;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class SimulationInstance implements Serializable {
-
+public class SimulationInstance implements Serializable, Runnable {
+    private String simulationId;
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
     private final Map<String, Rule> rules;
@@ -40,7 +38,8 @@ public class SimulationInstance implements Serializable {
     private int totalPopulation;
     private final int constAll = -1;
 
-    public SimulationInstance(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
+    public SimulationInstance(String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
+        this.simulationId = simulationId;
         this.environmentProperties = environmentProperties;
         this.entities = entities;
         this.rules = rules;
@@ -52,6 +51,26 @@ public class SimulationInstance implements Serializable {
         totalPopulation = 0;
     }
 
+    public SimulationInstance(SimulationInstance simulationInstance){
+        this.simulationId = simulationInstance.getSimulationId();
+        this.environmentProperties = simulationInstance.dupEnvVarsMap();
+        this.entities = simulationInstance.dupEntitiesMap();
+        this.rules = simulationInstance.dupRules();
+        this.endingConditions = simulationInstance.getEndingConditions();
+        this.ticks = simulationInstance.ticks;
+        this.timePassed = -1;
+        this.threadCount = simulationInstance.threadCount;
+        this.grid = new Grid(simulationInstance.grid);
+        totalPopulation = 0;
+    }
+
+    public String getSimulationId() {
+        return simulationId;
+    }
+
+    public void setSimulationId(String simulationId) {
+        this.simulationId = simulationId;
+    }
 
     public Map<String, Property> getEnvironmentProperties() {
         return environmentProperties;
@@ -130,6 +149,44 @@ public class SimulationInstance implements Serializable {
 
         worldToString.append('}');
         return worldToString.toString();
+    }
+
+    /**
+     * The 3 following methods duplicate the environment variables, entities and rules maps.
+     */
+    public Map<String, Property> dupEnvVarsMap() {
+        Map<String, Property> ret = new HashMap<>();
+
+        for(Property property : environmentProperties.values()) {
+            ret.put(property.getName(), property.dupProperty());
+        }
+
+        return ret;
+    }
+
+    public Map<String, Entity> dupEntitiesMap() {
+        Map<String, Entity> ret = new HashMap<>();
+
+        for (Entity entity : entities.values()) {
+            ret.put(entity.getName(), entity.dupEntity());
+        }
+
+        return ret;
+    }
+
+    public Map<String, Rule> dupRules() {
+        Map<String, Rule> ret = new LinkedHashMap<>();
+
+        for (Rule rule : rules.values()) {
+            ret.put(rule.getName(), rule.dupRule());
+        }
+
+        return ret;
+    }
+
+    @Override
+    public void run() {
+        runSimulation();
     }
 
     /**
@@ -428,9 +485,43 @@ public class SimulationInstance implements Serializable {
         }
     }
 
+    private void fetchReplaceActions() {
+        Entity entityForReplace;
+
+        for (Rule rule : rules.values()) {
+            for (Action action : rule.getActions()) {
+                if(action instanceof ReplaceAction) {
+                    ReplaceAction replaceAction = (ReplaceAction)action;
+                    entityForReplace = entities.get(replaceAction.getNewEntityName());
+                    replaceAction.setNewEntity(entityForReplace);
+                } else if (action instanceof AbstractConditionAction) {
+                    AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
+                    checkForReplaceInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
+                    checkForReplaceInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
+                } else if (action instanceof ProximityAction) {
+                    ProximityAction proximityAction = (ProximityAction)action;
+                    checkForReplaceInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
+                }
+            }
+        }
+    }
+
+    private void checkForReplaceInSubActions(List<Action> subActions) {
+        Entity entityForReplace;
+
+        for (Action action : subActions) {
+            if(action instanceof ReplaceAction) {
+                ReplaceAction replaceAction = (ReplaceAction) action;
+                entityForReplace = entities.get(replaceAction.getNewEntityName());
+                replaceAction.setNewEntity(entityForReplace);
+            }
+        }
+    }
+
     private void initSimulation() {
         initInstances();
         initGrid();
+        fetchReplaceActions();
     }
 
 }

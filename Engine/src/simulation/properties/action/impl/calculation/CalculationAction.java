@@ -3,6 +3,7 @@ package simulation.properties.action.impl.calculation;
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.AbstractAction;
+import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
@@ -112,4 +113,22 @@ public class CalculationAction extends AbstractAction implements Serializable {
         }
     }
 
+    @Override
+    public Action dupAction() {
+        Expression dupProperty = null, dupArg1 = null, dupArg2 = null;
+
+        if(getContextEntity() != null) {
+            dupProperty = getContextProperty().dupExpression();
+        }
+
+        if (arg1 != null) {
+            dupArg1 = arg1.dupExpression();
+        }
+
+        if (arg2 != null) {
+            dupArg2 = arg2.dupExpression();
+        }
+
+        return new CalculationAction(getType(), dupProperty, getContextEntity(), getSecondaryEntity(), dupArg1, dupArg2, type);
+    }
 }
