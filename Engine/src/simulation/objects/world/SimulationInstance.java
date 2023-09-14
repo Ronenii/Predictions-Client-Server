@@ -41,6 +41,7 @@ public class SimulationInstance implements Serializable, Runnable {
     private SimulationStatus status;
     private ResultData resultData;
 
+
     public SimulationInstance(String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
         this.simulationId = simulationId;
         this.environmentProperties = environmentProperties;
@@ -48,7 +49,7 @@ public class SimulationInstance implements Serializable, Runnable {
         this.rules = rules;
         this.endingConditions = endingConditions;
         this.ticksCounter = ticksCounter;
-        this.timePassed = -1;
+        this.timePassed = 0;
         this.threadCount = threadCount;
         this.grid = grid;
         totalPopulation = 0;
@@ -62,7 +63,7 @@ public class SimulationInstance implements Serializable, Runnable {
         this.rules = simulationInstance.dupRules();
         this.endingConditions = simulationInstance.getEndingConditions();
         this.ticksCounter = simulationInstance.ticksCounter;
-        this.timePassed = -1;
+        this.timePassed = 0;
         this.threadCount = simulationInstance.threadCount;
         this.grid = new Grid(simulationInstance.grid);
         totalPopulation = 0;
@@ -220,10 +221,6 @@ public class SimulationInstance implements Serializable, Runnable {
         List<Action> actionsToInvoke = new ArrayList<>();
 
         initSimulation();
-        // Set the starting time to calculate later for 'ending by seconds'
-        if (endingConditions.containsKey(EndingConditionType.SECONDS)) {
-            startingTime = System.currentTimeMillis();
-        }
 
         // Simulation main loop
         do {
@@ -239,10 +236,16 @@ public class SimulationInstance implements Serializable, Runnable {
             }
 
             resultData.setNextTickPopulation(calculateRemainingInstances());
+            updateTickAndTime();
         } while ((!endingConditionsMet()));
 
         resultData.setEntities(dtoCreator.convertEntities2DTOEntities(entities));
         this.status = SimulationStatus.COMPLETED;
+    }
+
+    private void updateTickAndTime(){
+        timePassed = System.currentTimeMillis() - startingTime;
+        ticksCounter.incrementTick();
     }
 
     private int calculateRemainingInstances(){
@@ -407,7 +410,6 @@ public class SimulationInstance implements Serializable, Runnable {
                 terminateCondition = endingConditions.get(EndingConditionType.TICKS);
                 ret = true;
             }
-            ticksCounter.incrementTick();
         }
 
         return ret;
@@ -420,7 +422,6 @@ public class SimulationInstance implements Serializable, Runnable {
         boolean ret = false;
 
         if (endingConditions.containsKey(EndingConditionType.SECONDS)) {
-            timePassed = (System.currentTimeMillis() - startingTime) / 1000;
             if (timePassed >= endingConditions.get(EndingConditionType.SECONDS).getCount()) {
                 terminateCondition = endingConditions.get(EndingConditionType.SECONDS);
                 ret = true;
@@ -544,6 +545,7 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     private void initSimulation() {
+        this.startingTime = System.currentTimeMillis();
         this.status = SimulationStatus.ONGOING;
         initInstances();
         initGrid();

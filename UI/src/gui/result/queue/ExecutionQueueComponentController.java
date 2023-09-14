@@ -63,11 +63,16 @@ public class ExecutionQueueComponentController implements EngineCommunicator {
             protected Void call() throws Exception {
                 SimulationRunData selectedInThread;
                 do {
-                    selectedInThread = getEngineAgent().getRunDataById(simId);// Get the most current run data from the engine
-                    mainController.updateSimulationRunDataMap(simId, selectedInThread); // Update the runData references we keep in the gui
-                    mainController.updateGuiToChosenSimulation(selectedInThread); // Update the components displaying the simulation
+                    selectedInThread = getEngineAgent().getRunDataById(getQueueSelectedItem().getSimId());// Get the most current run data from the engine
+
+                    // Wrap UI updates in Platform.runLater to execute them on the FX application thread
+                    SimulationRunData finalSelectedInThread = selectedInThread;
+                    Platform.runLater(() -> {
+                        mainController.updateGuiToChosenSimulation(finalSelectedInThread); // Update the components displaying the simulation
+                    });
+
                     Thread.sleep(200); // Make the thread sleep for 200ms
-                }while(selectedInThread != null && selectedInThread.getSimId().equals(simId) && !selectedInThread.isCompleted());
+                } while (selectedInThread != null && selectedInThread.getSimId().equals(simId) && !selectedInThread.isCompleted());
                 return null;
             }
         };

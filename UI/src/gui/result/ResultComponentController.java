@@ -34,9 +34,6 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
     @FXML
     private ExecutionDetailsComponentController executionDetailsComponentController;
 
-    Map<String, SimulationRunData> simulationRunDataMap; // used to access simulation run data with the simulation ID.
-
-
     public void setMainController(SubMenusController mainController) {
         this.mainController = mainController;
     }
@@ -48,7 +45,6 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
             resultTabComponentController.setMainController(this);
             executionQueueComponentController.setMainController(this);
         }
-        simulationRunDataMap = new HashMap<>();
     }
 
     @Override
@@ -66,7 +62,6 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
      */
     public void addSimulationToQueue(SimulationRunData simulationRunData) {
         executionQueueComponentController.addSimulationToQueue(simulationRunData);
-        simulationRunDataMap.put(simulationRunData.getSimId(), simulationRunData);
     }
 
     /**
@@ -75,14 +70,10 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
     public SimulationRunData getCurrentSelectedSimulation() {
         StatusData selected = executionQueueComponentController.getQueueSelectedItem();
         if (selected != null) {
-            return simulationRunDataMap.get(selected.getSimId());
+            return getEngineAgent().getRunDataById(selected.getSimId());
         } else {
             return null;
         }
-    }
-
-    public void updateSimulationRunDataMap(String simId, SimulationRunData newData){
-        simulationRunDataMap.put(simId, newData);
     }
 
     public void updateGuiToChosenSimulation(SimulationRunData simulationRunData){

@@ -53,13 +53,13 @@
             </HBox>
             <HBox spacing="13.0">
                <children>
-                  <Label text="Current Tick" />
+                  <Label text="Current Tick:" />
                   <Label id="lbl-ExecDetails-CurrTick" fx:id="currentTickDetLabel" text="-" />
                </children>
             </HBox>
             <HBox spacing="13.0">
                <children>
-                  <Label text="Duration" />
+                  <Label text="Duration:" />
                   <Label id="lbl-ExecDetails-Duration" fx:id="durationDetLabel" text="-" />
                </children>
             </HBox>
