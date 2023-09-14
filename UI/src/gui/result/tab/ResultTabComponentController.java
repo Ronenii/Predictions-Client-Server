@@ -52,6 +52,10 @@ public class ResultTabComponentController {
         executionResultTP.disableProperty().set(true);
     }
 
+    /**
+     * If the simulation chosen in the execution queue is completed then this function will enable the result tab
+     * component and display the results.
+     */
     public void updateToChosenSimulation(SimulationRunData simulationRunData){
         if (simulationRunData.isCompleted()) {
             enableResultComponent();
@@ -62,7 +66,6 @@ public class ResultTabComponentController {
         }
     }
 
-    // TODO: Implement both of these
     private void loadComponent(ResultData resultData) {
         clearComponent();
         chartComponentController.showPopulationData(resultData.getPopulationChartData());

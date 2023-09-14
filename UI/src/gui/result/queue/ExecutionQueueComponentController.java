@@ -34,6 +34,11 @@ public class ExecutionQueueComponentController implements EngineCommunicator {
         simStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
 
+    /**
+     * If the selected simulation in the TableView is ongoing or waiting then will create a task that updates the chosen simulation every 200ms.
+     * Else will just display the selected simulation.
+     *
+     */
     @FXML
     void onMouseClickedTV(MouseEvent event) {
         SimulationRunData selected = mainController.getCurrentSelectedSimulation();
@@ -47,6 +52,11 @@ public class ExecutionQueueComponentController implements EngineCommunicator {
         }
     }
 
+    /**
+     * This task will fetch simulation run data from the gui and display it as long as the simulation is still selected in the TableView
+     * and is ongoing.
+     * Every 200ms the task will query the engine for the run data, and will update the SimulationRunDataMap in the parent accordingly.
+     */
     public void executeFetchingTask(String simId){
         Task<Void> task = new Task<Void>() {
             @Override

@@ -36,6 +36,10 @@ public class StatisticsComponentController {
         
     }
 
+    /**
+     * TODO: Load the result data entities and properties into the tree view.
+     * Each property in the tree view will fill out the histogram table view and the statistics about it.
+     */
     public void loadComponent(DTOEntity[] entities){
         clearComponent();
     };

@@ -25,6 +25,10 @@ public class ChartComponentController {
         this.mainController = mainController;
     }
 
+    /**
+     * Builds a graph based on the given population list. Each index in the list represents the tick and to content
+     * represents the population at that tick.
+     */
     public void showPopulationData(List<Integer> population) {
         int tick = 1;
         XYChart.Series<Integer, Integer> series = new XYChart.Series<>();  // Specify the types for XYChart.Series

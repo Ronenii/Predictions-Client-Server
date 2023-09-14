@@ -61,6 +61,9 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
         return mainController.getEngineAgent();
     }
 
+    /**
+     * Adds the given simulation to the execution queue
+     */
     public void addSimulationToQueue(SimulationRunData simulationRunData) {
         executionQueueComponentController.addSimulationToQueue(simulationRunData);
         simulationRunDataMap.put(simulationRunData.getSimId(), simulationRunData);
