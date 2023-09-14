@@ -6,6 +6,7 @@ import manager.DTO.creator.DTOCreator;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
+import simulation.objects.world.status.SimulationStatus;
 import simulation.objects.world.ticks.counter.TicksCounter;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.Action;
@@ -37,6 +38,7 @@ public class SimulationInstance implements Serializable, Runnable {
     private final Grid grid;
     private int totalPopulation;
     private final int constAll = -1;
+    private SimulationStatus status;
 
     public SimulationInstance(String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
         this.simulationId = simulationId;
@@ -49,6 +51,7 @@ public class SimulationInstance implements Serializable, Runnable {
         this.threadCount = threadCount;
         this.grid = grid;
         totalPopulation = 0;
+        this.status = SimulationStatus.WAITING;
     }
 
     public SimulationInstance(SimulationInstance simulationInstance){
@@ -62,6 +65,7 @@ public class SimulationInstance implements Serializable, Runnable {
         this.threadCount = simulationInstance.threadCount;
         this.grid = new Grid(simulationInstance.grid);
         totalPopulation = 0;
+        this.status = SimulationStatus.WAITING;
     }
 
     public String getSimulationId() {
@@ -102,6 +106,14 @@ public class SimulationInstance implements Serializable, Runnable {
 
     public int getThreadCount() {
         return threadCount;
+    }
+
+    public long getTimePassed() {
+        return timePassed;
+    }
+
+    public SimulationStatus getStatus() {
+        return status;
     }
 
     @Override
@@ -222,6 +234,7 @@ public class SimulationInstance implements Serializable, Runnable {
             resultData.setNextTickPopulation(calculateRemainingInstances());
         } while ((!endingConditionsMet()));
 
+        this.status = SimulationStatus.COMPLETED;
         DTOCreator dtoCreator = new DTOCreator();
         resultData.setEntities(dtoCreator.convertEntities2DTOEntities(entities));
         return resultData;
@@ -519,6 +532,7 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     private void initSimulation() {
+        this.status = SimulationStatus.ONGOING;
         initInstances();
         initGrid();
         fetchReplaceActions();

@@ -1,5 +1,7 @@
 package manager.execution;
 
+import engine2ui.simulation.runtime.SimulationRunData;
+import manager.DTO.creator.DTOCreator;
 import manager.SimulationManager;
 import simulation.objects.world.SimulationInstance;
 
@@ -14,14 +16,17 @@ import java.util.concurrent.Executors;
 public class ExecutionManager {
     private ExecutorService threadExecutor = null;
     private final Map<String, SimulationInstance> simulations;
+    private final Map<String, SimulationRunData> simulationsRunData;
 
     public ExecutionManager(int threadCount) {
         threadExecutor = Executors.newFixedThreadPool(threadCount);
         simulations = new HashMap<>();
+        simulationsRunData = new HashMap<>();
     }
 
-    public void addSimulationToQueue(SimulationInstance simulationInstance) {
+    public void addSimulationToQueue(SimulationInstance simulationInstance, SimulationRunData simulationRunData) {
         simulations.put(simulationInstance.getSimulationId(), simulationInstance);
+        simulationsRunData.put(simulationRunData.getSimId(), simulationRunData);
         threadExecutor.execute(simulationInstance);
     }
 
@@ -32,4 +37,27 @@ public class ExecutionManager {
     public void shutdownThreadPool() {
         threadExecutor.shutdown();
     }
+
+    /**
+     * Return a new SimulationDataObject when the simulation is ongoing, otherwise return the SimulationRunData from the map.
+     */
+    public SimulationRunData getRunDataById(String simId) {
+        SimulationInstance simulationInstance = simulations.get(simId);
+        DTOCreator dtoCreator = new DTOCreator();
+        SimulationRunData ret = null;
+
+        switch (simulationInstance.getStatus()) {
+            case ONGOING:
+                ret = new SimulationRunData(simId, simulationInstance.getTicks().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityList(simulationInstance.getEntities()), "ONGOING", false);
+                break;
+            case WAITING:
+            case COMPLETED:
+                ret = simulationsRunData.get(simId);
+                break;
+        }
+
+        return ret;
+    }
+
+
 }
