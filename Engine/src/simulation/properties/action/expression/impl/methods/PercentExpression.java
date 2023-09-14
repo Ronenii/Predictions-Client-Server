@@ -53,4 +53,9 @@ public class PercentExpression extends AbstractExpression {
     public String getPropertyName() {
         return null;
     }
+
+    @Override
+    public Expression dupExpression() {
+        return new PercentExpression(getReturnValueType(), arg1.dupExpression(), arg2.dupExpression());
+    }
 }

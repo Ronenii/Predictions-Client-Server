@@ -1,6 +1,7 @@
 package simulation.properties.action.expression.impl.methods;
 
 import simulation.properties.action.expression.api.AbstractExpression;
+import simulation.properties.action.expression.api.Expression;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
 
@@ -31,5 +32,10 @@ public class EnvironmentExpression extends AbstractExpression {
     @Override
     public String getPropertyName() {
         return null;
+    }
+
+    @Override
+    public Expression dupExpression() {
+        return new EnvironmentExpression(getReturnValueType(), envProperty.dupProperty());
     }
 }

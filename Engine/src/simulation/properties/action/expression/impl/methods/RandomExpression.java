@@ -1,6 +1,7 @@
 package simulation.properties.action.expression.impl.methods;
 
 import simulation.properties.action.expression.api.AbstractExpression;
+import simulation.properties.action.expression.api.Expression;
 import simulation.properties.property.api.PropertyType;
 
 import java.util.Random;
@@ -32,5 +33,10 @@ public class RandomExpression extends AbstractExpression {
     @Override
     public String getPropertyName() {
         return null;
+    }
+
+    @Override
+    public Expression dupExpression() {
+        return new RandomExpression(getReturnValueType(), range);
     }
 }

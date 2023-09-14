@@ -1,6 +1,7 @@
 package simulation.properties.action.expression.impl;
 
 import simulation.properties.action.expression.api.AbstractExpression;
+import simulation.properties.action.expression.api.Expression;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
 
@@ -35,5 +36,10 @@ public class PropertyValueExpression extends AbstractExpression {
     @Override
     public String toString() {
         return property.getName();
+    }
+
+    @Override
+    public Expression dupExpression() {
+        return new PropertyValueExpression(getReturnValueType(), property.dupProperty());
     }
 }

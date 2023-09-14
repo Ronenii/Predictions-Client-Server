@@ -60,7 +60,7 @@ public class PRDConverter {
         validator = new PRDValidator();
         environmentProperties = new HashMap<>();
         entities = new HashMap<>();
-        rules = new HashMap<>();
+        rules = new LinkedHashMap<>();
         ticksCounter = new TicksCounter();
     }
 
@@ -95,7 +95,7 @@ public class PRDConverter {
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
-        return new SimulationInstance(environmentProperties, entities, rules, endingConditions, ticksCounter, grid, prdWorld.getPRDThreadCount());
+        return new SimulationInstance(null, environmentProperties, entities, rules, endingConditions, ticksCounter, grid, prdWorld.getPRDThreadCount());
     }
 
     private Grid PRDGrid2Grid(PRDWorld.PRDGrid grid) {

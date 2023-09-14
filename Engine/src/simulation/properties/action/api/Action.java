@@ -15,4 +15,6 @@ public interface Action {
 
     AbstractAction.SecondaryEntity getSecondaryEntity();
 
+    Action dupAction();
+
 }

@@ -4,11 +4,12 @@ import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.AbstractAction;
+import simulation.properties.action.api.Action;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 
 public class ReplaceAction extends AbstractAction {
-    private final Entity newEntity;
+    private Entity newEntity;
     private final ReplaceActionType replaceType;
 
     public ReplaceAction(Expression property, String contextEntity, Entity newEntity, SecondaryEntity secondaryEntity, ReplaceActionType replaceType) {
@@ -24,6 +25,10 @@ public class ReplaceAction extends AbstractAction {
 
     public String getNewEntityName() {
         return newEntity.getName();
+    }
+
+    public void setNewEntity(Entity newEntity) {
+        this.newEntity = newEntity;
     }
 
     @Override
@@ -54,5 +59,17 @@ public class ReplaceAction extends AbstractAction {
         else {
             invoke(secondEntityInstance, grid, lastChangeTickCount);
         }
+    }
+
+    @Override
+    public Action dupAction() {
+        Expression dupProperty = null;
+
+        if(getContextEntity() != null) {
+            dupProperty = getContextProperty().dupExpression();
+        }
+
+        return new ReplaceAction(dupProperty, getContextEntity(), newEntity, getSecondaryEntity(), replaceType);
+
     }
 }

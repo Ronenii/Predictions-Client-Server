@@ -80,6 +80,16 @@ public class Rule implements Serializable {
         return actionsToInvoke;
     }
 
+    public Rule dupRule() {
+        List<Action> actionsDup = new ArrayList<>();
+
+        for (Action action : actions) {
+            actionsDup.add(action.dupAction());
+        }
+
+        return new Rule(name, activation, actionsDup);
+    }
+
     /**
      * @return true if the required amount of ticks has passed since last invoking the rule.
      */

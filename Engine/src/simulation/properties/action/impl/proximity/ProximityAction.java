@@ -3,6 +3,7 @@ package simulation.properties.action.impl.proximity;
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.AbstractAction;
+import simulation.properties.action.api.Action;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 
@@ -31,6 +32,10 @@ public class ProximityAction extends AbstractAction {
 
     public String getDepthString() {
         return depth.toString();
+    }
+
+    public ProximitySubActions getProximityActions() {
+        return proximityActions;
     }
 
     @Override
@@ -104,4 +109,14 @@ public class ProximityAction extends AbstractAction {
         return ret;
     }
 
+    @Override
+    public Action dupAction() {
+        Expression dupProperty = null;
+
+        if(getContextEntity() != null) {
+            dupProperty = getContextProperty().dupExpression();
+        }
+
+        return new ProximityAction(dupProperty, getContextEntity(), getSecondaryEntity(), targetEntityName, depth.dupExpression(), proximityActions.dupProximitySubActions());
+    }
 }

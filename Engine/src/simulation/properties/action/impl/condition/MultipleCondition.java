@@ -3,10 +3,12 @@ package simulation.properties.action.impl.condition;
 
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
+import simulation.properties.action.api.Action;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MultipleCondition extends AbstractConditionAction implements Serializable {
@@ -105,5 +107,35 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
         }else{
             invokeElseActionsWithSecondary(primaryInstance, secondaryInstance, grid, lastChangeTickCount);
         }
+    }
+
+    @Override
+    public Action dupAction() {
+        Expression dupProperty = null, dupValue = null;
+        ThenOrElse thenDup = null, elseDup = null;
+
+        if(getContextEntity() != null) {
+            dupProperty = getContextProperty().dupExpression();
+        }
+
+        if (value != null) {
+            dupValue = value.dupExpression();
+        }
+
+        if (thenActions != null) {
+            thenDup = thenActions.dupThenOrElse();
+        }
+
+        if (elseActions != null) {
+            elseDup = elseActions.dupThenOrElse();
+        }
+
+        List<AbstractConditionAction> subConditionsDup = new ArrayList<>();
+
+        for (AbstractConditionAction conditionAction : subConditions) {
+            subConditionsDup.add((AbstractConditionAction)conditionAction.dupAction());
+        }
+
+        return new MultipleCondition(getType(), dupProperty, getContextEntity(), getSecondaryEntity(), dupValue, thenDup, elseDup, logical, subConditionsDup);
     }
 }
