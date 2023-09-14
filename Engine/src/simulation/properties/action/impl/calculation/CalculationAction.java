@@ -117,7 +117,7 @@ public class CalculationAction extends AbstractAction implements Serializable {
     public Action dupAction() {
         Expression dupProperty = null, dupArg1 = null, dupArg2 = null;
 
-        if(getContextEntity() != null) {
+        if(getContextProperty() != null) {
             dupProperty = getContextProperty().dupExpression();
         }
 

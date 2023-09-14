@@ -201,7 +201,7 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
         Expression dupProperty = null, dupValue = null;
         ThenOrElse thenDup = null, elseDup = null;
 
-        if(getContextEntity() != null) {
+        if(getContextProperty() != null) {
             dupProperty = getContextProperty().dupExpression();
         }
 
