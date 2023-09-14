@@ -1,5 +1,6 @@
 package gui.result.tab.chart;
 
+import gui.result.tab.ResultTabComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -9,6 +10,7 @@ import javafx.scene.chart.XYChart;
 import java.util.List;
 
 public class ChartComponentController {
+    private ResultTabComponentController mainController;
 
     @FXML
     private LineChart<Integer, Integer> chart;  // Specify the types for LineChart
@@ -18,6 +20,10 @@ public class ChartComponentController {
 
     @FXML
     private NumberAxis entityQuantityAxis;
+
+    public void setMainController(ResultTabComponentController mainController) {
+        this.mainController = mainController;
+    }
 
     public void showPopulationData(List<Integer> population) {
         int tick = 1;

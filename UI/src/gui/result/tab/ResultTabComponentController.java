@@ -4,13 +4,21 @@ import engine2ui.simulation.runtime.ResultData;
 import engine2ui.simulation.runtime.SimulationRunData;
 import gui.result.ResultComponentController;
 import gui.result.tab.chart.ChartComponentController;
+import gui.result.tab.statistics.StatisticsComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.chart.Chart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.GridPane;
 
 public class ResultTabComponentController {
     private ResultComponentController mainController;
+
+    @FXML
+    private GridPane statisticsComponent;
+
+    @FXML
+    private StatisticsComponentController statisticsComponentController;
 
     @FXML
     private Chart chartComponent;
@@ -23,6 +31,14 @@ public class ResultTabComponentController {
 
     @FXML
     private TabPane executionResultTP;
+
+    @FXML
+    public void initialize() {
+        if (statisticsComponentController != null && chartComponentController != null) {
+            statisticsComponentController.setMainController(this);
+            chartComponentController.setMainController(this);
+        }
+    }
 
     public void setMainController(ResultComponentController mainController) {
         this.mainController = mainController;
@@ -39,20 +55,21 @@ public class ResultTabComponentController {
     public void updateToChosenSimulation(SimulationRunData simulationRunData){
         if (simulationRunData.isCompleted()) {
             enableResultComponent();
-            loadResultComponent(simulationRunData.getResultData());
+            loadComponent(simulationRunData.getResultData());
         } else {
             disableResultComponent();
-            unloadResultComponent();
+            clearComponent();
         }
     }
 
     // TODO: Implement both of these
-    private void loadResultComponent(ResultData resultData) {
-        unloadResultComponent();
+    private void loadComponent(ResultData resultData) {
+        clearComponent();
         chartComponentController.showPopulationData(resultData.getPopulationChartData());
+        statisticsComponentController.loadComponent(resultData.getEntities());
     }
 
-    private void unloadResultComponent() {
+    private void clearComponent() {
         chartComponentController.clearChart();
     }
 }

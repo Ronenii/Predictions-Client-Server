@@ -48,7 +48,7 @@
                   <Font name="System Bold" size="15.0" />
                </font>
 				  </Label>
-                  <Label fx:id="ConsistencyLabel" />
+                  <Label fx:id="consistencyLabel" />
                </children>
             </HBox>
             <HBox fx:id="averageHbox" spacing="5.0" VBox.vgrow="NEVER">
