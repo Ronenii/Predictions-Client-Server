@@ -1,6 +1,7 @@
 package gui.result.queue;
 
 import engine2ui.simulation.runtime.SimulationRunData;
+import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.result.ResultComponentController;
 import gui.result.models.StatusData;
@@ -19,7 +20,7 @@ import simulation.objects.world.status.SimulationStatus;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExecutionQueueComponentController implements EngineCommunicator {
+public class ExecutionQueueComponentController implements EngineCommunicator, BarNotifier {
     private ResultComponentController mainController;
     @FXML
     private Label exeListLabel;
@@ -130,17 +131,48 @@ public class ExecutionQueueComponentController implements EngineCommunicator {
         ) {
             if (!s.getStatus().equals(SimulationStatus.COMPLETED.name())) {
                 SimulationRunData selectedInThread = getEngineAgent().getRunDataById(s.getSimId());
+
+                showNotificationIfSimulationRunStarted(s, selectedInThread);
+
                 Platform.runLater(() -> {
                     s.statusProperty().set(selectedInThread.getStatus());
+                    showNotificationIfSimulationRunCompleted(selectedInThread);
                 });
             }
         }
     }
 
     /**
+     * Will return true if the simulation is about to be started.
+     */
+    private boolean isStartedSimulation(StatusData current, SimulationRunData next) {
+        return SimulationStatus.valueOf(current.getStatus()) == SimulationStatus.WAITING && SimulationStatus.valueOf(next.status) == SimulationStatus.ONGOING;
+    }
+
+    /**
+     * Prints a notification if the simulation is about to start.
+     */
+    private void showNotificationIfSimulationRunStarted(StatusData statusData, SimulationRunData simulationRunData) {
+        if (isStartedSimulation(statusData, simulationRunData)) {
+            Platform.runLater(() -> {
+                getNotificationBar().showNotification(String.format("Simulation %s has started it's run.", statusData.getSimId()));
+            });
+        }
+    }
+
+    /**
+     * Will only run inside platform run later since it happens only after a simulation's status has changed to COMPLETED.
+     */
+    private void showNotificationIfSimulationRunCompleted(SimulationRunData simulationRunData) {
+        if (SimulationStatus.valueOf(simulationRunData.getStatus()) == SimulationStatus.COMPLETED) {
+            getNotificationBar().showNotification(String.format("Simulation %s has finished it's run.", simulationRunData.getSimId()));
+        }
+    }
+
+    /**
      * Given a task, this creates a thread for it and runs it.
      */
-    private void runTask(Task<Void> task){
+    private void runTask(Task<Void> task) {
         Thread thread = new Thread(task);
         thread.setDaemon(true); // Mark the thread as a daemon to allow application exit
         thread.start();
@@ -157,5 +189,10 @@ public class ExecutionQueueComponentController implements EngineCommunicator {
     @Override
     public synchronized EngineAgent getEngineAgent() {
         return mainController.getEngineAgent();
+    }
+
+    @Override
+    public BarNotifier getNotificationBar() {
+        return mainController.getNotificationBar();
     }
 }
