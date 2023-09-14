@@ -95,7 +95,7 @@ public class PRDConverter {
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
-        return new SimulationInstance(environmentProperties, entities, rules, endingConditions, ticksCounter, grid, prdWorld.getPRDThreadCount());
+        return new SimulationInstance(null, environmentProperties, entities, rules, endingConditions, ticksCounter, grid, prdWorld.getPRDThreadCount());
     }
 
     private Grid PRDGrid2Grid(PRDWorld.PRDGrid grid) {

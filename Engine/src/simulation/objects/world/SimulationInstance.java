@@ -24,7 +24,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public class SimulationInstance implements Serializable, Runnable {
-
+    private String simulationId;
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
     private final Map<String, Rule> rules;
@@ -38,7 +38,8 @@ public class SimulationInstance implements Serializable, Runnable {
     private int totalPopulation;
     private final int constAll = -1;
 
-    public SimulationInstance(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
+    public SimulationInstance(String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
+        this.simulationId = simulationId;
         this.environmentProperties = environmentProperties;
         this.entities = entities;
         this.rules = rules;
@@ -51,6 +52,7 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     public SimulationInstance(SimulationInstance simulationInstance){
+        this.simulationId = simulationInstance.getSimulationId();
         this.environmentProperties = simulationInstance.dupEnvVarsMap();
         this.entities = simulationInstance.dupEntitiesMap();
         this.rules = simulationInstance.dupRules();
@@ -62,6 +64,13 @@ public class SimulationInstance implements Serializable, Runnable {
         totalPopulation = 0;
     }
 
+    public String getSimulationId() {
+        return simulationId;
+    }
+
+    public void setSimulationId(String simulationId) {
+        this.simulationId = simulationId;
+    }
 
     public Map<String, Property> getEnvironmentProperties() {
         return environmentProperties;
