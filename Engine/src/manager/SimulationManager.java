@@ -20,6 +20,7 @@ import manager.validator.exceptions.IllegalStringValueException;
 import manager.validator.exceptions.OutOfRangeException;
 import manager.validator.validator.InputValidator;
 import simulation.objects.world.SimulationInstance;
+import simulation.objects.world.status.SimulationStatus;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
 import ui2engine.simulation.load.DTOLoadFile;
@@ -116,7 +117,7 @@ public class SimulationManager implements EngineInterface, Serializable {
     public StartResponse startSimulation() {
         if(simulationDefinition.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
-            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0f, dtoCreator.getDTOEntityList(simulationDefinition.getEntities()), "ONGOING", false);
+            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityList(simulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false);
 
             addSimulationToQueue(simulationRunData);
             return new StartResponse(true, "Simulation was added to the queue successfully.", simulationRunData);

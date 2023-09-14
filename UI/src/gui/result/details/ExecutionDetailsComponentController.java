@@ -15,7 +15,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import simulation.objects.world.status.SimulationStatus;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 
 public class ExecutionDetailsComponentController {
@@ -65,24 +69,13 @@ public class ExecutionDetailsComponentController {
         simIdProperty = new SimpleStringProperty();
         statusProperty = new SimpleStringProperty();
 
-        // Binds the ticks display label and this property
-        ticksProperty.addListener((observable, oldValue, newValue) -> {
-            currentTickDetLabel.setText(newValue);
-        });
-
-        // Binds the duration display label and this property
-        durationProperty.addListener(((observable, oldValue, newValue) -> {
-            durationDetLabel.setText(newValue);
-        }));
-
-        // Binds the simID display label and this property
-        simIdProperty.addListener(((observable, oldValue, newValue) -> {
-            simulationIdDetLabel.setText(newValue);
-        }));
+        currentTickDetLabel.textProperty().bind(ticksProperty);
+        durationDetLabel.textProperty().bind(durationProperty);
+        simulationIdDetLabel.textProperty().bind(simIdProperty);
 
         // Binds the enabling and disabling of the control bar to this property
         statusProperty.addListener(((observable, oldValue, newValue) -> {
-            switch (SimulationStatus.valueOf(observable.toString().toUpperCase())) {
+            switch (SimulationStatus.valueOf(newValue.toString().toUpperCase())) {
                 case WAITING:
                 case COMPLETED:
                     controlBarAnchorPane.disableProperty().set(false);
@@ -100,10 +93,17 @@ public class ExecutionDetailsComponentController {
     public void updateToChosenSimulation(SimulationRunData runData) {
         clearExecutionDetails();
         ticksProperty.set(String.valueOf(runData.getTick()));
-        durationProperty.set(String.valueOf(runData.getTime()));
-        statusProperty.set(runData.getSimId());
+        durationProperty.set(formatTime(runData.getTime()));
+        statusProperty.set(runData.getStatus());
         simIdProperty.set(String.valueOf(runData.getSimId()));
         updateEntitiesTV(runData.getEntities());
+    }
+
+    private String formatTime(long time){
+        Date date = new Date(time);
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return formatter.format(date);
     }
 
     /**

@@ -8,16 +8,16 @@ public class SimulationRunData {
     private final String simId;
     public final String status;
     private final int tick;
-    private final float time;
+    private final long time;
     private final List<DTOEntity> entities;
     public ResultData resultData;
     private final boolean isCompleted;
 
-    public SimulationRunData(String simId, int tick, float time, List<DTOEntity> entities, String status, boolean isCompleted) {
+    public SimulationRunData(String simId, int tick, long time, List<DTOEntity> entities, String status, boolean isCompleted) {
         this.simId = simId;
         this.entities = entities;
-        this.tick = 0;
-        this.time = 0f;
+        this.tick = tick;
+        this.time = time;
         this.status = status;
         this.isCompleted = isCompleted;
     }
@@ -30,7 +30,7 @@ public class SimulationRunData {
         return tick;
     }
 
-    public float getTime() {
+    public long getTime() {
         return time;
     }
 
