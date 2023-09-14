@@ -8,11 +8,9 @@ import engine2ui.simulation.genral.impl.properties.property.impl.RangedDTOProper
 import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.result.ResultInfo;
 import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
-import engine2ui.simulation.result.ResultData;
+import engine2ui.simulation.runtime.ResultData;
 import simulation.properties.property.api.PropertyType;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 

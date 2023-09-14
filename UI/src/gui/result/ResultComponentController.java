@@ -8,11 +8,7 @@ import gui.result.models.StatusData;
 import gui.result.queue.ExecutionQueueComponentController;
 import gui.result.tab.ResultTabComponentController;
 import gui.sub.menus.SubMenusController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import manager.EngineAgent;
@@ -65,6 +61,9 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
         return mainController.getEngineAgent();
     }
 
+    /**
+     * Adds the given simulation to the execution queue
+     */
     public void addSimulationToQueue(SimulationRunData simulationRunData) {
         executionQueueComponentController.addSimulationToQueue(simulationRunData);
         simulationRunDataMap.put(simulationRunData.getSimId(), simulationRunData);
@@ -82,25 +81,14 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
         }
     }
 
-    /**
-     * Updates the execution component based on the currently selected table view component.
-     */
-    @FXML
-    private void onMouseClickedTV(ActionEvent event) {
-        SimulationRunData selected = getCurrentSelectedSimulation();
-        if (selected != null) {
-            executionDetailsComponentController.updateToChosenSimulation(selected);
-            if (selected.isCompleted) {
-                resultTabComponentController.enableResultComponent();
-            } else {
-                resultTabComponentController.disableResultComponent();
-            }
-        }
+    public void updateSimulationRunDataMap(String simId, SimulationRunData newData){
+        simulationRunDataMap.put(simId, newData);
     }
 
-
-
-
+    public void updateGuiToChosenSimulation(SimulationRunData simulationRunData){
+        executionDetailsComponentController.updateToChosenSimulation(simulationRunData);
+        resultTabComponentController.updateToChosenSimulation(simulationRunData);
+    }
 }
 
 

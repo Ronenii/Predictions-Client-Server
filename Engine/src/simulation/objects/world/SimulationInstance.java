@@ -1,7 +1,7 @@
 package simulation.objects.world;
 
 import engine2ui.simulation.execution.SetResponse;
-import engine2ui.simulation.result.ResultData;
+import engine2ui.simulation.runtime.ResultData;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
@@ -141,6 +141,7 @@ public class SimulationInstance implements Serializable {
      * @return The result data of this simulation run.
      */
     public ResultData runSimulation() {
+        ResultData resultData = new ResultData();
         List<Action> actionsToInvoke = new ArrayList<>();
         initSimulation();
         // Set the starting time to calculate later for 'ending by seconds'
@@ -161,10 +162,22 @@ public class SimulationInstance implements Serializable {
                 invokeActionsOnAllInstances(entity.getEntityInstances(), actionsToInvoke);
             }
 
+            resultData.setNextTickPopulation(calculateRemainingInstances());
         } while ((!endingConditionsMet()));
 
         DTOCreator dtoCreator = new DTOCreator();
-        return new ResultData(dtoCreator.convertEntities2DTOEntities(entities));
+        resultData.setEntities(dtoCreator.convertEntities2DTOEntities(entities));
+        return resultData;
+    }
+
+    private int calculateRemainingInstances(){
+        int remainingInstances = 0;
+
+        for (Entity e: entities.values()
+             ) {
+            remainingInstances += e.getCurrentPopulation();
+        }
+        return remainingInstances;
     }
 
     /**
@@ -368,14 +381,14 @@ public class SimulationInstance implements Serializable {
                 totalPopulation -= entities.get(input.getName()).getStartingPopulation();
                 entities.get(input.getName()).setStartingPopulation(input.getPopulation());
                 totalPopulation += input.getPopulation();
-                return new SetResponse(true, String.format("You have successfully changed %s's starting population to %s. You have %s more instances you can add.", entities.get(input.getName()).getName(), input.getPopulation(), gridSize - totalPopulation));
+                return new SetResponse(true, String.format("You have successfully changed %s's starting population to %s.", entities.get(input.getName()).getName(), input.getPopulation()));
             }
         } else {
             if (totalPopulation + input.getPopulation() > gridSize) {
                 return populationErrorMessage(gridSize);
             } else {
                 totalPopulation += input.getPopulation();
-                return new SetResponse(true, String.format("You have successfully set %s's starting population to %s. You have %s more instances you can add.", entities.get(input.getName()).getName(), input.getPopulation(), gridSize - totalPopulation));
+                return new SetResponse(true, String.format("You have successfully set %s's starting population to %s.", entities.get(input.getName()).getName(), input.getPopulation()));
             }
         }
     }

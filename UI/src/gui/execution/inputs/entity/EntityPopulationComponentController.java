@@ -14,7 +14,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import jaxb.event.FileLoadedEvent;
 import manager.EngineAgent;
-import simulation.objects.world.grid.Grid;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ import java.util.Map;
 public class EntityPopulationComponentController implements FileLoadedEvent, BarNotifier, EngineCommunicator {
 
     private static final int POPULATION_ERROR = -1, NO_POPULATION = -1;
+    public Label entitiesLeftLabel;
     private InputsController mainController;
 
     @FXML
@@ -38,9 +38,6 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
 
     @FXML
     private Label entityLabel;
-
-    @FXML private Label entitiesLeftLbl;
-
     private int entitiesLeftToAdd;
 
     private Map<DTOEntity, Integer> entityPopulations; // Used for updating the TF values.
@@ -112,7 +109,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
             entitiesLeftToAdd += entityPopulations.get(entity);
         }
         entitiesLeftToAdd -= population;
-        entitiesLeftLbl.setText(String.valueOf(entitiesLeftToAdd));
+        entitiesLeftLabel.setText(String.valueOf(entitiesLeftToAdd));
     }
 
     /**
@@ -141,7 +138,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
 
     private void updateEntitiesLeft(int entityCount){
         entitiesLeftToAdd = entityCount;
-        entitiesLeftLbl.setText(String.valueOf(entityCount));
+        entitiesLeftLabel.setText(String.valueOf(entityCount));
     }
 
     private int calcGridCells(DTOGridAndThread grid){

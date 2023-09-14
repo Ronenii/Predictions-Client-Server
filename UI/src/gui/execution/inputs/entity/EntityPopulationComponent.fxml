@@ -38,6 +38,6 @@
          </font>
       </Label>
       <Label disable="true" text="Entities to add:" GridPane.columnIndex="3" GridPane.rowIndex="5" GridPane.valignment="TOP" />
-      <Label fx:id="EntitiesLeftLbl" disable="true" GridPane.columnIndex="5" GridPane.rowIndex="5" GridPane.valignment="TOP" />
+      <Label fx:id="entitiesLeftLabel" disable="true" GridPane.columnIndex="5" GridPane.rowIndex="5" GridPane.valignment="TOP" />
    </children>
 </GridPane>

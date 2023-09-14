@@ -7,8 +7,9 @@ import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.objects.DTOEntityInstance;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
-import engine2ui.simulation.result.ResultData;
+import engine2ui.simulation.runtime.ResultData;
 import engine2ui.simulation.result.ResultInfo;
+import engine2ui.simulation.runtime.SimulationRunData;
 import manager.exception.SimulationNotLoadedException;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
@@ -304,8 +305,7 @@ public class EngineAgent {
             filename = Input.getInput("Please enter the filename of the save");
             if (!isValidFilename(filename)) {
                 throw new IllegalArgumentException("The file name contains illegal characters. Please provide a valid name for saving the file.");
-            }
-            else{
+            } else {
                 path += "\\" + filename + ".out";
                 engine.saveState(path);
                 Console.println("The file was saved successfully.");
@@ -313,11 +313,11 @@ public class EngineAgent {
         }
     }
 
-    public SetResponse sendPopulationData(EntityPopulationUserInput input){
+    public SetResponse sendPopulationData(EntityPopulationUserInput input) {
         return engine.setEntityPopulation(input);
     }
 
-    public SetResponse sendEnvironmentVariableData(EnvPropertyUserInput input){
+    public SetResponse sendEnvironmentVariableData(EnvPropertyUserInput input) {
         return engine.setEnvironmentVariable(input);
     }
 
@@ -394,7 +394,11 @@ public class EngineAgent {
         return new TreeMap<>(unsortedMap);
     }
 
-    public StartResponse startSimulation(){
+    public StartResponse startSimulation() {
         return engine.startSimulation();
+    }
+
+    public SimulationRunData getRunDataById(String simId) {
+        return engine.getRunDataById(simId);
     }
 }

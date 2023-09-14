@@ -23,17 +23,14 @@ public class ExecutionDetailsControlBarController {
 
     @FXML
     void pauseButtonActionListener(ActionEvent event) {
-
     }
 
     @FXML
     void playButtonActionListener(ActionEvent event) {
-
     }
 
     @FXML
     void stopButtonActionListener(ActionEvent event) {
-
     }
 
 }
