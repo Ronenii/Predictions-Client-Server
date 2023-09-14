@@ -117,10 +117,11 @@ public class SimulationManager implements EngineInterface, Serializable {
     public StartResponse startSimulation() {
         if(simulationDefinition.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
-            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityList(simulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false);
+            String id = IdGenerator.generateID();
+            SimulationRunData simulationRunData = new SimulationRunData(id,0, 0, dtoCreator.getDTOEntityList(simulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false);
 
             addSimulationToQueue(simulationRunData);
-            return new StartResponse(true, "Simulation was added to the queue successfully.", simulationRunData);
+            return new StartResponse(true, String.format("Simulation %s was added to the queue successfully.", id), simulationRunData);
         } else {
             return new StartResponse(false, "ERROR: Could not start simulation. You need to have at least one entity with a population larger than 0.");
         }

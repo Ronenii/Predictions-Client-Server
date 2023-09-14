@@ -235,7 +235,7 @@ public class SimulationInstance implements Serializable, Runnable {
                 invokeActionsOnAllInstances(entity.getEntityInstances(), actionsToInvoke);
             }
 
-            resultData.setNextTickPopulation(calculateRemainingInstances());
+            resultData.setPopulationRecord(calculateRemainingInstances(), ticksCounter.getTicks());
             updateTickAndTime();
         } while ((!endingConditionsMet()));
 

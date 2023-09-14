@@ -40,7 +40,7 @@ public class ExecutionManager {
     /**
      * Return a new SimulationDataObject when the simulation is ongoing, otherwise return the SimulationRunData from the map.
      */
-    public SimulationRunData getRunDataById(String simId) {
+    public synchronized SimulationRunData getRunDataById(String simId) {
         SimulationInstance simulationInstance = simulations.get(simId);
         DTOCreator dtoCreator = new DTOCreator();
         SimulationRunData ret = null;

@@ -62,7 +62,6 @@ public class SubMenusController implements HasFileLoadedListeners, BarNotifier, 
     public BarNotifier getNotificationBar() {
         return mainController.getNotificationBar();
     }
-
     @Override
     public EngineAgent getEngineAgent() {
         return mainController.getEngineAgent();

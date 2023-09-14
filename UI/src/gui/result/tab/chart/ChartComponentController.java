@@ -16,7 +16,7 @@ public class ChartComponentController {
     private LineChart<Integer, Integer> chart;  // Specify the types for LineChart
 
     @FXML
-    private CategoryAxis ticksAxis;
+    private NumberAxis ticksAxis;
 
     @FXML
     private NumberAxis entityQuantityAxis;
@@ -26,16 +26,24 @@ public class ChartComponentController {
     }
 
     /**
-     * Builds a graph based on the given population list. Each index in the list represents the tick and to content
-     * represents the population at that tick.
+     * Builds a graph based on the given population list. Each index in the list represents
+     * the population in intervals of 20 ticks.
      */
     public void showPopulationData(List<Integer> population) {
-        int tick = 1;
-        XYChart.Series<Integer, Integer> series = new XYChart.Series<>();  // Specify the types for XYChart.Series
+        chart.getData().clear();
+        int tick = 0;
+        XYChart.Series<Integer, Integer> series = new XYChart.Series<>();
+
+        // Clear existing data in the series
+        series.getData().clear();
+
         for (Integer i : population) {
-            series.getData().add(new XYChart.Data<>(tick++, i));  // Use 'i' instead of 'population'
+            series.getData().add(new XYChart.Data<>(tick, i));
+            tick += 20;
         }
-        chart.getData().setAll(series);  // Use setAll to clear and set the data
+
+        // Set the series as the chart's data
+        chart.getData().setAll(series);
     }
 
     public void clearChart(){
