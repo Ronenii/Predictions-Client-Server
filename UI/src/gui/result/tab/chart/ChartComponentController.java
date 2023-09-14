@@ -26,19 +26,20 @@ public class ChartComponentController {
     }
 
     /**
-     * Builds a graph based on the given population list. Each index in the list represents the tick and to content
-     * represents the population at that tick.
+     * Builds a graph based on the given population list. Each index in the list represents
+     * the population in intervals of 20 ticks.
      */
     public void showPopulationData(List<Integer> population) {
         chart.getData().clear();
-        int tick = 1;
+        int tick = 0;
         XYChart.Series<Integer, Integer> series = new XYChart.Series<>();
 
         // Clear existing data in the series
         series.getData().clear();
 
         for (Integer i : population) {
-            series.getData().add(new XYChart.Data<>(tick++, i));
+            series.getData().add(new XYChart.Data<>(tick, i));
+            tick += 20;
         }
 
         // Set the series as the chart's data

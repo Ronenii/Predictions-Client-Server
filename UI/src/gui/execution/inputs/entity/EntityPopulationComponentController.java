@@ -131,6 +131,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
 
     @Override
     public void onFileLoaded(PreviewData previewData) {
+        populationTF.clear();
         clearListView();
         enableComponent();
         addItemsToListView(previewData.getEntities());

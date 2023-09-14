@@ -37,11 +37,13 @@ public class ResultData implements Serializable {
     }
 
     /**
-     * Each index in the list represents the tick, the content within each index is the total living population at that tick.
-     * This function adds the population to the list creating another tick documentation.
+     * Each index in the list represents the population after a 20 tick interval
+     * This function adds the population to the list creating another population record for this tick.
      */
-    public void setNextTickPopulation(int population){
-        populationChartData.add(population);
+    public void setPopulationRecord(int population, int currentTick){
+        if(currentTick % 20 == 0){
+            populationChartData.add(population);
+        }
     }
 
     public List<Integer> getPopulationChartData(){
