@@ -398,7 +398,7 @@ public class EngineAgent {
         return engine.startSimulation();
     }
 
-    public SimulationRunData getRunDataById(String simId) {
+    public synchronized SimulationRunData getRunDataById(String simId) {
         return engine.getRunDataById(simId);
     }
 
