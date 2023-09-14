@@ -514,11 +514,18 @@ public class SimulationInstance implements Serializable, Runnable {
                     replaceAction.setNewEntity(entityForReplace);
                 } else if (action instanceof AbstractConditionAction) {
                     AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
-                    checkForReplaceInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
-                    checkForReplaceInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
+                    if(abstractConditionAction.getThenActions() != null){
+                        checkForReplaceInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
+                    }
+
+                    if(abstractConditionAction.getElseActions() != null) {
+                        checkForReplaceInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
+                    }
                 } else if (action instanceof ProximityAction) {
                     ProximityAction proximityAction = (ProximityAction)action;
-                    checkForReplaceInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
+                    if(proximityAction.getProximityActions() != null) {
+                        checkForReplaceInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
+                    }
                 }
             }
         }

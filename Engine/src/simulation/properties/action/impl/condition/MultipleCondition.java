@@ -114,7 +114,7 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
         Expression dupProperty = null, dupValue = null;
         ThenOrElse thenDup = null, elseDup = null;
 
-        if(getContextEntity() != null) {
+        if(getContextProperty() != null) {
             dupProperty = getContextProperty().dupExpression();
         }
 

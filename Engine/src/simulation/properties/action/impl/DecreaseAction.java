@@ -80,7 +80,7 @@ public class DecreaseAction extends OneEntAction implements Serializable {
     public Action dupAction() {
         Expression dupProperty = null, dupValue = null;
 
-        if(getContextEntity() != null) {
+        if(getContextProperty() != null) {
             dupProperty = getContextProperty().dupExpression();
         }
 

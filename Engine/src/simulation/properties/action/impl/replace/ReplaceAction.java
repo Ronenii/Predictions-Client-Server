@@ -65,7 +65,7 @@ public class ReplaceAction extends AbstractAction {
     public Action dupAction() {
         Expression dupProperty = null;
 
-        if(getContextEntity() != null) {
+        if(getContextProperty() != null) {
             dupProperty = getContextProperty().dupExpression();
         }
 

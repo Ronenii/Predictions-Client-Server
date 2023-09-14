@@ -88,14 +88,11 @@ public class Grid {
 
             if (isValidMove(entityInstance, direction)) {
                 moveEntity(entityInstance, direction);
-                System.out.printf("%s has moved %s\n", entityInstance.getInstanceEntityName(), direction.name());
                 return;
             }
 
             directionSet.remove(direction);
         }
-
-        System.out.printf("%s has no where to move\n", entityInstance.getInstanceEntityName());
     }
 
     /**
