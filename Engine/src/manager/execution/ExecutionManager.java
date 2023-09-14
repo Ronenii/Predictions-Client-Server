@@ -51,8 +51,18 @@ public class ExecutionManager {
                 ret = new SimulationRunData(simId, simulationInstance.getTicks().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityList(simulationInstance.getEntities()), "ONGOING", false);
                 break;
             case WAITING:
-            case COMPLETED:
                 ret = simulationsRunData.get(simId);
+                break;
+            case COMPLETED:
+                if(simulationsRunData.get(simId).status.equals("COMPLETED")) {
+                    ret = simulationsRunData.get(simId);
+                } else {
+                    ret = new SimulationRunData(simId, simulationInstance.getTicks().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityList(simulationInstance.getEntities()), "COMPLETED", true);
+                    ret.resultData = simulationInstance.getResultData();
+                    simulationsRunData.remove(simId);
+                    simulationsRunData.put(simId, ret);
+                }
+
                 break;
         }
 

@@ -39,6 +39,7 @@ public class SimulationInstance implements Serializable, Runnable {
     private int totalPopulation;
     private final int constAll = -1;
     private SimulationStatus status;
+    private ResultData resultData;
 
     public SimulationInstance(String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
         this.simulationId = simulationId;
@@ -114,6 +115,10 @@ public class SimulationInstance implements Serializable, Runnable {
 
     public SimulationStatus getStatus() {
         return status;
+    }
+
+    public ResultData getResultData() {
+        return resultData;
     }
 
     @Override
@@ -209,9 +214,11 @@ public class SimulationInstance implements Serializable, Runnable {
      *
      * @return The result data of this simulation run.
      */
-    public ResultData runSimulation() {
-        ResultData resultData = new ResultData();
+    public void runSimulation() {
+        resultData = new ResultData();
+        DTOCreator dtoCreator = new DTOCreator();
         List<Action> actionsToInvoke = new ArrayList<>();
+
         initSimulation();
         // Set the starting time to calculate later for 'ending by seconds'
         if (endingConditions.containsKey(EndingConditionType.SECONDS)) {
@@ -234,10 +241,8 @@ public class SimulationInstance implements Serializable, Runnable {
             resultData.setNextTickPopulation(calculateRemainingInstances());
         } while ((!endingConditionsMet()));
 
-        this.status = SimulationStatus.COMPLETED;
-        DTOCreator dtoCreator = new DTOCreator();
         resultData.setEntities(dtoCreator.convertEntities2DTOEntities(entities));
-        return resultData;
+        this.status = SimulationStatus.COMPLETED;
     }
 
     private int calculateRemainingInstances(){

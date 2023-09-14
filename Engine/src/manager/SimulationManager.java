@@ -152,7 +152,7 @@ public class SimulationManager implements EngineInterface, Serializable {
         // TODO: implement function to fetch '
 
         // run the simulation.
-        ResultData result = this.simulationDefinition.runSimulation();
+        //ResultData result = this.simulationDefinition.runSimulation();
         //this.pastSimulations.put(result.getId(), result);
 
         // Sent to the UI the termination cause.
