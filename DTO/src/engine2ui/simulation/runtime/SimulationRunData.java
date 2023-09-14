@@ -10,8 +10,7 @@ public class SimulationRunData {
     private final int tick;
     private final float time;
     private final List<DTOEntity> entities;
-    private ResultData resultData;
-
+    public ResultData resultData;
     private final boolean isCompleted;
 
     public SimulationRunData(String simId, int tick, float time, List<DTOEntity> entities, String status, boolean isCompleted) {
@@ -54,4 +53,5 @@ public class SimulationRunData {
     public boolean isCompleted() {
         return isCompleted;
     }
+
 }
