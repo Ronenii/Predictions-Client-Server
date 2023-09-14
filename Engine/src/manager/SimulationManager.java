@@ -322,7 +322,6 @@ public class SimulationManager implements EngineInterface, Serializable {
         return response;
     }
 
-
     // TODO: Fetch simulation run data from simulation with this ID
     @Override
     public SimulationRunData getRunDataById(String simId) {
