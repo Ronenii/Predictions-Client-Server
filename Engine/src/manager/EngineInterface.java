@@ -39,4 +39,6 @@ public interface EngineInterface {
     SetResponse setEnvironmentVariable(EnvPropertyUserInput input);
 
     SimulationRunData getRunDataById(String simId);
+
+    void shutdownThreadPool();
 }

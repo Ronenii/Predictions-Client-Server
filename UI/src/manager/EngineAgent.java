@@ -401,4 +401,8 @@ public class EngineAgent {
     public SimulationRunData getRunDataById(String simId) {
         return engine.getRunDataById(simId);
     }
+
+    public void shutdownThreadPool() {
+        engine.shutdownThreadPool();
+    }
 }

@@ -117,9 +117,8 @@ public class SimulationManager implements EngineInterface, Serializable {
         if(simulationDefinition.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
             SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0f, dtoCreator.getDTOEntityList(simulationDefinition.getEntities()), "ONGOING", false);
-            addSimulationToQueue(simulationRunData.getSimId());
 
-            // TODO : add simulation to thread pool.
+            addSimulationToQueue(simulationRunData.getSimId());
             return new StartResponse(true, "Simulation was added to the queue successfully.", simulationRunData);
         } else {
             return new StartResponse(false, "ERROR: Could not start simulation. You need to have at least one entity with a population larger than 0.");
@@ -381,5 +380,12 @@ public class SimulationManager implements EngineInterface, Serializable {
         SimulationInstance simulationInstance = new SimulationInstance(simulationDefinition);
         simulationInstance.setSimulationId(simId);
         executionManager.addSimulationToQueue(simulationInstance);
+    }
+
+    @Override
+    public void shutdownThreadPool() {
+        if(executionManager != null){
+            executionManager.shutdownThreadPool();
+        }
     }
 }

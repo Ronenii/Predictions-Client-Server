@@ -6,9 +6,11 @@ import gui.api.HasFileLoadedListeners;
 import gui.header.component.HeaderComponentController;
 import gui.notification.NotificationBarComponentController;
 import gui.sub.menus.SubMenusController;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import manager.EngineAgent;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class AppController implements HasFileLoadedListeners, BarNotifier, Engin
     @FXML private NotificationBarComponentController notificationBarComponentController;
 
     @FXML private AnchorPane anchorNotification;
-
+    private Stage primaryStage;
     public EngineAgent engineAgent;
 
     @FXML
@@ -36,6 +38,12 @@ public class AppController implements HasFileLoadedListeners, BarNotifier, Engin
             subMenusController.setMainController(this);
             notificationBarComponentController.setMainController(this);
         }
+    }
+
+    public void setPrimaryStageOnClose(Stage primaryStage) {
+        primaryStage.setOnCloseRequest(event -> {
+            engineAgent.shutdownThreadPool();
+        });
     }
 
     public List<EventListener> getAllFileLoadedListeners(){
