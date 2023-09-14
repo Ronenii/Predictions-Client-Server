@@ -31,7 +31,7 @@ public class SimulationInstance implements Serializable, Runnable {
     private final Map<String, Rule> rules;
     private final Map<EndingConditionType, EndingCondition> endingConditions;
     private EndingCondition terminateCondition;
-    private final TicksCounter ticks;
+    private final TicksCounter ticksCounter;
     private long timePassed;
     private long startingTime;
     private final int threadCount;
@@ -47,7 +47,7 @@ public class SimulationInstance implements Serializable, Runnable {
         this.entities = entities;
         this.rules = rules;
         this.endingConditions = endingConditions;
-        this.ticks = ticksCounter;
+        this.ticksCounter = ticksCounter;
         this.timePassed = -1;
         this.threadCount = threadCount;
         this.grid = grid;
@@ -61,7 +61,7 @@ public class SimulationInstance implements Serializable, Runnable {
         this.entities = simulationInstance.dupEntitiesMap();
         this.rules = simulationInstance.dupRules();
         this.endingConditions = simulationInstance.getEndingConditions();
-        this.ticks = simulationInstance.ticks;
+        this.ticksCounter = simulationInstance.ticksCounter;
         this.timePassed = -1;
         this.threadCount = simulationInstance.threadCount;
         this.grid = new Grid(simulationInstance.grid);
@@ -97,8 +97,8 @@ public class SimulationInstance implements Serializable, Runnable {
         return terminateCondition;
     }
 
-    public TicksCounter getTicks() {
-        return ticks;
+    public TicksCounter getTicksCounter() {
+        return ticksCounter;
     }
 
     public Grid getGrid() {
@@ -287,19 +287,19 @@ public class SimulationInstance implements Serializable, Runnable {
 
     private void invokeAnAction(EntityInstance entityInstance, Action action) {
         if (action.getClass().getSuperclass() == OneEntAction.class) {
-            ((OneEntAction) action).invoke(entityInstance, false, ticks.getTicks());
+            ((OneEntAction) action).invoke(entityInstance, false, ticksCounter.getTicks());
         } else if (action instanceof CalculationAction) {
             CalculationAction calculationAction = (CalculationAction)action;
-            calculationAction.invoke(entityInstance, false, false, ticks.getTicks());
+            calculationAction.invoke(entityInstance, false, false, ticksCounter.getTicks());
         } else if (action instanceof AbstractConditionAction) {
             AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
-            abstractConditionAction.invoke(entityInstance, grid, ticks.getTicks());
+            abstractConditionAction.invoke(entityInstance, grid, ticksCounter.getTicks());
         } else if (action instanceof ReplaceAction) {
             ReplaceAction replaceAction = (ReplaceAction)action;
-            replaceAction.invoke(entityInstance, grid, ticks.getTicks());
+            replaceAction.invoke(entityInstance, grid, ticksCounter.getTicks());
         } else if (action instanceof ProximityAction) {
             ProximityAction proximityAction = (ProximityAction)action;
-            proximityAction.invoke(entityInstance, grid, ticks.getTicks());
+            proximityAction.invoke(entityInstance, grid, ticksCounter.getTicks());
         }
     }
 
@@ -312,19 +312,19 @@ public class SimulationInstance implements Serializable, Runnable {
         for(EntityInstance secondaryEntityInstance : secondaryInstances) {
             if(actionToInvoke instanceof OneEntAction){
                 OneEntAction oneEntAction = (OneEntAction)actionToInvoke;
-                oneEntAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, ticks.getTicks());
+                oneEntAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, ticksCounter.getTicks());
             } else if (actionToInvoke instanceof CalculationAction) {
                 CalculationAction calculationAction = (CalculationAction)actionToInvoke;
-                calculationAction.invokeWithSecondary(entityInstance,secondaryEntityInstance, ticks.getTicks());
+                calculationAction.invokeWithSecondary(entityInstance,secondaryEntityInstance, ticksCounter.getTicks());
             } else if (actionToInvoke instanceof AbstractConditionAction) {
                 AbstractConditionAction abstractConditionAction = (AbstractConditionAction) actionToInvoke;
-                abstractConditionAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticks.getTicks());
+                abstractConditionAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticksCounter.getTicks());
             } else if(actionToInvoke instanceof ProximityAction) {
                 ProximityAction proximityAction = (ProximityAction)actionToInvoke;
-                proximityAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticks.getTicks());
+                proximityAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticksCounter.getTicks());
             } else if(actionToInvoke instanceof ReplaceAction) {
                 ReplaceAction replaceAction = (ReplaceAction)actionToInvoke;
-                replaceAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticks.getTicks());
+                replaceAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticksCounter.getTicks());
             }
         }
     }
@@ -367,7 +367,7 @@ public class SimulationInstance implements Serializable, Runnable {
 
 
     public void resetWorld() {
-        ticks.resetTicks();
+        ticksCounter.resetTicks();
         this.timePassed = -1;
         for (Entity e : entities.values()
         ) {
@@ -403,11 +403,11 @@ public class SimulationInstance implements Serializable, Runnable {
         boolean ret = false;
 
         if (endingConditions.containsKey(EndingConditionType.TICKS)) {
-            if (ticks.getTicks() >= endingConditions.get(EndingConditionType.TICKS).getCount()) {
+            if (ticksCounter.getTicks() >= endingConditions.get(EndingConditionType.TICKS).getCount()) {
                 terminateCondition = endingConditions.get(EndingConditionType.TICKS);
                 ret = true;
             }
-            ticks.incrementTick();
+            ticksCounter.incrementTick();
         }
 
         return ret;

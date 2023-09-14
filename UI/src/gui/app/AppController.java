@@ -27,7 +27,6 @@ public class AppController implements HasFileLoadedListeners, BarNotifier, Engin
     @FXML private NotificationBarComponentController notificationBarComponentController;
 
     @FXML private AnchorPane anchorNotification;
-    private Stage primaryStage;
     public EngineAgent engineAgent;
 
     @FXML

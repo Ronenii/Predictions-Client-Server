@@ -2,7 +2,6 @@ package manager.execution;
 
 import engine2ui.simulation.runtime.SimulationRunData;
 import manager.DTO.creator.DTOCreator;
-import manager.SimulationManager;
 import simulation.objects.world.SimulationInstance;
 
 import java.util.HashMap;
@@ -48,7 +47,7 @@ public class ExecutionManager {
 
         switch (simulationInstance.getStatus()) {
             case ONGOING:
-                ret = new SimulationRunData(simId, simulationInstance.getTicks().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityList(simulationInstance.getEntities()), "ONGOING", false);
+                ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityList(simulationInstance.getEntities()), "ONGOING", false);
                 break;
             case WAITING:
                 ret = simulationsRunData.get(simId);
@@ -57,9 +56,8 @@ public class ExecutionManager {
                 if(simulationsRunData.get(simId).status.equals("COMPLETED")) {
                     ret = simulationsRunData.get(simId);
                 } else {
-                    ret = new SimulationRunData(simId, simulationInstance.getTicks().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityList(simulationInstance.getEntities()), "COMPLETED", true);
+                    ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityList(simulationInstance.getEntities()), "COMPLETED", true);
                     ret.resultData = simulationInstance.getResultData();
-                    simulationsRunData.remove(simId);
                     simulationsRunData.put(simId, ret);
                 }
 
