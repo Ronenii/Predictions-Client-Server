@@ -8,6 +8,7 @@ import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
 import simulation.objects.world.status.SimulationStatus;
 import simulation.objects.world.ticks.counter.TicksCounter;
+import simulation.objects.world.user.instructions.UserInstructions;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
@@ -33,10 +34,12 @@ public class SimulationInstance implements Serializable, Runnable {
     private EndingCondition terminateCondition;
     private final TicksCounter ticksCounter;
     private long timePassed;
+    private long timePassedBeforePause;
     private long startingTime;
     private final int threadCount;
     private final Grid grid;
     private int totalPopulation;
+    private final UserInstructions userInstructions;
     private final int constAll = -1;
     private SimulationStatus status;
     private ResultData resultData;
@@ -54,6 +57,7 @@ public class SimulationInstance implements Serializable, Runnable {
         this.grid = grid;
         totalPopulation = 0;
         this.status = SimulationStatus.WAITING;
+        userInstructions = new UserInstructions(false, false, false);
     }
 
     public SimulationInstance(SimulationInstance simulationInstance){
@@ -68,6 +72,7 @@ public class SimulationInstance implements Serializable, Runnable {
         this.grid = new Grid(simulationInstance.grid);
         totalPopulation = 0;
         this.status = SimulationStatus.WAITING;
+        userInstructions = new UserInstructions(false, false, false);
     }
 
     public String getSimulationId() {
@@ -102,6 +107,10 @@ public class SimulationInstance implements Serializable, Runnable {
         return ticksCounter;
     }
 
+    public long getStartingTime() {
+        return startingTime;
+    }
+
     public Grid getGrid() {
         return grid;
     }
@@ -111,7 +120,11 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     public long getTimePassed() {
-        return System.currentTimeMillis() - startingTime;
+        if(userInstructions.isSimulationPaused){
+            return timePassedBeforePause;
+        } else {
+            return System.currentTimeMillis() - startingTime;
+        }
     }
 
     public SimulationStatus getStatus() {
@@ -120,6 +133,10 @@ public class SimulationInstance implements Serializable, Runnable {
 
     public ResultData getResultData() {
         return resultData;
+    }
+
+    public UserInstructions getUserInstructions() {
+        return userInstructions;
     }
 
     @Override
@@ -221,28 +238,30 @@ public class SimulationInstance implements Serializable, Runnable {
         List<Action> actionsToInvoke = new ArrayList<>();
 
         initSimulation();
-
         // Simulation main loop
         do {
-//            try {
-//                Thread.sleep(250);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
+            if(!userInstructions.isSimulationPaused){
+                try {
+                    Thread.sleep(400);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
 
-            actionsToInvoke.clear();
-            grid.moveAllEntities();
-            // Get the invokable actions (by ticks and probability)
-            for (Rule r : rules.values()) {
-                actionsToInvoke.addAll(r.getActionsToInvoke());
-            }
-            // Invoke actions on the simulation entities.
-            for (Entity entity : entities.values()) {
-                invokeActionsOnAllInstances(entity.getEntityInstances(), actionsToInvoke);
+                actionsToInvoke.clear();
+                grid.moveAllEntities();
+                // Get the invokable actions (by ticks and probability)
+                for (Rule r : rules.values()) {
+                    actionsToInvoke.addAll(r.getActionsToInvoke());
+                }
+                // Invoke actions on the simulation entities.
+                for (Entity entity : entities.values()) {
+                    invokeActionsOnAllInstances(entity.getEntityInstances(), actionsToInvoke);
+                }
+
+                resultData.setPopulationRecord(calculateRemainingInstances(), ticksCounter.getTicks());
+                updateTickAndTime();
             }
 
-            resultData.setPopulationRecord(calculateRemainingInstances(), ticksCounter.getTicks());
-            updateTickAndTime();
         } while ((!endingConditionsMet()));
 
         resultData.setEntities(dtoCreator.convertEntities2DTOEntities(entities));
@@ -252,6 +271,14 @@ public class SimulationInstance implements Serializable, Runnable {
     private void updateTickAndTime(){
         timePassed = System.currentTimeMillis() - startingTime;
         ticksCounter.incrementTick();
+    }
+
+    public void updateTimePassBeforePause() {
+        timePassedBeforePause = timePassed;
+    }
+
+    public void resumeSimClock() {
+        startingTime = System.currentTimeMillis() - timePassed;
     }
 
     private int calculateRemainingInstances(){
@@ -402,7 +429,7 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     private boolean endingConditionsMet() {
-        return isEndingBySecondsMet() || isEndingByTicksMet();
+        return isEndingBySecondsMet() || isEndingByTicksMet() || userInstructions.isSimulationStopped;
     }
 
     /**
@@ -553,6 +580,7 @@ public class SimulationInstance implements Serializable, Runnable {
     private void initSimulation() {
         this.startingTime = System.currentTimeMillis();
         this.status = SimulationStatus.ONGOING;
+        userInstructions.isSimulationRunning = true;
         initInstances();
         initGrid();
         fetchReplaceActions();

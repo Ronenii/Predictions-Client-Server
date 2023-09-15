@@ -3,6 +3,8 @@ package manager.execution;
 import engine2ui.simulation.runtime.SimulationRunData;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.world.SimulationInstance;
+import simulation.objects.world.user.instructions.UserInstructions;
+import ui2engine.simulation.control.bar.DTOSimulationControlBar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,5 +69,21 @@ public class ExecutionManager {
         return ret;
     }
 
+    public void setStopPauseOrPlayForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
+        SimulationInstance simulationInstance = simulations.get(simId);
+        UserInstructions userInstructions = simulationInstance.getUserInstructions();
 
+        if(dtoSimulationControlBar.isToPause()) {
+            userInstructions.isSimulationPaused = true;
+            simulationInstance.updateTimePassBeforePause();
+            userInstructions.isSimulationRunning = false;
+        } else if (dtoSimulationControlBar.isToPlay()) {
+            userInstructions.isSimulationRunning = true;
+            simulationInstance.resumeSimClock();
+            userInstructions.isSimulationPaused = false;
+        } else if (dtoSimulationControlBar.isToStop()) {
+            userInstructions.isSimulationStopped = true;
+            userInstructions.isSimulationRunning = false;
+        }
+    }
 }

@@ -21,6 +21,7 @@ import manager.validator.exceptions.OutOfRangeException;
 import manager.validator.validator.InputValidator;
 import simulation.objects.world.SimulationInstance;
 import simulation.objects.world.status.SimulationStatus;
+import ui2engine.simulation.control.bar.DTOSimulationControlBar;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
 import ui2engine.simulation.load.DTOLoadFile;
@@ -387,5 +388,10 @@ public class SimulationManager implements EngineInterface, Serializable {
         if(executionManager != null){
             executionManager.shutdownThreadPool();
         }
+    }
+
+    @Override
+    public void setStopPauseOrPlayForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
+        executionManager.setStopPauseOrPlayForSimById(simId, dtoSimulationControlBar);
     }
 }

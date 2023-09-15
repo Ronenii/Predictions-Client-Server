@@ -5,6 +5,7 @@ import gui.api.EngineCommunicator;
 import gui.api.HasFileLoadedListeners;
 import gui.header.component.HeaderComponentController;
 import gui.notification.NotificationBarComponentController;
+import gui.result.queue.QueueManagementData;
 import gui.sub.menus.SubMenusController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -69,6 +70,14 @@ public class AppController implements HasFileLoadedListeners, BarNotifier, Engin
     @Override
     public EngineAgent getEngineAgent() {
         return engineAgent;
+    }
+
+    public void updateQueueLblInQueueManagement() {
+        headerComponentController.updateQueueLblInQueueManagement();
+    }
+
+    public void updateRunningAndCompletedLblsInQueueManagement(QueueManagementData queueManagementData) {
+        headerComponentController.updateRunningAndCompletedLblsInQueueManagement(queueManagementData);
     }
 
 }

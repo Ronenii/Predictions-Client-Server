@@ -17,6 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import simulation.objects.world.status.SimulationStatus;
+import ui2engine.simulation.control.bar.DTOSimulationControlBar;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -133,18 +134,6 @@ public class ExecutionDetailsComponentController {
                 populationDataMap.put(entityPopulation.getEntityName(), populationData);
             }
         }
-
-//
-//
-//
-//        ObservableList<PopulationData> populationList = FXCollections.observableArrayList();
-//
-//        for (DTOEntityPopulation e : dtoEntities) {
-//            populationList.add(new PopulationData(e.getEntityName(), e.getPopulation()));
-//        }
-//
-//        entitiesTV.setItems(populationList);
-//        entitiesTV.refresh();
     }
 
     /**
@@ -152,5 +141,20 @@ public class ExecutionDetailsComponentController {
      */
     public void clearExecutionDetails() {
         entitiesTV.getItems().clear();
+    }
+
+    public void sendStopToTheEngine() {
+        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(true, false, false);
+        mainController.getEngineAgent().setStopPauseOrPlayForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+    }
+
+    public void sendPauseToTheEngine() {
+        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, true, false);
+        mainController.getEngineAgent().setStopPauseOrPlayForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+    }
+
+    public void sendPlayToTheEngine() {
+        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, false, true);
+        mainController.getEngineAgent().setStopPauseOrPlayForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
     }
 }
