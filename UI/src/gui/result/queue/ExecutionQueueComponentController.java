@@ -1,6 +1,7 @@
 package gui.result.queue;
 
 import engine2ui.simulation.runtime.SimulationRunData;
+import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.result.ResultComponentController;
 import gui.result.models.StatusData;
@@ -14,8 +15,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import manager.EngineAgent;
+import simulation.objects.world.status.SimulationStatus;
 
-public class ExecutionQueueComponentController implements EngineCommunicator {
+import java.util.HashMap;
+import java.util.Map;
+
+public class ExecutionQueueComponentController implements EngineCommunicator, BarNotifier {
     private ResultComponentController mainController;
     @FXML
     private Label exeListLabel;
@@ -28,26 +33,30 @@ public class ExecutionQueueComponentController implements EngineCommunicator {
     @FXML
     private TableColumn<StatusData, String> simStatusCol;
 
+    private Map<StatusData, SimulationStatus> simulationStatusMap;
+
+    private boolean isFetchStatusTaskRunning;
+
     @FXML
     public void initialize() {
         simIdCol.setCellValueFactory(new PropertyValueFactory<>("simId"));
         simStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        simulationStatusMap = new HashMap<>();
+        isFetchStatusTaskRunning = false;
     }
 
     /**
      * If the selected simulation in the TableView is ongoing or waiting then will create a task that updates the chosen simulation every 200ms.
      * Else will just display the selected simulation.
-     *
      */
     @FXML
     void onMouseClickedTV(MouseEvent event) {
         SimulationRunData selected = mainController.getCurrentSelectedSimulation();
         if (selected != null) {
-            if(selected.isCompleted()){
+            if (selected.isCompleted()) {
                 mainController.updateGuiToChosenSimulation(selected);
-            }
-            else{
-                executeFetchingTask(selected.getSimId());
+            } else {
+                executeSimDataFetchingTask(selected.getSimId());
             }
         }
     }
@@ -57,7 +66,8 @@ public class ExecutionQueueComponentController implements EngineCommunicator {
      * and is ongoing.
      * Every 200ms the task will query the engine for the run data, and will update the SimulationRunDataMap in the parent accordingly.
      */
-    public void executeFetchingTask(String simId){
+    public void executeSimDataFetchingTask(String simId) {
+
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -77,26 +87,112 @@ public class ExecutionQueueComponentController implements EngineCommunicator {
             }
         };
 
-        Thread thread = new Thread(task);
-        thread.setDaemon(true); // Mark the thread as a daemon to allow application exit
-        thread.start();
+        runTask(task);
     }
 
     public void setMainController(ResultComponentController mainController) {
         this.mainController = mainController;
     }
 
-    public void addSimulationToQueue(SimulationRunData simulationRunData){
-        executionsQueueTV.getItems().add(new StatusData(simulationRunData.getSimId(), new SimpleStringProperty(simulationRunData.getStatus())));
-        executionsQueueTV.refresh();
+    public void addSimulationToQueue(SimulationRunData simulationRunData) {
+        StatusData toAdd = new StatusData(simulationRunData.getSimId(), new SimpleStringProperty(simulationRunData.getStatus()));
+        simulationStatusMap.put(toAdd, SimulationStatus.valueOf(toAdd.getStatus()));
+        executionsQueueTV.getItems().add(toAdd);
+        executeSimStatusFetchingTask();
     }
 
-    public StatusData getQueueSelectedItem(){
+    /**
+     * The task responsible for updating the status in the simulation execution queue.
+     */
+    private void executeSimStatusFetchingTask() {
+        // Check that we don't have more than one instance of this task running.
+        if (!isFetchStatusTaskRunning) {
+            isFetchStatusTaskRunning = true;
+            Task<Void> task = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    do {
+                        getStatusUpdatesForRunningSimulations();
+                        Thread.sleep(200); // Make the thread sleep for 200ms
+                    } while (hasNonCompletedSimulations());
+                    return null;
+                }
+            };
+
+            runTask(task);
+        }
+    }
+
+    /**
+     * Iterates on all waiting\ongoing simulations and queries the engine for updates.
+     */
+    private void getStatusUpdatesForRunningSimulations() {
+        for (StatusData s : simulationStatusMap.keySet()
+        ) {
+            if (!s.getStatus().equals(SimulationStatus.COMPLETED.name())) {
+                SimulationRunData selectedInThread = getEngineAgent().getRunDataById(s.getSimId());
+
+                showNotificationIfSimulationRunStarted(s, selectedInThread);
+
+                Platform.runLater(() -> {
+                    s.statusProperty().set(selectedInThread.getStatus());
+                    showNotificationIfSimulationRunCompleted(selectedInThread);
+                });
+            }
+        }
+    }
+
+    /**
+     * Will return true if the simulation is about to be started.
+     */
+    private boolean isStartedSimulation(StatusData current, SimulationRunData next) {
+        return SimulationStatus.valueOf(current.getStatus()) == SimulationStatus.WAITING && SimulationStatus.valueOf(next.status) == SimulationStatus.ONGOING;
+    }
+
+    /**
+     * Prints a notification if the simulation is about to start.
+     */
+    private void showNotificationIfSimulationRunStarted(StatusData statusData, SimulationRunData simulationRunData) {
+        if (isStartedSimulation(statusData, simulationRunData)) {
+            Platform.runLater(() -> {
+                getNotificationBar().showNotification(String.format("Simulation %s has started it's run.", statusData.getSimId()));
+            });
+        }
+    }
+
+    /**
+     * Will only run inside platform run later since it happens only after a simulation's status has changed to COMPLETED.
+     */
+    private void showNotificationIfSimulationRunCompleted(SimulationRunData simulationRunData) {
+        if (SimulationStatus.valueOf(simulationRunData.getStatus()) == SimulationStatus.COMPLETED) {
+            getNotificationBar().showNotification(String.format("Simulation %s has finished it's run.", simulationRunData.getSimId()));
+        }
+    }
+
+    /**
+     * Given a task, this creates a thread for it and runs it.
+     */
+    private void runTask(Task<Void> task) {
+        Thread thread = new Thread(task);
+        thread.setDaemon(true); // Mark the thread as a daemon to allow application exit
+        thread.start();
+    }
+
+    private boolean hasNonCompletedSimulations() {
+        return simulationStatusMap.containsValue(SimulationStatus.ONGOING) || simulationStatusMap.containsValue(SimulationStatus.WAITING);
+    }
+
+    public StatusData getQueueSelectedItem() {
         return executionsQueueTV.getSelectionModel().getSelectedItem();
     }
 
     @Override
-    public EngineAgent getEngineAgent() {
+    public synchronized EngineAgent getEngineAgent() {
         return mainController.getEngineAgent();
+    }
+
+    @Override
+    public BarNotifier getNotificationBar() {
+        return mainController.getNotificationBar();
     }
 }

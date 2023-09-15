@@ -40,6 +40,8 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     private Label entityLabel;
     private int entitiesLeftToAdd;
 
+    private int gridSize;
+
     private Map<DTOEntity, Integer> entityPopulations; // Used for updating the TF values.
 
     public void setMainController(InputsController mainController) {
@@ -129,6 +131,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
 
     @Override
     public void onFileLoaded(PreviewData previewData) {
+        populationTF.clear();
         clearListView();
         enableComponent();
         addItemsToListView(previewData.getEntities());
@@ -142,7 +145,8 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     }
 
     private int calcGridCells(DTOGridAndThread grid){
-        return grid.getGridRows() * grid.getGridColumns();
+        gridSize = grid.getGridRows() * grid.getGridColumns();
+        return gridSize;
     }
 
     /**
@@ -152,6 +156,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
      * @param entities
      */
     private void initEntityPopulations(List<DTOEntity> entities) {
+        updateEntitiesLeft(gridSize);
         for (DTOEntity e : entities
         ) {
             getEngineAgent().sendPopulationData(new EntityPopulationUserInput(e.getName(), 0));

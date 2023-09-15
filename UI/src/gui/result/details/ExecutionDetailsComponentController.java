@@ -89,12 +89,12 @@ public class ExecutionDetailsComponentController {
         // Binds the enabling and disabling of the control bar to this property
         statusProperty.addListener(((observable, oldValue, newValue) -> {
             switch (SimulationStatus.valueOf(newValue.toString().toUpperCase())) {
-                case WAITING:
                 case COMPLETED:
-                    controlBarAnchorPane.disableProperty().set(false);
-                    break;
-                case ONGOING:
                     controlBarAnchorPane.disableProperty().set(true);
+                    break;
+                case WAITING:
+                case ONGOING:
+                    controlBarAnchorPane.disableProperty().set(false);
                     break;
             }
         }));

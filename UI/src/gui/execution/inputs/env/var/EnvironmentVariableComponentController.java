@@ -129,6 +129,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
 
     @Override
     public void onFileLoaded(PreviewData previewData) {
+        valueTF.clear();
         clearListView();
         enableComponent();
         addItemsToListView(previewData.getEnvVariables());
