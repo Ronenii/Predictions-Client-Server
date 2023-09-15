@@ -23,14 +23,17 @@ public class ExecutionDetailsControlBarController {
 
     @FXML
     void pauseButtonActionListener(ActionEvent event) {
+        mainController.sendPauseToTheEngine();
     }
 
     @FXML
     void playButtonActionListener(ActionEvent event) {
+        mainController.sendPlayToTheEngine();
     }
 
     @FXML
     void stopButtonActionListener(ActionEvent event) {
+        mainController.sendStopToTheEngine();
     }
 
 }

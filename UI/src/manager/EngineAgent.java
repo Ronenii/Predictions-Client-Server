@@ -11,6 +11,7 @@ import engine2ui.simulation.runtime.ResultData;
 import engine2ui.simulation.result.ResultInfo;
 import engine2ui.simulation.runtime.SimulationRunData;
 import manager.exception.SimulationNotLoadedException;
+import ui2engine.simulation.control.bar.DTOSimulationControlBar;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
 import ui2engine.simulation.load.DTOLoadFile;
@@ -404,5 +405,9 @@ public class EngineAgent {
 
     public void shutdownThreadPool() {
         engine.shutdownThreadPool();
+    }
+
+    public void setStopPauseOrPlayForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
+        engine.setStopPauseOrPlayForSimById(simId, dtoSimulationControlBar);
     }
 }

@@ -6,6 +6,7 @@ import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.result.ResultInfo;
 import engine2ui.simulation.genral.impl.properties.StartData;
 import engine2ui.simulation.runtime.SimulationRunData;
+import ui2engine.simulation.control.bar.DTOSimulationControlBar;
 import ui2engine.simulation.execution.DTOExecutionData;
 
 import engine2ui.simulation.runtime.ResultData;
@@ -41,4 +42,5 @@ public interface EngineInterface {
     SimulationRunData getRunDataById(String simId);
 
     void shutdownThreadPool();
+    void setStopPauseOrPlayForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar);
 }

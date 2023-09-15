@@ -98,6 +98,7 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
         StatusData toAdd = new StatusData(simulationRunData.getSimId(), new SimpleStringProperty(simulationRunData.getStatus()));
         simulationStatusMap.put(toAdd, SimulationStatus.valueOf(toAdd.getStatus()));
         executionsQueueTV.getItems().add(toAdd);
+        mainController.updateQueueLblInQueueManagement();
         executeSimStatusFetchingTask();
     }
 
@@ -127,8 +128,10 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
      * Iterates on all waiting\ongoing simulations and queries the engine for updates.
      */
     private void getStatusUpdatesForRunningSimulations() {
-        for (StatusData s : simulationStatusMap.keySet()
-        ) {
+        QueueManagementData queueManagementData = new QueueManagementData();
+
+        for (StatusData s : simulationStatusMap.keySet()) {
+            updateQueueManagementData(queueManagementData, s.getStatus());
             if (!s.getStatus().equals(SimulationStatus.COMPLETED.name())) {
                 SimulationRunData selectedInThread = getEngineAgent().getRunDataById(s.getSimId());
 
@@ -137,8 +140,23 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
                 Platform.runLater(() -> {
                     s.statusProperty().set(selectedInThread.getStatus());
                     showNotificationIfSimulationRunCompleted(selectedInThread);
+
                 });
             }
+        }
+
+        // JAT will update the Queue Manager's labels.
+        Platform.runLater(() -> {mainController.updateRunningAndCompletedLblsInQueueManagement(queueManagementData);});
+    }
+
+    /**
+     * Fetch the 'QueueManagementData' object according to the current simulations in the queue.
+     */
+    private void updateQueueManagementData(QueueManagementData queueManagementData, String status) {
+        if(status.equals("ONGOING")) {
+            queueManagementData.runningCount++;
+        } else if (status.equals("COMPLETED")) {
+            queueManagementData.completedCount++;
         }
     }
 

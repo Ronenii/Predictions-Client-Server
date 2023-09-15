@@ -6,6 +6,7 @@ import gui.api.EngineCommunicator;
 import gui.result.details.ExecutionDetailsComponentController;
 import gui.result.models.StatusData;
 import gui.result.queue.ExecutionQueueComponentController;
+import gui.result.queue.QueueManagementData;
 import gui.result.tab.ResultTabComponentController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
@@ -79,6 +80,14 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
     public void updateGuiToChosenSimulation(SimulationRunData simulationRunData){
         executionDetailsComponentController.updateToChosenSimulation(simulationRunData);
         resultTabComponentController.updateToChosenSimulation(simulationRunData);
+    }
+
+    public void updateQueueLblInQueueManagement() {
+        mainController.updateQueueLblInQueueManagement();
+    }
+
+    public void updateRunningAndCompletedLblsInQueueManagement(QueueManagementData queueManagementData) {
+        mainController.updateRunningAndCompletedLblsInQueueManagement(queueManagementData);
     }
 }
 

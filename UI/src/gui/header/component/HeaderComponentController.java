@@ -4,6 +4,7 @@ import engine2ui.simulation.prview.PreviewData;
 import gui.api.EngineCommunicator;
 import gui.app.AppController;
 import gui.header.component.queue.manager.QueueManagerComponentController;
+import gui.result.queue.QueueManagementData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -23,8 +24,7 @@ public class HeaderComponentController implements FileLoadedEvent, EngineCommuni
     private Button loadFileBTN;
 
     @FXML
-    private GridPane QueueManagerComponent;
-
+    private GridPane queueManagerComponent;
     @FXML private QueueManagerComponentController queueManagerComponentController;
 
     @FXML
@@ -114,5 +114,13 @@ public class HeaderComponentController implements FileLoadedEvent, EngineCommuni
     @Override
     public EngineAgent getEngineAgent() {
         return mainController.getEngineAgent();
+    }
+
+    public void updateQueueLblInQueueManagement() {
+        queueManagerComponentController.incrementLblQueue();
+    }
+
+    public void updateRunningAndCompletedLblsInQueueManagement(QueueManagementData queueManagementData) {
+        queueManagerComponentController.updateRunningAndCompletedLblsInQueueManagement(queueManagementData);
     }
 }
