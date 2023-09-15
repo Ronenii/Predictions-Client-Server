@@ -6,9 +6,12 @@ public class SetResponse {
 
     private final String message;
 
-    public SetResponse(boolean success, String message){
-        this.message = message;
+    private final Object parsedValue;
+
+    public SetResponse(boolean success, String message, Object parsedValue) {
         this.success = success;
+        this.message = message;
+        this.parsedValue = parsedValue;
     }
 
     public boolean isSuccess() {
@@ -17,5 +20,9 @@ public class SetResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    public Object getParsedValue() {
+        return parsedValue;
     }
 }

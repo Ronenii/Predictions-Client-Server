@@ -2,6 +2,7 @@ package manager.DTO.creator;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.objects.DTOEntityInstance;
+import engine2ui.simulation.genral.impl.objects.DTOEntityPopulation;
 import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
 import engine2ui.simulation.genral.impl.properties.DTOGridAndThread;
 import engine2ui.simulation.genral.impl.properties.DTORule;
@@ -54,6 +55,16 @@ public class DTOCreator {
         endingConditionsList = getDTOEndingConditionsList(endingConditions);
         gridAndThread = new DTOGridAndThread(grid.getRows(),grid.getColumns(),threadCount);
         return new PreviewData(gridAndThread, envVariables, entitiesList, rulesList, endingConditionsList);
+    }
+
+    public List<DTOEntityPopulation> getDTOEntityPopulationList(Map<String, Entity> entities) {
+        List<DTOEntityPopulation> entityPopulationList = new ArrayList<>();
+
+        for (Entity entity : entities.values()) {
+            entityPopulationList.add(new DTOEntityPopulation(entity.getName(), entity.getCurrentPopulation()));
+        }
+
+        return entityPopulationList;
     }
 
     private List<DTOEnvironmentVariable> getDTOEnvironmentVariableList(Map<String, Property> environmentProperties){

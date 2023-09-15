@@ -43,6 +43,7 @@ public class ReplaceAction extends AbstractAction {
 
     public void invoke(EntityInstance firstEntityInstance, Grid grid, int lastChangeTickCount) {
         EntityInstance newInstance = newEntity.createNewEntityInstance();
+        newEntity.incrementPopulation();
 
         if(replaceType == ReplaceActionType.DERIVED) {
             newInstance.updateDerivedEntityInstance(firstEntityInstance, lastChangeTickCount);

@@ -1,6 +1,7 @@
 package engine2ui.simulation.runtime;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
+import engine2ui.simulation.genral.impl.objects.DTOEntityPopulation;
 
 import java.util.List;
 
@@ -9,13 +10,13 @@ public class SimulationRunData {
     public final String status;
     private final int tick;
     private final long time;
-    private final List<DTOEntity> entities;
+    private final List<DTOEntityPopulation> entityPopulation;
     public ResultData resultData;
     private final boolean isCompleted;
 
-    public SimulationRunData(String simId, int tick, long time, List<DTOEntity> entities, String status, boolean isCompleted) {
+    public SimulationRunData(String simId, int tick, long time, List<DTOEntityPopulation> entityPopulation, String status, boolean isCompleted) {
         this.simId = simId;
-        this.entities = entities;
+        this.entityPopulation = entityPopulation;
         this.tick = tick;
         this.time = time;
         this.status = status;
@@ -34,8 +35,8 @@ public class SimulationRunData {
         return time;
     }
 
-    public List<DTOEntity> getEntities() {
-        return entities;
+    public List<DTOEntityPopulation> getEntityPopulation() {
+        return entityPopulation;
     }
 
     public String getStatus() {

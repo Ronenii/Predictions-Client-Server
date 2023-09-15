@@ -10,12 +10,14 @@ import java.util.*;
 public class Entity implements Serializable {
 
     private int startingPopulation;
+    private int currentPopulation;
     private final String name;
     private final Map<String, Property> properties;
     private final List<EntityInstance> entityInstances;
 
     public Entity(String name, Map<String, Property> properties) {
         this.startingPopulation = 0;
+        this.currentPopulation = 0;
         this.name = name;
         this.properties = properties;
         this.entityInstances = new ArrayList<>();
@@ -23,6 +25,7 @@ public class Entity implements Serializable {
 
     public Entity(String name, Map<String, Property> properties, int startingPopulation) {
         this.startingPopulation = startingPopulation;
+        this.currentPopulation = startingPopulation;
         this.name = name;
         this.properties = properties;
         this.entityInstances = new ArrayList<>();
@@ -34,6 +37,15 @@ public class Entity implements Serializable {
 
     public void setStartingPopulation(int startingPopulation) {
         this.startingPopulation = startingPopulation;
+        this.currentPopulation = startingPopulation;
+    }
+
+    public void incrementPopulation() {
+        currentPopulation++;
+    }
+
+    public void decrementPopulation() {
+        currentPopulation --;
     }
 
     public String getName() {
@@ -68,15 +80,7 @@ public class Entity implements Serializable {
     }
 
     public int getCurrentPopulation() {
-        int aliveCount = 0;
-        for (EntityInstance e : entityInstances
-        ) {
-            if (e.isAlive()) {
-                aliveCount++;
-            }
-        }
-
-        return aliveCount;
+        return currentPopulation;
     }
 
     public void resetPopulation() {

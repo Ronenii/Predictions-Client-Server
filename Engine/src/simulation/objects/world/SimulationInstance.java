@@ -62,7 +62,7 @@ public class SimulationInstance implements Serializable, Runnable {
         this.entities = simulationInstance.dupEntitiesMap();
         this.rules = simulationInstance.dupRules();
         this.endingConditions = simulationInstance.getEndingConditions();
-        this.ticksCounter = simulationInstance.ticksCounter;
+        this.ticksCounter = new TicksCounter();
         this.timePassed = 0;
         this.threadCount = simulationInstance.threadCount;
         this.grid = new Grid(simulationInstance.grid);
@@ -111,7 +111,7 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     public long getTimePassed() {
-        return timePassed;
+        return System.currentTimeMillis() - startingTime;
     }
 
     public SimulationStatus getStatus() {
@@ -224,6 +224,12 @@ public class SimulationInstance implements Serializable, Runnable {
 
         // Simulation main loop
         do {
+//            try {
+//                Thread.sleep(250);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+
             actionsToInvoke.clear();
             grid.moveAllEntities();
             // Get the invokable actions (by ticks and probability)
@@ -457,14 +463,14 @@ public class SimulationInstance implements Serializable, Runnable {
                 totalPopulation -= entities.get(input.getName()).getStartingPopulation();
                 entities.get(input.getName()).setStartingPopulation(input.getPopulation());
                 totalPopulation += input.getPopulation();
-                return new SetResponse(true, String.format("You have successfully changed %s's starting population to %s.", entities.get(input.getName()).getName(), input.getPopulation()));
+                return new SetResponse(true, String.format("You have successfully changed %s's starting population to %s.", entities.get(input.getName()).getName(), input.getPopulation()), null);
             }
         } else {
             if (totalPopulation + input.getPopulation() > gridSize) {
                 return populationErrorMessage(gridSize);
             } else {
                 totalPopulation += input.getPopulation();
-                return new SetResponse(true, String.format("You have successfully set %s's starting population to %s.", entities.get(input.getName()).getName(), input.getPopulation()));
+                return new SetResponse(true, String.format("You have successfully set %s's starting population to %s.", entities.get(input.getName()).getName(), input.getPopulation()), null);
             }
         }
     }
@@ -472,7 +478,7 @@ public class SimulationInstance implements Serializable, Runnable {
     private SetResponse populationErrorMessage(int gridSize) {
         return new SetResponse(false, String.format("ERROR: You are trying to set more entities than the grid size allows.\n" +
                 "You can only add %s entity instances at most.\n" +
-                "The maximum allowed number of entities is %s.", gridSize - totalPopulation, gridSize));
+                "The maximum allowed number of entities is %s.", gridSize - totalPopulation, gridSize), null);
     }
 
     /**

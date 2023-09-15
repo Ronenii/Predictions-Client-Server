@@ -34,6 +34,7 @@ public class EntityInstance implements Serializable {
 
     public void kill() {
         isAlive = false;
+        contextEntity.decrementPopulation();
     }
 
     public boolean isAlive() {

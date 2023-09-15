@@ -1,6 +1,7 @@
 package gui.result.details;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
+import engine2ui.simulation.genral.impl.objects.DTOEntityPopulation;
 import engine2ui.simulation.runtime.SimulationRunData;
 import gui.result.ResultComponentController;
 import gui.result.details.control.bar.ExecutionDetailsControlBarController;
@@ -10,22 +11,30 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import simulation.objects.world.status.SimulationStatus;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 
 public class ExecutionDetailsComponentController {
     private ResultComponentController mainController;
     @FXML
     private TableView<PopulationData> entitiesTV;
+
+    @FXML
+    private TableColumn<PopulationData, String> entityColumn;
+
+    @FXML
+    private TableColumn<PopulationData, Number> quantityColumn;
+
+    private Map<String, PopulationData> populationDataMap;
 
     @FXML
     private Label simulationIdDetLabel;
@@ -57,6 +66,10 @@ public class ExecutionDetailsComponentController {
         if (executionDetailsControlBarController != null) {
             executionDetailsControlBarController.setMainController(this);
         }
+
+        entityColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("population"));
+        populationDataMap = new HashMap<>();
         initProperties();
     }
 
@@ -91,12 +104,12 @@ public class ExecutionDetailsComponentController {
      * Updates the components according to the given simulation run data.
      */
     public void updateToChosenSimulation(SimulationRunData runData) {
-        clearExecutionDetails();
+        //clearExecutionDetails();
         ticksProperty.set(String.valueOf(runData.getTick()));
         durationProperty.set(formatTime(runData.getTime()));
         statusProperty.set(runData.getStatus());
         simIdProperty.set(String.valueOf(runData.getSimId()));
-        updateEntitiesTV(runData.getEntities());
+        updateEntitiesTV(runData.getEntityPopulation());
     }
 
     private String formatTime(long time){
@@ -110,15 +123,28 @@ public class ExecutionDetailsComponentController {
      * @param dtoEntities The entities we want to display the quantities of in the
      *                    entitiesTV.
      */
-    private void updateEntitiesTV(List<DTOEntity> dtoEntities) {
-        ObservableList<PopulationData> populationList = FXCollections.observableArrayList();
-
-        for (DTOEntity e : dtoEntities
-        ) {
-            populationList.add(new PopulationData(e.getName(), e.instanceQuantityProperty()));
+    private void updateEntitiesTV(List<DTOEntityPopulation> dtoEntities) {
+        for (DTOEntityPopulation entityPopulation : dtoEntities) {
+            if (populationDataMap.containsKey(entityPopulation.getEntityName())) {
+                populationDataMap.get(entityPopulation.getEntityName()).populationProperty().set(entityPopulation.getPopulation());
+            } else {
+                PopulationData populationData = new PopulationData(entityPopulation.getEntityName(), entityPopulation.getPopulation());
+                entitiesTV.getItems().add(populationData);
+                populationDataMap.put(entityPopulation.getEntityName(), populationData);
+            }
         }
 
-        entitiesTV.setItems(populationList);
+//
+//
+//
+//        ObservableList<PopulationData> populationList = FXCollections.observableArrayList();
+//
+//        for (DTOEntityPopulation e : dtoEntities) {
+//            populationList.add(new PopulationData(e.getEntityName(), e.getPopulation()));
+//        }
+//
+//        entitiesTV.setItems(populationList);
+//        entitiesTV.refresh();
     }
 
     /**

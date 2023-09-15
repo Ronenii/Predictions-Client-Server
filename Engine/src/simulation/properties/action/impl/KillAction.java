@@ -26,7 +26,9 @@ public class KillAction extends OneEntAction implements Serializable {
 
     @Override
     public void invoke(EntityInstance entityInstance, boolean isExpressionUpdated, int lastChangeTickCount) {
-        entityInstance.kill();
+        if(entityInstance.isAlive()) {
+            entityInstance.kill();
+        }
     }
 
     @Override

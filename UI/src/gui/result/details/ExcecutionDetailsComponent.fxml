@@ -29,8 +29,8 @@
    <children>
       <TableView fx:id="entitiesTV" maxWidth="700.0" prefHeight="200.0" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="1">
          <columns>
-            <TableColumn prefWidth="156.0" resizable="false" text="Entity" />
-            <TableColumn minWidth="1.0" prefWidth="120.0" resizable="false" text="Quantity" />
+            <TableColumn fx:id="entityColumn" prefWidth="156.0" resizable="false" text="Entity" />
+            <TableColumn fx:id="quantityColumn" minWidth="1.0" prefWidth="120.0" resizable="false" text="Quantity" />
          </columns>
       </TableView>
       <AnchorPane fx:id="controlBarAnchorPane" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="3">

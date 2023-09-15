@@ -117,7 +117,7 @@ public class SimulationManager implements EngineInterface, Serializable {
     public StartResponse startSimulation() {
         if(simulationDefinition.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
-            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityList(simulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false);
+            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationList(simulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false);
 
             addSimulationToQueue(simulationRunData);
             return new StartResponse(true, "Simulation was added to the queue successfully.", simulationRunData);
@@ -304,18 +304,17 @@ public class SimulationManager implements EngineInterface, Serializable {
 
     @Override
     public SetResponse setEnvironmentVariable(EnvPropertyUserInput input) {
-
         SetResponse response;
         Map<String, Property> environmentProperties = this.simulationDefinition.getEnvironmentProperties();
         Property envProperty = environmentProperties.get(input.getName());
 
         if (input.isRandomInit()) {
             envProperty.updateValueAndIsRandomInit(getRandomValueByType(envProperty), input.isRandomInit());
-            response = new SetResponse(true, String.format("%s's value was set to %s", input.getName(), input.getValue()));
+            response = new SetResponse(true, String.format("%s's value was set to %s", input.getName(), input.getValue()), null);
         } else {
             response = validateEnvVarInitValue(envProperty, input.getValue());
             if (response.isSuccess()) {
-                envProperty.updateValueAndIsRandomInit(input.getValue(), input.isRandomInit());
+                envProperty.updateValueAndIsRandomInit(response.getParsedValue(), input.isRandomInit());
             }
         }
 
@@ -345,33 +344,33 @@ public class SimulationManager implements EngineInterface, Serializable {
 
                     int value = Integer.parseInt(inputValue.toString());
                     IntProperty intProperty = (IntProperty) property;
-
                     inputValidator.isIntegerInRange(value, intProperty.getFrom(), intProperty.getTo());
-
-                    return new SetResponse(true, successMessage);
+                    return new SetResponse(true, successMessage, value);
                 }
                 case FLOAT: {
                     double value = Double.parseDouble(inputValue.toString());
                     DoubleProperty doubleProperty = (DoubleProperty) property;
-
                     inputValidator.isDoubleInRange(value, doubleProperty.getFrom(), doubleProperty.getTo());
-
-                    return new SetResponse(true, successMessage);
+                    return new SetResponse(true, successMessage, value);
                 }
                 case BOOLEAN: {
                     inputValidator.validateBoolean(inputValue.toString());
-                    return new SetResponse(true, successMessage);
+                    if((inputValue.toString().equalsIgnoreCase("true"))) {
+                        return new SetResponse(true, successMessage, true);
+                    } else {
+                        return new SetResponse(true, successMessage, false);
+                    }
                 }
                 case STRING:
                     inputValidator.validateStringValue(inputValue.toString());
-                    return new SetResponse(true, successMessage);
+                    return new SetResponse(true, successMessage, inputValue);
             }
         } catch (NumberFormatException e) {
-            return new SetResponse(false, String.format("ERROR: Value provided is does not match %s's type (%s)", property.getName(), property.getType().toString()));
+            return new SetResponse(false, String.format("ERROR: Value provided is does not match %s's type (%s)", property.getName(), property.getType().toString()), null);
         } catch (OutOfRangeException | IllegalBooleanValueException e) {
-            return new SetResponse(false, String.format("ERROR: Value given is not in %s's range.", property.getName()));
+            return new SetResponse(false, String.format("ERROR: Value given is not in %s's range.", property.getName()), null);
         } catch (IllegalStringValueException e) {
-            return new SetResponse(false, "ERROR: String given does not meet the string guidelines.");
+            return new SetResponse(false, "ERROR: String given does not meet the string guidelines.", null);
         }
         return null;
     }

@@ -47,7 +47,7 @@ public class ExecutionManager {
 
         switch (simulationInstance.getStatus()) {
             case ONGOING:
-                ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityList(simulationInstance.getEntities()), "ONGOING", false);
+                ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationList(simulationInstance.getEntities()), "ONGOING", false);
                 break;
             case WAITING:
                 ret = simulationsRunData.get(simId);
@@ -56,7 +56,7 @@ public class ExecutionManager {
                 if(simulationsRunData.get(simId).status.equals("COMPLETED")) {
                     ret = simulationsRunData.get(simId);
                 } else {
-                    ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityList(simulationInstance.getEntities()), "COMPLETED", true);
+                    ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationList(simulationInstance.getEntities()), "COMPLETED", true);
                     ret.resultData = simulationInstance.getResultData();
                     simulationsRunData.put(simId, ret);
                 }
