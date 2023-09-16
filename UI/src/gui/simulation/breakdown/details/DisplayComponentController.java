@@ -40,7 +40,7 @@ public class DisplayComponentController implements FileLoadedEvent {
     }
 
     @Override
-    public void onFileLoaded(PreviewData previewData) {
+    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
         lblTitle.setText("The simulation creation has completed successfully");
     }
 }

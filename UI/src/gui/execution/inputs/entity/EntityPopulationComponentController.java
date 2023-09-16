@@ -130,7 +130,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     }
 
     @Override
-    public void onFileLoaded(PreviewData previewData) {
+    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
         populationTF.clear();
         clearListView();
         enableComponent();

@@ -105,7 +105,6 @@ public class ExecutionDetailsComponentController {
      * Updates the components according to the given simulation run data.
      */
     public void updateToChosenSimulation(SimulationRunData runData) {
-        //clearExecutionDetails();
         ticksProperty.set(String.valueOf(runData.getTick()));
         durationProperty.set(formatTime(runData.getTime()));
         statusProperty.set(runData.getStatus());
@@ -136,11 +135,12 @@ public class ExecutionDetailsComponentController {
         }
     }
 
-    /**
-     * Clears the entitiesTV from previous info.
-     */
-    public void clearExecutionDetails() {
+    public void clearComponent() {
         entitiesTV.getItems().clear();
+        populationDataMap.clear();
+        simIdProperty.set("-");
+        durationProperty.set("-");
+        ticksProperty.set("-");
     }
 
     public void sendStopToTheEngine() {

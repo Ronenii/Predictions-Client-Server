@@ -49,6 +49,7 @@ public class SimulationManager implements EngineInterface, Serializable {
     private Map<String, ResultData> pastSimulations;
     private Set<String> keysToSerialize;
     private boolean isSimulationLoaded;
+    private boolean isFirstSimulationLoaded;
     private ExecutionManager executionManager = null;
 
     public SimulationManager() {
@@ -56,6 +57,7 @@ public class SimulationManager implements EngineInterface, Serializable {
         pastSimulations = new HashMap<>();
         isSimulationLoaded = false;
         keysToSerialize = new HashSet<>();
+        isFirstSimulationLoaded = true;
     }
 
     public void loadValuesFromDeserialization(SimulationManager instance) {
@@ -103,6 +105,7 @@ public class SimulationManager implements EngineInterface, Serializable {
         if (this.simulationDefinition != null) {
             dtoLoadSucceed = new DTOLoadSucceed(true);
             invokeSuccessLoadListeners(dto.getListeners());
+            isFirstSimulationLoaded = false;
             if (executionManager != null){
                 executionManager.shutdownThreadPool();
             }
@@ -137,7 +140,7 @@ public class SimulationManager implements EngineInterface, Serializable {
 
         for (EventListener f : listeners) {
             FileLoadedEvent fileLoadedEvent = (FileLoadedEvent) f;
-            fileLoadedEvent.onFileLoaded(previewData);
+            fileLoadedEvent.onFileLoaded(previewData, isFirstSimulationLoaded);
         }
     }
 

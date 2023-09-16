@@ -1,5 +1,6 @@
 package gui.result;
 
+import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.runtime.SimulationRunData;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
@@ -12,9 +13,10 @@ import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import jaxb.event.FileLoadedEvent;
 import manager.EngineAgent;
 
-public class ResultComponentController implements EngineCommunicator, BarNotifier {
+public class ResultComponentController implements EngineCommunicator, BarNotifier, FileLoadedEvent {
     private SubMenusController mainController;
 
     @FXML
@@ -90,6 +92,18 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
     public int getSimulationCurrentTicks() {
         return executionDetailsComponentController.getSimulationCurrentTicks();
     }
+
+    @Override
+    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
+        if(!isFirstSimulationLoaded){
+            resultTabComponentController.clearComponent();
+            resultTabComponentController.disableResultComponent();
+            executionQueueComponentController.clearComponent();
+            executionDetailsComponentController.clearComponent();
+
+        }
+    }
+
 }
 
 

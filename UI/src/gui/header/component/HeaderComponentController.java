@@ -106,8 +106,9 @@ public class HeaderComponentController implements FileLoadedEvent, EngineCommuni
     }
 
     @Override
-    public void onFileLoaded(PreviewData previewData) {
+    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
         pathTF.setText(currentLoadedFilePath);
+        queueManagerComponentController.clearComponent();
         mainController.showNotification("File has been loaded successfully!");
     }
 

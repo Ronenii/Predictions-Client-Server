@@ -56,6 +56,7 @@ public class SubMenusController implements HasFileLoadedListeners, BarNotifier, 
         List<EventListener> listeners = new ArrayList<>();
         listeners.addAll(simBreakdownMenuController.getAllFileLoadedListeners());
         listeners.addAll(newExecutionComponentController.getAllFileLoadedListeners());
+        listeners.add(resultComponentController);
         return listeners;
     }
 

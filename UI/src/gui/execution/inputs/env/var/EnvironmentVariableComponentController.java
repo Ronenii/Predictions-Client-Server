@@ -128,7 +128,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
     }
 
     @Override
-    public void onFileLoaded(PreviewData previewData) {
+    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
         valueTF.clear();
         clearListView();
         enableComponent();
