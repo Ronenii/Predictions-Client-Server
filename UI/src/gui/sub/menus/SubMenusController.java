@@ -84,4 +84,8 @@ public class SubMenusController implements HasFileLoadedListeners, BarNotifier, 
     public void updateRunningAndCompletedLblsInQueueManagement(QueueManagementData queueManagementData) {
         mainController.updateRunningAndCompletedLblsInQueueManagement(queueManagementData);
     }
+
+    public void rerunSimulationById(String simId) {
+        newExecutionComponentController.rerunSimulationById(simId);
+    }
 }

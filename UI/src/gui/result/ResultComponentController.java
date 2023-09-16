@@ -11,10 +11,13 @@ import gui.result.models.QueueManagementData;
 import gui.result.tab.ResultTabComponentController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import jaxb.event.FileLoadedEvent;
 import manager.EngineAgent;
+
+import java.util.Map;
 
 public class ResultComponentController implements EngineCommunicator, BarNotifier, FileLoadedEvent {
     private SubMenusController mainController;
@@ -102,6 +105,14 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
             executionDetailsComponentController.clearComponent();
 
         }
+    }
+
+    public void rerunSimulationById(String simId) {
+        mainController.rerunSimulationById(simId);
+    }
+
+    public TabPane getMenusTabPane() {
+        return mainController.getMenusTabPane();
     }
 
 }

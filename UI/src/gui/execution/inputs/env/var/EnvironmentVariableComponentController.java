@@ -6,6 +6,7 @@ import engine2ui.simulation.prview.PreviewData;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.execution.inputs.InputsController;
+import gui.execution.models.EnvironmentVarsStartData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -209,5 +210,20 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
         environmentVariableMap.replaceAll((e, v) -> "");
         initEnvironmentVariables(new ArrayList<>(environmentVariableMap.keySet()));
         resetListView();
+    }
+
+    public EnvironmentVarsStartData getEnvironmentVarsStartData() {
+        return new EnvironmentVarsStartData(environmentVariableMap);
+    }
+
+    public void fetchEnvironmentVarsStartData(EnvironmentVarsStartData environmentVarsStartData) {
+        environmentVariableMap = environmentVarsStartData.getEnvironmentVariableMap();
+        for (DTOEnvironmentVariable environmentVariable : environmentVariableMap.keySet()) {
+            if (environmentVariableMap.get(environmentVariable) == null) {
+                getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(environmentVariable.getName(), true, null));
+            } else {
+                getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(environmentVariable.getName(), false, environmentVariableMap.get(environmentVariable)));
+            }
+        }
     }
 }
