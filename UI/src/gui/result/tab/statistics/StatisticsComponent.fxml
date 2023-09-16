@@ -23,7 +23,7 @@
     <RowConstraints maxHeight="300.0" minHeight="100.0" prefHeight="200.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TreeView fx:id="entityTreeView" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onMouseClickedTreeView" prefHeight="200.0" prefWidth="150.0" />
+      <TreeView fx:id="entityTreeView" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#selectItem" prefHeight="200.0" prefWidth="150.0" />
       <VBox alignment="TOP_CENTER" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <children>
             <Label minHeight="-Infinity" minWidth="-Infinity" text="Histogram">
@@ -33,8 +33,8 @@
             </Label>
             <TableView fx:id="histogramTableView" minHeight="100.0" minWidth="-Infinity" prefHeight="300.0" prefWidth="150.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Value" />
-                <TableColumn prefWidth="75.0" text="Quantity" />
+                <TableColumn fx:id="valueCol" prefWidth="75.0" text="Value" />
+                <TableColumn fx:id="quantityCol" prefWidth="75.0" text="Quantity" />
               </columns>
             </TableView>
          </children>

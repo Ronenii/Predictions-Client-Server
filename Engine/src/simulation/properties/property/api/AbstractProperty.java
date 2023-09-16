@@ -9,7 +9,7 @@ public abstract class AbstractProperty implements Property, Serializable {
     private final PropertyType type;
     protected Object value;
     protected int lastChangeTickCount;
-
+    protected int changeTickAmount;
 
     public AbstractProperty(String name, boolean isRandInit, PropertyType type, Object value, String entityName) {
         this.name = name;
@@ -18,6 +18,7 @@ public abstract class AbstractProperty implements Property, Serializable {
         this.type = type;
         this.value = value;
         this.lastChangeTickCount = 0;
+        this.changeTickAmount = 1;
     }
 
     @Override
@@ -48,6 +49,11 @@ public abstract class AbstractProperty implements Property, Serializable {
     @Override
     public int getLastChangeTickCount() {
         return lastChangeTickCount;
+    }
+
+    @Override
+    public int getChangeTickAmount() {
+        return changeTickAmount;
     }
 
     @Override

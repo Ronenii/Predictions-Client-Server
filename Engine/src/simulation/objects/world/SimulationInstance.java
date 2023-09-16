@@ -242,7 +242,7 @@ public class SimulationInstance implements Serializable, Runnable {
         do {
             if(!userInstructions.isSimulationPaused){
                 try {
-                    Thread.sleep(400);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

@@ -6,13 +6,15 @@ abstract public class DTOProperty implements Serializable {
     private final String name;
     private final String type;
     private final boolean isRandomInit;
-
     private final Object value;
-    public DTOProperty(String name, String type, boolean isRandomInit, Object value) {
+    private final int changeTickAmount;
+
+    public DTOProperty(String name, String type, boolean isRandomInit, Object value, int changeTickAmount) {
         this.name = name;
         this.type = type;
         this.isRandomInit = isRandomInit;
         this.value = value;
+        this.changeTickAmount = changeTickAmount;
     }
 
     public String getName() {
@@ -29,6 +31,10 @@ abstract public class DTOProperty implements Serializable {
 
     public Object getValue() {
         return value;
+    }
+
+    public int getChangeTickAmount() {
+        return changeTickAmount;
     }
 
     @Override

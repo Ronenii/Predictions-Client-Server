@@ -43,6 +43,7 @@ public class DoubleProperty extends AbstractProperty implements RangedProperty, 
         }
 
         this.lastChangeTickCount = lastChangTickCount;
+        this.changeTickAmount++;
     }
 
     private double getValueAsDouble(Object value) {

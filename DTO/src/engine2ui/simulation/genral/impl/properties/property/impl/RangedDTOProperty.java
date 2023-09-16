@@ -7,8 +7,8 @@ public class RangedDTOProperty extends DTOProperty implements RangedProperty {
     private final double from;
     private final double to;
 
-    public RangedDTOProperty(String name, String type, boolean isRandomInit,  Object value, double from, double to) {
-        super(name, type, isRandomInit,value);
+    public RangedDTOProperty(String name, String type, boolean isRandomInit, Object value, int changeTickAmount, double from, double to) {
+        super(name, type, isRandomInit, value, changeTickAmount);
         this.from = from;
         this.to = to;
     }

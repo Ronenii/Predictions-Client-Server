@@ -75,4 +75,8 @@ public class ResultTabComponentController {
     private void clearComponent() {
         chartComponentController.clearChart();
     }
+
+    public int getSimulationCurrentTicks() {
+       return mainController.getSimulationCurrentTicks();
+    }
 }
