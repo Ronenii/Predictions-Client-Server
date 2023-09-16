@@ -4,7 +4,7 @@ import engine2ui.simulation.prview.PreviewData;
 import gui.api.EngineCommunicator;
 import gui.app.AppController;
 import gui.header.component.queue.manager.QueueManagerComponentController;
-import gui.result.queue.QueueManagementData;
+import gui.result.models.QueueManagementData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

@@ -1,4 +1,4 @@
-package gui.result.queue;
+package gui.result.models;
 
 public class QueueManagementData {
     public int runningCount;

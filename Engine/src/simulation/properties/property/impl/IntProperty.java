@@ -43,6 +43,7 @@ public class IntProperty extends AbstractProperty implements RangedProperty, Ser
         }
 
         this.lastChangeTickCount = lastChangTickCount;
+        this.changeTickAmount++;
     }
 
     public int getFrom() {

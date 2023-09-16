@@ -27,4 +27,6 @@ public interface Property {
 
     int getLastChangeTickCount();
 
+    int getChangeTickAmount();
+
 }

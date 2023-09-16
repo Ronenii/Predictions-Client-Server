@@ -4,6 +4,7 @@ import engine2ui.simulation.runtime.SimulationRunData;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.result.ResultComponentController;
+import gui.result.models.QueueManagementData;
 import gui.result.models.StatusData;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;

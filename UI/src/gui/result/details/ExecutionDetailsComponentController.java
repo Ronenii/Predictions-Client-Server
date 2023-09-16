@@ -157,4 +157,8 @@ public class ExecutionDetailsComponentController {
         DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, false, true);
         mainController.getEngineAgent().setStopPauseOrPlayForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
     }
+
+    public int getSimulationCurrentTicks() {
+        return Integer.parseInt(currentTickDetLabel.getText());
+    }
 }

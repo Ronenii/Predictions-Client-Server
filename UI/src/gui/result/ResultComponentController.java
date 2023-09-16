@@ -6,16 +6,13 @@ import gui.api.EngineCommunicator;
 import gui.result.details.ExecutionDetailsComponentController;
 import gui.result.models.StatusData;
 import gui.result.queue.ExecutionQueueComponentController;
-import gui.result.queue.QueueManagementData;
+import gui.result.models.QueueManagementData;
 import gui.result.tab.ResultTabComponentController;
 import gui.sub.menus.SubMenusController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import manager.EngineAgent;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ResultComponentController implements EngineCommunicator, BarNotifier {
     private SubMenusController mainController;
@@ -88,6 +85,10 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
 
     public void updateRunningAndCompletedLblsInQueueManagement(QueueManagementData queueManagementData) {
         mainController.updateRunningAndCompletedLblsInQueueManagement(queueManagementData);
+    }
+
+    public int getSimulationCurrentTicks() {
+        return executionDetailsComponentController.getSimulationCurrentTicks();
     }
 }
 

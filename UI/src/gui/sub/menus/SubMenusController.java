@@ -8,7 +8,7 @@ import gui.api.HasFileLoadedListeners;
 import gui.app.AppController;
 import gui.execution.NewExecutionComponentController;
 import gui.result.ResultComponentController;
-import gui.result.queue.QueueManagementData;
+import gui.result.models.QueueManagementData;
 import gui.simulation.breakdown.SimBreakdownMenuController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
