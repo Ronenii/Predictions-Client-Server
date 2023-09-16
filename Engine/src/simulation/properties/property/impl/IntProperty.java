@@ -33,17 +33,19 @@ public class IntProperty extends AbstractProperty implements RangedProperty, Ser
     public void setValue(Object value, int lastChangTickCount) {
         int givenValue = (int)value;
 
-        if(givenValue < from){
-            this.value = from;
-        } else if (givenValue > to) {
-            this.value = to;
-        }
-        else {
-            this.value = value;
-        }
+        if((int)this.value != givenValue){
+            if(givenValue < from){
+                this.value = from;
+            } else if (givenValue > to) {
+                this.value = to;
+            }
+            else {
+                this.value = value;
+            }
 
-        this.lastChangeTickCount = lastChangTickCount;
-        this.changeTickAmount++;
+            this.lastChangeTickCount = lastChangTickCount;
+            this.changeTickAmount++;
+        }
     }
 
     public int getFrom() {

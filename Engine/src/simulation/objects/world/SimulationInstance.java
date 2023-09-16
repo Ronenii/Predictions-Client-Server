@@ -12,8 +12,10 @@ import simulation.objects.world.user.instructions.UserInstructions;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
+import simulation.properties.action.expression.impl.methods.TicksExpression;
 import simulation.properties.action.impl.calculation.CalculationAction;
 import simulation.properties.action.impl.condition.AbstractConditionAction;
+import simulation.properties.action.impl.condition.MultipleCondition;
 import simulation.properties.action.impl.proximity.ProximityAction;
 import simulation.properties.action.impl.replace.ReplaceAction;
 import simulation.properties.ending.conditions.EndingConditionType;
@@ -537,6 +539,88 @@ public class SimulationInstance implements Serializable, Runnable {
         }
     }
 
+
+    private void fetchTicksExpressions() {
+        for (Rule rule : rules.values()) {
+            for (Action action : rule.getActions()) {
+                if(action instanceof AbstractConditionAction) {
+                    AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
+                    if(abstractConditionAction instanceof MultipleCondition) {
+                        checkForTicksInSubMultipleConditions(((MultipleCondition)abstractConditionAction).getSubConditions());
+                    }
+                    if(abstractConditionAction.getThenActions() != null){
+                        checkForTicksInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
+                    }
+
+                    if(abstractConditionAction.getElseActions() != null) {
+                        checkForTicksInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
+                    }
+
+                } else if(action instanceof ProximityAction){
+                    ProximityAction proximityAction = (ProximityAction)action;
+                    if(proximityAction.getProximityActions() != null) {
+                        checkForTicksInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
+                    }
+                }
+
+                if(action.getContextProperty() != null && action.getContextProperty() instanceof TicksExpression) {
+                    TicksExpression ticksExpression = (TicksExpression)action.getContextProperty();
+                    ticksExpression.setSimulationTicks(ticksCounter);
+                }
+
+                if(action.getValueExpression() != null && action.getValueExpression() instanceof TicksExpression) {
+                    TicksExpression ticksExpression = (TicksExpression)action.getValueExpression();
+                    ticksExpression.setSimulationTicks(ticksCounter);
+                }
+            }
+        }
+    }
+
+    private void checkForTicksInSubActions(List<Action> subActions) {
+        for (Action action : subActions) {
+            if(action instanceof AbstractConditionAction) {
+                AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
+                if(abstractConditionAction.getThenActions() != null){
+                    checkForTicksInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
+                }
+
+                if(abstractConditionAction.getElseActions() != null) {
+                    checkForTicksInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
+                }
+
+            } else if(action instanceof ProximityAction){
+                ProximityAction proximityAction = (ProximityAction)action;
+                if(proximityAction.getProximityActions() != null) {
+                    checkForTicksInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
+                }
+            }
+
+            if(action.getContextProperty() != null && action.getContextProperty() instanceof TicksExpression) {
+                TicksExpression ticksExpression = (TicksExpression)action.getContextProperty();
+                ticksExpression.setSimulationTicks(ticksCounter);
+            }
+
+            if(action.getValueExpression() != null && action.getValueExpression() instanceof TicksExpression) {
+                TicksExpression ticksExpression = (TicksExpression)action.getValueExpression();
+                ticksExpression.setSimulationTicks(ticksCounter);
+            }
+        }
+    }
+
+    private void checkForTicksInSubMultipleConditions(List<AbstractConditionAction> subConditions) {
+        for (AbstractConditionAction action : subConditions) {
+            if(action.getContextProperty() != null && action.getContextProperty() instanceof TicksExpression) {
+                TicksExpression ticksExpression = (TicksExpression)action.getContextProperty();
+                ticksExpression.setSimulationTicks(ticksCounter);
+            }
+
+            if(action.getValueExpression() != null && action.getValueExpression() instanceof TicksExpression) {
+                TicksExpression ticksExpression = (TicksExpression)action.getValueExpression();
+                ticksExpression.setSimulationTicks(ticksCounter);
+            }
+        }
+    }
+
     private void fetchReplaceActions() {
         Entity entityForReplace;
 
@@ -573,9 +657,24 @@ public class SimulationInstance implements Serializable, Runnable {
                 ReplaceAction replaceAction = (ReplaceAction) action;
                 entityForReplace = entities.get(replaceAction.getNewEntityName());
                 replaceAction.setNewEntity(entityForReplace);
+            } else if (action instanceof AbstractConditionAction) {
+                AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
+                if(abstractConditionAction.getThenActions() != null){
+                    checkForReplaceInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
+                }
+
+                if(abstractConditionAction.getElseActions() != null) {
+                    checkForReplaceInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
+                }
+            } else if (action instanceof ProximityAction) {
+                ProximityAction proximityAction = (ProximityAction)action;
+                if(proximityAction.getProximityActions() != null) {
+                    checkForReplaceInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
+                }
             }
         }
     }
+
 
     private void initSimulation() {
         this.startingTime = System.currentTimeMillis();
@@ -583,6 +682,7 @@ public class SimulationInstance implements Serializable, Runnable {
         userInstructions.isSimulationRunning = true;
         initInstances();
         initGrid();
+        fetchTicksExpressions();
         fetchReplaceActions();
     }
 
