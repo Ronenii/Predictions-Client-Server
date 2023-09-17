@@ -248,7 +248,7 @@ public class SimulationInstance implements Serializable, Runnable {
         // Simulation main loop
         do {
             if(!userInstructions.isSimulationPaused){
-                //threadSleep();
+                threadSleep();
                 try {
                     checkPopulation();
                     actionsToInvoke.clear();
