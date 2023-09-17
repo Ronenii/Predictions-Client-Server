@@ -260,7 +260,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     }
 
     @Override
-    public void onFileLoaded(PreviewData previewData) {
+    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
         clearTreeView();
         displayComponentController.clearGridPaneCell();
         this.previewData = previewData;

@@ -56,6 +56,7 @@ public class SubMenusController implements HasFileLoadedListeners, BarNotifier, 
         List<EventListener> listeners = new ArrayList<>();
         listeners.addAll(simBreakdownMenuController.getAllFileLoadedListeners());
         listeners.addAll(newExecutionComponentController.getAllFileLoadedListeners());
+        listeners.add(resultComponentController);
         return listeners;
     }
 
@@ -82,5 +83,9 @@ public class SubMenusController implements HasFileLoadedListeners, BarNotifier, 
 
     public void updateRunningAndCompletedLblsInQueueManagement(QueueManagementData queueManagementData) {
         mainController.updateRunningAndCompletedLblsInQueueManagement(queueManagementData);
+    }
+
+    public void rerunSimulationById(String simId) {
+        newExecutionComponentController.rerunSimulationById(simId);
     }
 }

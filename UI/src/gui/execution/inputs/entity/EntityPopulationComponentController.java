@@ -7,6 +7,7 @@ import engine2ui.simulation.prview.PreviewData;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.execution.inputs.InputsController;
+import gui.execution.models.EntitiesStartData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -130,7 +131,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     }
 
     @Override
-    public void onFileLoaded(PreviewData previewData) {
+    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
         populationTF.clear();
         clearListView();
         enableComponent();
@@ -216,5 +217,31 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     @Override
     public EngineAgent getEngineAgent() {
         return mainController.getEngineAgent();
+    }
+
+    public EntitiesStartData getEntitiesStartData() {
+        Map<DTOEntity, Integer> entityPopulationsDup = new HashMap<>();
+
+        for (DTOEntity entity : entityPopulations.keySet()) {
+            entityPopulationsDup.put(entity, entityPopulations.get(entity));
+        }
+
+        return new EntitiesStartData(entityPopulationsDup, entitiesLeftToAdd);
+    }
+
+    public void fetchEntitiesStartData(EntitiesStartData entitiesStartData) {
+        for (DTOEntity entity : entitiesStartData.getEntityPopulations().keySet()) {
+            entityPopulations.put(entity, entitiesStartData.getEntityPopulations().get(entity));
+        }
+
+        if (entitiesLV.getSelectionModel().getSelectedItem() != null) {
+            populationTF.setText(entityPopulations.get(entitiesLV.getSelectionModel().getSelectedItem()).toString());
+        }
+
+        entitiesLeftToAdd = entitiesStartData.getEntitiesLeft();
+        entitiesLeftLabel.setText(String.valueOf(entitiesLeftToAdd));
+        for (DTOEntity entity : entityPopulations.keySet()) {
+            getEngineAgent().sendPopulationData(new EntityPopulationUserInput(entity.getName(), entityPopulations.get(entity)));
+        }
     }
 }

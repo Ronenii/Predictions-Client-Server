@@ -19,8 +19,8 @@
       <Label text="Queue" GridPane.halignment="CENTER" />
       <Label text="Running" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
       <Label text="Ended" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-      <Label fx:id="lblQueue" text="Placeholder" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-      <Label fx:id="lblRunning" text="Placeholder" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-      <Label fx:id="lblEnded" text="Placeholder" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+      <Label fx:id="lblQueue" text="-" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+      <Label fx:id="lblRunning" text="-" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+      <Label fx:id="lblEnded" text="-" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
    </children>
 </GridPane>

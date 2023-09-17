@@ -4,6 +4,7 @@ import engine2ui.simulation.execution.StartResponse;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.execution.NewExecutionComponentController;
+import gui.execution.models.StartDetails;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -34,7 +35,7 @@ public class ControlBarController implements BarNotifier, EngineCommunicator {
         if(getEngineAgent().isFileLoaded())
         {
             StartResponse response = getEngineAgent().startSimulation();
-
+            mainController.updateStartDetailsMap(response.getSimulationRunData().getSimId(), response.getSimulationRunData().getEnvVarsValuesMap());
             showNotification(response.getMessage());
             if(response.isSuccess()){
                 mainController.getMenusTabPane().getSelectionModel().selectLast();

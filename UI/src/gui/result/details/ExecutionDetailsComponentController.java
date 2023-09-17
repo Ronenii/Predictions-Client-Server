@@ -9,7 +9,9 @@ import gui.result.models.PopulationData;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -51,6 +53,8 @@ public class ExecutionDetailsComponentController {
     private ExecutionDetailsControlBarController executionDetailsControlBarController;
     @FXML
     private AnchorPane controlBarAnchorPane;
+    @FXML
+    private Button rerunBTN;
 
     private SimpleStringProperty ticksProperty;
     private SimpleStringProperty durationProperty;
@@ -105,12 +109,17 @@ public class ExecutionDetailsComponentController {
      * Updates the components according to the given simulation run data.
      */
     public void updateToChosenSimulation(SimulationRunData runData) {
-        //clearExecutionDetails();
         ticksProperty.set(String.valueOf(runData.getTick()));
         durationProperty.set(formatTime(runData.getTime()));
         statusProperty.set(runData.getStatus());
         simIdProperty.set(String.valueOf(runData.getSimId()));
         updateEntitiesTV(runData.getEntityPopulation());
+        if(runData.isCompleted()) {
+            rerunBTN.setDisable(false);
+        }
+        else {
+            rerunBTN.setDisable(true);
+        }
     }
 
     private String formatTime(long time){
@@ -136,11 +145,12 @@ public class ExecutionDetailsComponentController {
         }
     }
 
-    /**
-     * Clears the entitiesTV from previous info.
-     */
-    public void clearExecutionDetails() {
+    public void clearComponent() {
         entitiesTV.getItems().clear();
+        populationDataMap.clear();
+        simIdProperty.set("-");
+        durationProperty.set("-");
+        ticksProperty.set("-");
     }
 
     public void sendStopToTheEngine() {
@@ -160,5 +170,11 @@ public class ExecutionDetailsComponentController {
 
     public int getSimulationCurrentTicks() {
         return Integer.parseInt(currentTickDetLabel.getText());
+    }
+
+    @FXML
+    void rerunButtonActionListener(ActionEvent event) {
+        mainController.rerunSimulationById(simulationIdDetLabel.getText());
+        mainController.getMenusTabPane().getSelectionModel().selectPrevious();
     }
 }

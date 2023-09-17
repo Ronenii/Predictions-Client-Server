@@ -9,7 +9,7 @@ import simulation.properties.property.api.PropertyType;
 public class TicksExpression extends AbstractExpression {
 
     private Property property;
-    private final TicksCounter simulationTicks;
+    private TicksCounter simulationTicks;
     private final String entityName;
 
     public TicksExpression(PropertyType returnValueType, Property property, TicksCounter simulationTicks, String entityName) {
@@ -21,6 +21,10 @@ public class TicksExpression extends AbstractExpression {
 
     public void setProperty(Property property) {
         this.property = property;
+    }
+
+    public void setSimulationTicks(TicksCounter simulationTicks) {
+        this.simulationTicks = simulationTicks;
     }
 
     @Override

@@ -214,4 +214,14 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
     public BarNotifier getNotificationBar() {
         return mainController.getNotificationBar();
     }
+
+    public void clearComponent() {
+        executionsQueueTV.getItems().clear();
+        simIdCol.setCellValueFactory(new PropertyValueFactory<>("simId"));
+        simStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        simulationStatusMap.clear();
+        isFetchStatusTaskRunning = false;
+        // JAT will clear the queue manager after its previous actions.
+        Platform.runLater(() -> {mainController.updateRunningAndCompletedLblsInQueueManagement(new QueueManagementData());});
+    }
 }

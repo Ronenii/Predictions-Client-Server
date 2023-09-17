@@ -6,6 +6,7 @@ import engine2ui.simulation.prview.PreviewData;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.execution.inputs.InputsController;
+import gui.execution.models.EnvironmentVarsStartData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -128,7 +129,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
     }
 
     @Override
-    public void onFileLoaded(PreviewData previewData) {
+    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
         valueTF.clear();
         clearListView();
         enableComponent();
@@ -162,6 +163,9 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
 
     private void addItemsToListView(List<DTOEnvironmentVariable> envVariables) {
         envVarsLV.getItems().addAll(envVariables);
+        for (DTOEnvironmentVariable environmentVariable : envVariables) {
+            environmentVariableMap.put(environmentVariable,"");
+        }
 
         envVarsLV.setCellFactory(new Callback<ListView<DTOEnvironmentVariable>, ListCell<DTOEnvironmentVariable>>() {
             @Override
@@ -209,5 +213,26 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
         environmentVariableMap.replaceAll((e, v) -> "");
         initEnvironmentVariables(new ArrayList<>(environmentVariableMap.keySet()));
         resetListView();
+    }
+
+    public void fetchEnvironmentVarsStartData(EnvironmentVarsStartData environmentVarsStartData) {
+        Map<String, Object> envVarsValuesMap = environmentVarsStartData.getEnvVarsValuesMap();
+
+        for(DTOEnvironmentVariable environmentVariable : environmentVariableMap.keySet()) {
+            environmentVariableMap.put(environmentVariable, envVarsValuesMap.get(environmentVariable.getName()).toString());
+        }
+
+        for (DTOEnvironmentVariable environmentVariable : environmentVariableMap.keySet()) {
+            if (environmentVariableMap.get(environmentVariable) == null) {
+                getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(environmentVariable.getName(), true, null));
+            } else {
+                getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(environmentVariable.getName(), false, environmentVariableMap.get(environmentVariable)));
+            }
+        }
+
+        DTOEnvironmentVariable selectedItem = envVarsLV.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            updateTextFieldToCurrentEnvVarValue(selectedItem);
+        }
     }
 }

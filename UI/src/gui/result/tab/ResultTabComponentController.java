@@ -72,8 +72,9 @@ public class ResultTabComponentController {
         statisticsComponentController.loadComponent(resultData.getEntities());
     }
 
-    private void clearComponent() {
+    public void clearComponent() {
         chartComponentController.clearChart();
+        statisticsComponentController.clearComponent();
     }
 
     public int getSimulationCurrentTicks() {

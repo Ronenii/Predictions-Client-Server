@@ -5,6 +5,9 @@ import gui.api.HasFileLoadedListeners;
 import gui.execution.NewExecutionComponentController;
 import gui.execution.inputs.entity.EntityPopulationComponentController;
 import gui.execution.inputs.env.var.EnvironmentVariableComponentController;
+import gui.execution.models.EntitiesStartData;
+import gui.execution.models.EnvironmentVarsStartData;
+import gui.execution.models.StartDetails;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import manager.EngineAgent;
@@ -13,6 +16,7 @@ import ui2engine.simulation.execution.DTOExecutionData;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
+import java.util.Map;
 
 public class InputsController implements HasFileLoadedListeners, BarNotifier, EngineCommunicator {
     private NewExecutionComponentController mainController;
@@ -57,5 +61,16 @@ public class InputsController implements HasFileLoadedListeners, BarNotifier, En
     public void clearInputs(){
         entityPopulationComponentController.clearInputs();
         environmentVariableComponentController.clearInputs();
+    }
+
+    public StartDetails getStartDetails(Map<String, Object> envVarsValuesMap) {
+        EntitiesStartData entitiesStartData = entityPopulationComponentController.getEntitiesStartData();
+        EnvironmentVarsStartData environmentVarsStartData = new EnvironmentVarsStartData(envVarsValuesMap);
+        return new StartDetails(entitiesStartData, environmentVarsStartData);
+    }
+
+    public void fetchStartDetails(StartDetails startDetails) {
+        entityPopulationComponentController.fetchEntitiesStartData(startDetails.getEntitiesStartData());
+        environmentVariableComponentController.fetchEnvironmentVarsStartData(startDetails.getEnvironmentVarsStartData());
     }
 }

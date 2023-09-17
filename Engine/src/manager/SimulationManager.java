@@ -49,6 +49,7 @@ public class SimulationManager implements EngineInterface, Serializable {
     private Map<String, ResultData> pastSimulations;
     private Set<String> keysToSerialize;
     private boolean isSimulationLoaded;
+    private boolean isFirstSimulationLoaded;
     private ExecutionManager executionManager = null;
 
     public SimulationManager() {
@@ -56,6 +57,7 @@ public class SimulationManager implements EngineInterface, Serializable {
         pastSimulations = new HashMap<>();
         isSimulationLoaded = false;
         keysToSerialize = new HashSet<>();
+        isFirstSimulationLoaded = true;
     }
 
     public void loadValuesFromDeserialization(SimulationManager instance) {
@@ -103,6 +105,7 @@ public class SimulationManager implements EngineInterface, Serializable {
         if (this.simulationDefinition != null) {
             dtoLoadSucceed = new DTOLoadSucceed(true);
             invokeSuccessLoadListeners(dto.getListeners());
+            isFirstSimulationLoaded = false;
             if (executionManager != null){
                 executionManager.shutdownThreadPool();
             }
@@ -119,7 +122,7 @@ public class SimulationManager implements EngineInterface, Serializable {
         if(simulationDefinition.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
             String id = IdGenerator.generateID();
-            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationList(simulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false);
+            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationList(simulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap());
 
             addSimulationToQueue(simulationRunData);
             return new StartResponse(true, String.format("Simulation %s was added to the queue successfully.", id), simulationRunData);
@@ -127,6 +130,17 @@ public class SimulationManager implements EngineInterface, Serializable {
             return new StartResponse(false, "ERROR: Could not start simulation. You need to have at least one entity with a population larger than 0.");
         }
 
+    }
+
+    private Map<String, Object> getEnvVarsValuesMap() {
+        Map<String, Object> envVarsValuesMap = new HashMap<>();
+        Map<String, Property> environmentProperties = simulationDefinition.getEnvironmentProperties();
+
+        for (Property property : environmentProperties.values()) {
+            envVarsValuesMap.put(property.getName(), property.getValue());
+        }
+
+        return envVarsValuesMap;
     }
 
     /**
@@ -137,7 +151,7 @@ public class SimulationManager implements EngineInterface, Serializable {
 
         for (EventListener f : listeners) {
             FileLoadedEvent fileLoadedEvent = (FileLoadedEvent) f;
-            fileLoadedEvent.onFileLoaded(previewData);
+            fileLoadedEvent.onFileLoaded(previewData, isFirstSimulationLoaded);
         }
     }
 
