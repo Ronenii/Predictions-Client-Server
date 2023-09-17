@@ -11,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import simulation.objects.entity.Entity;
+import simulation.objects.entity.EntityInstance;
 import simulation.properties.property.api.PropertyType;
 
 import java.util.*;
@@ -98,7 +99,7 @@ public class StatisticsComponentController {
             if (selectedItem.isLeaf()) {
                 chosenProperty = getDTOPropertyByName(selectedItem.getParent().getValue(), selectedItem.getValue());
                 updateHistogramTableView(chosenProperty, selectedItem.getParent().getValue());
-                updateConsistencyLbl(chosenProperty, getHasPopulation(getDTOEntityByName(selectedItem.getParent().getValue())));
+                updateConsistencyLbl(selectedItem.getValue(), selectedItem.getParent().getValue(), getHasPopulation(getDTOEntityByName(selectedItem.getParent().getValue())));
                 updateAverageLbl(selectedItem.getParent().getValue(), chosenProperty.getName(), chosenProperty.getType());
             }
         }
@@ -204,12 +205,17 @@ public class StatisticsComponentController {
     /**
      * Calculate and set in 'consistencyLabel' the property's consistency.
      */
-    private void updateConsistencyLbl(DTOProperty property, boolean hasPopulation) {
+    private void updateConsistencyLbl(String propertyName, String entityName, boolean hasPopulation) {
         if(hasPopulation){
+            DTOEntityInstance[] entityInstances = getDTOEntityByName(entityName).getInstances();
             int simulationTicks = mainController.getSimulationCurrentTicks();
-            float avg = (float)simulationTicks / property.getChangeTickAmount();
+            float subAvg = 0, mainAvg;
+            for (DTOEntityInstance entityInstance : entityInstances) {
+                subAvg += (float)simulationTicks / entityInstance.getDTOPropertyByName(propertyName).getChangeTickAmount();
+            }
 
-            consistencyLabel.setText(String.format("%.2f", avg));
+            mainAvg = subAvg / entityInstances.length;
+            consistencyLabel.setText(String.format("%.2f", mainAvg));
         }else {
             consistencyLabel.setText("-");
         }
