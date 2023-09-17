@@ -70,8 +70,8 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
         mainController.addSimulationToQueue(simulationRunData);
     }
 
-    public void updateStartDetailsMap(String simId) {
-        StartDetails startDetails = inputsController.getStartDetails();
+    public void updateStartDetailsMap(String simId, Map<String, Object> envVarsValuesMap) {
+        StartDetails startDetails = inputsController.getStartDetails(envVarsValuesMap);
         startDetailsMap.put(simId, startDetails);
     }
 

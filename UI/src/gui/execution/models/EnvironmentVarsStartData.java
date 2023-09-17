@@ -5,13 +5,13 @@ import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import java.util.Map;
 
 public class EnvironmentVarsStartData {
-    private final Map<DTOEnvironmentVariable, String> environmentVariableMap;
+    private final Map<String, Object> envVarsValuesMap;
 
-    public EnvironmentVarsStartData(Map<DTOEnvironmentVariable, String> environmentVariableMap) {
-        this.environmentVariableMap = environmentVariableMap;
+    public EnvironmentVarsStartData(Map<String, Object> envVarsValuesMap) {
+        this.envVarsValuesMap = envVarsValuesMap;
     }
 
-    public Map<DTOEnvironmentVariable, String> getEnvironmentVariableMap() {
-        return environmentVariableMap;
+    public Map<String, Object> getEnvVarsValuesMap() {
+        return envVarsValuesMap;
     }
 }

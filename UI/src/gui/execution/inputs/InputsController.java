@@ -16,6 +16,7 @@ import ui2engine.simulation.execution.DTOExecutionData;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
+import java.util.Map;
 
 public class InputsController implements HasFileLoadedListeners, BarNotifier, EngineCommunicator {
     private NewExecutionComponentController mainController;
@@ -62,9 +63,9 @@ public class InputsController implements HasFileLoadedListeners, BarNotifier, En
         environmentVariableComponentController.clearInputs();
     }
 
-    public StartDetails getStartDetails() {
+    public StartDetails getStartDetails(Map<String, Object> envVarsValuesMap) {
         EntitiesStartData entitiesStartData = entityPopulationComponentController.getEntitiesStartData();
-        EnvironmentVarsStartData environmentVarsStartData = environmentVariableComponentController.getEnvironmentVarsStartData();
+        EnvironmentVarsStartData environmentVarsStartData = new EnvironmentVarsStartData(envVarsValuesMap);
         return new StartDetails(entitiesStartData, environmentVarsStartData);
     }
 

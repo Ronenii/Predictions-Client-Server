@@ -163,6 +163,9 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
 
     private void addItemsToListView(List<DTOEnvironmentVariable> envVariables) {
         envVarsLV.getItems().addAll(envVariables);
+        for (DTOEnvironmentVariable environmentVariable : envVariables) {
+            environmentVariableMap.put(environmentVariable,"");
+        }
 
         envVarsLV.setCellFactory(new Callback<ListView<DTOEnvironmentVariable>, ListCell<DTOEnvironmentVariable>>() {
             @Override
@@ -212,18 +215,24 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
         resetListView();
     }
 
-    public EnvironmentVarsStartData getEnvironmentVarsStartData() {
-        return new EnvironmentVarsStartData(environmentVariableMap);
-    }
-
     public void fetchEnvironmentVarsStartData(EnvironmentVarsStartData environmentVarsStartData) {
-        environmentVariableMap = environmentVarsStartData.getEnvironmentVariableMap();
+        Map<String, Object> envVarsValuesMap = environmentVarsStartData.getEnvVarsValuesMap();
+
+        for(DTOEnvironmentVariable environmentVariable : environmentVariableMap.keySet()) {
+            environmentVariableMap.put(environmentVariable, envVarsValuesMap.get(environmentVariable.getName()).toString());
+        }
+
         for (DTOEnvironmentVariable environmentVariable : environmentVariableMap.keySet()) {
             if (environmentVariableMap.get(environmentVariable) == null) {
                 getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(environmentVariable.getName(), true, null));
             } else {
                 getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(environmentVariable.getName(), false, environmentVariableMap.get(environmentVariable)));
             }
+        }
+
+        DTOEnvironmentVariable selectedItem = envVarsLV.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            updateTextFieldToCurrentEnvVarValue(selectedItem);
         }
     }
 }

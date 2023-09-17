@@ -312,12 +312,15 @@ public class SimulationInstance implements Serializable, Runnable {
      */
     private void invokeActionsOnSingleInstance(EntityInstance entityInstance, List<Action> actionsToInvoke) {
         for (Action action : actionsToInvoke){
-            if(action.getContextEntity().equals(entityInstance.getInstanceEntityName())){
-                if(action.getSecondaryEntity() != null) {
-                    invokeActionsWithSecondaryEntity(entityInstance, action);
-                }
-                else {
-                    invokeAnAction(entityInstance, action);
+            // Need to check again if an instance did not get kill in the previous actions.
+            if(entityInstance.isAlive()){
+                if(action.getContextEntity().equals(entityInstance.getInstanceEntityName())){
+                    if(action.getSecondaryEntity() != null) {
+                        invokeActionsWithSecondaryEntity(entityInstance, action);
+                    }
+                    else {
+                        invokeAnAction(entityInstance, action);
+                    }
                 }
             }
         }

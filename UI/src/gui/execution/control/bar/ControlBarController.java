@@ -35,7 +35,7 @@ public class ControlBarController implements BarNotifier, EngineCommunicator {
         if(getEngineAgent().isFileLoaded())
         {
             StartResponse response = getEngineAgent().startSimulation();
-            mainController.updateStartDetailsMap(response.getSimulationRunData().getSimId());
+            mainController.updateStartDetailsMap(response.getSimulationRunData().getSimId(), response.getSimulationRunData().getEnvVarsValuesMap());
             showNotification(response.getMessage());
             if(response.isSuccess()){
                 mainController.getMenusTabPane().getSelectionModel().selectLast();
