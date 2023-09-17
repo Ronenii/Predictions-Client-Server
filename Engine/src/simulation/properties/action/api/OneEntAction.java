@@ -1,6 +1,7 @@
 package simulation.properties.action.api;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.exception.CrashException;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.expression.api.Expression;
 
@@ -11,7 +12,7 @@ public abstract class OneEntAction extends AbstractAction implements Action, Ser
         super(type, contextProperty, contextEntity, secondaryEntity);
     }
 
-    abstract public void invoke(EntityInstance entityInstance, boolean isExpressionUpdated, int lastChangeTickCount);
+    abstract public void invoke(EntityInstance entityInstance, boolean isExpressionUpdated, int lastChangeTickCount) throws CrashException;
 
-    abstract public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, int lastChangeTickCount);
+    abstract public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, int lastChangeTickCount) throws CrashException;
 }

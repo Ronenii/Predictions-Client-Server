@@ -135,13 +135,16 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
             updateQueueManagementData(queueManagementData, s.getStatus());
             if (!s.getStatus().equals(SimulationStatus.COMPLETED.name())) {
                 SimulationRunData selectedInThread = getEngineAgent().getRunDataById(s.getSimId());
+                if(selectedInThread.errorMessage != null){
+                    Platform.runLater(() -> {
+                        getNotificationBar().showNotification(selectedInThread.errorMessage);
+                    });
+                }
 
                 showNotificationIfSimulationRunStarted(s, selectedInThread);
-
                 Platform.runLater(() -> {
                     s.statusProperty().set(selectedInThread.getStatus());
                     showNotificationIfSimulationRunCompleted(selectedInThread);
-
                 });
             }
         }

@@ -2,6 +2,7 @@ package simulation.properties.action.impl.condition;
 
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.exception.CrashException;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.ActionType;
@@ -45,7 +46,7 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
      * @param entityInstance The given instance to invoke the condition action on.
      */
     @Override
-    public void invoke(EntityInstance entityInstance, Grid grid, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, Grid grid, int lastChangeTickCount) throws CrashException {
         boolean isFirst = true;
 
         for (AbstractConditionAction a : subConditions) {
@@ -74,7 +75,7 @@ public class MultipleCondition extends AbstractConditionAction implements Serial
     }
 
     @Override
-    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount) {
+    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount) throws CrashException {
         boolean isFirst = true;
 
         for (AbstractConditionAction a : subConditions) {

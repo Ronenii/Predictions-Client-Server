@@ -15,6 +15,7 @@ public class SimulationRunData {
     public ResultData resultData;
     private final boolean isCompleted;
     private final Map<String, Object> envVarsValuesMap;
+    public String errorMessage = null;
 
     public SimulationRunData(String simId, int tick, long time, List<DTOEntityPopulation> entityPopulation, String status, boolean isCompleted, Map<String, Object> envVarsValuesMap) {
         this.simId = simId;

@@ -64,6 +64,17 @@ public class ExecutionManager {
                 }
 
                 break;
+            case CRUSHED:
+                if(simulationsRunData.get(simId).status.equals("CRUSHED")) {
+                    simulationsRunData.get(simId).errorMessage = null;
+                    ret = simulationsRunData.get(simId);
+                } else {
+                    ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationList(simulationInstance.getEntities()), "CRUSHED", false, null);
+                    ret.errorMessage = simulationInstance.getErrorMessage();
+                    simulationsRunData.put(simId, ret);
+                }
+
+                break;
         }
 
         return ret;

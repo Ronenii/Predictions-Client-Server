@@ -151,6 +151,7 @@ public class ExecutionDetailsComponentController {
         simIdProperty.set("-");
         durationProperty.set("-");
         ticksProperty.set("-");
+        rerunBTN.setDisable(true);
     }
 
     public void sendStopToTheEngine() {
