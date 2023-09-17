@@ -115,6 +115,18 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
         return mainController.getMenusTabPane();
     }
 
+    public void setExecutionQueueTaskOnSkipForward() {
+        executionQueueComponentController.setExecutionQueueTaskOnSkipForward();
+    }
+
+    public void setExecutionQueueTaskOnPause() {
+        executionQueueComponentController.setExecutionQueueTaskOnPause();
+    }
+
+    public void disableExecutionQueueTaskOnPause() {
+        executionQueueComponentController.disableExecutionQueueTaskOnPause();
+    }
+
 }
 
 

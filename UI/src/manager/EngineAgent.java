@@ -407,7 +407,7 @@ public class EngineAgent {
         engine.shutdownThreadPool();
     }
 
-    public void setStopPauseOrPlayForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
-        engine.setStopPauseOrPlayForSimById(simId, dtoSimulationControlBar);
+    public void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
+        engine.setStopPausePlayOrSkipFwdForSimById(simId, dtoSimulationControlBar);
     }
 }

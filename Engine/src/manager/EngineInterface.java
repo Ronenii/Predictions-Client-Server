@@ -42,5 +42,5 @@ public interface EngineInterface {
     SimulationRunData getRunDataById(String simId);
 
     void shutdownThreadPool();
-    void setStopPauseOrPlayForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar);
+    void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar);
 }

@@ -1,14 +1,11 @@
 package gui.result.details;
 
-import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.objects.DTOEntityPopulation;
 import engine2ui.simulation.runtime.SimulationRunData;
 import gui.result.ResultComponentController;
 import gui.result.details.control.bar.ExecutionDetailsControlBarController;
 import gui.result.models.PopulationData;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -155,18 +152,35 @@ public class ExecutionDetailsComponentController {
     }
 
     public void sendStopToTheEngine() {
-        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(true, false, false);
-        mainController.getEngineAgent().setStopPauseOrPlayForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(true, false, false, false);
+        mainController.getEngineAgent().setStopPausePlayOrSkipFwdForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
     }
 
     public void sendPauseToTheEngine() {
-        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, true, false);
-        mainController.getEngineAgent().setStopPauseOrPlayForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, true, false, false);
+        mainController.getEngineAgent().setStopPausePlayOrSkipFwdForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
     }
 
     public void sendPlayToTheEngine() {
-        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, false, true);
-        mainController.getEngineAgent().setStopPauseOrPlayForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, false, true, false);
+        mainController.getEngineAgent().setStopPausePlayOrSkipFwdForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+    }
+
+    public void sendSkipForwardToTheEngine() {
+        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, true, false, true);
+        mainController.getEngineAgent().setStopPausePlayOrSkipFwdForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+    }
+
+    public void setExecutionQueueTaskOnSkipForward() {
+        mainController.setExecutionQueueTaskOnSkipForward();
+    }
+
+    public void setExecutionQueueTaskOnPause() {
+        mainController.setExecutionQueueTaskOnPause();
+    }
+
+    public void disableExecutionQueueTaskOnPause() {
+        mainController.disableExecutionQueueTaskOnPause();
     }
 
     public int getSimulationCurrentTicks() {

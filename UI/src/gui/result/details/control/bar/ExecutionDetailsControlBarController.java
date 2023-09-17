@@ -17,6 +17,9 @@ public class ExecutionDetailsControlBarController {
     @FXML
     private Button stopBTN;
 
+    @FXML
+    private Button skipForwardBTN;
+
     public void setMainController(ExecutionDetailsComponentController mainController) {
         this.mainController = mainController;
     }
@@ -24,16 +27,26 @@ public class ExecutionDetailsControlBarController {
     @FXML
     void pauseButtonActionListener(ActionEvent event) {
         mainController.sendPauseToTheEngine();
+        mainController.setExecutionQueueTaskOnPause();
+        skipForwardBTN.setDisable(false);
     }
 
     @FXML
     void playButtonActionListener(ActionEvent event) {
         mainController.sendPlayToTheEngine();
+        mainController.disableExecutionQueueTaskOnPause();
+        skipForwardBTN.setDisable(true);
     }
 
     @FXML
     void stopButtonActionListener(ActionEvent event) {
         mainController.sendStopToTheEngine();
+        skipForwardBTN.setDisable(true);
     }
 
+    @FXML
+    void skipForwardButtonActionListener(ActionEvent event) {
+        mainController.sendSkipForwardToTheEngine();
+        mainController.setExecutionQueueTaskOnSkipForward();
+    }
 }

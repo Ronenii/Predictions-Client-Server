@@ -247,7 +247,7 @@ public class SimulationInstance implements Serializable, Runnable {
         initSimulation();
         // Simulation main loop
         do {
-            if(!userInstructions.isSimulationPaused){
+            if(!userInstructions.isSimulationPaused || userInstructions.isSimulationSkippedForward){
                 threadSleep();
                 try {
                     checkPopulation();
@@ -268,7 +268,12 @@ public class SimulationInstance implements Serializable, Runnable {
                     errorMessage = e.getErrorMassage();
                     status = SimulationStatus.CRUSHED;
                 }
+
+                if (userInstructions.isSimulationSkippedForward) {
+                    resultData.setEntities(dtoCreator.convertEntities2DTOEntities(entities));
+                }
             }
+            userInstructions.isSimulationSkippedForward = false;
         } while ((!endingConditionsMet()));
 
         if(status != SimulationStatus.CRUSHED){
