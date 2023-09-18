@@ -127,6 +127,10 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
         executionQueueComponentController.disableExecutionQueueTaskOnPause();
     }
 
+    public void setOneUpdateAfterPauseFlag() {
+        executionQueueComponentController.setOneUpdateAfterPauseFlag();
+    }
+
 }
 
 

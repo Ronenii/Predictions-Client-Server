@@ -38,6 +38,7 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
     private boolean isFetchStatusTaskRunning;
     private boolean isSimulationPaused;
     private boolean isSimulationSkippedForward;
+    private boolean oneUpdateAfterPauseFlag;
 
 
     @FXML
@@ -48,6 +49,7 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
         isFetchStatusTaskRunning = false;
         isSimulationPaused = false;
         isSimulationSkippedForward = false;
+        oneUpdateAfterPauseFlag = false;
     }
 
     /**
@@ -80,7 +82,7 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
                 do {
                     selectedInThread = getEngineAgent().getRunDataById(getQueueSelectedItem().getSimId());// Get the most current run data from the engine
                     // Wrap UI updates in Platform.runLater to execute them on the FX application thread
-                    if(!isSimulationPaused || isSimulationSkippedForward) {
+                    if(!isSimulationPaused || isSimulationSkippedForward || oneUpdateAfterPauseFlag) {
                         // Check if we skipped forward and didn't get entities in the ResultData to load.
                         if(!isSimulationSkippedForward || selectedInThread.resultData.getEntities() != null) {
                             SimulationRunData finalSelectedInThread = selectedInThread;
@@ -89,6 +91,7 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
                             });
                             isSimulationSkippedForward = false;
                         }
+                        oneUpdateAfterPauseFlag = false;
                     }
 
                     Thread.sleep(200); // Make the thread sleep for 200ms
@@ -247,5 +250,9 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
 
     public void disableExecutionQueueTaskOnPause() {
         isSimulationPaused = false;
+    }
+
+    public void setOneUpdateAfterPauseFlag() {
+        oneUpdateAfterPauseFlag = true;
     }
 }

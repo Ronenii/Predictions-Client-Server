@@ -87,6 +87,10 @@ public class ExecutionManager {
         return ret;
     }
 
+    /**
+     * set the simulations control bar flags according to the 'DTOSimulationControlBar'.
+     * The 'DTOSimulationControlBar' contains info about which button was clicked.
+     */
     public void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
         SimulationInstance simulationInstance = simulations.get(simId);
         UserInstructions userInstructions = simulationInstance.getUserInstructions();
