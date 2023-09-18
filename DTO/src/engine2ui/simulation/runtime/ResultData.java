@@ -4,14 +4,16 @@ import engine2ui.simulation.genral.impl.objects.DTOEntity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Holds the data of a simulation run after it ended.
  */
 public class ResultData implements Serializable {
 
-    private List<Integer> populationChartData;
+    private final Map<String, List<Integer>> populationChartData;
 
     private DTOEntity[] entities;
 
@@ -21,14 +23,14 @@ public class ResultData implements Serializable {
      * so we save this time as a string according to the required format.
      * We also generate a unique ID for the simulation run.
      */
-    public ResultData(){
-        populationChartData = new ArrayList<>();
+    public ResultData() {
+        populationChartData = new HashMap<>();
     }
 
     /**
      * To be used at the end of a simulation run. Sets the entities to the entities at the end of a simulation run.
      */
-    public void setEntities(DTOEntity[] entities){
+    public void setEntities(DTOEntity[] entities) {
         this.entities = entities;
     }
 
@@ -40,13 +42,16 @@ public class ResultData implements Serializable {
      * Each index in the list represents the population after a 20 tick interval
      * This function adds the population to the list creating another population record for this tick.
      */
-    public void setPopulationRecord(int population, int currentTick){
-        if(currentTick % 20 == 0){
-            populationChartData.add(population);
+    public void setPopulationRecord(String entityName, int population) {
+        if (populationChartData.get(entityName) == null) {
+            List<Integer> populationList = new ArrayList<>();
+            populationChartData.put(entityName, populationList);
         }
+
+        populationChartData.get(entityName).add(population);
     }
 
-    public List<Integer> getPopulationChartData(){
+    public Map<String, List<Integer>> getPopulationChartData() {
         return populationChartData;
     }
 }

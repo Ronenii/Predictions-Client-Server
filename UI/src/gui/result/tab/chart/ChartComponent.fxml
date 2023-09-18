@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 
 <LineChart fx:id="chart" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.result.tab.chart.ChartComponentController">
   <xAxis>
-    <NumberAxis fx:id="ticksAxis" side="BOTTOM" />
+    <NumberAxis fx:id="ticksAxis" label="Ticks" side="BOTTOM" />
   </xAxis>
   <yAxis>
-    <NumberAxis fx:id="entityQuantityAxis" side="LEFT" />
+    <NumberAxis fx:id="entityQuantityAxis" label="Population" side="LEFT" />
   </yAxis>
 </LineChart>

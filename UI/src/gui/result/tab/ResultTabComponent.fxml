@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -18,19 +19,27 @@
          <tabs>
             <Tab text="Chart">
                <content>
-                  <AnchorPane>
-                     <children>
-                        <fx:include fx:id="chartComponent" source="chart/ChartComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children>
-                  </AnchorPane>
+                  <ScrollPane>
+                     <content>
+                        <AnchorPane>
+                           <children>
+                              <fx:include fx:id="chartComponent" minHeight="-Infinity" prefHeight="200.0" source="chart/ChartComponent.fxml" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </ScrollPane>
                </content></Tab>
             <Tab text="Statistics">
                <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                        <fx:include fx:id="statisticsComponent" source="statistics/StatisticsComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children>
-                  </AnchorPane>
+                  <ScrollPane>
+                     <content>
+                        <AnchorPane>
+                           <children>
+                              <fx:include fx:id="statisticsComponent" source="statistics/StatisticsComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </ScrollPane>
                </content></Tab>
          </tabs>
       </TabPane>
