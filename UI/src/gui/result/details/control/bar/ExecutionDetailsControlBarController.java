@@ -34,6 +34,8 @@ public class ExecutionDetailsControlBarController {
         mainController.setExecutionQueueTaskOnPause();
         if(isPauseFirstClick){
             isPauseFirstClick = false;
+            // For the first click on pause we allow the task in the execution queue controller (which fetches the runtime & result details components)
+            // to complete another loop, and then we put this loop on hold.
             mainController.setOneUpdateAfterPauseFlag();
         }
         skipForwardBTN.setDisable(false);
@@ -62,6 +64,9 @@ public class ExecutionDetailsControlBarController {
     void skipForwardButtonActionListener(ActionEvent event) {
         if(isSkipForwardFirstClick){
             isSkipForwardFirstClick = false;
+            // For the first click on skip forward we create the task in the execution details component (which informs the engine moving one tick forward),
+            // and after one update of the engine, the task will be put on hold until another click on the
+            // skip forward button (which will go to the 'else' and allow the task run one loop).
             mainController.sendSkipForwardToTheEngine();
         } else {
             mainController.setSkipOne(true);
