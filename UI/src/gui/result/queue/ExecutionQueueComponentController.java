@@ -82,6 +82,10 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
                 do {
                     selectedInThread = getEngineAgent().getRunDataById(getQueueSelectedItem().getSimId());// Get the most current run data from the engine
                     // Wrap UI updates in Platform.runLater to execute them on the FX application thread
+
+                    // isSimulationPaused - true when the simulation on pause
+                    // isSimulationSkippedForward - the skip forward button set this flag to true, allowing the task run this loop once and then return to a hold state.
+                    // oneUpdateAfterPauseFlag - the pause button set this flag to true, allowing the task run this loop once (to fetch the details) and then return to a hold state.
                     if(!isSimulationPaused || isSimulationSkippedForward || oneUpdateAfterPauseFlag) {
                         // Check if we skipped forward and didn't get entities in the ResultData to load.
                         if(!isSimulationSkippedForward || selectedInThread.resultData.getEntities() != null) {

@@ -103,12 +103,18 @@ public class CalculationAction extends AbstractAction implements Serializable {
                 break;
         }
     }
-    private void divideAndSetPropertyValue(Property toSet, int lastChangTickCount){
+    private void divideAndSetPropertyValue(Property toSet, int lastChangTickCount) throws CrashException {
         switch (toSet.getType()){
             case DECIMAL:
+                if((int)arg2.evaluate() == 0) {
+                    throw new CrashException("in action 'Calculation', arg2 equals 0, can not complete divide action.");
+                }
                 toSet.setValue((int)arg1.evaluate() / (int)arg2.evaluate(), lastChangTickCount);
                 break;
             case FLOAT:
+                if((double)arg2.evaluate() == 0) {
+                    throw new CrashException("in action 'Calculation', arg2 equals 0, can not complete divide action.");
+                }
                 toSet.setValue((double)arg1.evaluate() / (double)arg2.evaluate(), lastChangTickCount);
                 break;
         }
