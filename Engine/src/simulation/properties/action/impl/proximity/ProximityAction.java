@@ -1,6 +1,7 @@
 package simulation.properties.action.impl.proximity;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.exception.CrashException;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.Action;
@@ -53,7 +54,7 @@ public class ProximityAction extends AbstractAction {
         return ret;
     }
 
-    public void invoke(EntityInstance entityInstance, Grid grid, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, Grid grid, int lastChangeTickCount) throws CrashException {
         int depthValue = getDepth();
 
         for (int i = -depthValue; i <= depthValue; i++) {
@@ -70,7 +71,7 @@ public class ProximityAction extends AbstractAction {
         }
     }
 
-    private int getDepth() {
+    private int getDepth() throws CrashException {
         Object depthObject = depth.evaluate();
         int ret = 0;
 
@@ -81,10 +82,14 @@ public class ProximityAction extends AbstractAction {
             ret = (int)doubleDepthObject;
         }
 
+        if (ret == 0){
+            throw new CrashException("in action 'Proximity', depth value can not be 0!");
+        }
+
         return ret;
     }
 
-    public void invokeWithSecondary(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Grid grid, int lastChangeTickCount) {
+    public void invokeWithSecondary(EntityInstance firstEntityInstance, EntityInstance secondEntityInstance, Grid grid, int lastChangeTickCount) throws CrashException {
         if(getContextEntity().equals(firstEntityInstance.getInstanceEntityName())) {
             invoke(firstEntityInstance, grid, lastChangeTickCount);
         }

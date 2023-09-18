@@ -15,8 +15,10 @@ public class SimulationRunData {
     public ResultData resultData;
     private final boolean isCompleted;
     private final Map<String, Object> envVarsValuesMap;
+    public String errorMessage = null;
+    private final boolean isSimulationSkipped;
 
-    public SimulationRunData(String simId, int tick, long time, List<DTOEntityPopulation> entityPopulation, String status, boolean isCompleted, Map<String, Object> envVarsValuesMap) {
+    public SimulationRunData(String simId, int tick, long time, List<DTOEntityPopulation> entityPopulation, String status, boolean isCompleted, Map<String, Object> envVarsValuesMap, boolean isSimulationSkipped) {
         this.simId = simId;
         this.entityPopulation = entityPopulation;
         this.tick = tick;
@@ -24,6 +26,7 @@ public class SimulationRunData {
         this.status = status;
         this.isCompleted = isCompleted;
         this.envVarsValuesMap = envVarsValuesMap;
+        this.isSimulationSkipped = isSimulationSkipped;
     }
 
     public String getSimId() {
@@ -60,5 +63,9 @@ public class SimulationRunData {
 
     public Map<String, Object> getEnvVarsValuesMap() {
         return envVarsValuesMap;
+    }
+
+    public boolean isSimulationSkipped() {
+        return isSimulationSkipped;
     }
 }

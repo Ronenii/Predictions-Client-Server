@@ -41,8 +41,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class SimulationManager implements EngineInterface, Serializable {
     private SimulationInstance simulationDefinition;
@@ -122,7 +120,7 @@ public class SimulationManager implements EngineInterface, Serializable {
         if(simulationDefinition.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
             String id = IdGenerator.generateID();
-            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationList(simulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap());
+            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationList(simulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(), false);
 
             addSimulationToQueue(simulationRunData);
             return new StartResponse(true, String.format("Simulation %s was added to the queue successfully.", id), simulationRunData);
@@ -405,7 +403,7 @@ public class SimulationManager implements EngineInterface, Serializable {
     }
 
     @Override
-    public void setStopPauseOrPlayForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
-        executionManager.setStopPauseOrPlayForSimById(simId, dtoSimulationControlBar);
+    public void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
+        executionManager.setStopPausePlayOrSkipFwdForSimById(simId, dtoSimulationControlBar);
     }
 }

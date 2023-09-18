@@ -1,6 +1,7 @@
 package simulation.properties.action.impl;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.exception.CrashException;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
@@ -37,12 +38,12 @@ public class DecreaseAction extends OneEntAction implements Serializable {
      * @param entityInstance The given entity to decrease the value of the action's property from.
      */
     @Override
-    public void invoke(EntityInstance entityInstance, boolean isExpressionUpdated, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, boolean isExpressionUpdated, int lastChangeTickCount) throws CrashException {
         String propertyName = getContextProperty().getPropertyName();
         Property toDecrease = entityInstance.getPropertyByName(propertyName);
 
         if(toDecrease == null){
-            return;
+            throw new CrashException(String.format("in action 'Decrease', %s %s does not exists",entityInstance.getInstanceEntityName(), propertyName));
         }
 
         if (!isExpressionUpdated){
@@ -61,7 +62,7 @@ public class DecreaseAction extends OneEntAction implements Serializable {
     }
 
     @Override
-    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, int lastChangeTickCount) {
+    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, int lastChangeTickCount) throws CrashException {
         EntityInstance instanceForInvoke;
         boolean isExpressionUpdated;
 

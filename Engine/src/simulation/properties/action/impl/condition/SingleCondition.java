@@ -1,6 +1,7 @@
 package simulation.properties.action.impl.condition;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.exception.CrashException;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.ActionType;
@@ -33,13 +34,13 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
     }
 
     @Override
-    public void invoke(EntityInstance entityInstance, Grid grid, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, Grid grid, int lastChangeTickCount) throws CrashException {
         Object valueToCompare;
 
         updateExpression(entityInstance, contextProperty);
         valueToCompare = contextProperty.evaluate();
         if (valueToCompare == null) {
-            return;
+            throw new CrashException("in action 'Single condition', the property value does not exists");
         }
 
         updateExpression(entityInstance, value);
@@ -73,7 +74,7 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
         }
     }
 
-    private void compareInequalityByInteger(Object toCompare, EntityInstance entityInstance, Grid grid, int lastChangTickCount){
+    private void compareInequalityByInteger(Object toCompare, EntityInstance entityInstance, Grid grid, int lastChangTickCount) throws CrashException {
         switch (operator) {
             case BIGGER_THAN:
                 if ((int) toCompare > (int) getValue()) {
@@ -92,7 +93,7 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
         }
     }
 
-    private void compareInequalityByIntegerWithSecondary(Object toCompare, EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount){
+    private void compareInequalityByIntegerWithSecondary(Object toCompare, EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount) throws CrashException {
         switch (operator) {
             case BIGGER_THAN:
                 if ((int) toCompare > (int) getValue()) {
@@ -111,7 +112,7 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
         }
     }
 
-    private void compareInequalityByFloat(Object toCompare, EntityInstance entityInstance, Grid grid, int lastChangeTickCount){
+    private void compareInequalityByFloat(Object toCompare, EntityInstance entityInstance, Grid grid, int lastChangeTickCount) throws CrashException {
         switch (operator) {
             case BIGGER_THAN:
                 if ((double) toCompare > (double) getValue()) {
@@ -130,7 +131,7 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
         }
     }
 
-    private void compareInequalityByFloatWithSecondary(Object toCompare, EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount){
+    private void compareInequalityByFloatWithSecondary(Object toCompare, EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount) throws CrashException {
         switch (operator) {
             case BIGGER_THAN:
                 if ((double) toCompare > (double) getValue()) {
@@ -150,7 +151,7 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
     }
 
     @Override
-    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount) {
+    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount) throws CrashException {
         Object valueToCompare;
         // Try to update property with one of the entities.
         if(!updateExpressionWithSecondary(primaryInstance, secondaryInstance, contextProperty)){

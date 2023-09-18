@@ -17,6 +17,13 @@ public class ExecutionDetailsControlBarController {
     @FXML
     private Button stopBTN;
 
+    @FXML
+    private Button skipForwardBTN;
+
+    private boolean isSkipForwardFirstClick = true;
+
+    private boolean isPauseFirstClick = true;
+
     public void setMainController(ExecutionDetailsComponentController mainController) {
         this.mainController = mainController;
     }
@@ -24,16 +31,40 @@ public class ExecutionDetailsControlBarController {
     @FXML
     void pauseButtonActionListener(ActionEvent event) {
         mainController.sendPauseToTheEngine();
+        mainController.setExecutionQueueTaskOnPause();
+        if(isPauseFirstClick){
+            isPauseFirstClick = false;
+            mainController.setOneUpdateAfterPauseFlag();
+        }
+        skipForwardBTN.setDisable(false);
     }
 
     @FXML
     void playButtonActionListener(ActionEvent event) {
         mainController.sendPlayToTheEngine();
+        mainController.disableExecutionQueueTaskOnPause();
+        mainController.setPlayButtonClicked(true);
+        isSkipForwardFirstClick = true;
+        isPauseFirstClick = true;
+        skipForwardBTN.setDisable(true);
     }
 
     @FXML
     void stopButtonActionListener(ActionEvent event) {
         mainController.sendStopToTheEngine();
+        mainController.disableExecutionQueueTaskOnPause();
+        isSkipForwardFirstClick = true;
+        isPauseFirstClick = true;
+        skipForwardBTN.setDisable(true);
     }
 
+    @FXML
+    void skipForwardButtonActionListener(ActionEvent event) {
+        if(isSkipForwardFirstClick){
+            isSkipForwardFirstClick = false;
+            mainController.sendSkipForwardToTheEngine();
+        } else {
+            mainController.setSkipOne(true);
+        }
+    }
 }

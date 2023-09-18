@@ -73,8 +73,8 @@ public class HeaderComponentController implements FileLoadedEvent, EngineCommuni
      */
     private void loadFile(File fileToLoad){
         try {
-            getEngineAgent().loadSimulationFromFile(fileToLoad,mainController.getAllFileLoadedListeners());
             currentLoadedFilePath = fileToLoad.getPath();
+            getEngineAgent().loadSimulationFromFile(fileToLoad,mainController.getAllFileLoadedListeners());
         }catch (IllegalArgumentException e){
             mainController.showNotification(e.getMessage());
         }

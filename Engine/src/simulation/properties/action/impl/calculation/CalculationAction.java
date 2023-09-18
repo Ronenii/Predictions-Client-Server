@@ -1,6 +1,7 @@
 package simulation.properties.action.impl.calculation;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.exception.CrashException;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.Action;
@@ -50,12 +51,12 @@ public class CalculationAction extends AbstractAction implements Serializable {
         return null;
     }
 
-    public void invoke(EntityInstance entityInstance, boolean isArg1Updated, boolean isArg2Updated, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, boolean isArg1Updated, boolean isArg2Updated, int lastChangeTickCount) throws CrashException {
         String propertyName = getContextProperty().getPropertyName();
         Property toSet = entityInstance.getPropertyByName(propertyName);
 
         if(toSet == null){
-            return;
+            throw new CrashException(String.format("in action 'Calculation', %s %s does not exists",entityInstance.getInstanceEntityName(), propertyName));
         }
 
         if(!isArg1Updated) {
@@ -76,7 +77,7 @@ public class CalculationAction extends AbstractAction implements Serializable {
         }
     }
 
-    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, int lastChangeTickCount) {
+    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, int lastChangeTickCount) throws CrashException {
         EntityInstance instanceForInvoke;
         boolean isArg1Updated, isArg2Updated;
 

@@ -5,6 +5,7 @@ import engine2ui.simulation.runtime.ResultData;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.exception.CrashException;
 import simulation.objects.world.grid.Grid;
 import simulation.objects.world.status.SimulationStatus;
 import simulation.objects.world.ticks.counter.TicksCounter;
@@ -45,7 +46,7 @@ public class SimulationInstance implements Serializable, Runnable {
     private final int constAll = -1;
     private SimulationStatus status;
     private ResultData resultData;
-
+    private String errorMessage;
 
     public SimulationInstance(String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
         this.simulationId = simulationId;
@@ -119,6 +120,10 @@ public class SimulationInstance implements Serializable, Runnable {
 
     public int getThreadCount() {
         return threadCount;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
     public long getTimePassed() {
@@ -242,32 +247,40 @@ public class SimulationInstance implements Serializable, Runnable {
         initSimulation();
         // Simulation main loop
         do {
-            if(!userInstructions.isSimulationPaused){
+            threadSleep();
+            if(!userInstructions.isSimulationPaused || userInstructions.isSimulationSkippedForward){
                 try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    checkPopulation();
+                    actionsToInvoke.clear();
+                    grid.moveAllEntities();
+                    // Get the invokable actions (by ticks and probability)
+                    for (Rule r : rules.values()) {
+                        actionsToInvoke.addAll(r.getActionsToInvoke());
+                    }
+                    // Invoke actions on the simulation entities.
+                    for (Entity entity : entities.values()) {
+                        invokeActionsOnAllInstances(entity.getEntityInstances(), actionsToInvoke);
+                    }
+
+                    resultData.setPopulationRecord(calculateRemainingInstances(), ticksCounter.getTicks());
+                    updateTickAndTime();
+                } catch (CrashException e) {
+                    errorMessage = e.getErrorMassage();
+                    status = SimulationStatus.CRUSHED;
+                }
+                // create an entities DTO if the simulation moved by one tick.
+                if (userInstructions.isSimulationSkippedForward) {
+                    resultData.setEntities(dtoCreator.convertEntities2DTOEntities(entities));
                 }
 
-                actionsToInvoke.clear();
-                grid.moveAllEntities();
-                // Get the invokable actions (by ticks and probability)
-                for (Rule r : rules.values()) {
-                    actionsToInvoke.addAll(r.getActionsToInvoke());
-                }
-                // Invoke actions on the simulation entities.
-                for (Entity entity : entities.values()) {
-                    invokeActionsOnAllInstances(entity.getEntityInstances(), actionsToInvoke);
-                }
-
-                resultData.setPopulationRecord(calculateRemainingInstances(), ticksCounter.getTicks());
-                updateTickAndTime();
+                userInstructions.isSimulationSkippedForward = false;
             }
-
         } while ((!endingConditionsMet()));
 
-        resultData.setEntities(dtoCreator.convertEntities2DTOEntities(entities));
-        this.status = SimulationStatus.COMPLETED;
+        if(status != SimulationStatus.CRUSHED){
+            resultData.setEntities(dtoCreator.convertEntities2DTOEntities(entities));
+            this.status = SimulationStatus.COMPLETED;
+        }
     }
 
     private void updateTickAndTime(){
@@ -299,7 +312,7 @@ public class SimulationInstance implements Serializable, Runnable {
      * @param entityInstances A specific entity instances
      * @param actionsToInvoke List of invokable actions.
      */
-    private void invokeActionsOnAllInstances(List<EntityInstance> entityInstances, List<Action> actionsToInvoke) {
+    private void invokeActionsOnAllInstances(List<EntityInstance> entityInstances, List<Action> actionsToInvoke) throws CrashException {
         for (EntityInstance e : entityInstances) {
             if (e.isAlive()) {
                 invokeActionsOnSingleInstance(e, actionsToInvoke);
@@ -310,7 +323,7 @@ public class SimulationInstance implements Serializable, Runnable {
     /**
      * 'invokeActionsOnAllInstances' helper, invoke the list of action on a specific entity instance.
      */
-    private void invokeActionsOnSingleInstance(EntityInstance entityInstance, List<Action> actionsToInvoke) {
+    private void invokeActionsOnSingleInstance(EntityInstance entityInstance, List<Action> actionsToInvoke) throws CrashException {
         for (Action action : actionsToInvoke){
             // Need to check again if an instance did not get kill in the previous actions.
             if(entityInstance.isAlive()){
@@ -326,7 +339,7 @@ public class SimulationInstance implements Serializable, Runnable {
         }
     }
 
-    private void invokeAnAction(EntityInstance entityInstance, Action action) {
+    private void invokeAnAction(EntityInstance entityInstance, Action action) throws CrashException {
         if (action.getClass().getSuperclass() == OneEntAction.class) {
             ((OneEntAction) action).invoke(entityInstance, false, ticksCounter.getTicks());
         } else if (action instanceof CalculationAction) {
@@ -347,7 +360,7 @@ public class SimulationInstance implements Serializable, Runnable {
     /**
      * Getting the secondary entity instances list and invoke the action on each secondary entity instance and the primary entity instance.
      */
-    private void invokeActionsWithSecondaryEntity(EntityInstance entityInstance, Action actionToInvoke) {
+    private void invokeActionsWithSecondaryEntity(EntityInstance entityInstance, Action actionToInvoke) throws CrashException {
         List<EntityInstance> secondaryInstances = getSecondaryInstances(actionToInvoke.getSecondaryEntity());
 
         for(EntityInstance secondaryEntityInstance : secondaryInstances) {
@@ -373,7 +386,7 @@ public class SimulationInstance implements Serializable, Runnable {
     /**
      * Calculate the secondary entity instances create a list with the instances and return this list.
      */
-    private List<EntityInstance> getSecondaryInstances(AbstractAction.SecondaryEntity secondaryEntity) {
+    private List<EntityInstance> getSecondaryInstances(AbstractAction.SecondaryEntity secondaryEntity) throws CrashException {
         List<EntityInstance> entityInstances = new ArrayList<>();
         AbstractConditionAction conditionAction = (AbstractConditionAction)secondaryEntity.getCondition();
         Entity secondaryEntityRef = entities.get(secondaryEntity.getContextEntity());
@@ -434,7 +447,7 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     private boolean endingConditionsMet() {
-        return isEndingBySecondsMet() || isEndingByTicksMet() || userInstructions.isSimulationStopped;
+        return isEndingBySecondsMet() || isEndingByTicksMet() || userInstructions.isSimulationStopped || status == SimulationStatus.CRUSHED;
     }
 
     /**
@@ -687,6 +700,26 @@ public class SimulationInstance implements Serializable, Runnable {
         initGrid();
         fetchTicksExpressions();
         fetchReplaceActions();
+    }
+
+    private void checkPopulation() throws CrashException {
+        int populationSum = 0;
+
+        for (Entity entity : entities.values()) {
+            populationSum += entity.getCurrentPopulation();
+        }
+
+        if(populationSum > grid.getRows()*grid.getColumns()) {
+            throw new CrashException("Simulation crushed: population count is greater than the grid size!");
+        }
+    }
+
+    private void threadSleep() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

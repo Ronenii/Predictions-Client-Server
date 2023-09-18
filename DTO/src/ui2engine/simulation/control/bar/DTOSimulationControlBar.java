@@ -4,11 +4,13 @@ public class DTOSimulationControlBar {
     private final boolean toStop;
     private final boolean toPause;
     private final boolean toPlay;
+    private final boolean toSkipForward;
 
-    public DTOSimulationControlBar(boolean toStop, boolean toPause, boolean toPlay) {
+    public DTOSimulationControlBar(boolean toStop, boolean toPause, boolean toPlay, boolean toSkipForward) {
         this.toStop = toStop;
         this.toPause = toPause;
         this.toPlay = toPlay;
+        this.toSkipForward = toSkipForward;
     }
 
     public boolean isToStop() {
@@ -22,4 +24,9 @@ public class DTOSimulationControlBar {
     public boolean isToPlay() {
         return toPlay;
     }
+
+    public boolean isToSkipForward() {
+        return toSkipForward;
+    }
 }
+

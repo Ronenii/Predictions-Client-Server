@@ -57,7 +57,7 @@ public class ResultTabComponentController {
      * component and display the results.
      */
     public void updateToChosenSimulation(SimulationRunData simulationRunData){
-        if (simulationRunData.isCompleted()) {
+        if (simulationRunData.isCompleted() || simulationRunData.isSimulationSkipped()) {
             enableResultComponent();
             loadComponent(simulationRunData.getResultData());
         } else {
@@ -69,7 +69,9 @@ public class ResultTabComponentController {
     private void loadComponent(ResultData resultData) {
         clearComponent();
         chartComponentController.showPopulationData(resultData.getPopulationChartData());
-        statisticsComponentController.loadComponent(resultData.getEntities());
+        if(resultData.getEntities() != null){
+            statisticsComponentController.loadComponent(resultData.getEntities());
+        }
     }
 
     public void clearComponent() {

@@ -1,6 +1,7 @@
 package simulation.properties.action.impl.proximity;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.exception.CrashException;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
@@ -26,7 +27,7 @@ public class ProximitySubActions {
         return actionsToInvoke.size();
     }
 
-    public void invoke(EntityInstance sourceEntityInstance, EntityInstance targetEntityInstance, Grid grid, int lastChangTickCount){
+    public void invoke(EntityInstance sourceEntityInstance, EntityInstance targetEntityInstance, Grid grid, int lastChangTickCount) throws CrashException {
         for (Action action: actionsToInvoke) {
             if(action instanceof OneEntAction){
                 OneEntAction oneEntAction = (OneEntAction)action;

@@ -1,6 +1,7 @@
 package simulation.properties.action.impl.condition;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.exception.CrashException;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
@@ -27,7 +28,7 @@ public class ThenOrElse implements Serializable {
         return actionsToInvoke.size();
     }
 
-    public void invoke(EntityInstance entityInstance, Grid grid, int lastChangTickCount){
+    public void invoke(EntityInstance entityInstance, Grid grid, int lastChangTickCount) throws CrashException {
         for (Action action: actionsToInvoke) {
             if(action instanceof OneEntAction){
                 OneEntAction oneEntAction = (OneEntAction)action;
@@ -48,7 +49,7 @@ public class ThenOrElse implements Serializable {
         }
     }
 
-    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount) {
+    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, Grid grid, int lastChangeTickCount) throws CrashException {
         for (Action action: actionsToInvoke) {
             if(action instanceof OneEntAction){
                 OneEntAction oneEntAction = (OneEntAction)action;

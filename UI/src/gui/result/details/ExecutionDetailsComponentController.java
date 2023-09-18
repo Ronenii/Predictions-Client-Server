@@ -1,14 +1,12 @@
 package gui.result.details;
 
-import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.objects.DTOEntityPopulation;
 import engine2ui.simulation.runtime.SimulationRunData;
 import gui.result.ResultComponentController;
 import gui.result.details.control.bar.ExecutionDetailsControlBarController;
 import gui.result.models.PopulationData;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -61,6 +59,8 @@ public class ExecutionDetailsComponentController {
     private SimpleStringProperty simIdProperty;
     private SimpleStringProperty statusProperty;
 
+    private boolean isPlayButtonClicked;
+    private boolean skipOne;
 
     public void setMainController(ResultComponentController mainController) {
         this.mainController = mainController;
@@ -74,6 +74,7 @@ public class ExecutionDetailsComponentController {
 
         entityColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("population"));
+        isPlayButtonClicked = true;
         populationDataMap = new HashMap<>();
         initProperties();
     }
@@ -151,21 +152,78 @@ public class ExecutionDetailsComponentController {
         simIdProperty.set("-");
         durationProperty.set("-");
         ticksProperty.set("-");
+        rerunBTN.setDisable(true);
     }
 
     public void sendStopToTheEngine() {
-        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(true, false, false);
-        mainController.getEngineAgent().setStopPauseOrPlayForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(true, false, false, false);
+        mainController.getEngineAgent().setStopPausePlayOrSkipFwdForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
     }
 
     public void sendPauseToTheEngine() {
-        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, true, false);
-        mainController.getEngineAgent().setStopPauseOrPlayForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, true, false, false);
+        mainController.getEngineAgent().setStopPausePlayOrSkipFwdForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
     }
 
     public void sendPlayToTheEngine() {
-        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, false, true);
-        mainController.getEngineAgent().setStopPauseOrPlayForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, false, true, false);
+        mainController.getEngineAgent().setStopPausePlayOrSkipFwdForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+    }
+
+    public void sendSkipForwardToTheEngine() {
+        DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, true, false, true);
+        isPlayButtonClicked = false;
+        skipOne = true;
+        skipForwardTask(dtoSimulationControlBar);
+    }
+
+    private void skipForwardTask(DTOSimulationControlBar dtoSimulationControlBar) {
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                do {
+                    if(skipOne){
+                        mainController.getEngineAgent().setStopPausePlayOrSkipFwdForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+                        setExecutionQueueTaskOnSkipForward();
+                        skipOne = false;
+                    }
+
+                    Thread.sleep(200); // Make the thread sleep for 200ms
+                } while (!isPlayButtonClicked);
+                return null;
+            }
+        };
+
+        runTask(task);
+    }
+
+    /**
+     * Given a task, this creates a thread for it and runs it.
+     */
+    private void runTask(Task<Void> task) {
+        Thread thread = new Thread(task);
+        thread.setDaemon(true); // Mark the thread as a daemon to allow application exit
+        thread.start();
+    }
+
+    public void setPlayButtonClicked(boolean playButtonClicked) {
+        isPlayButtonClicked = playButtonClicked;
+    }
+
+    public void setSkipOne(boolean skipOne) {
+        this.skipOne = skipOne;
+    }
+
+    public void setExecutionQueueTaskOnSkipForward() {
+        mainController.setExecutionQueueTaskOnSkipForward();
+    }
+
+    public void setExecutionQueueTaskOnPause() {
+        mainController.setExecutionQueueTaskOnPause();
+    }
+
+    public void disableExecutionQueueTaskOnPause() {
+        mainController.disableExecutionQueueTaskOnPause();
     }
 
     public int getSimulationCurrentTicks() {
@@ -176,5 +234,9 @@ public class ExecutionDetailsComponentController {
     void rerunButtonActionListener(ActionEvent event) {
         mainController.rerunSimulationById(simulationIdDetLabel.getText());
         mainController.getMenusTabPane().getSelectionModel().selectPrevious();
+    }
+
+    public void setOneUpdateAfterPauseFlag() {
+        mainController.setOneUpdateAfterPauseFlag();
     }
 }

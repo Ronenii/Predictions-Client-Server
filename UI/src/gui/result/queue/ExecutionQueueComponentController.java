@@ -35,8 +35,11 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
     private TableColumn<StatusData, String> simStatusCol;
 
     private Map<StatusData, SimulationStatus> simulationStatusMap;
-
     private boolean isFetchStatusTaskRunning;
+    private boolean isSimulationPaused;
+    private boolean isSimulationSkippedForward;
+    private boolean oneUpdateAfterPauseFlag;
+
 
     @FXML
     public void initialize() {
@@ -44,6 +47,9 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
         simStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         simulationStatusMap = new HashMap<>();
         isFetchStatusTaskRunning = false;
+        isSimulationPaused = false;
+        isSimulationSkippedForward = false;
+        oneUpdateAfterPauseFlag = false;
     }
 
     /**
@@ -75,12 +81,18 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
                 SimulationRunData selectedInThread;
                 do {
                     selectedInThread = getEngineAgent().getRunDataById(getQueueSelectedItem().getSimId());// Get the most current run data from the engine
-
                     // Wrap UI updates in Platform.runLater to execute them on the FX application thread
-                    SimulationRunData finalSelectedInThread = selectedInThread;
-                    Platform.runLater(() -> {
-                        mainController.updateGuiToChosenSimulation(finalSelectedInThread); // Update the components displaying the simulation
-                    });
+                    if(!isSimulationPaused || isSimulationSkippedForward || oneUpdateAfterPauseFlag) {
+                        // Check if we skipped forward and didn't get entities in the ResultData to load.
+                        if(!isSimulationSkippedForward || selectedInThread.resultData.getEntities() != null) {
+                            SimulationRunData finalSelectedInThread = selectedInThread;
+                            Platform.runLater(() -> {
+                                mainController.updateGuiToChosenSimulation(finalSelectedInThread); // Update the components displaying the simulation
+                            });
+                            isSimulationSkippedForward = false;
+                        }
+                        oneUpdateAfterPauseFlag = false;
+                    }
 
                     Thread.sleep(200); // Make the thread sleep for 200ms
                 } while (selectedInThread != null && selectedInThread.getSimId().equals(simId) && !selectedInThread.isCompleted());
@@ -135,13 +147,16 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
             updateQueueManagementData(queueManagementData, s.getStatus());
             if (!s.getStatus().equals(SimulationStatus.COMPLETED.name())) {
                 SimulationRunData selectedInThread = getEngineAgent().getRunDataById(s.getSimId());
+                if(selectedInThread.errorMessage != null){
+                    Platform.runLater(() -> {
+                        getNotificationBar().showNotification(selectedInThread.errorMessage);
+                    });
+                }
 
                 showNotificationIfSimulationRunStarted(s, selectedInThread);
-
                 Platform.runLater(() -> {
                     s.statusProperty().set(selectedInThread.getStatus());
                     showNotificationIfSimulationRunCompleted(selectedInThread);
-
                 });
             }
         }
@@ -223,5 +238,21 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
         isFetchStatusTaskRunning = false;
         // JAT will clear the queue manager after its previous actions.
         Platform.runLater(() -> {mainController.updateRunningAndCompletedLblsInQueueManagement(new QueueManagementData());});
+    }
+
+    public void setExecutionQueueTaskOnSkipForward() {
+        isSimulationSkippedForward = true;
+    }
+
+    public void setExecutionQueueTaskOnPause() {
+        isSimulationPaused = true;
+    }
+
+    public void disableExecutionQueueTaskOnPause() {
+        isSimulationPaused = false;
+    }
+
+    public void setOneUpdateAfterPauseFlag() {
+        oneUpdateAfterPauseFlag = true;
     }
 }

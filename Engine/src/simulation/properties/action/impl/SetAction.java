@@ -1,6 +1,7 @@
 package simulation.properties.action.impl;
 
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.exception.CrashException;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
@@ -30,11 +31,11 @@ public class SetAction extends OneEntAction implements Serializable {
     }
 
     @Override
-    public void invoke(EntityInstance entityInstance, boolean isExpressionUpdated, int lastChangeTickCount) {
+    public void invoke(EntityInstance entityInstance, boolean isExpressionUpdated, int lastChangeTickCount) throws CrashException {
         String propertyName = getContextProperty().getPropertyName();
         Property toSet = entityInstance.getPropertyByName(propertyName);
         if(toSet == null){
-            return;
+            throw new CrashException(String.format("in action 'Decrease', %s %s does not exists",entityInstance.getInstanceEntityName(), propertyName));
         }
 
         if (!isExpressionUpdated){
@@ -45,7 +46,7 @@ public class SetAction extends OneEntAction implements Serializable {
     }
 
     @Override
-    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, int lastChangeTickCount) {
+    public void invokeWithSecondary(EntityInstance primaryInstance, EntityInstance secondaryInstance, int lastChangeTickCount) throws CrashException {
         EntityInstance instanceForInvoke;
         boolean isExpressionUpdated;
 
