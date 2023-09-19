@@ -21,6 +21,8 @@ public class Main extends Application {
         appController.setPrimaryStageOnClose(primaryStage);
         appController.getSceneForThemes(scene);
         primaryStage.setScene(scene);
+        primaryStage.setHeight(900);
+        primaryStage.setWidth(1100);
         primaryStage.show();
     }
 

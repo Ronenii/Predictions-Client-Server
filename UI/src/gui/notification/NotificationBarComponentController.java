@@ -102,6 +102,7 @@ public class NotificationBarComponentController {
     private void addExpandHyperLinkToLabel(String text){
         // Create the hyperlink that creates the error window when clicked.
         Hyperlink expandLink = new Hyperlink("expand");
+        expandLink.getStyleClass().add("expand-link");
         expandLink.minWidth(expandLink.getWidth());
         expandLink.setOnAction(event -> showLogWindow(logs.toString()));
         VBox vBox = new VBox(expandLink);
