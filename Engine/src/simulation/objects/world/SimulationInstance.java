@@ -63,7 +63,7 @@ public class SimulationInstance implements Serializable, Runnable {
         userInstructions = new UserInstructions(false, false, false);
     }
 
-    public SimulationInstance(SimulationInstance simulationInstance){
+    public SimulationInstance(SimulationInstance simulationInstance) {
         this.simulationId = simulationInstance.getSimulationId();
         this.environmentProperties = simulationInstance.dupEnvVarsMap();
         this.entities = simulationInstance.dupEntitiesMap();
@@ -127,7 +127,7 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     public long getTimePassed() {
-        if(userInstructions.isSimulationPaused){
+        if (userInstructions.isSimulationPaused) {
             return timePassedBeforePause;
         } else {
             return System.currentTimeMillis() - startingTime;
@@ -199,7 +199,7 @@ public class SimulationInstance implements Serializable, Runnable {
     public Map<String, Property> dupEnvVarsMap() {
         Map<String, Property> ret = new HashMap<>();
 
-        for(Property property : environmentProperties.values()) {
+        for (Property property : environmentProperties.values()) {
             ret.put(property.getName(), property.dupProperty());
         }
 
@@ -248,7 +248,7 @@ public class SimulationInstance implements Serializable, Runnable {
         // Simulation main loop
         do {
             threadSleep();
-            if(!userInstructions.isSimulationPaused || userInstructions.isSimulationSkippedForward){
+            if (!userInstructions.isSimulationPaused || userInstructions.isSimulationSkippedForward) {
                 try {
                     checkPopulation();
                     actionsToInvoke.clear();
@@ -262,7 +262,7 @@ public class SimulationInstance implements Serializable, Runnable {
                         invokeActionsOnAllInstances(entity.getEntityInstances(), actionsToInvoke);
                     }
 
-                    resultData.setPopulationRecord(calculateRemainingInstances(), ticksCounter.getTicks());
+                    setEntitiesPopulationRecord();
                     updateTickAndTime();
                 } catch (CrashException e) {
                     errorMessage = e.getErrorMassage();
@@ -277,13 +277,23 @@ public class SimulationInstance implements Serializable, Runnable {
             }
         } while ((!endingConditionsMet()));
 
-        if(status != SimulationStatus.CRUSHED){
+        if (status != SimulationStatus.CRUSHED) {
             resultData.setEntities(dtoCreator.convertEntities2DTOEntities(entities));
             this.status = SimulationStatus.COMPLETED;
         }
     }
 
-    private void updateTickAndTime(){
+    /**
+     * Sets the result data entities population map for each entity.
+     */
+    private void setEntitiesPopulationRecord() {
+        for (Entity e : entities.values()
+        ) {
+            resultData.setPopulationRecord(e.getName(), e.getCurrentPopulation());
+        }
+    }
+
+    private void updateTickAndTime() {
         timePassed = System.currentTimeMillis() - startingTime;
         ticksCounter.incrementTick();
     }
@@ -296,11 +306,11 @@ public class SimulationInstance implements Serializable, Runnable {
         startingTime = System.currentTimeMillis() - timePassed;
     }
 
-    private int calculateRemainingInstances(){
+    private int calculateRemainingInstances() {
         int remainingInstances = 0;
 
-        for (Entity e: entities.values()
-             ) {
+        for (Entity e : entities.values()
+        ) {
             remainingInstances += e.getCurrentPopulation();
         }
         return remainingInstances;
@@ -324,14 +334,13 @@ public class SimulationInstance implements Serializable, Runnable {
      * 'invokeActionsOnAllInstances' helper, invoke the list of action on a specific entity instance.
      */
     private void invokeActionsOnSingleInstance(EntityInstance entityInstance, List<Action> actionsToInvoke) throws CrashException {
-        for (Action action : actionsToInvoke){
+        for (Action action : actionsToInvoke) {
             // Need to check again if an instance did not get kill in the previous actions.
-            if(entityInstance.isAlive()){
-                if(action.getContextEntity().equals(entityInstance.getInstanceEntityName())){
-                    if(action.getSecondaryEntity() != null) {
+            if (entityInstance.isAlive()) {
+                if (action.getContextEntity().equals(entityInstance.getInstanceEntityName())) {
+                    if (action.getSecondaryEntity() != null) {
                         invokeActionsWithSecondaryEntity(entityInstance, action);
-                    }
-                    else {
+                    } else {
                         invokeAnAction(entityInstance, action);
                     }
                 }
@@ -343,16 +352,16 @@ public class SimulationInstance implements Serializable, Runnable {
         if (action.getClass().getSuperclass() == OneEntAction.class) {
             ((OneEntAction) action).invoke(entityInstance, false, ticksCounter.getTicks());
         } else if (action instanceof CalculationAction) {
-            CalculationAction calculationAction = (CalculationAction)action;
+            CalculationAction calculationAction = (CalculationAction) action;
             calculationAction.invoke(entityInstance, false, false, ticksCounter.getTicks());
         } else if (action instanceof AbstractConditionAction) {
-            AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
+            AbstractConditionAction abstractConditionAction = (AbstractConditionAction) action;
             abstractConditionAction.invoke(entityInstance, grid, ticksCounter.getTicks());
         } else if (action instanceof ReplaceAction) {
-            ReplaceAction replaceAction = (ReplaceAction)action;
+            ReplaceAction replaceAction = (ReplaceAction) action;
             replaceAction.invoke(entityInstance, grid, ticksCounter.getTicks());
         } else if (action instanceof ProximityAction) {
-            ProximityAction proximityAction = (ProximityAction)action;
+            ProximityAction proximityAction = (ProximityAction) action;
             proximityAction.invoke(entityInstance, grid, ticksCounter.getTicks());
         }
     }
@@ -363,21 +372,21 @@ public class SimulationInstance implements Serializable, Runnable {
     private void invokeActionsWithSecondaryEntity(EntityInstance entityInstance, Action actionToInvoke) throws CrashException {
         List<EntityInstance> secondaryInstances = getSecondaryInstances(actionToInvoke.getSecondaryEntity());
 
-        for(EntityInstance secondaryEntityInstance : secondaryInstances) {
-            if(actionToInvoke instanceof OneEntAction){
-                OneEntAction oneEntAction = (OneEntAction)actionToInvoke;
+        for (EntityInstance secondaryEntityInstance : secondaryInstances) {
+            if (actionToInvoke instanceof OneEntAction) {
+                OneEntAction oneEntAction = (OneEntAction) actionToInvoke;
                 oneEntAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, ticksCounter.getTicks());
             } else if (actionToInvoke instanceof CalculationAction) {
-                CalculationAction calculationAction = (CalculationAction)actionToInvoke;
-                calculationAction.invokeWithSecondary(entityInstance,secondaryEntityInstance, ticksCounter.getTicks());
+                CalculationAction calculationAction = (CalculationAction) actionToInvoke;
+                calculationAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, ticksCounter.getTicks());
             } else if (actionToInvoke instanceof AbstractConditionAction) {
                 AbstractConditionAction abstractConditionAction = (AbstractConditionAction) actionToInvoke;
                 abstractConditionAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticksCounter.getTicks());
-            } else if(actionToInvoke instanceof ProximityAction) {
-                ProximityAction proximityAction = (ProximityAction)actionToInvoke;
+            } else if (actionToInvoke instanceof ProximityAction) {
+                ProximityAction proximityAction = (ProximityAction) actionToInvoke;
                 proximityAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticksCounter.getTicks());
-            } else if(actionToInvoke instanceof ReplaceAction) {
-                ReplaceAction replaceAction = (ReplaceAction)actionToInvoke;
+            } else if (actionToInvoke instanceof ReplaceAction) {
+                ReplaceAction replaceAction = (ReplaceAction) actionToInvoke;
                 replaceAction.invokeWithSecondary(entityInstance, secondaryEntityInstance, grid, ticksCounter.getTicks());
             }
         }
@@ -388,28 +397,26 @@ public class SimulationInstance implements Serializable, Runnable {
      */
     private List<EntityInstance> getSecondaryInstances(AbstractAction.SecondaryEntity secondaryEntity) throws CrashException {
         List<EntityInstance> entityInstances = new ArrayList<>();
-        AbstractConditionAction conditionAction = (AbstractConditionAction)secondaryEntity.getCondition();
+        AbstractConditionAction conditionAction = (AbstractConditionAction) secondaryEntity.getCondition();
         Entity secondaryEntityRef = entities.get(secondaryEntity.getContextEntity());
         int count = secondaryEntity.getCount();
 
-        if(count == constAll){
+        if (count == constAll) {
             entityInstances.addAll(secondaryEntityRef.getEntityInstances());
-        }
-        else {
-            if(count > secondaryEntityRef.getCurrentPopulation()){
+        } else {
+            if (count > secondaryEntityRef.getCurrentPopulation()) {
                 count = secondaryEntityRef.getCurrentPopulation();
             }
 
             int i = 0;
             while (i < count) {
-                if(conditionAction != null) {
+                if (conditionAction != null) {
                     EntityInstance entityInstanceToAdd = secondaryEntityRef.getRandomEntityInstance();
-                    if(conditionAction.getConditionResult(entityInstanceToAdd)) {
+                    if (conditionAction.getConditionResult(entityInstanceToAdd)) {
                         entityInstances.add(entityInstanceToAdd);
                         i++;
                     }
-                }
-                else {
+                } else {
                     entityInstances.add(secondaryEntityRef.getRandomEntityInstance());
                     i++;
                 }
@@ -496,6 +503,7 @@ public class SimulationInstance implements Serializable, Runnable {
     /**
      * Tries to set the entity's starting population according to the user's input.
      * Will do so only if the user is trying to set the population according to
+     *
      * @param input The entity input from the user.
      * @return A response with an appropriate message.
      */
@@ -530,10 +538,10 @@ public class SimulationInstance implements Serializable, Runnable {
      * In func we add the simulation to the thread-pool. If the simulation has no population
      * at all it will send back a response indicating the simulation was not added.
      */
-    public boolean isStartable(){
+    public boolean isStartable() {
         int populationCount = 0;
-        for (Entity e: entities.values()
-             ) {
+        for (Entity e : entities.values()
+        ) {
             populationCount += e.getStartingPopulation();
         }
 
@@ -542,7 +550,7 @@ public class SimulationInstance implements Serializable, Runnable {
 
     private void initGrid() {
         List<EntityInstance> allEntityInstances = new ArrayList<>();
-        for(Entity entity : entities.values()) {
+        for (Entity entity : entities.values()) {
             allEntityInstances.addAll(entity.getEntityInstances());
         }
 
@@ -550,7 +558,7 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     private void initInstances() {
-        for(Entity entity : entities.values()) {
+        for (Entity entity : entities.values()) {
             entity.resetPopulation();
         }
     }
@@ -559,33 +567,33 @@ public class SimulationInstance implements Serializable, Runnable {
     private void fetchTicksExpressions() {
         for (Rule rule : rules.values()) {
             for (Action action : rule.getActions()) {
-                if(action instanceof AbstractConditionAction) {
-                    AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
-                    if(abstractConditionAction instanceof MultipleCondition) {
-                        checkForTicksInSubMultipleConditions(((MultipleCondition)abstractConditionAction).getSubConditions());
+                if (action instanceof AbstractConditionAction) {
+                    AbstractConditionAction abstractConditionAction = (AbstractConditionAction) action;
+                    if (abstractConditionAction instanceof MultipleCondition) {
+                        checkForTicksInSubMultipleConditions(((MultipleCondition) abstractConditionAction).getSubConditions());
                     }
-                    if(abstractConditionAction.getThenActions() != null){
+                    if (abstractConditionAction.getThenActions() != null) {
                         checkForTicksInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
                     }
 
-                    if(abstractConditionAction.getElseActions() != null) {
+                    if (abstractConditionAction.getElseActions() != null) {
                         checkForTicksInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
                     }
 
-                } else if(action instanceof ProximityAction){
-                    ProximityAction proximityAction = (ProximityAction)action;
-                    if(proximityAction.getProximityActions() != null) {
+                } else if (action instanceof ProximityAction) {
+                    ProximityAction proximityAction = (ProximityAction) action;
+                    if (proximityAction.getProximityActions() != null) {
                         checkForTicksInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
                     }
                 }
 
-                if(action.getContextProperty() != null && action.getContextProperty() instanceof TicksExpression) {
-                    TicksExpression ticksExpression = (TicksExpression)action.getContextProperty();
+                if (action.getContextProperty() != null && action.getContextProperty() instanceof TicksExpression) {
+                    TicksExpression ticksExpression = (TicksExpression) action.getContextProperty();
                     ticksExpression.setSimulationTicks(ticksCounter);
                 }
 
-                if(action.getValueExpression() != null && action.getValueExpression() instanceof TicksExpression) {
-                    TicksExpression ticksExpression = (TicksExpression)action.getValueExpression();
+                if (action.getValueExpression() != null && action.getValueExpression() instanceof TicksExpression) {
+                    TicksExpression ticksExpression = (TicksExpression) action.getValueExpression();
                     ticksExpression.setSimulationTicks(ticksCounter);
                 }
             }
@@ -594,30 +602,30 @@ public class SimulationInstance implements Serializable, Runnable {
 
     private void checkForTicksInSubActions(List<Action> subActions) {
         for (Action action : subActions) {
-            if(action instanceof AbstractConditionAction) {
-                AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
-                if(abstractConditionAction.getThenActions() != null){
+            if (action instanceof AbstractConditionAction) {
+                AbstractConditionAction abstractConditionAction = (AbstractConditionAction) action;
+                if (abstractConditionAction.getThenActions() != null) {
                     checkForTicksInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
                 }
 
-                if(abstractConditionAction.getElseActions() != null) {
+                if (abstractConditionAction.getElseActions() != null) {
                     checkForTicksInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
                 }
 
-            } else if(action instanceof ProximityAction){
-                ProximityAction proximityAction = (ProximityAction)action;
-                if(proximityAction.getProximityActions() != null) {
+            } else if (action instanceof ProximityAction) {
+                ProximityAction proximityAction = (ProximityAction) action;
+                if (proximityAction.getProximityActions() != null) {
                     checkForTicksInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
                 }
             }
 
-            if(action.getContextProperty() != null && action.getContextProperty() instanceof TicksExpression) {
-                TicksExpression ticksExpression = (TicksExpression)action.getContextProperty();
+            if (action.getContextProperty() != null && action.getContextProperty() instanceof TicksExpression) {
+                TicksExpression ticksExpression = (TicksExpression) action.getContextProperty();
                 ticksExpression.setSimulationTicks(ticksCounter);
             }
 
-            if(action.getValueExpression() != null && action.getValueExpression() instanceof TicksExpression) {
-                TicksExpression ticksExpression = (TicksExpression)action.getValueExpression();
+            if (action.getValueExpression() != null && action.getValueExpression() instanceof TicksExpression) {
+                TicksExpression ticksExpression = (TicksExpression) action.getValueExpression();
                 ticksExpression.setSimulationTicks(ticksCounter);
             }
         }
@@ -625,13 +633,13 @@ public class SimulationInstance implements Serializable, Runnable {
 
     private void checkForTicksInSubMultipleConditions(List<AbstractConditionAction> subConditions) {
         for (AbstractConditionAction action : subConditions) {
-            if(action.getContextProperty() != null && action.getContextProperty() instanceof TicksExpression) {
-                TicksExpression ticksExpression = (TicksExpression)action.getContextProperty();
+            if (action.getContextProperty() != null && action.getContextProperty() instanceof TicksExpression) {
+                TicksExpression ticksExpression = (TicksExpression) action.getContextProperty();
                 ticksExpression.setSimulationTicks(ticksCounter);
             }
 
-            if(action.getValueExpression() != null && action.getValueExpression() instanceof TicksExpression) {
-                TicksExpression ticksExpression = (TicksExpression)action.getValueExpression();
+            if (action.getValueExpression() != null && action.getValueExpression() instanceof TicksExpression) {
+                TicksExpression ticksExpression = (TicksExpression) action.getValueExpression();
                 ticksExpression.setSimulationTicks(ticksCounter);
             }
         }
@@ -642,22 +650,22 @@ public class SimulationInstance implements Serializable, Runnable {
 
         for (Rule rule : rules.values()) {
             for (Action action : rule.getActions()) {
-                if(action instanceof ReplaceAction) {
-                    ReplaceAction replaceAction = (ReplaceAction)action;
+                if (action instanceof ReplaceAction) {
+                    ReplaceAction replaceAction = (ReplaceAction) action;
                     entityForReplace = entities.get(replaceAction.getNewEntityName());
                     replaceAction.setNewEntity(entityForReplace);
                 } else if (action instanceof AbstractConditionAction) {
-                    AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
-                    if(abstractConditionAction.getThenActions() != null){
+                    AbstractConditionAction abstractConditionAction = (AbstractConditionAction) action;
+                    if (abstractConditionAction.getThenActions() != null) {
                         checkForReplaceInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
                     }
 
-                    if(abstractConditionAction.getElseActions() != null) {
+                    if (abstractConditionAction.getElseActions() != null) {
                         checkForReplaceInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
                     }
                 } else if (action instanceof ProximityAction) {
-                    ProximityAction proximityAction = (ProximityAction)action;
-                    if(proximityAction.getProximityActions() != null) {
+                    ProximityAction proximityAction = (ProximityAction) action;
+                    if (proximityAction.getProximityActions() != null) {
                         checkForReplaceInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
                     }
                 }
@@ -669,22 +677,22 @@ public class SimulationInstance implements Serializable, Runnable {
         Entity entityForReplace;
 
         for (Action action : subActions) {
-            if(action instanceof ReplaceAction) {
+            if (action instanceof ReplaceAction) {
                 ReplaceAction replaceAction = (ReplaceAction) action;
                 entityForReplace = entities.get(replaceAction.getNewEntityName());
                 replaceAction.setNewEntity(entityForReplace);
             } else if (action instanceof AbstractConditionAction) {
-                AbstractConditionAction abstractConditionAction = (AbstractConditionAction)action;
-                if(abstractConditionAction.getThenActions() != null){
+                AbstractConditionAction abstractConditionAction = (AbstractConditionAction) action;
+                if (abstractConditionAction.getThenActions() != null) {
                     checkForReplaceInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
                 }
 
-                if(abstractConditionAction.getElseActions() != null) {
+                if (abstractConditionAction.getElseActions() != null) {
                     checkForReplaceInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
                 }
             } else if (action instanceof ProximityAction) {
-                ProximityAction proximityAction = (ProximityAction)action;
-                if(proximityAction.getProximityActions() != null) {
+                ProximityAction proximityAction = (ProximityAction) action;
+                if (proximityAction.getProximityActions() != null) {
                     checkForReplaceInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
                 }
             }
@@ -709,7 +717,7 @@ public class SimulationInstance implements Serializable, Runnable {
             populationSum += entity.getCurrentPopulation();
         }
 
-        if(populationSum > grid.getRows()*grid.getColumns()) {
+        if (populationSum > grid.getRows() * grid.getColumns()) {
             throw new CrashException("Simulation crushed: population count is greater than the grid size!");
         }
     }
