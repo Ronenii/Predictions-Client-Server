@@ -19,11 +19,11 @@
          <tabs>
             <Tab text="Chart">
                <content>
-                  <ScrollPane>
+                  <ScrollPane maxHeight="300.0" minWidth="200.0">
                      <content>
-                        <AnchorPane>
+                        <AnchorPane maxHeight="300.0">
                            <children>
-                              <fx:include fx:id="chartComponent" maxWidth="200.0" minHeight="-Infinity" source="chart/ChartComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <fx:include fx:id="chartComponent" source="chart/ChartComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                      </content>
