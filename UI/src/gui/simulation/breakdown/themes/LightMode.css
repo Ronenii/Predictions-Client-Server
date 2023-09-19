@@ -1,0 +1,4 @@
+/* Set a dark background color for the entire application */
+.mainComponent {
+    -fx-background-color: #e0e0e0;
+}

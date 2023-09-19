@@ -1,0 +1,15 @@
+.mainComponent {
+    -fx-background-color: #e0e0e0;
+}
+
+/* Set a lighter background color for individual containers */
+.container {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Style labels */
+.label {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+}

@@ -1,0 +1,9 @@
+/* Set a dark background color for the entire application */
+.mainComponent {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Set a lighter background color for individual containers */
+.container {
+    -fx-background-color: #f0f0f0;
+}

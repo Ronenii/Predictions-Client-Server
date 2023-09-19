@@ -7,6 +7,7 @@ import engine2ui.simulation.prview.PreviewData;
 import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import gui.api.BarNotifier;
 import gui.api.HasFileLoadedListeners;
+import gui.app.mode.AppMode;
 import gui.simulation.breakdown.details.DisplayComponentController;
 import gui.simulation.breakdown.details.entity.property.PropertyDetailsController;
 import gui.simulation.breakdown.details.environment.EnvironmentVarDetailsController;
@@ -20,6 +21,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import jaxb.event.FileLoadedEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -29,7 +31,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class SimBreakdownMenuController implements Initializable, HasFileLoadedListeners, FileLoadedEvent, BarNotifier {
-
+    @FXML private GridPane currentMainComponent;
+    @FXML private GridPane treeViewGridPane;
     private SubMenusController mainController;
     private PreviewData previewData;
     @FXML
@@ -270,5 +273,29 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     @Override
     public BarNotifier getNotificationBar() {
         return mainController.getNotificationBar();
+    }
+
+    public void changeToDarkMode() {
+        displayComponentController.changeToDarkMode();
+        currentMainComponent.getStylesheets().add(getClass().getResource("themes/DarkMode.css").toExternalForm());
+
+    }
+
+    public void changeToLightMode() {
+        displayComponentController.changeToLightMode();
+        currentMainComponent.getStylesheets().add(getClass().getResource("themes/LightMode.css").toExternalForm());
+    }
+
+    public void clearMode(AppMode appMode) {
+        displayComponentController.clearMode(appMode);
+
+        switch (appMode) {
+            case DARK:
+                currentMainComponent.getStylesheets().remove(getClass().getResource("themes/DarkMode.css").toExternalForm());
+                break;
+            case LIGHT:
+                currentMainComponent.getStylesheets().remove(getClass().getResource("themes/LightMode.css").toExternalForm());
+                break;
+        }
     }
 }

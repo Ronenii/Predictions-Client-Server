@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.sub.menus.SubMenusController">
+<GridPane fx:id="currentMainComponent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="mainComponent" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.sub.menus.SubMenusController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
   </columnConstraints>
@@ -16,7 +16,7 @@
     <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TabPane fx:id="menusTabPane" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
+      <TabPane fx:id="menusTabPane" minHeight="-Infinity" minWidth="-Infinity" styleClass="tabPane" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
          <tabs>
             <Tab fx:id="detailsTab" text="Details">
                <content>

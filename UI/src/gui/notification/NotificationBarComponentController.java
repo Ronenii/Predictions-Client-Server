@@ -1,6 +1,7 @@
 package gui.notification;
 
 import gui.app.AppController;
+import gui.app.mode.AppMode;
 import gui.notification.window.LogWindowController;
 import javafx.animation.FillTransition;
 import javafx.fxml.FXML;
@@ -50,6 +51,7 @@ public class NotificationBarComponentController {
     @FXML
     public void initialize() {
         logs = new StringBuilder();
+        grdParent.visibleProperty().set(false);
     }
 
     @FXML
@@ -80,9 +82,6 @@ public class NotificationBarComponentController {
         fillTransition.setToValue(Color.web("#19fc11"));
         fillTransition.setCycleCount(4);
         fillTransition.play();
-        //notificationCircle.setFill(Color.web("#19fc11"));
-
-
     }
 
     /**
@@ -136,5 +135,29 @@ public class NotificationBarComponentController {
             System.out.println(e.getMessage());
         }
     }
+
+    public void turnOnNotificationBar() {
+        grdParent.visibleProperty().set(true);
+    }
+
+    public void changeToDarkMode() {
+        grdParent.getStylesheets().add(getClass().getResource("themes/DarkMode.css").toExternalForm());
+    }
+
+    public void changeToLightMode() {
+        grdParent.getStylesheets().add(getClass().getResource("themes/LightMode.css").toExternalForm());
+    }
+
+    public void clearMode(AppMode appMode) {
+        switch (appMode) {
+            case DARK:
+                grdParent.getStylesheets().remove(getClass().getResource("themes/DarkMode.css").toExternalForm());
+                break;
+            case LIGHT:
+                grdParent.getStylesheets().remove(getClass().getResource("themes/LightMode.css").toExternalForm());
+                break;
+        }
+    }
+
 }
 

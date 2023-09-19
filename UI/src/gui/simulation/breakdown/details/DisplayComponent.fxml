@@ -12,7 +12,7 @@
    <content>
       <BorderPane minHeight="-Infinity" minWidth="-Infinity">
          <center>
-            <GridPane fx:id="grdDisplay" BorderPane.alignment="CENTER">
+            <GridPane fx:id="grdDisplay" styleClass="mainComponent" BorderPane.alignment="CENTER">
               <columnConstraints>
                 <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
                 <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="10.0" />
