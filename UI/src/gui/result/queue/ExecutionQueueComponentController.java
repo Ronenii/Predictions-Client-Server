@@ -47,9 +47,7 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
         simStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         simulationStatusMap = new HashMap<>();
         isFetchStatusTaskRunning = false;
-        isSimulationPaused = false;
-        isSimulationSkippedForward = false;
-        oneUpdateAfterPauseFlag = false;
+        resetFlags();
     }
 
     /**
@@ -59,6 +57,7 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
     @FXML
     void onMouseClickedTV(MouseEvent event) {
         SimulationRunData selected = mainController.getCurrentSelectedSimulation();
+        resetFlags();
         if (selected != null) {
             if (selected.isCompleted()) {
                 mainController.updateGuiToChosenSimulation(selected);
@@ -66,6 +65,12 @@ public class ExecutionQueueComponentController implements EngineCommunicator, Ba
                 executeSimDataFetchingTask(selected.getSimId());
             }
         }
+    }
+
+    private void resetFlags() {
+        isSimulationPaused = false;
+        isSimulationSkippedForward = false;
+        oneUpdateAfterPauseFlag = false;
     }
 
     /**
