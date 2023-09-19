@@ -16,13 +16,13 @@
    <columnConstraints>
       <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
       <ColumnConstraints hgrow="NEVER" maxWidth="220.0" minWidth="150.0" prefWidth="220.0" />
-      <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="10.0" prefWidth="10.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="300.0" minWidth="10.0" prefWidth="10.0" />
       <ColumnConstraints hgrow="NEVER" maxWidth="500.0" minWidth="-Infinity" />
       <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="10.0" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
-      <RowConstraints minHeight="150.0" prefHeight="200.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="400.0" minHeight="150.0" prefHeight="200.0" vgrow="ALWAYS" />
       <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />

@@ -15,7 +15,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TabPane fx:id="executionResultTP" disable="true" maxHeight="500.0" opacity="0.2" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+      <TabPane fx:id="executionResultTP" disable="true" maxHeight="1000.0" opacity="0.2" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
          <tabs>
             <Tab text="Chart">
                <content>
@@ -23,7 +23,7 @@
                      <content>
                         <AnchorPane>
                            <children>
-                              <fx:include fx:id="chartComponent" minHeight="-Infinity" prefHeight="200.0" source="chart/ChartComponent.fxml" />
+                              <fx:include fx:id="chartComponent" maxWidth="200.0" minHeight="-Infinity" source="chart/ChartComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                      </content>
