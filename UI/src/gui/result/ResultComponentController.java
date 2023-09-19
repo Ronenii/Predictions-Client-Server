@@ -107,6 +107,10 @@ public class ResultComponentController implements EngineCommunicator, BarNotifie
         }
     }
 
+    public boolean isBonusSelected(){
+        return mainController.isBonusSelected();
+    }
+
     public void rerunSimulationById(String simId) {
         mainController.rerunSimulationById(simId);
     }

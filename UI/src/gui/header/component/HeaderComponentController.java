@@ -10,10 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
@@ -39,12 +36,33 @@ public class HeaderComponentController implements FileLoadedEvent, EngineCommuni
     private Label predictionLabel;
     @FXML
     private ComboBox<String> themesCB;
+    @FXML
+    private CheckBox bonusCheckBox;
+
     private Scene scene;
     private String currentLoadedFilePath;
 
     public void setMainController(AppController mainController) {
+        setOnChecked(null);
         this.mainController = mainController;
         currentLoadedFilePath = "";
+    }
+
+    public boolean isBonusSelected(){
+        return bonusCheckBox.isSelected();
+    }
+
+    @FXML
+    private void setOnChecked(ActionEvent event){
+        if(bonusCheckBox.isSelected())
+        {
+            themesCB.visibleProperty().set(true);
+        }
+        else{
+            // Select the default theme
+            themesCB.visibleProperty().set(false);
+            themesCB.getSelectionModel().selectFirst();
+        }
     }
 
     public void initialize() {
