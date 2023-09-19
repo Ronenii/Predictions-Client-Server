@@ -101,6 +101,10 @@ public class SubMenusController implements HasFileLoadedListeners, BarNotifier, 
         currentMainComponent.getStylesheets().add(getClass().getResource("themes/LightMode.css").toExternalForm());
     }
 
+    public boolean isBonusSelected(){
+        return mainController.isBonusSelected();
+    }
+
     public void clearMode(AppMode appMode) {
         simBreakdownMenuController.clearMode(appMode);
 

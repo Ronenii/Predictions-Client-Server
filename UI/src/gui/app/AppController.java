@@ -54,6 +54,10 @@ public class AppController implements HasFileLoadedListeners, BarNotifier, Engin
         });
     }
 
+    public boolean isBonusSelected(){
+        return headerComponentController.isBonusSelected();
+    }
+
     public void getSceneForThemes(Scene scene){
         headerComponentController.setSceneForThemes(scene);
     }

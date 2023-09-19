@@ -18,6 +18,7 @@
 
 /* Style labels */
 .label {
+    -fx-font-weight: bold;
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-text-fill: black;
     -fx-font-size: 16px;

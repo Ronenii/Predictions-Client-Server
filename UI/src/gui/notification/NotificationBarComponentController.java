@@ -42,7 +42,8 @@ public class NotificationBarComponentController {
 
     Stage logWindow;
 
-    @FXML private LogWindowController logWindowController;
+    @FXML
+    private LogWindowController logWindowController;
 
     public void setMainController(AppController mainController) {
         this.mainController = mainController;
@@ -62,26 +63,28 @@ public class NotificationBarComponentController {
      * Displays the firs line of the notification on the screen. Adds the date and time this notification is displayed at.
      * Also adds it to the program logs.
      */
-    public void addNotification(String notification){
+    public void addNotification(String notification) {
         enableNotificationAnimation();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         addExpandHyperLinkToLabel(notification);
         LocalDateTime ldt = LocalDateTime.now();
         String toDisplay = ldt.format(dtf) + "- " + notification + "\n\n";
-        logs.insert(0,toDisplay);
+        logs.insert(0, toDisplay);
         setLblNotificationText(toDisplay);
 
-        if(logWindow != null && logWindowController != null){
+        if (logWindow != null && logWindowController != null) {
             logWindowController.changeTextAreaText(logs.toString());
         }
     }
 
     private void enableNotificationAnimation() {
-        FillTransition fillTransition = new FillTransition(Duration.millis(700), notificationCircle);
-        fillTransition.setFromValue(Color.WHITE);
-        fillTransition.setToValue(Color.web("#19fc11"));
-        fillTransition.setCycleCount(4);
-        fillTransition.play();
+        if (mainController.isBonusSelected()) {
+            FillTransition fillTransition = new FillTransition(Duration.millis(700), notificationCircle);
+            fillTransition.setFromValue(Color.WHITE);
+            fillTransition.setToValue(Color.web("#19fc11"));
+            fillTransition.setCycleCount(4);
+            fillTransition.play();
+        }
     }
 
     /**
@@ -99,9 +102,10 @@ public class NotificationBarComponentController {
     /**
      * Creates an expand hyperlink and adds it to the notification bar if no expand link exists.
      */
-    private void addExpandHyperLinkToLabel(String text){
+    private void addExpandHyperLinkToLabel(String text) {
         // Create the hyperlink that creates the error window when clicked.
         Hyperlink expandLink = new Hyperlink("expand");
+        expandLink.getStyleClass().add("expand-link");
         expandLink.minWidth(expandLink.getWidth());
         expandLink.setOnAction(event -> showLogWindow(logs.toString()));
         VBox vBox = new VBox(expandLink);
@@ -110,7 +114,7 @@ public class NotificationBarComponentController {
         lblNotification.setGraphic(new Text("\n"));
         lblNotification.setGraphicTextGap(5);
 
-        if(hBoxExpand.getChildren().isEmpty()){
+        if (hBoxExpand.getChildren().isEmpty()) {
             hBoxExpand.getChildren().add(vBox);
             hBoxExpand.minWidth(hBoxExpand.getWidth());
         }

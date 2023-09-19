@@ -41,7 +41,7 @@
       </AnchorPane>
       <VBox fx:id="execDetailsVBox" prefHeight="200.0" prefWidth="100.0" spacing="13.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Label fx:id="executionDetLabel" text="Execution Details" textAlignment="CENTER">
+            <Label fx:id="executionDetLabel" styleClass="Title" text="Execution Details" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>

@@ -19,3 +19,8 @@
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-text-fill: black;
 }
+
+.Title{
+    -fx-font-weight: bold;
+}
+

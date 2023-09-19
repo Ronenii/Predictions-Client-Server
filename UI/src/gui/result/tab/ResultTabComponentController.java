@@ -52,11 +52,12 @@ public class ResultTabComponentController {
     }
 
     public void enableResultComponent() {
+        enableComponent();
         executionResultTP.disableProperty().set(false);
     }
 
     public void disableResultComponent() {
-        disableComponentFadeTransition();
+        disableComponent();
         executionResultTP.disableProperty().set(true);
     }
 
@@ -72,6 +73,29 @@ public class ResultTabComponentController {
         }
     }
 
+    private void disableComponent(){
+        if(mainController.isBonusSelected()){
+            disableComponentFadeTransition();
+        }
+        else
+        {
+            isComponentLoaded = false;
+            isComponentDisabled = true;
+        }
+    }
+
+    private  void enableComponent(){
+        if(mainController.isBonusSelected()){
+            enableComponentFadeTransition();
+        }
+        else
+        {
+            executionResultTP.opacityProperty().set(1);
+            isComponentLoaded = true;
+            isComponentDisabled = false;
+        }
+    }
+
     /**
      * If the simulation chosen in the execution queue is completed then this function will enable the result tab
      * component and display the results.
@@ -79,15 +103,15 @@ public class ResultTabComponentController {
     public void updateToChosenSimulation(SimulationRunData simulationRunData){
         if (simulationRunData.isCompleted() || simulationRunData.isSimulationSkipped()) {
             enableResultComponent();
-            loadComponent(simulationRunData.getResultData());
+            displayResults(simulationRunData.getResultData());
         } else {
             disableResultComponent();
             clearComponent();
         }
     }
 
-    private void loadComponent(ResultData resultData) {
-        loadComponentFadeTransition();
+    private void displayResults(ResultData resultData) {
+        enableResultComponent();
         clearComponent();
         chartComponentController.showPopulationData(resultData.getPopulationChartData());
         if(resultData.getEntities() != null){
@@ -95,7 +119,7 @@ public class ResultTabComponentController {
         }
     }
 
-    private void loadComponentFadeTransition() {
+    private void enableComponentFadeTransition() {
         if(!isComponentLoaded){
             FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), executionResultTP);
             fadeTransition.setFromValue(0.2);

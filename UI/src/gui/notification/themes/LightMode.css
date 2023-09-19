@@ -11,5 +11,9 @@
 .label {
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-text-fill: black;
-    -fx-font-size: 16px;
+}
+
+.expand-link {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-text-fill: blue;
 }
