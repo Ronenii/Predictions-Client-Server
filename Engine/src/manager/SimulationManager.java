@@ -11,6 +11,7 @@ import engine2ui.simulation.runtime.SimulationRunData;
 import engine2ui.simulation.runtime.generator.IdGenerator;
 import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import engine2ui.simulation.genral.impl.properties.StartData;
+import javafx.application.Platform;
 import jaxb.event.FileLoadedEvent;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
@@ -146,11 +147,12 @@ public class SimulationManager implements EngineInterface, Serializable {
      */
     private void invokeSuccessLoadListeners(List<EventListener> listeners) {
         PreviewData previewData = getCurrentSimulationDetails();
-
-        for (EventListener f : listeners) {
-            FileLoadedEvent fileLoadedEvent = (FileLoadedEvent) f;
-            fileLoadedEvent.onFileLoaded(previewData, isFirstSimulationLoaded);
-        }
+        Platform.runLater(() -> {
+            for (EventListener f : listeners) {
+                FileLoadedEvent fileLoadedEvent = (FileLoadedEvent) f;
+                fileLoadedEvent.onFileLoaded(previewData, isFirstSimulationLoaded);
+            }
+        });
     }
 
     /**

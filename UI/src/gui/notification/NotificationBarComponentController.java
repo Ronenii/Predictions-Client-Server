@@ -2,6 +2,7 @@ package gui.notification;
 
 import gui.app.AppController;
 import gui.notification.window.LogWindowController;
+import javafx.animation.FillTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -12,8 +13,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
+
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -46,12 +52,16 @@ public class NotificationBarComponentController {
         logs = new StringBuilder();
     }
 
+    @FXML
+    private Circle notificationCircle;
+
 
     /**
      * Displays the firs line of the notification on the screen. Adds the date and time this notification is displayed at.
      * Also adds it to the program logs.
      */
     public void addNotification(String notification){
+        enableNotificationAnimation();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         addExpandHyperLinkToLabel(notification);
         LocalDateTime ldt = LocalDateTime.now();
@@ -62,6 +72,17 @@ public class NotificationBarComponentController {
         if(logWindow != null && logWindowController != null){
             logWindowController.changeTextAreaText(logs.toString());
         }
+    }
+
+    private void enableNotificationAnimation() {
+        FillTransition fillTransition = new FillTransition(Duration.millis(700), notificationCircle);
+        fillTransition.setFromValue(Color.WHITE);
+        fillTransition.setToValue(Color.web("#19fc11"));
+        fillTransition.setCycleCount(4);
+        fillTransition.play();
+        //notificationCircle.setFill(Color.web("#19fc11"));
+
+
     }
 
     /**

@@ -10,6 +10,7 @@ import engine2ui.simulation.load.success.DTOLoadSucceed;
 import engine2ui.simulation.runtime.ResultData;
 import engine2ui.simulation.result.ResultInfo;
 import engine2ui.simulation.runtime.SimulationRunData;
+import javafx.concurrent.Task;
 import manager.exception.SimulationNotLoadedException;
 import ui2engine.simulation.control.bar.DTOSimulationControlBar;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
@@ -62,20 +63,32 @@ public class EngineAgent {
      * into the system.
      */
     public void loadSimulationFromFile(File file, List<EventListener> listeners) {
-        DTOLoadSucceed dtoLoadSucceed = engine.loadSimulationFromFile(new DTOLoadFile(file, listeners));
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                DTOLoadSucceed dtoLoadSucceed = engine.loadSimulationFromFile(new DTOLoadFile(file, listeners));
 
-        /* If we succeeded in creating the simulation we want to reset the engine.
-         If a simulation was loaded beforehand and the creation failed we don't want
-         to delete past data until a new simulation is loaded successfully. */
+                 /* If we succeeded in creating the simulation we want to reset the engine.
+                    If a simulation was loaded beforehand and the creation failed we don't want
+                    to delete past data until a new simulation is loaded successfully. */
+                if (dtoLoadSucceed.isSucceed()) {
+                    isFileLoaded = true;
+                    Console.println("The simulation creation has completed successfully");
+                    engine.resetEngine();
+                } else {
+                    Console.println("The simulation creation has failed");
+                }
+                return null;
+            }
+        };
 
-        // TODO: Change this to a graphical user notification
-        if (dtoLoadSucceed.isSucceed()) {
-            isFileLoaded = true;
-            Console.println("The simulation creation has completed successfully");
-            engine.resetEngine();
-        } else {
-            Console.println("The simulation creation has failed");
-        }
+        runTask(task);
+    }
+
+    private void runTask(Task<Void> task) {
+        Thread thread = new Thread(task);
+        thread.setDaemon(true); // Mark the thread as a daemon to allow application exit
+        thread.start();
     }
 
 
