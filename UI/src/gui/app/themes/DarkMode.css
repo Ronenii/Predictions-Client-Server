@@ -18,3 +18,7 @@
     -fx-font-family: "Arial", sans-serif;
     -fx-text-fill: white;
 }
+
+.Title{
+    -fx-font-weight: bold;
+}
