@@ -110,10 +110,6 @@ public class SimulationInstance implements Serializable, Runnable {
         return ticksCounter;
     }
 
-    public long getStartingTime() {
-        return startingTime;
-    }
-
     public Grid getGrid() {
         return grid;
     }
@@ -247,7 +243,7 @@ public class SimulationInstance implements Serializable, Runnable {
         initSimulation();
         // Simulation main loop
         do {
-            threadSleep();
+            //threadSleep();
             if (!userInstructions.isSimulationPaused || userInstructions.isSimulationSkippedForward) {
                 try {
                     checkPopulation();

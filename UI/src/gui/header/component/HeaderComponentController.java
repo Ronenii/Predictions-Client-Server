@@ -3,11 +3,15 @@ package gui.header.component;
 import engine2ui.simulation.prview.PreviewData;
 import gui.api.EngineCommunicator;
 import gui.app.AppController;
+import gui.app.mode.AppMode;
 import gui.header.component.queue.manager.QueueManagerComponentController;
 import gui.result.models.QueueManagementData;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -19,6 +23,8 @@ import manager.EngineAgent;
 import java.io.File;
 
 public class HeaderComponentController implements FileLoadedEvent, EngineCommunicator {
+    @FXML
+    private GridPane currentMainComponent;
     private AppController mainController;
     @FXML
     private Button loadFileBTN;
@@ -31,7 +37,9 @@ public class HeaderComponentController implements FileLoadedEvent, EngineCommuni
     private TextField pathTF;
     @FXML
     private Label predictionLabel;
-
+    @FXML
+    private ComboBox<String> themesCB;
+    private Scene scene;
     private String currentLoadedFilePath;
 
     public void setMainController(AppController mainController) {
@@ -42,6 +50,31 @@ public class HeaderComponentController implements FileLoadedEvent, EngineCommuni
     public void initialize() {
         if(queueManagerComponentController != null) {
             queueManagerComponentController.setMainController(this);
+        }
+
+        themesCB.setItems(FXCollections.observableArrayList("Default mode", "Light mode", "Dark mode"));
+
+    }
+
+    public void setSceneForThemes(Scene scene){
+        this.scene = scene;
+    }
+
+    @FXML
+    void selectedItemComboBox(ActionEvent event) {
+        String selectedItem = themesCB.getSelectionModel().getSelectedItem();
+
+        switch (selectedItem) {
+            case "Default mode":
+                mainController.clearMode();
+                break;
+            case "Light mode":
+                mainController.changeToLightMode();
+                break;
+            case "Dark mode":
+                mainController.changeToDarkMode();
+                break;
+
         }
     }
 
@@ -123,5 +156,24 @@ public class HeaderComponentController implements FileLoadedEvent, EngineCommuni
 
     public void updateRunningAndCompletedLblsInQueueManagement(QueueManagementData queueManagementData) {
         queueManagerComponentController.updateRunningAndCompletedLblsInQueueManagement(queueManagementData);
+    }
+
+    public void changeToDarkMode() {
+        currentMainComponent.getStylesheets().add(getClass().getResource("themes/DarkMode.css").toExternalForm());
+    }
+
+    public void changeToLightMode() {
+        currentMainComponent.getStylesheets().add(getClass().getResource("themes/LightMode.css").toExternalForm());
+    }
+
+    public void clearMode(AppMode appMode) {
+        switch (appMode) {
+            case DARK:
+                currentMainComponent.getStylesheets().remove(getClass().getResource("themes/DarkMode.css").toExternalForm());
+                break;
+            case LIGHT:
+                currentMainComponent.getStylesheets().remove(getClass().getResource("themes/LightMode.css").toExternalForm());
+                break;
+        }
     }
 }
