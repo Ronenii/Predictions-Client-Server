@@ -1,0 +1,20 @@
+/* Set a dark background color for the entire application */
+.NotificationAnchor {
+    -fx-background-color: #333;
+}
+
+.mainScrollPane {
+    -fx-background-color: #333;
+}
+
+/* Style buttons */
+.button {
+    -fx-background-color: #666;
+    -fx-text-fill: white;
+}
+
+/* Style labels */
+.label {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-text-fill: white;
+}
