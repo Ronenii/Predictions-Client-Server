@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Client-Admin/Client-Admin.iml" filepath="$PROJECT_DIR$/Client-Admin/Client-Admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Client-User/Client-User.iml" filepath="$PROJECT_DIR$/Client-User/Client-User.iml" />
       <module fileurl="file://$PROJECT_DIR$/DTO/DTO.iml" filepath="$PROJECT_DIR$/DTO/DTO.iml" />
       <module fileurl="file://$PROJECT_DIR$/Engine/Engine.iml" filepath="$PROJECT_DIR$/Engine/Engine.iml" />
       <module fileurl="file://$PROJECT_DIR$/Predictions.iml" filepath="$PROJECT_DIR$/Predictions.iml" />
