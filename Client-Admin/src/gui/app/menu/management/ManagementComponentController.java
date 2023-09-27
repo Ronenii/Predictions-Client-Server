@@ -1,8 +1,8 @@
-package gui.app.menu.managment;
+package gui.app.menu.management;
 
 import gui.app.menu.MenuComponentController;
-import gui.app.menu.managment.simulation.SimulationManagerComponentController;
-import gui.app.menu.managment.thread.ThreadManagerComponentController;
+import gui.app.menu.management.simulation.SimulationManagerComponentController;
+import gui.app.menu.management.thread.ThreadManagerComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 

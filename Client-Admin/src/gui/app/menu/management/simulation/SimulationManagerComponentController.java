@@ -1,7 +1,7 @@
-package gui.app.menu.managment.simulation;
+package gui.app.menu.management.simulation;
 
-import gui.app.menu.managment.ManagementComponentController;
-import gui.app.menu.managment.simulation.data.LoadedSimulationData;
+import gui.app.menu.management.ManagementComponentController;
+import gui.app.menu.management.simulation.data.LoadedSimulationData;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -17,10 +17,10 @@ public class SimulationManagerComponentController {
     private ManagementComponentController mainController;
 
     @FXML
-    private TextField pathTF;
+    private TextField textFieldPath;
 
     @FXML
-    private Button loadFileBTN;
+    private Button buttonLoadFile;
 
     @FXML
     private ListView<LoadedSimulationData> listViewSimulations;
@@ -57,8 +57,8 @@ public class SimulationManagerComponentController {
 
     @FXML
     void loadFileTextFieldListener(ActionEvent event) {
-        if (!pathTF.getText().equals(currentLoadedFilePath)) {
-            File file = new File(pathTF.getText());
+        if (!textFieldPath.getText().equals(currentLoadedFilePath)) {
+            File file = new File(textFieldPath.getText());
 
 //            loadFile(file);
         }

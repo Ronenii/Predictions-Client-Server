@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.menu.managment.simulation.SimulationManagerComponentController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.menu.management.simulation.SimulationManagerComponentController">
   <columnConstraints>
     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
@@ -29,8 +29,8 @@
    <children>
       <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3">
          <children>
-            <TextField id="tf-Header-FilePath" fx:id="pathTF" editable="false" onAction="#loadFileTextFieldListener" onMouseEntered="#resetTextOnMouseEnteredTextFieldListener" onMouseExited="#resetTextOnMouseExitTextFieldListener" HBox.hgrow="ALWAYS" />
-            <Button id="btn-Header-LoadFile" fx:id="loadFileBTN" mnemonicParsing="false" onAction="#loadFileButtonActionListener" text="Load file" />
+            <TextField id="tf-Header-FilePath" fx:id="textFieldPath" editable="false" onAction="#loadFileTextFieldListener" HBox.hgrow="ALWAYS" />
+            <Button id="btn-Header-LoadFile" fx:id="buttonLoadFile" mnemonicParsing="false" onAction="#loadFileButtonActionListener" text="Load file" />
          </children>
       </HBox>
       <ListView fx:id="listViewSimulations" focusTraversable="false" onContextMenuRequested="#onSimulationSelected" GridPane.columnIndex="1" GridPane.rowIndex="5" />

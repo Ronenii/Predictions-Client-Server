@@ -1,4 +1,4 @@
-package gui.app.menu.managment.simulation.data;
+package gui.app.menu.management.simulation.data;
 
 public class LoadedSimulationData {
     private final String simulationName;

@@ -3,7 +3,7 @@ package gui.app.menu;
 
 import gui.app.AdminAppController;
 import gui.app.menu.allocation.AllocationComponentController;
-import gui.app.menu.managment.ManagementComponentController;
+import gui.app.menu.management.ManagementComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 
