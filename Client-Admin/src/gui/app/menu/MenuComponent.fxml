@@ -6,7 +6,14 @@
 
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.menu.MenuComponentController">
   <tabs>
-    <Tab text="Managment" />
+    <Tab text="Managment">
+         <content>
+            <AnchorPane>
+               <children>
+                  <fx:include fx:id="managementComponent" source="managment/ManagementComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+         </content></Tab>
     <Tab text="Allocations">
          <content>
             <AnchorPane>
