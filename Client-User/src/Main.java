@@ -12,7 +12,7 @@ import java.net.URL;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Predictions");
+        primaryStage.setTitle("Predictions-User");
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL url = getClass().getResource("gui/app/UserApp.fxml");
         fxmlLoader.setLocation(url);

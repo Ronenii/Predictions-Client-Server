@@ -1,4 +1,4 @@
-package gui.notification;
+package gui.app.notification;
 
 import gui.app.AdminAppController;
 import gui.notification.window.LogWindowController;

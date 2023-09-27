@@ -1,6 +1,6 @@
 package gui.app;
 
-import gui.notification.NotificationBarComponentController;
+import gui.app.notification.NotificationBarComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
