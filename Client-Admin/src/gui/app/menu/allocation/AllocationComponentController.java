@@ -25,7 +25,7 @@ public class AllocationComponentController {
     private Button buttonAccept;
 
     public void setMainController(MenuComponentController menuComponentController){
-        mainController = menuComponentController;
+        this.mainController = menuComponentController;
     }
 
     @FXML
