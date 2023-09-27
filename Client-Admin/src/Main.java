@@ -20,10 +20,7 @@ public class Main extends Application {
         Scene scene = new Scene(root);
         AdminAppController appController = fxmlLoader.getController();
         appController.setPrimaryStageOnClose(primaryStage);
-        appController.getSceneForThemes(scene);
         primaryStage.setScene(scene);
-        primaryStage.setHeight(900);
-        primaryStage.setWidth(1100);
         primaryStage.show();
     }
 

@@ -11,7 +11,7 @@
          <bottom>
             <AnchorPane fx:id="anchorNotification" minHeight="40.0" styleClass="NotificationAnchor" visible="false" BorderPane.alignment="CENTER">
                <children>
-                  <fx:include fx:id="notificationBarComponent" source="../notification/NotificationBarComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <fx:include fx:id="notificationBarComponent" source="notification/NotificationBarComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
                <BorderPane.margin>
                   <Insets />
