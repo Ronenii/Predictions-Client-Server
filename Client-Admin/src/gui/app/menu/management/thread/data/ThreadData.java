@@ -1,11 +1,11 @@
 package gui.app.menu.management.thread.data;
 
-public class QueueManagementData {
+public class ThreadData {
     public int runningCount;
 
     public int completedCount;
 
-    public QueueManagementData() {
+    public ThreadData() {
         runningCount = 0;
         completedCount = 0;
     }

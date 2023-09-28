@@ -33,7 +33,7 @@
             <Button id="btn-Header-LoadFile" fx:id="buttonLoadFile" mnemonicParsing="false" onAction="#loadFileButtonActionListener" text="Load file" />
          </children>
       </HBox>
-      <ListView fx:id="listViewSimulations" focusTraversable="false" onContextMenuRequested="#onSimulationSelected" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <ListView fx:id="listViewSimulations" focusTraversable="false" maxWidth="345.0" minWidth="200.0" onContextMenuRequested="#onSimulationSelected" prefHeight="200.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
       <Label text="SImulation Manager" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets />

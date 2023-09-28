@@ -1,7 +1,7 @@
 package gui.app.menu.management.thread;
 
 import gui.app.menu.management.ManagementComponentController;
-import gui.app.menu.management.thread.data.QueueManagementData;
+import gui.app.menu.management.thread.data.ThreadData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -42,7 +42,7 @@ public class ThreadManagerComponentController {
 
     }
 
-    public void updateLabelsInQueueManagement(QueueManagementData queueManagementData) {
+    public void updateLabelsInQueueManagement(ThreadData queueManagementData) {
         lblRunning.setText(String.valueOf(queueManagementData.runningCount));
         lblEnded.setText(String.valueOf(queueManagementData.completedCount));
     }

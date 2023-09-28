@@ -14,14 +14,14 @@
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.menu.allocation.AllocationComponentController">
   <columnConstraints>
     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="600.0" minWidth="-Infinity" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="600.0" minWidth="350.0" />
       <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
       <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
       <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
-    <RowConstraints minHeight="-Infinity" prefHeight="200.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="800.0" minHeight="-Infinity" prefHeight="200.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
@@ -32,7 +32,7 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <TableView fx:id="allocationTableView" onContextMenuRequested="#onItemSelected">
+            <TableView fx:id="allocationTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onContextMenuRequested="#onItemSelected">
                <columns>
                   <TableColumn prefWidth="115.0" text="Simulation" />
                   <TableColumn prefWidth="115.0" text="User" />

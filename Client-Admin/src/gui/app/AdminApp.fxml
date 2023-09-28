@@ -23,9 +23,9 @@
          <top>
          </top>
          <center>
-            <AnchorPane BorderPane.alignment="CENTER">
+            <AnchorPane BorderPane.alignment="CENTER_LEFT">
                <children>
-                  <fx:include fx:id="menuComponent" source="menu/MenuComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <fx:include fx:id="menuComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="menu/MenuComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
          </center>
