@@ -1,8 +1,7 @@
-package gui.app.menu.execution.history.result.chart;
+package gui.app.menu.execution.result.chart;
 
-import gui.app.menu.execution.history.result.ResultTabComponentController;
+import gui.app.menu.execution.result.ResultTabComponentController;
 import javafx.fxml.FXML;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;

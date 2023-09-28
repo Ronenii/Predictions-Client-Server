@@ -1,12 +1,10 @@
-package gui.app.menu.execution.history.queue;
+package gui.app.menu.execution.queue;
 
 
 import engine2ui.simulation.runtime.SimulationRunData;
-import gui.app.menu.execution.history.ExecutionComponentController;
-import gui.app.menu.execution.history.data.QueueData;
-import gui.app.menu.execution.history.queue.data.StatusData;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
+import gui.app.menu.execution.ExecutionComponentController;
+import gui.app.menu.execution.queue.data.QueueData;
+import gui.app.menu.execution.data.StatusData;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -64,7 +62,7 @@ public class ExecutionQueueComponentController {
     * Else will just display the selected simulation.
     */
     @FXML
-    void onMouseClickedTV(MouseEvent event) {
+    void onTableViewItemSelected(MouseEvent event) {
 //        SimulationRunData selected = mainController.getCurrentSelectedSimulation();
 //        resetFlags();
 //        if (selected != null) {

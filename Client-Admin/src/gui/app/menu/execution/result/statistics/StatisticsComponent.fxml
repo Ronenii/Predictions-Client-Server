@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.menu.execution.history.result.statistics.StatisticsComponentController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.menu.execution.result.statistics.StatisticsComponentController">
   <columnConstraints>
     <ColumnConstraints hgrow="ALWAYS" maxWidth="250.0" minWidth="-Infinity" prefWidth="150.0" />
       <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="10.0" />
@@ -23,7 +23,7 @@
     <RowConstraints maxHeight="300.0" minHeight="100.0" prefHeight="200.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TreeView fx:id="entityTreeView" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#selectItem" prefHeight="200.0" prefWidth="150.0" />
+      <TreeView fx:id="entityTreeView" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onTreeViewItemSelected" prefHeight="200.0" prefWidth="150.0" />
       <VBox alignment="TOP_CENTER" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <children>
             <Label minHeight="-Infinity" minWidth="-Infinity" text="Histogram">

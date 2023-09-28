@@ -1,10 +1,10 @@
-package gui.app.menu.execution.history.result.statistics;
+package gui.app.menu.execution.result.statistics;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.objects.DTOEntityInstance;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
-import gui.app.menu.execution.history.result.ResultTabComponentController;
-import gui.app.menu.execution.history.result.data.HistogramData;
+import gui.app.menu.execution.result.ResultTabComponentController;
+import gui.app.menu.execution.result.data.HistogramData;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -91,7 +91,7 @@ public class StatisticsComponentController {
     }
 
     @FXML
-    void selectItem(MouseEvent event) {
+    void onTreeViewItemSelected(MouseEvent event) {
 //        TreeItem<String> selectedItem = entityTreeView.getSelectionModel().getSelectedItem();
 //        DTOProperty chosenProperty;
 //

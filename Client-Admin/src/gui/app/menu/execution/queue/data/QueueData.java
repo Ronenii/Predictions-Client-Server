@@ -1,4 +1,4 @@
-package gui.app.menu.execution.history.data;
+package gui.app.menu.execution.queue.data;
 
 public class QueueData {
     public int runningCount;

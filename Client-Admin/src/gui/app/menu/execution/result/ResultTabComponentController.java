@@ -1,10 +1,10 @@
-package gui.app.menu.execution.history.result;
+package gui.app.menu.execution.result;
 
 import engine2ui.simulation.runtime.ResultData;
 import engine2ui.simulation.runtime.SimulationRunData;
-import gui.app.menu.execution.history.ExecutionComponentController;
-import gui.app.menu.execution.history.result.chart.ChartComponentController;
-import gui.app.menu.execution.history.result.statistics.StatisticsComponentController;
+import gui.app.menu.execution.ExecutionComponentController;
+import gui.app.menu.execution.result.chart.ChartComponentController;
+import gui.app.menu.execution.result.statistics.StatisticsComponentController;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.chart.Chart;

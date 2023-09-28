@@ -1,4 +1,4 @@
-package gui.app.menu.execution.history.queue.data;
+package gui.app.menu.execution.data;
 
 import javafx.beans.property.SimpleStringProperty;
 

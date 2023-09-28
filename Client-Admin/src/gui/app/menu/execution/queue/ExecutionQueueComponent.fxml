@@ -6,14 +6,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.menu.execution.history.queue.ExecutionQueueComponentController">
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.menu.execution.queue.ExecutionQueueComponentController">
    <children>
       <Label fx:id="exeListLabel" styleClass="Title" text="Execution Queue">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TableView fx:id="executionsQueueTV" maxWidth="250.0" onMouseClicked="#onMouseClickedTV" VBox.vgrow="ALWAYS">
+      <TableView fx:id="executionsQueueTV" maxWidth="250.0" onMouseClicked="#onTableViewItemSelected" VBox.vgrow="ALWAYS">
          <columns>
             <TableColumn fx:id="simIdCol" prefWidth="142.0" resizable="false" text="Simulation ID" />
             <TableColumn fx:id="simStatusCol" prefWidth="106.0" resizable="false" text="Status" />

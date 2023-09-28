@@ -1,4 +1,4 @@
-package gui.app.menu.execution.history.result.data;
+package gui.app.menu.execution.result.data;
 
 public class HistogramData {
     private final String value;

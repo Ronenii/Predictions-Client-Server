@@ -1,12 +1,10 @@
-package gui.app.menu.execution.history.details;
+package gui.app.menu.execution.details;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntityPopulation;
 import engine2ui.simulation.runtime.SimulationRunData;
-import gui.app.menu.execution.history.ExecutionComponentController;
-import gui.result.models.PopulationData;
+import gui.app.menu.execution.ExecutionComponentController;
+import gui.app.menu.execution.details.data.PopulationData;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
