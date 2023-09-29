@@ -17,8 +17,6 @@ import javafx.scene.layout.VBox;
 import jaxb.event.FileLoadedEvent;
 import manager.EngineAgent;
 
-import java.util.Map;
-
 public class ResultComponentController implements EngineCommunicator, BarNotifier, FileLoadedEvent {
     private SubMenusController mainController;
 
