@@ -1,7 +1,7 @@
 package gui.app.notification;
 
 import gui.app.UserAppController;
-import gui.notification.window.LogWindowController;
+import fixed.app.notification.window.LogWindowController;
 import javafx.animation.FillTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
