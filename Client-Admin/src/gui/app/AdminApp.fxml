@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
 
 <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="mainScrollPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.AdminAppController">
    <content>
@@ -21,11 +23,19 @@
          <top>
          </top>
          <center>
-            <AnchorPane BorderPane.alignment="CENTER">
+            <AnchorPane BorderPane.alignment="CENTER_LEFT">
                <children>
+                  <fx:include fx:id="menuComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="menu/MenuComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
          </center>
+         <top>
+            <Label text="Predictions - Administrator" BorderPane.alignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+         </top>
       </BorderPane>
    </content>
 </ScrollPane>

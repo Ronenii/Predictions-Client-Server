@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<GridPane minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.menu.execution.details.ExecutionDetailsComponentController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="220.0" minWidth="150.0" prefWidth="220.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="300.0" minWidth="10.0" prefWidth="10.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="500.0" minWidth="-Infinity" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="400.0" minHeight="150.0" prefHeight="200.0" vgrow="ALWAYS" />
+      <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
+   </rowConstraints>
+   <children>
+      <TableView fx:id="entitiesTV" maxWidth="700.0" prefHeight="200.0" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="1">
+         <columns>
+            <TableColumn fx:id="entityColumn" prefWidth="156.0" resizable="false" text="Entity" />
+            <TableColumn fx:id="quantityColumn" minWidth="1.0" prefWidth="120.0" resizable="false" text="Quantity" />
+         </columns>
+      </TableView>
+      <VBox fx:id="execDetailsVBox" prefHeight="200.0" prefWidth="100.0" spacing="13.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <children>
+            <Label fx:id="executionDetLabel" styleClass="Title" text="Execution Details" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <HBox spacing="13.0">
+               <children>
+                  <Label text="Simulation Name:" />
+                  <Label id="lbl-ExecDetails-SimID" fx:id="simulationIdNameLabel" text="-" />
+               </children>
+            </HBox>
+            <HBox spacing="13.0">
+               <children>
+                  <Label text="Simulation ID:" />
+                  <Label id="lbl-ExecDetails-SimID" fx:id="simulationIdDetLabel" text="-" />
+               </children>
+            </HBox>
+            <HBox spacing="13.0">
+               <children>
+                  <Label text="Current Tick:" />
+                  <Label id="lbl-ExecDetails-CurrTick" fx:id="currentTickDetLabel" text="-" />
+               </children>
+            </HBox>
+            <HBox spacing="13.0">
+               <children>
+                  <Label text="Duration:" />
+                  <Label id="lbl-ExecDetails-Duration" fx:id="durationDetLabel" text="-" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</GridPane>

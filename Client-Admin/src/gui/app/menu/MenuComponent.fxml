@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.menu.MenuComponentController">
+  <tabs>
+    <Tab text="Managment">
+         <content>
+            <AnchorPane>
+               <children>
+                  <fx:include fx:id="managementComponent" source="management/ManagementComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+         </content></Tab>
+    <Tab text="Allocations">
+         <content>
+            <AnchorPane>
+               <children>
+                  <fx:include fx:id="allocationComponent" source="allocation/AllocationComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+         </content></Tab>
+      <Tab text="Executions History">
+         <content>
+            <AnchorPane>
+               <children>
+                  <fx:include source="execution/ExecutionComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+         </content></Tab>
+  </tabs>
+</TabPane>
