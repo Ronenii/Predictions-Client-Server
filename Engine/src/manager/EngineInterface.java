@@ -24,8 +24,6 @@ public interface EngineInterface {
 
     StartResponse startSimulation();
 
-    ResultInfo runSimulation(DTOExecutionData dtoExecutionData);
-
     void resetEngine();
 
     StartData getSimulationStartData();

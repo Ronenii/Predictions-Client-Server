@@ -30,16 +30,17 @@ import java.util.*;
 
 public class SimulationInstance implements Serializable, Runnable {
     private String simulationId;
+    private final String simulationName;
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
     private final Map<String, Rule> rules;
-    private final Map<EndingConditionType, EndingCondition> endingConditions;
+    private Map<EndingConditionType, EndingCondition> endingConditions;
     private EndingCondition terminateCondition;
     private final TicksCounter ticksCounter;
     private long timePassed;
     private long timePassedBeforePause;
     private long startingTime;
-    private final int threadCount;
+    private int threadCount;
     private final Grid grid;
     private int totalPopulation;
     private final UserInstructions userInstructions;
@@ -48,15 +49,14 @@ public class SimulationInstance implements Serializable, Runnable {
     private ResultData resultData;
     private String errorMessage;
 
-    public SimulationInstance(String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, TicksCounter ticksCounter, Grid grid, int threadCount) {
+    public SimulationInstance(String simulationName, String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, TicksCounter ticksCounter, Grid grid) {
+        this.simulationName = simulationName;
         this.simulationId = simulationId;
         this.environmentProperties = environmentProperties;
         this.entities = entities;
         this.rules = rules;
-        this.endingConditions = endingConditions;
         this.ticksCounter = ticksCounter;
         this.timePassed = 0;
-        this.threadCount = threadCount;
         this.grid = grid;
         totalPopulation = 0;
         this.status = SimulationStatus.WAITING;
@@ -64,6 +64,7 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     public SimulationInstance(SimulationInstance simulationInstance) {
+        this.simulationName = simulationInstance.getSimulationName();
         this.simulationId = simulationInstance.getSimulationId();
         this.environmentProperties = simulationInstance.dupEnvVarsMap();
         this.entities = simulationInstance.dupEntitiesMap();
@@ -76,6 +77,10 @@ public class SimulationInstance implements Serializable, Runnable {
         totalPopulation = 0;
         this.status = SimulationStatus.WAITING;
         userInstructions = new UserInstructions(false, false, false);
+    }
+
+    public String getSimulationName() {
+        return simulationName;
     }
 
     public String getSimulationId() {

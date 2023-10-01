@@ -11,6 +11,7 @@ import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException
 import jaxb.unmarshal.converter.validator.PRDValidator;
 import jaxb.unmarshal.converter.value.initializer.ValueInitializer;
 import simulation.objects.entity.Entity;
+import simulation.objects.world.definition.SimulationDefinition;
 import simulation.objects.world.grid.Grid;
 import simulation.objects.world.ticks.counter.TicksCounter;
 import simulation.properties.action.api.AbstractAction;
@@ -64,9 +65,7 @@ public class PRDConverter {
         ticksCounter = new TicksCounter();
     }
 
-    public SimulationInstance PRDWorld2World(PRDWorld prdWorld) {
-
-        Map<EndingConditionType, EndingCondition> endingConditions;
+    public SimulationInstance PRDWorld2World(PRDWorld prdWorld, Map<String, SimulationDefinition> simulationDefinitions) {
 
         if (!isWorldGridAndThreadCountValid(prdWorld)) {
             validator.addEntitiesAndEnvPropCreationErrorMessage();
@@ -87,15 +86,13 @@ public class PRDConverter {
 
         getRulesFromPRDWorld(prdWorld);
 
-        endingConditions = getEndingConditions(prdWorld.getPRDTermination());
-
-        // check if the rules and ending condition convert succeed.
+        // check if the rules convert succeed.
         if (validator.containsErrors()) {
             validator.addRulesAndEndingConditionsCreationErrorMessage();
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
-        return new SimulationInstance(null, environmentProperties, entities, rules, endingConditions, ticksCounter, grid, prdWorld.getPRDThreadCount());
+        return new SimulationInstance(prdWorld.getName(),null, environmentProperties, entities, rules, ticksCounter, grid);
     }
 
     private Grid PRDGrid2Grid(PRDWorld.PRDGrid grid) {

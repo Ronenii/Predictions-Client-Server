@@ -3,6 +3,7 @@ package jaxb.unmarshal;
 import jaxb.schema.generated.PRDWorld;
 import jaxb.unmarshal.converter.PRDConverter;
 import simulation.objects.world.SimulationInstance;
+import simulation.objects.world.definition.SimulationDefinition;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -11,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * A class designated to read the XML file data and convert it to program objects we can work with.
@@ -23,12 +25,14 @@ public class Reader {
      * @param file The xml file to read the world from.
      * @return The world read from the xml file
      */
-    public static SimulationInstance readWorldFromXML(File file) {
+    public static SimulationDefinition readWorldFromXML(File file, Map<String, SimulationDefinition> simulationDefinitions) {
         PRDConverter prdConverter = new PRDConverter();
         try {
             InputStream inputStream = new FileInputStream(file);
             PRDWorld prdWorld = deserializeFrom(inputStream);
-            return prdConverter.PRDWorld2World(prdWorld);
+            SimulationInstance simulationAbstractInstance = prdConverter.PRDWorld2World(prdWorld, simulationDefinitions);
+
+            return new SimulationDefinition(simulationAbstractInstance.getSimulationName(), simulationAbstractInstance);
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException("The given path is invalid. Please provide the full path for the simulation config file.");
         } catch (JAXBException e) {
