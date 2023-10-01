@@ -67,7 +67,7 @@ public class PRDConverter {
 
     public SimulationInstance PRDWorld2World(PRDWorld prdWorld, Map<String, SimulationDefinition> simulationDefinitions) {
 
-        if (!isWorldGridAndThreadCountValid(prdWorld)) {
+        if (!isWorldGridAndWorldNameValid(prdWorld, simulationDefinitions)) {
             validator.addEntitiesAndEnvPropCreationErrorMessage();
             throw new IllegalArgumentException(validator.getErrorList());
         }
@@ -99,11 +99,11 @@ public class PRDConverter {
         return new Grid(grid.getRows(), grid.getColumns());
     }
 
-    private boolean isWorldGridAndThreadCountValid(PRDWorld prdWorld) {
+    private boolean isWorldGridAndWorldNameValid(PRDWorld prdWorld, Map<String, SimulationDefinition> simulationDefinitions) {
         boolean ret = true;
 
         try {
-            validator.validatePRDGridAndPRDThreadCount(prdWorld);
+            validator.validatePRDGridAndPRDName(prdWorld, simulationDefinitions);
         } catch (PRDObjectConversionException e) {
             ret = false;
         }
