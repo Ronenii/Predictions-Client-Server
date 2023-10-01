@@ -1,4 +1,4 @@
-package gui.notification.window;
+package gui.app.notification.window;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;

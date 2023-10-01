@@ -1,8 +1,8 @@
 package gui.app.notification;
 
 import gui.app.UserAppController;
-import fixed.app.notification.window.LogWindowController;
-import javafx.animation.FillTransition;
+import gui.app.mode.AppMode;
+import gui.app.notification.window.LogWindowController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -13,11 +13,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 
 import java.io.IOException;
@@ -63,7 +61,6 @@ public class NotificationBarComponentController {
      * Also adds it to the program logs.
      */
     public void addNotification(String notification) {
-        enableNotificationAnimation();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         addExpandHyperLinkToLabel(notification);
         LocalDateTime ldt = LocalDateTime.now();
@@ -76,13 +73,6 @@ public class NotificationBarComponentController {
         }
     }
 
-    private void enableNotificationAnimation() {
-            FillTransition fillTransition = new FillTransition(Duration.millis(700), notificationCircle);
-            fillTransition.setFromValue(Color.WHITE);
-            fillTransition.setToValue(Color.web("#19fc11"));
-            fillTransition.setCycleCount(4);
-            fillTransition.play();
-    }
 
     /**
      * Sets the notification bar text.
@@ -149,16 +139,16 @@ public class NotificationBarComponentController {
         grdParent.getStylesheets().add(getClass().getResource("themes/LightMode.css").toExternalForm());
     }
 
-//    public void clearMode(AppMode appMode) {
-//        switch (appMode) {
-//            case DARK:
-//                grdParent.getStylesheets().remove(getClass().getResource("themes/DarkMode.css").toExternalForm());
-//                break;
-//            case LIGHT:
-//                grdParent.getStylesheets().remove(getClass().getResource("themes/LightMode.css").toExternalForm());
-//                break;
-//        }
-//    }
+    public void clearMode(AppMode appMode) {
+        switch (appMode) {
+            case DARK:
+                grdParent.getStylesheets().remove(getClass().getResource("themes/DarkMode.css").toExternalForm());
+                break;
+            case LIGHT:
+                grdParent.getStylesheets().remove(getClass().getResource("themes/LightMode.css").toExternalForm());
+                break;
+        }
+    }
 
 }
 
