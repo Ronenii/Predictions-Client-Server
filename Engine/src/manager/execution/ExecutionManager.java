@@ -2,6 +2,7 @@ package manager.execution;
 
 import engine2ui.simulation.runtime.SimulationRunData;
 import manager.DTO.creator.DTOCreator;
+import manager.execution.holder.SimulationsHolder;
 import simulation.objects.world.SimulationInstance;
 import simulation.objects.world.user.instructions.UserInstructions;
 import ui2engine.simulation.control.bar.DTOSimulationControlBar;
@@ -17,6 +18,7 @@ import java.util.concurrent.Executors;
 public class ExecutionManager {
     private ExecutorService threadExecutor = null;
     private final Map<String, SimulationInstance> simulations;
+    private Map<String, SimulationsHolder> simulationsHolder;
     private final Map<String, SimulationRunData> simulationsRunData;
     private boolean isSkippingForward;
 
@@ -24,12 +26,21 @@ public class ExecutionManager {
         threadExecutor = Executors.newFixedThreadPool(threadCount);
         simulations = new HashMap<>();
         simulationsRunData = new HashMap<>();
+        simulationsHolder = new HashMap<>();
         isSkippingForward = false;
     }
 
-    public void addSimulationToQueue(SimulationInstance simulationInstance, SimulationRunData simulationRunData) {
-        simulations.put(simulationInstance.getSimulationId(), simulationInstance);
-        simulationsRunData.put(simulationRunData.getSimId(), simulationRunData);
+    public void addSimulationToQueue(String simulationName, SimulationInstance simulationInstance, SimulationRunData simulationRunData) {
+        // first add of this simulation
+        if(simulationsHolder.get(simulationName) == null) {
+            simulationsHolder.put(simulationName, new SimulationsHolder());
+            simulationsHolder.get(simulationName).addSimulationInstance(simulationInstance);
+            simulationsHolder.get(simulationName).addSimulationRunData(simulationRunData);
+        } else {
+            simulationsHolder.get(simulationName).addSimulationInstance(simulationInstance);
+            simulationsHolder.get(simulationName).addSimulationRunData(simulationRunData);
+        }
+
         threadExecutor.execute(simulationInstance);
     }
 
