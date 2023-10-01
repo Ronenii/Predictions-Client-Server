@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fixed.app.menu.result.tab.statistics.StatisticsComponentController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="ALWAYS" maxWidth="250.0" minWidth="-Infinity" prefWidth="150.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="10.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
+      <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="10.0" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="300.0" minHeight="100.0" prefHeight="200.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <TreeView fx:id="entityTreeView" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#selectItem" prefHeight="200.0" prefWidth="150.0" />
+      <VBox alignment="TOP_CENTER" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+         <children>
+            <Label minHeight="-Infinity" minWidth="-Infinity" text="Histogram">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <TableView fx:id="histogramTableView" minHeight="100.0" minWidth="-Infinity" prefHeight="300.0" prefWidth="150.0">
+              <columns>
+                <TableColumn fx:id="valueCol" prefWidth="75.0" text="Value" />
+                <TableColumn fx:id="quantityCol" prefWidth="75.0" text="Quantity" />
+              </columns>
+            </TableView>
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" spacing="20.0" GridPane.columnIndex="4">
+         <children>
+            <HBox spacing="5.0" VBox.vgrow="NEVER">
+               <children>
+                  <Label text="Consistency:">
+				  <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+				  </Label>
+                  <Label fx:id="consistencyLabel" />
+               </children>
+            </HBox>
+            <HBox fx:id="averageHbox" spacing="5.0" VBox.vgrow="NEVER">
+               <children>
+                  <Label text="Average:">
+				  <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+				  </Label>
+                  <Label fx:id="AverageLabel" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</GridPane>
