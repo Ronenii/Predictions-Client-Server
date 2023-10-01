@@ -163,53 +163,11 @@ public class SimulationManager implements EngineInterface, Serializable {
     }
 
     /**
-     * TODO: Adjust to aviad's model. We also need to implement it with threads.
-     */
-    @Override
-    public ResultInfo runSimulation(DTOExecutionData dtoExecutionData) {
-        // Resets all entities in this world
-        simulationDefinition.resetWorld();
-
-        // fetch the user data input into the simulation's environment properties.
-        fetchDTOThirdFunctionObject(dtoExecutionData);
-
-        // TODO: implement function to fetch '
-
-        // run the simulation.
-        //ResultData result = this.simulationDefinition.runSimulation();
-        //this.pastSimulations.put(result.getId(), result);
-
-        // Sent to the UI the termination cause.
-        DTOEndingCondition dtoEndingCondition = new DTOEndingCondition(simulationDefinition.getTerminateCondition().getType().toString(), simulationDefinition.getTerminateCondition().getCount());
-        return null;
-    }
-
-    /**
      * Clears all data of past simulations and all generated IDs.
      */
     public void resetEngine() {
         pastSimulations.clear();
         IdGenerator.clearIds();
-    }
-
-    /**
-     *
-     * @param dtoExecutionData the third function's DTO object
-     */
-    private void fetchDTOThirdFunctionObject(DTOExecutionData dtoExecutionData) {
-        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
-        Map<String, EnvPropertyUserInput> envPropertyUserInputs = dtoExecutionData.getEnvPropertyUserInputs();
-        Map<String, Property> environmentProperties = this.simulationDefinition.getEnvironmentProperties();
-        Property envProperty;
-
-        for (EnvPropertyUserInput envPropertyUserInput : envPropertyUserInputs.values()) {
-            envProperty = environmentProperties.get(envPropertyUserInput.getName());
-            if (envPropertyUserInput.isRandomInit()) {
-                envProperty.updateValueAndIsRandomInit(getRandomValueByType(envProperty), envPropertyUserInput.isRandomInit());
-            } else {
-                envProperty.updateValueAndIsRandomInit(envPropertyUserInput.getValue(), envPropertyUserInput.isRandomInit());
-            }
-        }
     }
 
     /**
