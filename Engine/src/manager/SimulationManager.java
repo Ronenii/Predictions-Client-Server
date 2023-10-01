@@ -21,6 +21,7 @@ import manager.validator.exceptions.IllegalStringValueException;
 import manager.validator.exceptions.OutOfRangeException;
 import manager.validator.validator.InputValidator;
 import simulation.objects.world.SimulationInstance;
+import simulation.objects.world.definition.SimulationDefinition;
 import simulation.objects.world.status.SimulationStatus;
 import ui2engine.simulation.control.bar.DTOSimulationControlBar;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
@@ -45,6 +46,7 @@ import java.util.*;
 
 public class SimulationManager implements EngineInterface, Serializable {
     private SimulationInstance simulationDefinition;
+    private Map<String, SimulationDefinition> simulationDefinitions;
     private Map<String, ResultData> pastSimulations;
     private Set<String> keysToSerialize;
     private boolean isSimulationLoaded;
@@ -53,6 +55,7 @@ public class SimulationManager implements EngineInterface, Serializable {
 
     public SimulationManager() {
         simulationDefinition = null;
+        simulationDefinitions = new HashMap<>();
         pastSimulations = new HashMap<>();
         isSimulationLoaded = false;
         keysToSerialize = new HashSet<>();
@@ -99,9 +102,10 @@ public class SimulationManager implements EngineInterface, Serializable {
     public DTOLoadSucceed loadSimulationFromFile(DTOLoadFile dto) {
         DTOLoadSucceed dtoLoadSucceed = new DTOLoadSucceed(false);
         Reader.validatePath(dto.getFile().getPath());
+        SimulationDefinition newDefinition = Reader.readWorldFromXML(dto.getFile(), simulationDefinitions);
 
-        this.simulationDefinition = Reader.readWorldFromXML(dto.getFile());
-        if (this.simulationDefinition != null) {
+        if (newDefinition.getSimulationAbstractInstance() != null) {
+            simulationDefinitions.put(newDefinition.getSimulationName(), newDefinition);
             dtoLoadSucceed = new DTOLoadSucceed(true);
             invokeSuccessLoadListeners(dto.getListeners());
             isFirstSimulationLoaded = false;
@@ -109,6 +113,7 @@ public class SimulationManager implements EngineInterface, Serializable {
                 executionManager.shutdownThreadPool();
             }
 
+            // TODO: Adjust the code below to the new construction.
             executionManager = new ExecutionManager(simulationDefinition.getThreadCount());
         }
 
@@ -118,6 +123,7 @@ public class SimulationManager implements EngineInterface, Serializable {
 
     @Override
     public StartResponse startSimulation() {
+        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
         if(simulationDefinition.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
             String id = IdGenerator.generateID();
@@ -132,6 +138,7 @@ public class SimulationManager implements EngineInterface, Serializable {
     }
 
     private Map<String, Object> getEnvVarsValuesMap() {
+        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
         Map<String, Object> envVarsValuesMap = new HashMap<>();
         Map<String, Property> environmentProperties = simulationDefinition.getEnvironmentProperties();
 
@@ -186,11 +193,11 @@ public class SimulationManager implements EngineInterface, Serializable {
     }
 
     /**
-     * TODO: Delete this once we delete the console display classes.
      *
      * @param dtoExecutionData the third function's DTO object
      */
     private void fetchDTOThirdFunctionObject(DTOExecutionData dtoExecutionData) {
+        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
         Map<String, EnvPropertyUserInput> envPropertyUserInputs = dtoExecutionData.getEnvPropertyUserInputs();
         Map<String, Property> environmentProperties = this.simulationDefinition.getEnvironmentProperties();
         Property envProperty;
@@ -247,6 +254,7 @@ public class SimulationManager implements EngineInterface, Serializable {
      */
     @Override
     public StartData getSimulationStartData() {
+        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
         List<DTOEnvironmentVariable> environmentVariables = new ArrayList<>();
         Map<String, Property> environmentProperties = this.simulationDefinition.getEnvironmentProperties();
         Property valueFromTheMap;
@@ -315,11 +323,13 @@ public class SimulationManager implements EngineInterface, Serializable {
 
     @Override
     public SetResponse setEntityPopulation(EntityPopulationUserInput input) {
+        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
         return simulationDefinition.setEntityPopulation(input);
     }
 
     @Override
     public SetResponse setEnvironmentVariable(EnvPropertyUserInput input) {
+        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
         SetResponse response;
         Map<String, Property> environmentProperties = this.simulationDefinition.getEnvironmentProperties();
         Property envProperty = environmentProperties.get(input.getName());
@@ -337,7 +347,7 @@ public class SimulationManager implements EngineInterface, Serializable {
         return response;
     }
 
-    // TODO: Fetch simulation run data from simulation with this ID
+
     @Override
     public SimulationRunData getRunDataById(String simId) {
         return executionManager.getRunDataById(simId);
@@ -392,9 +402,11 @@ public class SimulationManager implements EngineInterface, Serializable {
     }
 
     private void addSimulationToQueue(SimulationRunData simulationRunData) {
+        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
         SimulationInstance simulationInstance = new SimulationInstance(simulationDefinition);
         simulationInstance.setSimulationId(simulationRunData.getSimId());
-        executionManager.addSimulationToQueue(simulationInstance, simulationRunData);
+        // TODO: send null to the executionManager temporarily until we fetch previous methods.
+        executionManager.addSimulationToQueue(null,simulationInstance, simulationRunData);
     }
 
     @Override
