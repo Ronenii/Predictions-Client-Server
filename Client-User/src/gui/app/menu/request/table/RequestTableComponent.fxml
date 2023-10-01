@@ -34,13 +34,13 @@
         <columns>
             <TableColumn prefWidth="130.0" text="Request ID" />
           <TableColumn prefWidth="150.0" text="Simulation Name" />
-          <TableColumn prefWidth="75.0" text="Amount" />
+          <TableColumn prefWidth="75.0" text="Tokens" />
             <TableColumn prefWidth="100.0" text="Status" />
             <TableColumn prefWidth="100.0" text="Running" />
             <TableColumn prefWidth="100.0" text="Finished" />
         </columns>
       </TableView>
-      <Label text="Request Table" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Label text="Requests Table" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>

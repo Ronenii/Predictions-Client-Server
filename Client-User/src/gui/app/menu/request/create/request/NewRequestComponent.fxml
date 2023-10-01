@@ -2,8 +2,9 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -35,15 +36,7 @@
             <Insets bottom="120.0" />
          </GridPane.margin>
       </Label>
-      <TextField maxWidth="250.0" minWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <GridPane.margin>
-            <Insets bottom="120.0" left="150.0" />
-         </GridPane.margin>
-      </TextField>
-      <Label text="Simulations amount:" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <Label text="Simulations tokens:" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <font>
             <Font size="16.0" />
          </font>
@@ -56,30 +49,6 @@
             <Insets left="150.0" />
          </GridPane.margin>
       </TextField>
-      <RadioButton mnemonicParsing="false" text="Termination by ticks" GridPane.columnIndex="3" GridPane.rowIndex="3">
-         <font>
-            <Font size="16.0" />
-         </font>
-         <GridPane.margin>
-            <Insets bottom="120.0" />
-         </GridPane.margin>
-      </RadioButton>
-      <RadioButton mnemonicParsing="false" text="Termination by seconds" GridPane.columnIndex="3" GridPane.rowIndex="3">
-         <font>
-            <Font size="16.0" />
-         </font>
-         <GridPane.margin>
-            <Insets />
-         </GridPane.margin>
-      </RadioButton>
-      <RadioButton mnemonicParsing="false" text="Termination by user" GridPane.columnIndex="3" GridPane.rowIndex="3">
-         <GridPane.margin>
-            <Insets top="120.0" />
-         </GridPane.margin>
-         <font>
-            <Font size="16.0" />
-         </font>
-      </RadioButton>
       <TextField disable="true" maxWidth="250.0" minWidth="50.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="210.0" />
@@ -100,5 +69,31 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
+      <CheckBox mnemonicParsing="false" text="Termination by ticks" GridPane.columnIndex="3" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets bottom="120.0" />
+         </GridPane.margin>
+         <font>
+            <Font size="16.0" />
+         </font>
+      </CheckBox>
+      <CheckBox mnemonicParsing="false" text="Termination by seconds" GridPane.columnIndex="3" GridPane.rowIndex="3">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </CheckBox>
+      <CheckBox mnemonicParsing="false" text="Termination by user" GridPane.columnIndex="3" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets top="120.0" />
+         </GridPane.margin>
+         <font>
+            <Font size="16.0" />
+         </font>
+      </CheckBox>
+      <ComboBox maxWidth="250.0" minWidth="50.0" promptText="Simulations names" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets bottom="120.0" left="150.0" />
+         </GridPane.margin>
+      </ComboBox>
    </children>
 </GridPane>
