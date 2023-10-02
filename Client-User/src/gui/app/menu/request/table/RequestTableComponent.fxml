@@ -31,7 +31,6 @@
          </GridPane.margin>
       </Button>
       <TableView fx:id="requestsTV" maxWidth="-Infinity" prefHeight="200.0" prefWidth="655.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-      <TableView maxHeight="600.0" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3">
         <columns>
             <TableColumn fx:id="requestIdColumn" prefWidth="130.0" text="Request ID" />
           <TableColumn fx:id="simulationNameColumn" prefWidth="150.0" text="Simulation Name" />
