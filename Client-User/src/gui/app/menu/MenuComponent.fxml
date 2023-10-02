@@ -31,7 +31,7 @@
               <content>
                 <AnchorPane>
                      <children>
-                        <fx:include source="request/RequestComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="119.0" AnchorPane.topAnchor="0.0" />
+                        <fx:include fx:id="requestComponent" source="request/RequestComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="119.0" AnchorPane.topAnchor="0.0" />
                      </children></AnchorPane>
               </content>
             </Tab>

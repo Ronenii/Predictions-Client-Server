@@ -7,6 +7,7 @@ import gui.api.UserEngineCommunicator;
 import gui.api.HasFileLoadedListeners;
 import gui.app.UserAppController;
 import gui.app.menu.execution.NewExecutionComponentController;
+import gui.app.menu.request.RequestComponentController;
 import gui.app.menu.result.ResultComponentController;
 import gui.app.menu.simulation.breakdown.SimBreakdownMenuController;
 import javafx.fxml.FXML;
@@ -33,6 +34,8 @@ public class MenuComponentController implements HasFileLoadedListeners, BarNotif
     @FXML private NewExecutionComponentController newExecutionComponentController;
     @FXML private GridPane resultComponent;
     @FXML private ResultComponentController resultComponentController;
+    @FXML private GridPane requestComponent;
+    @FXML private RequestComponentController requestComponentController;
 
     public void setMainController(UserAppController mainController) {
         this.mainController = mainController;
@@ -40,10 +43,11 @@ public class MenuComponentController implements HasFileLoadedListeners, BarNotif
 
     @FXML
     public void initialize() {
-        if(simBreakdownMenuController != null && newExecutionComponentController != null && resultComponentController != null) {
+        if(simBreakdownMenuController != null && newExecutionComponentController != null && resultComponentController != null && requestComponentController != null) {
             simBreakdownMenuController.setMainController(this);
             newExecutionComponentController.setMainController(this);
             resultComponentController.setMainController(this);
+            requestComponentController.setMainController(this);
         }
     }
 

@@ -44,22 +44,22 @@
             <Insets />
          </GridPane.margin>
       </Label>
-      <TextField maxWidth="250.0" minWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <TextField fx:id="simulationsTokensTF" maxWidth="250.0" minWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="150.0" />
          </GridPane.margin>
       </TextField>
-      <TextField disable="true" maxWidth="250.0" minWidth="50.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
+      <TextField fx:id="secondsTerminationTF" disable="true" maxWidth="250.0" minWidth="50.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="210.0" />
          </GridPane.margin>
       </TextField>
-      <TextField disable="true" maxWidth="250.0" minWidth="50.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
+      <TextField fx:id="ticksTerminationTF" disable="true" maxWidth="250.0" minWidth="50.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets bottom="120.0" left="210.0" />
          </GridPane.margin>
       </TextField>
-      <Button mnemonicParsing="false" text="Submit" GridPane.columnIndex="3" GridPane.rowIndex="4">
+      <Button fx:id="submitBTN" mnemonicParsing="false" onAction="#submitButtonActionListener" text="Submit" GridPane.columnIndex="3" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets left="310.0" />
          </GridPane.margin>
@@ -69,7 +69,7 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <CheckBox mnemonicParsing="false" text="Termination by ticks" GridPane.columnIndex="3" GridPane.rowIndex="3">
+      <CheckBox fx:id="ticksTerminationCB" mnemonicParsing="false" text="Termination by ticks" GridPane.columnIndex="3" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets bottom="120.0" />
          </GridPane.margin>
@@ -77,12 +77,12 @@
             <Font size="16.0" />
          </font>
       </CheckBox>
-      <CheckBox mnemonicParsing="false" text="Termination by seconds" GridPane.columnIndex="3" GridPane.rowIndex="3">
+      <CheckBox fx:id="secondsTerminationCB" mnemonicParsing="false" text="Termination by seconds" GridPane.columnIndex="3" GridPane.rowIndex="3">
          <font>
             <Font size="16.0" />
          </font>
       </CheckBox>
-      <CheckBox mnemonicParsing="false" text="Termination by user" GridPane.columnIndex="3" GridPane.rowIndex="3">
+      <CheckBox fx:id="userTerminationCB" mnemonicParsing="false" text="Termination by user" GridPane.columnIndex="3" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets top="120.0" />
          </GridPane.margin>
@@ -90,7 +90,7 @@
             <Font size="16.0" />
          </font>
       </CheckBox>
-      <ComboBox maxWidth="250.0" minWidth="50.0" promptText="Simulations names" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <ComboBox fx:id="simulationNameCB" maxWidth="250.0" minWidth="50.0" onAction="#simulationNameCbActionListener" promptText="Simulations names" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets bottom="120.0" left="150.0" />
          </GridPane.margin>

@@ -25,19 +25,19 @@
     <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Button mnemonicParsing="false" text="Execute" GridPane.columnIndex="1" GridPane.rowIndex="4">
+      <Button fx:id="executeBTN" mnemonicParsing="false" onAction="#executeButtonActionListener" text="Execute" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets left="590.0" />
          </GridPane.margin>
       </Button>
-      <TableView maxWidth="-Infinity" prefHeight="200.0" prefWidth="655.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <TableView fx:id="requestsTV" maxWidth="-Infinity" prefHeight="200.0" prefWidth="655.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
         <columns>
-            <TableColumn prefWidth="130.0" text="Request ID" />
-          <TableColumn prefWidth="150.0" text="Simulation Name" />
-          <TableColumn prefWidth="75.0" text="Tokens" />
-            <TableColumn prefWidth="100.0" text="Status" />
-            <TableColumn prefWidth="100.0" text="Running" />
-            <TableColumn prefWidth="100.0" text="Finished" />
+            <TableColumn fx:id="requestIdColumn" prefWidth="130.0" text="Request ID" />
+          <TableColumn fx:id="simulationNameColumn" prefWidth="150.0" text="Simulation Name" />
+          <TableColumn fx:id="tokensColumn" prefWidth="75.0" text="Tokens" />
+            <TableColumn fx:id="statusColumn" prefWidth="100.0" text="Status" />
+            <TableColumn fx:id="runningColumn" prefWidth="100.0" text="Running" />
+            <TableColumn fx:id="finishedColumn" prefWidth="100.0" text="Finished" />
         </columns>
       </TableView>
       <Label text="Requests Table" GridPane.columnIndex="1" GridPane.rowIndex="1">

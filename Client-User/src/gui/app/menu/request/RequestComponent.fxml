@@ -21,11 +21,11 @@
    <children>
       <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <fx:include source="create/request/NewRequestComponent.fxml" />
+            <fx:include fx:id="newRequestComponent" source="create/request/NewRequestComponent.fxml" />
          </children></AnchorPane>
       <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="3">
          <children>
-            <fx:include prefHeight="300.0" source="table/RequestTableComponent.fxml" />
+            <fx:include fx:id="requestTableComponent" prefHeight="300.0" source="table/RequestTableComponent.fxml" />
          </children></AnchorPane>
    </children>
 </GridPane>
