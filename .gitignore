@@ -29,6 +29,6 @@ bin/
 .DS_Store
 /.idea/uiDesigner.xml
 
-!Client-User\Client-User.iml
-!Client-Admin\Client-Admin.iml
-!Server-Web\Server-Web.iml
+!Client-User/Client-User.iml
+!Client-Admin/Client-Admin.iml
+!Server-Web/Server-Web.iml
