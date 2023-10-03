@@ -13,6 +13,10 @@ import java.io.IOException;
 
 public class AdminServerAgent {
 
+    /**
+     * Tries to connect the admin app to the server.
+     * @param adminAppController We use this to access the notification bar and show notifications.
+     */
     public static void connect(AdminAppController adminAppController){
         String finalUrl = HttpUrl
                 .parse(Constants.ADMIN_CONNECT_PATH)

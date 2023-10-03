@@ -15,5 +15,5 @@ public class Constants {
 
     private final static String FULL_SERVER_PATH = BASE_URL + CONTEXT_PATH;
 
-    public final static String ADMIN_CONNECT_PATH = FULL_SERVER_PATH + "/adminConnect";
+    public final static String ADMIN_CONNECT_PATH = FULL_SERVER_PATH + "/admin";
 }
