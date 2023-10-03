@@ -28,5 +28,6 @@ bin/
 ### Mac OS ###
 .DS_Store
 /.idea/uiDesigner.xml
-
-*.iml
+Server-Web.iml
+Client-User.iml
+Client-Admin.iml
