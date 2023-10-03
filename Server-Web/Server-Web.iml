@@ -19,10 +19,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="apache-tomcat-10.0" level="project" />
     <orderEntry type="module" module-name="Engine" />
-    <orderEntry type="library" name="gson-2.8.8" level="project" />
-    <orderEntry type="library" name="gson-2.8.8-javadoc" level="project" />
-    <orderEntry type="library" name="gson-2.8.8-sources" level="project" />
   </component>
 </module>
