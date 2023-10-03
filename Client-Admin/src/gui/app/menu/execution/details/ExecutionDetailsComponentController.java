@@ -82,6 +82,7 @@ public class ExecutionDetailsComponentController {
         durationDetLabel.textProperty().bind(durationProperty);
         simulationIdDetLabel.textProperty().bind(simIdProperty);
 
+
         // Binds the enabling and disabling of the control bar to this property
         statusProperty.addListener(((observable, oldValue, newValue) -> {
             switch (SimulationStatus.valueOf(newValue.toString().toUpperCase())) {
