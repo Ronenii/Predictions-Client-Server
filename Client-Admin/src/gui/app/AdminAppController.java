@@ -3,15 +3,12 @@ package gui.app;
 import gui.app.menu.MenuComponentController;
 import gui.app.notification.NotificationBarComponentController;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import manager.AdminEngineAgent;
+import manager.AdminAppAgent;
 
-import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
@@ -21,11 +18,11 @@ public class AdminAppController{
     @FXML private GridPane notificationBarComponent;
     @FXML private NotificationBarComponentController notificationBarComponentController;
     @FXML private AnchorPane anchorNotification;
-    public AdminEngineAgent engineAgent;
+    public AdminAppAgent engineAgent;
 
     @FXML
     public void initialize() {
-        engineAgent = new AdminEngineAgent();
+        engineAgent = new AdminAppAgent();
         if(notificationBarComponentController != null && menuComponentController != null) {
             notificationBarComponentController.setMainController(this);
             menuComponentController.setMainController(this);
