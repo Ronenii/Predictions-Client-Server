@@ -7,7 +7,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import manager.AdminAppAgent;
+import manager.AdminServerAgent;
 
 import java.util.EventListener;
 import java.util.List;
@@ -18,11 +18,11 @@ public class AdminAppController{
     @FXML private GridPane notificationBarComponent;
     @FXML private NotificationBarComponentController notificationBarComponentController;
     @FXML private AnchorPane anchorNotification;
-    public AdminAppAgent engineAgent;
+    public AdminServerAgent engineAgent;
 
     @FXML
     public void initialize() {
-        engineAgent = new AdminAppAgent();
+        engineAgent = new AdminServerAgent();
         if(notificationBarComponentController != null && menuComponentController != null) {
             notificationBarComponentController.setMainController(this);
             menuComponentController.setMainController(this);
@@ -33,7 +33,6 @@ public class AdminAppController{
 
     public void setPrimaryStageOnClose(Stage primaryStage) {
         primaryStage.setOnCloseRequest(event -> {
-            engineAgent.shutdownThreadPool();
         });
     }
 
@@ -41,6 +40,10 @@ public class AdminAppController{
     public List<EventListener> getAllFileLoadedListeners(){
         // TODO: PLACEHOLDER
         return null;
+    }
+
+    public void showNotification(String notificationText){
+        notificationBarComponentController.addNotification(notificationText);
     }
 
 //    /**

@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import manager.AdminServerAgent;
 
 import java.net.URL;
 
@@ -22,6 +23,7 @@ public class Main extends Application {
         appController.setPrimaryStageOnClose(primaryStage);
         primaryStage.setScene(scene);
         primaryStage.show();
+        AdminServerAgent.connect(appController);
     }
 
     public static void main(String[] args) {
