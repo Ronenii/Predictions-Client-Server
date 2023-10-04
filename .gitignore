@@ -28,4 +28,5 @@ bin/
 ### Mac OS ###
 .DS_Store
 /.idea/uiDesigner.xml
-lib\
+
+lib/
