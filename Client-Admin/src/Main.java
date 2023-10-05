@@ -22,8 +22,10 @@ public class Main extends Application {
         AdminAppController appController = fxmlLoader.getController();
         appController.setPrimaryStageOnClose(primaryStage);
         primaryStage.setScene(scene);
-        primaryStage.show();
-        AdminServerAgent.connect(appController);
+        if(AdminServerAgent.connect(appController))
+        {
+            primaryStage.show();
+        }
     }
 
     public static void main(String[] args) {

@@ -3,6 +3,7 @@ package gui.app;
 import gui.app.menu.MenuComponentController;
 import gui.app.notification.NotificationBarComponentController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -44,6 +45,15 @@ public class AdminAppController{
 
     public void showNotification(String notificationText){
         notificationBarComponentController.addNotification(notificationText);
+    }
+
+    public void showPushNotification(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setContentText(message);
+        alert.show();
+    }
+    public void closeApp(){
+
     }
 
 //    /**

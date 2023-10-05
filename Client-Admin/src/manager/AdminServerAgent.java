@@ -12,12 +12,14 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 public class AdminServerAgent {
+    private static boolean isConnected = false;
 
     /**
      * Tries to connect the admin app to the server.
+     *
      * @param adminAppController We use this to access the notification bar and show notifications.
      */
-    public static void connect(AdminAppController adminAppController){
+    public static boolean connect(AdminAppController adminAppController) {
         String finalUrl = HttpUrl
                 .parse(Constants.ADMIN_CONNECT_PATH)
                 .newBuilder()
@@ -29,26 +31,29 @@ public class AdminServerAgent {
         HttpClientAgent.sendRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                 Platform.runLater(() -> adminAppController.showNotification("Error: Could not reach server. Trying again."));
+                Platform.runLater(() -> adminAppController.showNotification("Error: Could not reach server. Trying again."));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 // Connection successful
-                if (response.code() == 200){
+                if (response.code() == 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> adminAppController.showNotification("Connection successful."));
+                    adminAppController.showNotification("Connection successful. Welcome Admin!");
+                    isConnected = true;
                 }
                 // An admin session is currently in progress
-                else if(response.code() == 409){
-                    // TODO: Close the application and show a notification that an admin session is in progress
-                    // Platform.runLater(() ->);
+                else if (response.code() == 409) {
+                    adminAppController.showPushNotification("An admin is already connected.");
+                    isConnected = false;
                 }
                 // Another error
-                else{
-                    Platform.runLater(() -> adminAppController.showNotification("Error: " + response.body()));
+                else {
+                    adminAppController.showPushNotification("Encountered a problem while trying to connect.");
+                    isConnected = false;
                 }
             }
         });
+        return isConnected;
     }
 }

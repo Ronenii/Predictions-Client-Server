@@ -8,12 +8,17 @@ public class Constants {
 
     // Server resource locations
     private final static String BASE_DOMAIN = "localhost";
+    private final static String PORT = ":8080";
 
-    private final static String BASE_URL = "http://" + BASE_DOMAIN;
+    private final static String BASE_URL = "http://" + BASE_DOMAIN + PORT;
 
     private final static String CONTEXT_PATH = "/Predictions_Web";
 
     private final static String FULL_SERVER_PATH = BASE_URL + CONTEXT_PATH;
 
-    public final static String ADMIN_CONNECT_PATH = FULL_SERVER_PATH + "/admin";
+    private final static String ADMIN_CONTEXT = "/admin";
+
+    private final static String ADMIN_CONTEXT_PATH = FULL_SERVER_PATH + ADMIN_CONTEXT;
+
+    public final static String ADMIN_CONNECT_PATH = ADMIN_CONTEXT_PATH + "/connect";
 }
