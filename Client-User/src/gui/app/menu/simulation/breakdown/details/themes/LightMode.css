@@ -1,5 +1,6 @@
+/* Set a dark background color for the entire application */
 .mainComponent {
-    -fx-background-color: #e0e0e0;
+    -fx-background-color: #f0f0f0;
 }
 
 /* Set a lighter background color for individual containers */
@@ -7,13 +8,8 @@
     -fx-background-color: #f0f0f0;
 }
 
-/* Style labels */
-.label {
+.Message{
+    -fx-font-weight: bold;
     -fx-font-family: "Segoe UI", sans-serif;
-    -fx-text-fill: black;
-}
-
-.expand-link {
-    -fx-font-family: "Segoe UI", sans-serif;
-    -fx-text-fill: blue;
+    -fx-font-size: 24px;
 }
