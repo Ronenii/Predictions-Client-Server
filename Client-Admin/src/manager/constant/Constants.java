@@ -21,4 +21,5 @@ public class Constants {
     private final static String ADMIN_CONTEXT_PATH = FULL_SERVER_PATH + ADMIN_CONTEXT;
 
     public final static String ADMIN_CONNECT_PATH = ADMIN_CONTEXT_PATH + "/connect";
+    public final static String ADMIN_DISCONNECT_PATH = ADMIN_CONTEXT_PATH + "/disconnect";
 }

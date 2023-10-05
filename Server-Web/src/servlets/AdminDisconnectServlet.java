@@ -10,16 +10,11 @@ import utils.ServletUtils;
 
 import java.io.IOException;
 
-@WebServlet(name = "AdminLoginServlet", urlPatterns = {"/admin/connect"})
-public class AdminLoginServlet extends HttpServlet {
+@WebServlet(name = "AdminDisconnectServlet", urlPatterns = {"/admin/disconnect"})
+public class AdminDisconnectServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
-        if(userManager.isAdminConnected){
-            resp.setStatus(HttpServletResponse.SC_CONFLICT);
-        }
-        else{
-            userManager.isAdminConnected = true;
-        }
+        userManager.isAdminConnected = false;
     }
 }

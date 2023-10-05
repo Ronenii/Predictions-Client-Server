@@ -9,6 +9,12 @@ public class HttpClientAgent {
     private final static OkHttpClient HTTP_CLIENT =
             new OkHttpClient.Builder().build();
 
+    /**
+     * Enqueues a http query to the server.
+     *
+     * @param url The url of the request we are trying to send.
+     * @param callback A thread handling the response we get from the server.
+     */
     public static void sendRequest(String url, Callback callback){
         Request request = new Request.Builder().url(url).build();
 
