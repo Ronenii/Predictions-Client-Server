@@ -6,6 +6,7 @@ import jaxb.unmarshal.converter.expression.converter.ExpressionAndValueValidator
 import jaxb.unmarshal.converter.expression.converter.exception.ExpressionConversionException;
 import jaxb.unmarshal.converter.validator.exception.PRDObjectConversionException;
 import simulation.objects.entity.Entity;
+import simulation.objects.world.definition.SimulationDefinition;
 import simulation.properties.property.api.Property;
 import simulation.properties.rule.Rule;
 
@@ -25,10 +26,14 @@ public class PRDValidator extends Validator {
 
     private int actionNumber;
 
-    public void validatePRDGridAndPRDThreadCount(PRDWorld prdWorld) throws PRDObjectConversionException {
+    public void validatePRDGridAndPRDName(PRDWorld prdWorld, Map<String, SimulationDefinition> simulationDefinitions) throws PRDObjectConversionException {
         validatePRDGridSize(prdWorld.getPRDGrid());
-        if (prdWorld.getPRDThreadCount() <= 0) {
-            addErrorToListAndThrowException(prdWorld, "world", "The given world's thread count must be at least 1.");
+        validatePRDName(prdWorld.getName(), simulationDefinitions);
+    }
+
+    private void validatePRDName(String worldName, Map<String, SimulationDefinition> simulationDefinitions) throws PRDObjectConversionException {
+        if(simulationDefinitions.get(worldName) != null) {
+            addErrorToListAndThrowException("prdWorld", "world", "The given world's name already exists");
         }
     }
 
