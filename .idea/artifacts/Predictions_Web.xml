@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Predictions_Web">
+    <output-path>$PROJECT_DIR$/out/artifacts/Predictions_Web</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="Server-Web/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Server-Web" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="artifact" artifact-name="Engine" />
+          <element id="artifact" artifact-name="DTO" />
+          <element id="dir-copy" path="$PROJECT_DIR$/lib/gson" />
+          <element id="dir-copy" path="$PROJECT_DIR$/lib/tomcat" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
