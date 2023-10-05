@@ -13,7 +13,7 @@ import java.io.IOException;
 @WebServlet(name = "AdminDisconnectServlet", urlPatterns = {"/admin/disconnect"})
 public class AdminDisconnectServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
         userManager.isAdminConnected = false;
     }

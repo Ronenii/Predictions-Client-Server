@@ -30,7 +30,7 @@ public class AdminServerAgent {
 
         System.out.println("New Request for: " + finalUrl);
 
-        HttpClientAgent.sendRequest(finalUrl, new Callback() {
+        HttpClientAgent.sendPostRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() -> adminAppController.showNotification("Error: Could not reach server. Trying again."));
@@ -80,7 +80,7 @@ public class AdminServerAgent {
 
         System.out.println("New Request for: " + finalUrl);
 
-        HttpClientAgent.sendRequest(finalUrl, new Callback() {
+        HttpClientAgent.sendDeleteRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 showDisconnectErrorAndExit(adminAppController);
