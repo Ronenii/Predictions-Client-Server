@@ -10,7 +10,8 @@
         <element id="directory" name="lib">
           <element id="artifact" artifact-name="Engine" />
           <element id="artifact" artifact-name="DTO" />
-          <element id="file-copy" path="D:/Dependencies/gson/gson-2.8.8.jar" />
+          <element id="dir-copy" path="$PROJECT_DIR$/lib/gson" />
+          <element id="dir-copy" path="$PROJECT_DIR$/lib/tomcat" />
         </element>
       </element>
     </root>
