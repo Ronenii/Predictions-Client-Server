@@ -23,9 +23,9 @@
          <children>
             <fx:include source="create/request/NewRequestComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children></AnchorPane>
-      <AnchorPane maxWidth="600.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
+      <AnchorPane maxHeight="500.0" maxWidth="600.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
          <children>
-            <fx:include fx:id="requestTableComponent" prefHeight="300.0" source="table/RequestTableComponent.fxml" />
+            <fx:include fx:id="requestTableComponent" prefHeight="300.0" source="table/RequestTableComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children></AnchorPane>
    </children>
 </GridPane>
