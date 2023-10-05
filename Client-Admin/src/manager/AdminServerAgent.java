@@ -2,6 +2,7 @@ package manager;
 
 import gui.app.AdminAppController;
 import javafx.application.Platform;
+import javafx.stage.Stage;
 import manager.constant.Constants;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -12,14 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 public class AdminServerAgent {
-    private static boolean isConnected = false;
-
     /**
      * Tries to connect the admin app to the server.
      *
      * @param adminAppController We use this to access the notification bar and show notifications.
      */
-    public static boolean connect(AdminAppController adminAppController) {
+    public static void connect(AdminAppController adminAppController, Stage primaryStage) {
         String finalUrl = HttpUrl
                 .parse(Constants.ADMIN_CONNECT_PATH)
                 .newBuilder()
@@ -40,20 +39,21 @@ public class AdminServerAgent {
                 if (response.code() == 200) {
                     String responseBody = response.body().string();
                     adminAppController.showNotification("Connection successful. Welcome Admin!");
-                    isConnected = true;
+                    Platform.runLater(()-> primaryStage.show());
                 }
                 // An admin session is currently in progress
                 else if (response.code() == 409) {
-                    adminAppController.showPushNotification("An admin is already connected.");
-                    isConnected = false;
+                    Platform.runLater(()-> {
+                        adminAppController.showPushNotification("An admin is already connected.");
+                        primaryStage.close();});
                 }
                 // Another error
                 else {
-                    adminAppController.showPushNotification("Encountered a problem while trying to connect.");
-                    isConnected = false;
+                    Platform.runLater(()-> {
+                        adminAppController.showPushNotification("Encountered a problem while trying to connect.");
+                        primaryStage.close();});
                 }
             }
         });
-        return isConnected;
     }
 }
