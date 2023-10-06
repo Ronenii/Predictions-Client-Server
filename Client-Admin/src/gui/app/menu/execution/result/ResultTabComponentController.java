@@ -2,6 +2,7 @@ package gui.app.menu.execution.result;
 
 import engine2ui.simulation.runtime.ResultData;
 import engine2ui.simulation.runtime.SimulationRunData;
+import gui.app.api.Controller;
 import gui.app.menu.execution.ExecutionComponentController;
 import gui.app.menu.execution.result.chart.ChartComponentController;
 import gui.app.menu.execution.result.statistics.StatisticsComponentController;
@@ -13,7 +14,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
-public class ResultTabComponentController {
+public class ResultTabComponentController implements Controller {
     private ExecutionComponentController mainController;
 
     @FXML
@@ -123,6 +124,16 @@ public class ResultTabComponentController {
     public void clearComponent() {
         chartComponentController.clearChart();
         statisticsComponentController.clearComponent();
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+
+    }
+
+    @Override
+    public void showAlert(String message) {
+
     }
 
 //    public int getSimulationCurrentTicks() {

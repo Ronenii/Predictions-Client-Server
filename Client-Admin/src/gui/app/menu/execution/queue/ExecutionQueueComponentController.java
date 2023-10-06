@@ -2,6 +2,7 @@ package gui.app.menu.execution.queue;
 
 
 import engine2ui.simulation.runtime.SimulationRunData;
+import gui.app.api.Controller;
 import gui.app.menu.execution.ExecutionComponentController;
 import gui.app.menu.execution.queue.data.QueueData;
 import gui.app.menu.execution.data.StatusData;
@@ -17,7 +18,7 @@ import simulation.objects.world.status.SimulationStatus;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExecutionQueueComponentController {
+public class ExecutionQueueComponentController implements Controller {
     private ExecutionComponentController mainController;
     @FXML
     private Label exeListLabel;
@@ -57,10 +58,10 @@ public class ExecutionQueueComponentController {
         oneUpdateAfterPauseFlag = false;
     }
 
-   /**
-    * If the selected simulation in the TableView is ongoing or waiting then will create a task that updates the chosen simulation every 200ms.
-    * Else will just display the selected simulation.
-    */
+    /**
+     * If the selected simulation in the TableView is ongoing or waiting then will create a task that updates the chosen simulation every 200ms.
+     * Else will just display the selected simulation.
+     */
     @FXML
     void onTableViewItemSelected(MouseEvent event) {
 //        SimulationRunData selected = mainController.getCurrentSelectedSimulation();
@@ -177,7 +178,7 @@ public class ExecutionQueueComponentController {
      * Fetch the 'QueueManagementData' object according to the current simulations in the queue.
      */
     private void updateQueueManagementData(QueueData queueManagementData, String status) {
-        if(status.equals("ONGOING")) {
+        if (status.equals("ONGOING")) {
             queueManagementData.runningCount++;
         } else if (status.equals("COMPLETED")) {
             queueManagementData.completedCount++;
@@ -262,5 +263,15 @@ public class ExecutionQueueComponentController {
 
     public void setOneUpdateAfterPauseFlag() {
         oneUpdateAfterPauseFlag = true;
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+
+    }
+
+    @Override
+    public void showAlert(String message) {
+
     }
 }

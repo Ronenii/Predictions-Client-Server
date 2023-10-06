@@ -1,5 +1,6 @@
 package gui.app.menu.management.simulation;
 
+import gui.app.api.Controller;
 import gui.app.menu.management.ManagementComponentController;
 import gui.app.menu.management.simulation.data.LoadedSimulationData;
 import javafx.fxml.FXML;
@@ -12,7 +13,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 
-public class SimulationManagerComponentController {
+public class SimulationManagerComponentController implements Controller {
 
     private ManagementComponentController mainController;
 
@@ -33,7 +34,7 @@ public class SimulationManagerComponentController {
     }
 
     @FXML
-    private void initialize(){
+    private void initialize() {
         currentLoadedFilePath = "";
     }
 
@@ -50,9 +51,9 @@ public class SimulationManagerComponentController {
 
         File selectedFile = fileChooser.showOpenDialog(null);
 
-//        if (selectedFile != null) {
-//            loadFile(selectedFile);
-//        }
+        if (selectedFile != null) {
+
+        }
     }
 
     @FXML
@@ -66,6 +67,16 @@ public class SimulationManagerComponentController {
 
     @FXML
     void onSimulationSelected(ContextMenuEvent event) {
+
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+
+    }
+
+    @Override
+    public void showAlert(String message) {
 
     }
 }

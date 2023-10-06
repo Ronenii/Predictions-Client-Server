@@ -2,6 +2,8 @@ package manager;
 
 import okhttp3.*;
 
+import java.io.File;
+
 public class HttpClientAgent {
     private final static OkHttpClient HTTP_CLIENT =
             new OkHttpClient.Builder().build();
@@ -21,7 +23,7 @@ public class HttpClientAgent {
     /**
      * Sends a POST request to the given URL without a request body.
      */
-    public static void sendPostRequest(String url, Callback callback, RequestBody requestBody){
+    public static void sendPostRequest(String url, RequestBody requestBody, Callback callback){
         Request request = new Request.Builder().url(url).post(requestBody).build();
 
         enqueueRequest(request, callback);

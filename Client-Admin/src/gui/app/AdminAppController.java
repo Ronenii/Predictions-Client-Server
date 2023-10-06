@@ -1,5 +1,6 @@
 package gui.app;
 
+import gui.app.api.Controller;
 import gui.app.menu.MenuComponentController;
 import gui.app.notification.NotificationBarComponentController;
 import javafx.fxml.FXML;
@@ -13,7 +14,7 @@ import manager.AdminServerAgent;
 import java.util.EventListener;
 import java.util.List;
 
-public class AdminAppController{
+public class AdminAppController implements Controller {
     @FXML private TabPane menuComponent;
     @FXML private MenuComponentController menuComponentController;
     @FXML private GridPane notificationBarComponent;
@@ -45,6 +46,11 @@ public class AdminAppController{
 
     public void showNotification(String notificationText){
         notificationBarComponentController.addNotification(notificationText);
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+
     }
 
     /**

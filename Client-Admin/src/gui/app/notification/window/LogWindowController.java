@@ -1,9 +1,10 @@
-package gui.notification.window;
+package gui.app.notification.window;
 
+import gui.app.api.Controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
-public class LogWindowController {
+public class LogWindowController implements Controller {
 
     @FXML
     private TextArea taNotificationDisplay;
@@ -17,4 +18,13 @@ public class LogWindowController {
         taNotificationDisplay.setText(text);
     }
 
+    @Override
+    public void showMessageInNotificationBar(String message) {
+
+    }
+
+    @Override
+    public void showAlert(String message) {
+
+    }
 }

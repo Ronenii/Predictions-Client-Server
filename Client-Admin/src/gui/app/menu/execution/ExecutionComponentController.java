@@ -1,5 +1,6 @@
 package gui.app.menu.execution;
 
+import gui.app.api.Controller;
 import gui.app.menu.MenuComponentController;
 import gui.app.menu.execution.details.ExecutionDetailsComponentController;
 import gui.app.menu.execution.queue.ExecutionQueueComponentController;
@@ -8,7 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-public class ExecutionComponentController{
+public class ExecutionComponentController implements Controller {
     private MenuComponentController mainController;
 
     @FXML
@@ -37,6 +38,16 @@ public class ExecutionComponentController{
             resultTabComponentController.setMainController(this);
             executionQueueComponentController.setMainController(this);
         }
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+
+    }
+
+    @Override
+    public void showAlert(String message) {
+
     }
 
 //    @Override

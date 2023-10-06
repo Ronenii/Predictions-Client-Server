@@ -2,6 +2,7 @@ package gui.app.menu.execution.details;
 
 import engine2ui.simulation.genral.impl.objects.DTOEntityPopulation;
 import engine2ui.simulation.runtime.SimulationRunData;
+import gui.app.api.Controller;
 import gui.app.menu.execution.ExecutionComponentController;
 import gui.app.menu.execution.details.data.PopulationData;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-public class ExecutionDetailsComponentController {
+public class ExecutionDetailsComponentController implements Controller {
     private ExecutionComponentController mainController;
     @FXML
     private TableView<PopulationData> entitiesTV;
@@ -144,6 +145,16 @@ public class ExecutionDetailsComponentController {
         durationProperty.set("-");
         ticksProperty.set("-");
         rerunBTN.setDisable(true);
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+
+    }
+
+    @Override
+    public void showAlert(String message) {
+
     }
 
 //    public void sendStopToTheEngine() {

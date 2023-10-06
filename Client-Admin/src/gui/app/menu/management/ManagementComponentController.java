@@ -1,12 +1,13 @@
 package gui.app.menu.management;
 
+import gui.app.api.Controller;
 import gui.app.menu.MenuComponentController;
 import gui.app.menu.management.simulation.SimulationManagerComponentController;
 import gui.app.menu.management.thread.ThreadManagerComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 
-public class ManagementComponentController {
+public class ManagementComponentController implements Controller {
     private MenuComponentController mainController;
 
     @FXML
@@ -21,15 +22,25 @@ public class ManagementComponentController {
     @FXML
     private ThreadManagerComponentController threadManagerComponentController;
 
-    public void setMainController(MenuComponentController menuComponentController){
+    public void setMainController(MenuComponentController menuComponentController) {
         this.mainController = menuComponentController;
     }
 
     @FXML
     public void initialize() {
-        if(simulationManagerComponentController != null && threadManagerComponentController != null){
+        if (simulationManagerComponentController != null && threadManagerComponentController != null) {
             simulationManagerComponentController.setMainController(this);
             threadManagerComponentController.setMainController(this);
         }
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+
+    }
+
+    @Override
+    public void showAlert(String message) {
+
     }
 }

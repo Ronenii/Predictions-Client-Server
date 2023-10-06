@@ -1,7 +1,9 @@
 package gui.app.notification;
 
 import gui.app.AdminAppController;
-import gui.notification.window.LogWindowController;
+import gui.app.api.Controller;
+import gui.app.notification.window.LogWindowController;
+import gui.app.notification.window.LogWindowController;
 import javafx.animation.FillTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,7 +27,7 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class NotificationBarComponentController {
+public class NotificationBarComponentController implements Controller {
 
     private AdminAppController mainController;
     @FXML
@@ -127,7 +129,7 @@ public class NotificationBarComponentController {
             FXMLLoader fxmlLoader = new FXMLLoader();
             URL url = getClass().getResource("window/LogWindow.fxml");
             Parent root = fxmlLoader.load(url.openStream());
-            logWindowController = fxmlLoader.getController();
+            logWindowController = (LogWindowController)fxmlLoader.getController();
             logWindowController.initialize(logs);
             Scene scene = new Scene(root);
             logWindow.setScene(scene);
@@ -147,6 +149,16 @@ public class NotificationBarComponentController {
 
     public void changeToLightMode() {
         grdParent.getStylesheets().add(getClass().getResource("themes/LightMode.css").toExternalForm());
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+
+    }
+
+    @Override
+    public void showAlert(String message) {
+
     }
 
 //    public void clearMode(AppMode appMode) {

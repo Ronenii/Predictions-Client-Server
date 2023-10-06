@@ -1,5 +1,6 @@
 package gui.app.menu.allocation;
 
+import gui.app.api.Controller;
 import gui.app.menu.MenuComponentController;
 import gui.app.menu.allocation.data.RequestData;
 import javafx.fxml.FXML;
@@ -8,7 +9,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.HBox;
 import javafx.event.ActionEvent;
-public class AllocationComponentController {
+public class AllocationComponentController implements Controller {
 
     private MenuComponentController mainController;
 
@@ -40,6 +41,16 @@ public class AllocationComponentController {
 
     @FXML
     void onItemSelected(ContextMenuEvent event) {
+
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+
+    }
+
+    @Override
+    public void showAlert(String message) {
 
     }
 }
