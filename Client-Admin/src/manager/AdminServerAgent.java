@@ -37,12 +37,10 @@ public class AdminServerAgent {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
                 // If connection is successful, open the admin client application.
                 if (response.code() == 200) {
-                    String responseBody = response.body().string();
                     adminAppController.showNotification("Connection successful. Welcome Admin!");
-                    Platform.runLater(primaryStage::show);
                 }
 
                 // If an admin session is currently in progress, show an alert and close the app.
