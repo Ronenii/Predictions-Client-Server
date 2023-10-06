@@ -2,7 +2,7 @@ package manager;
 
 import server2client.simulation.execution.SetResponse;
 import server2client.simulation.execution.StartResponse;
-import server2client.simulation.load.success.DTOLoadResult;
+import server2client.simulation.load.result.DTOLoadResult;
 import server2client.simulation.genral.impl.properties.StartData;
 import server2client.simulation.runtime.SimulationRunData;
 import client2server.simulation.control.bar.DTOSimulationControlBar;
@@ -10,7 +10,6 @@ import client2server.simulation.control.bar.DTOSimulationControlBar;
 import server2client.simulation.runtime.ResultData;
 import client2server.simulation.execution.user.input.EntityPopulationUserInput;
 import client2server.simulation.execution.user.input.EnvPropertyUserInput;
-import client2server.simulation.load.DTOLoadFile;
 
 import java.io.File;
 

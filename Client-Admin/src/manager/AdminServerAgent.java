@@ -29,8 +29,6 @@ public class AdminServerAgent {
                 .build()
                 .toString();
 
-        System.out.println("New Request for: " + finalUrl);
-
         HttpClientAgent.sendPostRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -41,13 +39,15 @@ public class AdminServerAgent {
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 // If connection is successful, open the admin client application.
                 if (response.code() == 200) {
-                    controller.showMessageInNotificationBar("Connection successful. Welcome Admin!");
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("Connection successful. Welcome Admin!"));
+                    System.out.println("Admin connection successful.");
                 }
 
                 // If an admin session is currently in progress, show an alert and close the app.
                 else if (response.code() == 409) {
                     Platform.runLater(() -> {
-                        controller.showAlertAndWait("An admin is already connected.");
+                        Platform.runLater(() -> controller.showAlertAndWait("An admin is already connected."));
+                        System.out.println("An admin is already connected.");
                         System.exit(0);
                     });
 
@@ -55,7 +55,8 @@ public class AdminServerAgent {
                 // If another error has occurred, show an alert and close the app.
                 else {
                     Platform.runLater(() -> {
-                        controller.showAlertAndWait("Encountered a problem while trying to connect.");
+                        Platform.runLater(() -> controller.showAlertAndWait("Encountered a problem while trying to connect."));
+                        System.out.println("Encountered a problem while trying to connect.");
                         System.exit(0);
                     });
                 }
@@ -77,8 +78,6 @@ public class AdminServerAgent {
                 .build()
                 .toString();
 
-        System.out.println("New Request for: " + finalUrl);
-
         HttpClientAgent.sendDeleteRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -89,53 +88,75 @@ public class AdminServerAgent {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     showDisconnectErrorAndExit(controller);
+                    System.out.println("Encountered a problem while admin tried to disconnect.");
+                } else {
+                    System.out.println("Admin successfully disconnected.");
                 }
             }
         });
     }
 
     private static void showDisconnectErrorAndExit(Controller controller) {
-        controller.showAlertAndWait("An error has occurred while closing the program.");
-        System.exit(0);
+        Platform.runLater(() -> {
+            controller.showAlertAndWait("An error has occurred while closing the program.");
+            System.exit(0);
+        });
+
     }
 
+    /**
+     * Sends the given file within a post request (multipart body).
+     * OK - Show file was loaded successfully and pull all loaded simulations to the listview in the SimulationManagerComponent.
+     * BAD_REQUEST - Show the errors created from loading a bad simulation config file.
+     * OTHER - Show a general error.
+     *
+     * TODO: I have given it some thought and we actually do need to send the file name to the engine since that is how
+     *       we recognize that the client is trying to load a file that already exists.
+     */
     public static void uploadFile(File file, SimulationManagerComponentController simulationManagerComponentController) {
-        // TODO: Validate file
-        try {
-            byte[] fileContent = Files.readAllBytes(file.toPath());
-            RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"),fileContent);
-            String finalUrl = HttpUrl
-                    .parse(Constants.FILE_UPLOAD_PATH)
-                    .newBuilder()
-                    .build()
-                    .toString();
+        final String fileNameString = "File: \"" + file.getName() + "\", ";
 
-            HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    simulationManagerComponentController.showMessageInNotificationBar("Error: could not reach server while trying to upload file.");
+        // TODO: Validate file path and suffix (xml)
+
+        // Convert the file into a multipart request body
+        RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("application/octet-stream"), file))
+                .build();
+
+        String finalUrl = HttpUrl
+                .parse(Constants.FILE_UPLOAD_PATH)
+                .newBuilder()
+                .build()
+                .toString();
+
+        HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar("Error: could not reach server while trying to upload file."));
+                System.out.println(fileNameString + "encountered a problem while uploading a file.");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                // If load succeeded.
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    System.out.println(fileNameString + "uploaded successfully.");
+                    Platform.runLater(() -> {
+                        simulationManagerComponentController.showMessageInNotificationBar(fileNameString + "successfully uploaded to server.");
+
+                        // TODO: Pull all loaded files from the servers and update the list view in "simulationManagerComponentController".
+                    });
                 }
-
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    String fileNameString = "File: \"" + file.getName() + "\", ";
-                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                        Platform.runLater(()->{
-                            simulationManagerComponentController.showMessageInNotificationBar(fileNameString + "successfully uploaded to server.");
-                            // TODO: Pull all loaded files from the servers and update the list view in "simulationManagerComponentController".
-                            });
-                    } else if (response.code() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                        Platform.runLater(()->simulationManagerComponentController.showMessageInNotificationBar(response.body().toString()));
-                    } else {
-                        Platform.runLater(()->simulationManagerComponentController.showMessageInNotificationBar("Error: a problem was encountered while trying to upload a file to the server."));
-                    }
+                // If the configuration file is invalid (errors with trying to load the file as a simulation).
+                else if (response.code() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                    System.out.println(fileNameString + "Invalid file configuration.");
+                    Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar(response.body().toString()));
+                } else {
+                    System.out.println(fileNameString + "encountered a problem while uploading a file.");
+                    Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar("Error: a problem was encountered while trying to upload a file to the server."));
                 }
-            });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
+            }
+        });
     }
 
 }

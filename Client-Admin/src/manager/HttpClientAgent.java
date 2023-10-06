@@ -52,6 +52,9 @@ public class HttpClientAgent {
     }
 
     private static void enqueueRequest(Request request, Callback callback){
+        System.out.println("New Request for: " + request.url());
+
+
         Call call = HTTP_CLIENT.newCall(request);
 
         call.enqueue(callback);

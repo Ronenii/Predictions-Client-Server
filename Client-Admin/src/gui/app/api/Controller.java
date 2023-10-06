@@ -2,6 +2,9 @@ package gui.app.api;
 
 import javafx.scene.control.Alert;
 
+/**
+ * An interface that aggregates all controllers.
+ */
 public interface Controller {
     void showMessageInNotificationBar(String message);
     default void showAlertAndWait(String message){

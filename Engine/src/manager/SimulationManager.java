@@ -2,7 +2,7 @@ package manager;
 
 import server2client.simulation.execution.SetResponse;
 import server2client.simulation.execution.StartResponse;
-import server2client.simulation.load.success.DTOLoadResult;
+import server2client.simulation.load.result.DTOLoadResult;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.runtime.ResultData;
 import server2client.simulation.runtime.SimulationRunData;

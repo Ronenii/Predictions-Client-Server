@@ -1,6 +1,5 @@
 package servlets;
 
-import client2server.simulation.load.DTOLoadFile;
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -9,7 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import server2client.simulation.load.success.DTOLoadResult;
+import server2client.simulation.load.result.DTOLoadResult;
 import utils.ServletUtils;
 
 import java.io.InputStream;
@@ -31,16 +30,19 @@ public class FileUploadServlet extends HttpServlet {
         Collection<Part> partCollection = req.getParts();
 
         // We create a temporary file to pass to the engine
-        Path tempFile = Files.createTempFile("temp", ".tmp");
+        Path tempFile = Files.createTempFile("temp", ".xml");
 
         for (Part part : partCollection) {
-            InputStream partInputStream = part.getInputStream();
-
-            // Append the content of each part to the temporary file
-            Files.copy(partInputStream, tempFile);
+            try (InputStream inputStream = part.getInputStream()) {
+                // TODO: Exception while trying to copy.
+                Files.copy(inputStream, tempFile);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+                throw new RuntimeException(e);
+            }
         }
 
-        // We try to convert the given file to a simulation definition
+        // We try to convert the given file  to a simulation definition
         DTOLoadResult dtoLoadResult = ServletUtils.getSimulationManager(getServletContext()).loadSimulationFromFile(tempFile.toFile());
 
         // If the simulation file wasn't loaded because of a problem with the content set the response as a bad request.
@@ -52,5 +54,8 @@ public class FileUploadServlet extends HttpServlet {
         String responseJsonContent = gson.toJson(dtoLoadResult);
 
         resp.getOutputStream().println(responseJsonContent);
+
+        // Delete the temporary file after we are finished using it.
+        Files.delete(tempFile);
     }
 }
