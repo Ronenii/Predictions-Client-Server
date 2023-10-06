@@ -1,25 +1,61 @@
 import gui.app.AdminAppController;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import manager.AdminServerAgent;
 
+import java.io.IOException;
 import java.net.URL;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 public class Main extends Application {
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
+        setupPrimaryStage(primaryStage);
+    }
+
+    private void setupPrimaryStage(Stage primaryStage) {
         primaryStage.setTitle("Predictions-Admin");
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        URL url = getClass().getResource("gui/app/AdminApp.fxml");
-        fxmlLoader.setLocation(url);
-        Parent root = fxmlLoader.load(url.openStream());
-        Scene scene = new Scene(root);
+        FXMLLoader fxmlLoader = createFXMLLoader("gui/app/AdminApp.fxml");
+        Parent root = loadFXML(fxmlLoader);
         AdminAppController appController = fxmlLoader.getController();
         appController.setPrimaryStageOnClose(primaryStage);
+        setupOnCloseEventHandler(primaryStage, appController);
+        AdminServerAgent.connect(appController, primaryStage);
+        showPrimaryStage(primaryStage, root);
+    }
+
+    private FXMLLoader createFXMLLoader(String fxmlPath) {
+        URL url = getClass().getResource(fxmlPath);
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(url);
+        return fxmlLoader;
+    }
+
+    private Parent loadFXML(FXMLLoader fxmlLoader) {
+        try {
+            return fxmlLoader.load();
+        } catch (IOException e) {
+            // Handle the exception appropriately (e.g., log or display an error)
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void setupOnCloseEventHandler(Stage primaryStage, AdminAppController appController) {
+        primaryStage.setOnCloseRequest(event -> {
+            AdminServerAgent.disconnect(appController);
+            System.exit(0);
+        });
+    }
+
+    private void showPrimaryStage(Stage primaryStage, Parent root) {
+        Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

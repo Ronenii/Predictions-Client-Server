@@ -3,15 +3,13 @@ package gui.app;
 import gui.app.menu.MenuComponentController;
 import gui.app.notification.NotificationBarComponentController;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import manager.AdminEngineAgent;
+import manager.AdminServerAgent;
 
-import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
@@ -21,11 +19,11 @@ public class AdminAppController{
     @FXML private GridPane notificationBarComponent;
     @FXML private NotificationBarComponentController notificationBarComponentController;
     @FXML private AnchorPane anchorNotification;
-    public AdminEngineAgent engineAgent;
+    public AdminServerAgent engineAgent;
 
     @FXML
     public void initialize() {
-        engineAgent = new AdminEngineAgent();
+        engineAgent = new AdminServerAgent();
         if(notificationBarComponentController != null && menuComponentController != null) {
             notificationBarComponentController.setMainController(this);
             menuComponentController.setMainController(this);
@@ -36,7 +34,6 @@ public class AdminAppController{
 
     public void setPrimaryStageOnClose(Stage primaryStage) {
         primaryStage.setOnCloseRequest(event -> {
-            engineAgent.shutdownThreadPool();
         });
     }
 
@@ -44,6 +41,19 @@ public class AdminAppController{
     public List<EventListener> getAllFileLoadedListeners(){
         // TODO: PLACEHOLDER
         return null;
+    }
+
+    public void showNotification(String notificationText){
+        notificationBarComponentController.addNotification(notificationText);
+    }
+
+    /**
+     * Displays an alert window for the user and pauses this JAT until the user closes the alert.
+     */
+    public void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 //    /**
