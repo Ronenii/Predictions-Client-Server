@@ -27,10 +27,6 @@ public class MenuComponentController implements Controller {
         this.mainController = controller;
     }
 
-//    public void setMainController(AdminAppController adminAppController) {
-//        mainController = adminAppController;
-//    }
-
     @FXML
     public void initialize() {
         if (allocationComponentController != null && managementComponentController != null) {
@@ -42,11 +38,6 @@ public class MenuComponentController implements Controller {
 
     @Override
     public void showMessageInNotificationBar(String message) {
-
-    }
-
-    @Override
-    public void showAlertAndWait(String message) {
-
+        mainController.showMessageInNotificationBar(message);
     }
 }

@@ -41,11 +41,6 @@ public class ManagementComponentController implements Controller {
 
     @Override
     public void showMessageInNotificationBar(String message) {
-
-    }
-
-    @Override
-    public void showAlertAndWait(String message) {
-
+        mainController.showMessageInNotificationBar(message);
     }
 }

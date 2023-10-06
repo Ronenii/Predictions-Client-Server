@@ -42,10 +42,6 @@ public class ExecutionQueueComponentController implements Controller {
         this.mainController = controller;
     }
 
-//    public void setMainController(ExecutionComponentController mainController) {
-//        this.mainController = mainController;
-//    }
-
 
     @FXML
     public void initialize() {
@@ -271,11 +267,6 @@ public class ExecutionQueueComponentController implements Controller {
 
     @Override
     public void showMessageInNotificationBar(String message) {
-
-    }
-
-    @Override
-    public void showAlertAndWait(String message) {
-
+        mainController.showMessageInNotificationBar(message);
     }
 }

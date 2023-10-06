@@ -57,10 +57,6 @@ public class ExecutionDetailsComponentController implements Controller {
     private boolean isPlayButtonClicked;
     private boolean skipOne;
 
-//    public void setMainController(ExecutionComponentController mainController) {
-//        this.mainController = mainController;
-//    }
-
     @Override
     public void setMainController(Controller controller) {
         this.mainController = controller;
@@ -154,12 +150,7 @@ public class ExecutionDetailsComponentController implements Controller {
 
     @Override
     public void showMessageInNotificationBar(String message) {
-
-    }
-
-    @Override
-    public void showAlertAndWait(String message) {
-
+        mainController.showMessageInNotificationBar(message);
     }
 
 //    public void sendStopToTheEngine() {

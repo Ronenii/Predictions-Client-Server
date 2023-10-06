@@ -23,10 +23,6 @@ public class ChartComponentController implements Controller {
     @FXML
     private NumberAxis entityQuantityAxis;
 
-//    public void setMainController(ResultTabComponentController mainController) {
-//        this.mainController = mainController;
-//    }
-
     @Override
     public void setMainController(Controller controller) {
         this.mainController = controller;
@@ -68,11 +64,6 @@ public class ChartComponentController implements Controller {
 
     @Override
     public void showMessageInNotificationBar(String message) {
-
-    }
-
-    @Override
-    public void showAlertAndWait(String message) {
-
+        mainController.showMessageInNotificationBar(message);
     }
 }

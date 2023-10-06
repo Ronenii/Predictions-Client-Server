@@ -53,15 +53,6 @@ public class AdminAppController implements Controller {
         notificationBarComponentController.showMessageInNotificationBar(message);
     }
 
-    /**
-     * Displays an alert window for the user and pauses this JAT until the user closes the alert.
-     */
-    public void showAlertAndWait(String message){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
 //    /**
 //     * Shows the given string on the notification bar.
 //     */

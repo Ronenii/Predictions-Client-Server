@@ -43,22 +43,13 @@ public class StatisticsComponentController implements Controller {
 
     @Override
     public void showMessageInNotificationBar(String message) {
-
-    }
-
-    @Override
-    public void showAlertAndWait(String message) {
-
+        mainController.showMessageInNotificationBar(message);
     }
 
     @Override
     public void setMainController(Controller controller) {
         this.mainController = controller;
     }
-
-//    public void setMainController(ResultTabComponentController mainController) {
-//        this.mainController = mainController;
-//    }
 
     /**
      * TODO: Load the result data entities and properties into the tree view.

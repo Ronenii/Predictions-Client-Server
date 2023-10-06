@@ -25,10 +25,6 @@ public class AllocationComponentController implements Controller {
     @FXML
     private Button buttonAccept;
 
-//    public void setMainController(MenuComponentController menuComponentController){
-//        this.mainController = menuComponentController;
-//    }
-
     @Override
     public void setMainController(Controller controller) {
         this.mainController = controller;
@@ -51,11 +47,6 @@ public class AllocationComponentController implements Controller {
 
     @Override
     public void showMessageInNotificationBar(String message) {
-
-    }
-
-    @Override
-    public void showAlertAndWait(String message) {
 
     }
 }

@@ -32,10 +32,6 @@ public class ExecutionComponentController implements Controller {
         this.mainController = controller;
     }
 
-//    public void setMainController(MenuComponentController mainController) {
-//        this.mainController = mainController;
-//    }
-
     @FXML
     public void initialize() {
         if (executionDetailsComponentController != null && resultTabComponentController != null && executionQueueComponentController != null) {
@@ -47,12 +43,7 @@ public class ExecutionComponentController implements Controller {
 
     @Override
     public void showMessageInNotificationBar(String message) {
-
-    }
-
-    @Override
-    public void showAlertAndWait(String message) {
-
+        mainController.showMessageInNotificationBar(message);
     }
 
 //    @Override

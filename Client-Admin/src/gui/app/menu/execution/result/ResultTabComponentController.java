@@ -53,10 +53,6 @@ public class ResultTabComponentController implements Controller {
         this.mainController = controller;
     }
 
-//    public void setMainController(ExecutionComponentController mainController) {
-//        this.mainController = mainController;
-//    }
-
     public void enableResultComponent() {
         enableComponent();
         executionResultTP.disableProperty().set(false);
@@ -133,15 +129,6 @@ public class ResultTabComponentController implements Controller {
 
     @Override
     public void showMessageInNotificationBar(String message) {
-
+        mainController.showMessageInNotificationBar(message);
     }
-
-    @Override
-    public void showAlertAndWait(String message) {
-
-    }
-
-//    public int getSimulationCurrentTicks() {
-//       return mainController.getSimulationCurrentTicks();
-//    }
 }

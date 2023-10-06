@@ -46,10 +46,6 @@ public class NotificationBarComponentController implements Controller {
     @FXML
     private LogWindowController logWindowController;
 
-//    public void setMainController(AdminAppController mainController) {
-//        this.mainController = mainController;
-//    }
-
     @Override
     public void setMainController(Controller controller) {
         this.mainController = controller;
@@ -150,11 +146,6 @@ public class NotificationBarComponentController implements Controller {
         if (logWindow != null && logWindowController != null) {
             logWindowController.changeTextAreaText(logs.toString());
         }
-    }
-
-    @Override
-    public void showAlertAndWait(String message) {
-
     }
 
 //    public void clearMode(AppMode appMode) {
