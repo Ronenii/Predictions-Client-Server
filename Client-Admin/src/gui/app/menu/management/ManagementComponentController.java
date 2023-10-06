@@ -22,15 +22,9 @@ public class ManagementComponentController implements Controller {
     @FXML
     private ThreadManagerComponentController threadManagerComponentController;
 
-//    public void setMainController(MenuComponentController menuComponentController) {
-//        this.mainController = menuComponentController;
-//    }
-
-    @Override
-    public void setMainController(Controller controller) {
+    public void setMainController(MenuComponentController controller){
         this.mainController = controller;
     }
-
     @FXML
     public void initialize() {
         if (simulationManagerComponentController != null && threadManagerComponentController != null) {

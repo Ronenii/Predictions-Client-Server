@@ -1,8 +1,8 @@
 package gui.result.tab.statistics;
 
-import engine2ui.simulation.genral.impl.objects.DTOEntity;
-import engine2ui.simulation.genral.impl.objects.DTOEntityInstance;
-import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
+import server2client.simulation.genral.impl.objects.DTOEntity;
+import server2client.simulation.genral.impl.objects.DTOEntityInstance;
+import server2client.simulation.genral.impl.properties.property.api.DTOProperty;
 import gui.result.models.HistogramData;
 import gui.result.tab.ResultTabComponentController;
 import javafx.fxml.FXML;
@@ -10,8 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import simulation.objects.entity.Entity;
-import simulation.objects.entity.EntityInstance;
 import simulation.properties.property.api.PropertyType;
 
 import java.util.*;

@@ -1,6 +1,6 @@
 package gui.execution.models;
 
-import engine2ui.simulation.genral.impl.objects.DTOEntity;
+import server2client.simulation.genral.impl.objects.DTOEntity;
 
 import java.util.Map;
 

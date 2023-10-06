@@ -1,6 +1,6 @@
 package gui.app.menu.execution;
 
-import engine2ui.simulation.runtime.SimulationRunData;
+import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.execution.control.bar.ControlBarController;
 import gui.app.menu.execution.inputs.InputsController;
 import gui.app.menu.execution.models.StartDetails;

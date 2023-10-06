@@ -1,8 +1,8 @@
 package gui.app.menu.execution.inputs.env.var;
 
-import engine2ui.simulation.execution.SetResponse;
-import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
-import engine2ui.simulation.prview.PreviewData;
+import server2client.simulation.execution.SetResponse;
+import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
+import server2client.simulation.prview.PreviewData;
 import gui.api.BarNotifier;
 import gui.api.UserEngineCommunicator;
 import gui.app.menu.execution.inputs.InputsController;
@@ -15,7 +15,7 @@ import javafx.util.Callback;
 import jaxb.event.FileLoadedEvent;
 import manager.UserEngineAgent;
 import simulation.properties.property.api.PropertyType;
-import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
+import client2server.simulation.execution.user.input.EnvPropertyUserInput;
 
 import java.util.ArrayList;
 import java.util.HashMap;

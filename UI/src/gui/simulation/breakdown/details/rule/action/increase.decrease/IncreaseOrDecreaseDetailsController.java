@@ -1,6 +1,6 @@
 package gui.simulation.breakdown.details.rule.action.increase.decrease;
 
-import engine2ui.simulation.genral.impl.properties.action.impl.DTOIncreaseOrDecrease;
+import server2client.simulation.genral.impl.properties.action.impl.DTOIncreaseOrDecrease;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

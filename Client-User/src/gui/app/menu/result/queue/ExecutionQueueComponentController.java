@@ -1,6 +1,6 @@
 package gui.app.menu.result.queue;
 
-import engine2ui.simulation.runtime.SimulationRunData;
+import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.result.models.QueueManagementData;
 import gui.app.menu.result.models.StatusData;
 import gui.api.BarNotifier;

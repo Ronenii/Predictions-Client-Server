@@ -1,9 +1,9 @@
 package gui.app.menu.execution.details;
 
-import engine2ui.simulation.genral.impl.objects.DTOEntityPopulation;
-import engine2ui.simulation.runtime.SimulationRunData;
-import gui.app.api.Controller;
 import gui.app.menu.execution.ExecutionComponentController;
+import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
+import server2client.simulation.runtime.SimulationRunData;
+import gui.app.api.Controller;
 import gui.app.menu.execution.details.data.PopulationData;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -57,8 +57,7 @@ public class ExecutionDetailsComponentController implements Controller {
     private boolean isPlayButtonClicked;
     private boolean skipOne;
 
-    @Override
-    public void setMainController(Controller controller) {
+    public void setMainController(ExecutionComponentController controller) {
         this.mainController = controller;
     }
 

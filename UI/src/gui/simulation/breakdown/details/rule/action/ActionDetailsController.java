@@ -1,7 +1,6 @@
 package gui.simulation.breakdown.details.rule.action;
 
-import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
-import engine2ui.simulation.genral.impl.properties.action.impl.*;
+import server2client.simulation.genral.impl.properties.action.api.DTOAction;
 import gui.simulation.breakdown.details.rule.action.calculation.CalculationDetailsController;
 import gui.simulation.breakdown.details.rule.action.condition.MultipleConditionDetailsController;
 import gui.simulation.breakdown.details.rule.action.condition.SingleConditionDetailsController;
@@ -13,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import server2client.simulation.genral.impl.properties.action.impl.*;
+
 import java.io.IOException;
 
 public class ActionDetailsController {

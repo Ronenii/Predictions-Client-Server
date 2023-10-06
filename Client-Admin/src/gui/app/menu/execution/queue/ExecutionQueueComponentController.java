@@ -1,9 +1,9 @@
 package gui.app.menu.execution.queue;
 
 
-import engine2ui.simulation.runtime.SimulationRunData;
-import gui.app.api.Controller;
 import gui.app.menu.execution.ExecutionComponentController;
+import server2client.simulation.runtime.SimulationRunData;
+import gui.app.api.Controller;
 import gui.app.menu.execution.queue.data.QueueData;
 import gui.app.menu.execution.data.StatusData;
 import javafx.concurrent.Task;
@@ -37,8 +37,7 @@ public class ExecutionQueueComponentController implements Controller {
     private boolean isSimulationSkippedForward;
     private boolean oneUpdateAfterPauseFlag;
 
-    @Override
-    public void setMainController(Controller controller) {
+    public void setMainController(ExecutionComponentController controller) {
         this.mainController = controller;
     }
 

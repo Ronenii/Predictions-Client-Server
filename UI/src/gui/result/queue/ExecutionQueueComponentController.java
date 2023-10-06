@@ -1,6 +1,6 @@
 package gui.result.queue;
 
-import engine2ui.simulation.runtime.SimulationRunData;
+import server2client.simulation.runtime.SimulationRunData;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.result.ResultComponentController;

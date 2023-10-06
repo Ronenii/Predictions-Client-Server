@@ -46,8 +46,7 @@ public class NotificationBarComponentController implements Controller {
     @FXML
     private LogWindowController logWindowController;
 
-    @Override
-    public void setMainController(Controller controller) {
+    public void setMainController(AdminAppController controller) {
         this.mainController = controller;
     }
 

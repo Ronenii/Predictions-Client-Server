@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.nio.file.Files;
 
 public class AdminServerAgent {
     /**
@@ -99,37 +100,42 @@ public class AdminServerAgent {
     }
 
     public static void uploadFile(File file, SimulationManagerComponentController simulationManagerComponentController) {
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("application/octet-stream"), file))
-                .build();
+        // TODO: Validate file
+        try {
+            byte[] fileContent = Files.readAllBytes(file.toPath());
+            RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"),fileContent);
+            String finalUrl = HttpUrl
+                    .parse(Constants.FILE_UPLOAD_PATH)
+                    .newBuilder()
+                    .build()
+                    .toString();
 
-        String finalUrl = HttpUrl
-                .parse(Constants.FILE_UPLOAD_PATH)
-                .newBuilder()
-                .build()
-                .toString();
-
-        HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                simulationManagerComponentController.showMessageInNotificationBar("Error: could not reach server while trying to upload file.");
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String fileNameString = "File: \"" + file.getName() + "\", ";
-                if (response.code() == HttpURLConnection.HTTP_OK) {
-                    simulationManagerComponentController.showMessageInNotificationBar(fileNameString + "successfully uploaded to server.");
-                    // TODO: Pull all loaded files from the servers and update the list view in "simulationManagerComponentController".
-
-                } else if (response.code() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                    simulationManagerComponentController.showMessageInNotificationBar(response.body().toString());
-                } else {
-                    simulationManagerComponentController.showMessageInNotificationBar("Error: a problem was encountered while trying to upload a file to the server.");
+            HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    simulationManagerComponentController.showMessageInNotificationBar("Error: could not reach server while trying to upload file.");
                 }
-            }
-        });
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    String fileNameString = "File: \"" + file.getName() + "\", ";
+                    if (response.code() == HttpURLConnection.HTTP_OK) {
+                        Platform.runLater(()->{
+                            simulationManagerComponentController.showMessageInNotificationBar(fileNameString + "successfully uploaded to server.");
+                            // TODO: Pull all loaded files from the servers and update the list view in "simulationManagerComponentController".
+                            });
+                    } else if (response.code() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                        Platform.runLater(()->simulationManagerComponentController.showMessageInNotificationBar(response.body().toString()));
+                    } else {
+                        Platform.runLater(()->simulationManagerComponentController.showMessageInNotificationBar("Error: a problem was encountered while trying to upload a file to the server."));
+                    }
+                }
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
 }

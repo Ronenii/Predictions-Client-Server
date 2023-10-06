@@ -1,9 +1,9 @@
 package gui.app.menu.execution.result;
 
-import engine2ui.simulation.runtime.ResultData;
-import engine2ui.simulation.runtime.SimulationRunData;
-import gui.app.api.Controller;
 import gui.app.menu.execution.ExecutionComponentController;
+import server2client.simulation.runtime.ResultData;
+import server2client.simulation.runtime.SimulationRunData;
+import gui.app.api.Controller;
 import gui.app.menu.execution.result.chart.ChartComponentController;
 import gui.app.menu.execution.result.statistics.StatisticsComponentController;
 import javafx.animation.FadeTransition;
@@ -48,8 +48,7 @@ public class ResultTabComponentController implements Controller {
         this.isComponentDisabled = true;
     }
 
-    @Override
-    public void setMainController(Controller controller) {
+    public void setMainController(ExecutionComponentController controller) {
         this.mainController = controller;
     }
 

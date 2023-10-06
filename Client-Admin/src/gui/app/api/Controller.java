@@ -16,5 +16,5 @@ public interface Controller {
         alert.show();
     }
 
-    void setMainController(Controller controller);
+    // void setMainController(Controller controller);
 }

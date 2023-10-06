@@ -1,7 +1,7 @@
 package gui.sub.menus;
 
-import engine2ui.simulation.prview.PreviewData;
-import engine2ui.simulation.runtime.SimulationRunData;
+import server2client.simulation.prview.PreviewData;
+import server2client.simulation.runtime.SimulationRunData;
 import gui.api.BarNotifier;
 import gui.api.EngineCommunicator;
 import gui.api.HasFileLoadedListeners;

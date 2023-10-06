@@ -1,6 +1,6 @@
 package gui.simulation.breakdown.details.rule.action.proximity;
 
-import engine2ui.simulation.genral.impl.properties.action.impl.DTOProximity;
+import server2client.simulation.genral.impl.properties.action.impl.DTOProximity;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

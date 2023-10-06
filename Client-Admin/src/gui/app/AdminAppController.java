@@ -16,13 +16,12 @@ import java.util.List;
 
 public class AdminAppController implements Controller {
     @FXML private TabPane menuComponent;
-    @FXML private Controller menuComponentController;
+    @FXML private MenuComponentController menuComponentController;
     @FXML private GridPane notificationBarComponent;
     @FXML private NotificationBarComponentController notificationBarComponentController;
     @FXML private AnchorPane anchorNotification;
     public AdminServerAgent engineAgent;
 
-    @Override
     public void setMainController(Controller controller) {
     }
 

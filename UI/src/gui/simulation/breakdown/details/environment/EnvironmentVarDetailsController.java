@@ -1,6 +1,6 @@
 package gui.simulation.breakdown.details.environment;
 
-import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
+import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

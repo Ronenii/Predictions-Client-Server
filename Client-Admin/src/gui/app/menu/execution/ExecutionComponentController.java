@@ -27,8 +27,7 @@ public class ExecutionComponentController implements Controller {
     @FXML
     private ExecutionDetailsComponentController executionDetailsComponentController;
 
-    @Override
-    public void setMainController(Controller controller) {
+    public void setMainController(MenuComponentController controller) {
         this.mainController = controller;
     }
 

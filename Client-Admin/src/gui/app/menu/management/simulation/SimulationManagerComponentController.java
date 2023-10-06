@@ -1,6 +1,7 @@
 package gui.app.menu.management.simulation;
 
 import gui.app.api.Controller;
+import gui.app.menu.MenuComponentController;
 import gui.app.menu.management.ManagementComponentController;
 import gui.app.menu.management.simulation.data.LoadedSimulationData;
 import javafx.fxml.FXML;
@@ -29,13 +30,7 @@ public class SimulationManagerComponentController implements Controller {
 
     private String currentLoadedFilePath;
 
-
-//    public void setMainController(ManagementComponentController managementComponentController) {
-//        this.mainController = managementComponentController;
-//    }
-
-    @Override
-    public void setMainController(Controller controller) {
+    public void setMainController(ManagementComponentController controller){
         this.mainController = controller;
     }
 

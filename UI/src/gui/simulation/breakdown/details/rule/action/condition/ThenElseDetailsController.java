@@ -1,8 +1,8 @@
 package gui.simulation.breakdown.details.rule.action.condition;
 
-import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
-import engine2ui.simulation.genral.impl.properties.action.impl.DTOMultipleCondition;
-import engine2ui.simulation.genral.impl.properties.action.impl.DTOSingleCondition;
+import server2client.simulation.genral.impl.properties.action.api.DTOAction;
+import server2client.simulation.genral.impl.properties.action.impl.DTOMultipleCondition;
+import server2client.simulation.genral.impl.properties.action.impl.DTOSingleCondition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

@@ -1,7 +1,7 @@
 package gui.app.menu.result.tab;
 
-import engine2ui.simulation.runtime.ResultData;
-import engine2ui.simulation.runtime.SimulationRunData;
+import server2client.simulation.runtime.ResultData;
+import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.result.tab.chart.ChartComponentController;
 import gui.app.menu.result.tab.statistics.StatisticsComponentController;
 import gui.app.menu.result.ResultComponentController;

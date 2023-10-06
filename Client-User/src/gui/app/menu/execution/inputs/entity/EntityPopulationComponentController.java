@@ -1,9 +1,9 @@
 package gui.app.menu.execution.inputs.entity;
 
-import engine2ui.simulation.execution.SetResponse;
-import engine2ui.simulation.genral.impl.objects.DTOEntity;
-import engine2ui.simulation.genral.impl.properties.DTOGridAndThread;
-import engine2ui.simulation.prview.PreviewData;
+import server2client.simulation.execution.SetResponse;
+import server2client.simulation.genral.impl.objects.DTOEntity;
+import server2client.simulation.genral.impl.properties.DTOGridAndThread;
+import server2client.simulation.prview.PreviewData;
 import gui.api.BarNotifier;
 import gui.api.UserEngineCommunicator;
 import gui.app.menu.execution.inputs.InputsController;
@@ -15,7 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import jaxb.event.FileLoadedEvent;
 import manager.UserEngineAgent;
-import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
+import client2server.simulation.execution.user.input.EntityPopulationUserInput;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -29,13 +29,8 @@ public class ThreadManagerComponentController implements Controller {
 
     private int queueCount = 0;
 
-//    public void setMainController(ManagementComponentController managementComponentController){
-//        this.mainController = managementComponentController;
-//    }
-
-    @Override
-    public void setMainController(Controller controller) {
-        this.mainController = controller;
+    public void setMainController(ManagementComponentController managementComponentController){
+        this.mainController = managementComponentController;
     }
 
     @FXML

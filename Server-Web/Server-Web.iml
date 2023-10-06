@@ -23,5 +23,6 @@
     <orderEntry type="module" module-name="Engine" />
     <orderEntry type="library" name="gson" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="tomcat" level="application_server_libraries" />
+    <orderEntry type="module" module-name="DTO" />
   </component>
 </module>

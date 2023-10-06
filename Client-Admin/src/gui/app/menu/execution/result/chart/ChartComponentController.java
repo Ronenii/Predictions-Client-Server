@@ -23,8 +23,7 @@ public class ChartComponentController implements Controller {
     @FXML
     private NumberAxis entityQuantityAxis;
 
-    @Override
-    public void setMainController(Controller controller) {
+    public void setMainController(ResultTabComponentController controller) {
         this.mainController = controller;
     }
 

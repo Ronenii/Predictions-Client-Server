@@ -1,10 +1,10 @@
 package gui.app.menu.execution.result.statistics;
 
-import engine2ui.simulation.genral.impl.objects.DTOEntity;
-import engine2ui.simulation.genral.impl.objects.DTOEntityInstance;
-import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
-import gui.app.api.Controller;
 import gui.app.menu.execution.result.ResultTabComponentController;
+import server2client.simulation.genral.impl.objects.DTOEntity;
+import server2client.simulation.genral.impl.objects.DTOEntityInstance;
+import server2client.simulation.genral.impl.properties.property.api.DTOProperty;
+import gui.app.api.Controller;
 import gui.app.menu.execution.result.data.HistogramData;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -46,8 +46,7 @@ public class StatisticsComponentController implements Controller {
         mainController.showMessageInNotificationBar(message);
     }
 
-    @Override
-    public void setMainController(Controller controller) {
+    public void setMainController(ResultTabComponentController controller) {
         this.mainController = controller;
     }
 

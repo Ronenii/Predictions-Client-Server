@@ -1,6 +1,6 @@
 package gui.simulation.breakdown.details;
 
-import engine2ui.simulation.prview.PreviewData;
+import server2client.simulation.prview.PreviewData;
 import gui.app.mode.AppMode;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

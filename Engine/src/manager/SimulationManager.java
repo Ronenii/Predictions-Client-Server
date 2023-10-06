@@ -1,16 +1,14 @@
 package manager;
 
-import engine2ui.simulation.execution.SetResponse;
-import engine2ui.simulation.execution.StartResponse;
-import engine2ui.simulation.genral.impl.properties.DTOEndingCondition;
-import engine2ui.simulation.load.success.DTOLoadSucceed;
-import engine2ui.simulation.prview.PreviewData;
-import engine2ui.simulation.runtime.ResultData;
-import engine2ui.simulation.result.ResultInfo;
-import engine2ui.simulation.runtime.SimulationRunData;
-import engine2ui.simulation.runtime.generator.IdGenerator;
-import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
-import engine2ui.simulation.genral.impl.properties.StartData;
+import server2client.simulation.execution.SetResponse;
+import server2client.simulation.execution.StartResponse;
+import server2client.simulation.load.success.DTOLoadResult;
+import server2client.simulation.prview.PreviewData;
+import server2client.simulation.runtime.ResultData;
+import server2client.simulation.runtime.SimulationRunData;
+import server2client.simulation.runtime.generator.IdGenerator;
+import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
+import server2client.simulation.genral.impl.properties.StartData;
 import javafx.application.Platform;
 import jaxb.event.FileLoadedEvent;
 import jaxb.unmarshal.Reader;
@@ -23,10 +21,9 @@ import manager.validator.validator.InputValidator;
 import simulation.objects.world.SimulationInstance;
 import simulation.objects.world.definition.SimulationDefinition;
 import simulation.objects.world.status.SimulationStatus;
-import ui2engine.simulation.control.bar.DTOSimulationControlBar;
-import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
-import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
-import ui2engine.simulation.load.DTOLoadFile;
+import client2server.simulation.control.bar.DTOSimulationControlBar;
+import client2server.simulation.execution.user.input.EntityPopulationUserInput;
+import client2server.simulation.execution.user.input.EnvPropertyUserInput;
 import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
 import simulation.properties.property.impl.DoubleProperty;
@@ -36,7 +33,6 @@ import simulation.properties.property.random.value.impl.BoolRndValueGen;
 import simulation.properties.property.random.value.impl.DoubleRndValueGen;
 import simulation.properties.property.random.value.impl.IntRndValueGen;
 import simulation.properties.property.random.value.impl.StringRndValueGen;
-import ui2engine.simulation.execution.DTOExecutionData;
 
 import java.io.*;
 import java.util.HashMap;
@@ -44,7 +40,7 @@ import java.util.Map;
 
 import java.util.*;
 
-public class SimulationManager implements EngineInterface, Serializable {
+public class SimulationManager implements EngineInterface {
     private SimulationInstance simulationDefinition;
     private Map<String, SimulationDefinition> simulationDefinitions;
     private Map<String, ResultData> pastSimulations;
@@ -99,26 +95,30 @@ public class SimulationManager implements EngineInterface, Serializable {
     }
 
     @Override
-    public DTOLoadSucceed loadSimulationFromFile(DTOLoadFile dto) {
-        DTOLoadSucceed dtoLoadSucceed = new DTOLoadSucceed(false);
-        Reader.validatePath(dto.getFile().getPath());
-        SimulationDefinition newDefinition = Reader.readWorldFromXML(dto.getFile(), simulationDefinitions);
+    public DTOLoadResult loadSimulationFromFile(File file) {
+        SimulationDefinition newDefinition = null;
+        DTOLoadResult dtoLoadResult = null;
+        try {
+            newDefinition = Reader.readWorldFromXML(file, simulationDefinitions);
+            if (newDefinition.getSimulationAbstractInstance() != null) {
+                simulationDefinitions.put(newDefinition.getSimulationName(), newDefinition);
+                dtoLoadResult = new DTOLoadResult(true, "");
 
-        if (newDefinition.getSimulationAbstractInstance() != null) {
-            simulationDefinitions.put(newDefinition.getSimulationName(), newDefinition);
-            dtoLoadSucceed = new DTOLoadSucceed(true);
-            invokeSuccessLoadListeners(dto.getListeners());
-            isFirstSimulationLoaded = false;
-            if (executionManager != null){
-                executionManager.shutdownThreadPool();
+                isFirstSimulationLoaded = false;
+                if (executionManager != null){
+                    executionManager.shutdownThreadPool();
+                }
+
+                executionManager = new ExecutionManager(simulationDefinition.getThreadCount());
             }
 
-            // TODO: Adjust the code below to the new construction.
-            executionManager = new ExecutionManager(simulationDefinition.getThreadCount());
+            isSimulationLoaded = true;
+        }catch (IllegalArgumentException e){
+            dtoLoadResult = new DTOLoadResult(false, e.getMessage());
         }
 
-        isSimulationLoaded = true;
-        return dtoLoadSucceed;
+
+        return dtoLoadResult;
     }
 
     @Override

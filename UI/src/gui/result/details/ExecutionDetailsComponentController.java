@@ -1,7 +1,7 @@
 package gui.result.details;
 
-import engine2ui.simulation.genral.impl.objects.DTOEntityPopulation;
-import engine2ui.simulation.runtime.SimulationRunData;
+import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
+import server2client.simulation.runtime.SimulationRunData;
 import gui.result.ResultComponentController;
 import gui.result.details.control.bar.ExecutionDetailsControlBarController;
 import gui.result.models.PopulationData;
@@ -17,7 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import simulation.objects.world.status.SimulationStatus;
-import ui2engine.simulation.control.bar.DTOSimulationControlBar;
+import client2server.simulation.control.bar.DTOSimulationControlBar;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
