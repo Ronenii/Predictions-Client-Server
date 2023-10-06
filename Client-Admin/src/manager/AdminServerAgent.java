@@ -1,14 +1,16 @@
 package manager;
 
+import com.sun.deploy.net.HttpResponse;
 import gui.app.api.Controller;
+import gui.app.menu.management.simulation.SimulationManagerComponentController;
 import javafx.application.Platform;
-import javafx.stage.Stage;
 import manager.constant.Constants;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 public class AdminServerAgent {
     /**
@@ -19,7 +21,7 @@ public class AdminServerAgent {
      *
      * @param controller We use this to access the notification bar and show notifications.
      */
-    public static void connect(Controller controller, Stage primaryStage) {
+    public static void connect(Controller controller) {
         String finalUrl = HttpUrl
                 .parse(Constants.ADMIN_CONNECT_PATH)
                 .newBuilder()
@@ -38,7 +40,7 @@ public class AdminServerAgent {
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 // If connection is successful, open the admin client application.
                 if (response.code() == 200) {
-                    controller.showAlertAndWait("Connection successful. Welcome Admin!");
+                    controller.showMessageInNotificationBar("Connection successful. Welcome Admin!");
                 }
 
                 // If an admin session is currently in progress, show an alert and close the app.
@@ -96,7 +98,7 @@ public class AdminServerAgent {
         System.exit(0);
     }
 
-    public static void uploadFile(File file, Controller controller) {
+    public static void uploadFile(File file, SimulationManagerComponentController simulationManagerComponentController) {
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("application/octet-stream"), file))
@@ -111,13 +113,23 @@ public class AdminServerAgent {
         HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                simulationManagerComponentController.showMessageInNotificationBar("Error: could not reach server while trying to upload file.");
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String fileNameString = "File: \"" + file.getName() + "\", ";
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    simulationManagerComponentController.showMessageInNotificationBar(fileNameString + "successfully uploaded to server.");
+                    // TODO: Pull all loaded files from the servers and update the list view in "simulationManagerComponentController".
 
+                } else if (response.code() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                    simulationManagerComponentController.showMessageInNotificationBar(response.body().toString());
+                } else {
+                    simulationManagerComponentController.showMessageInNotificationBar("Error: a problem was encountered while trying to upload a file to the server.");
+                }
             }
         });
     }
+
 }

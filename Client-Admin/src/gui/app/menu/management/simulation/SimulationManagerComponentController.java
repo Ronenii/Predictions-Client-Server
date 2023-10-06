@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.stage.FileChooser;
+import manager.AdminServerAgent;
 
 import java.io.File;
 
@@ -57,7 +58,7 @@ public class SimulationManagerComponentController implements Controller {
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-
+            AdminServerAgent.uploadFile(selectedFile, this);
         }
     }
 
