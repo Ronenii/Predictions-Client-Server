@@ -11,7 +11,7 @@ import gui.app.menu.MenuComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
-import manager.UserEngineAgent;
+import manager.UserServerAgent;
 
 import java.util.EventListener;
 import java.util.HashMap;
@@ -52,7 +52,7 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
     }
 
     @Override
-    public UserEngineAgent getEngineAgent() {
+    public UserServerAgent getEngineAgent() {
         return mainController.getEngineAgent();
     }
 

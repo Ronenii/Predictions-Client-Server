@@ -10,7 +10,7 @@ import gui.api.HasFileLoadedListeners;
 import gui.app.menu.execution.NewExecutionComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
-import manager.UserEngineAgent;
+import manager.UserServerAgent;
 import ui2engine.simulation.execution.DTOExecutionData;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class InputsController implements HasFileLoadedListeners, BarNotifier, Us
     }
 
     @Override
-    public UserEngineAgent getEngineAgent() {
+    public UserServerAgent getEngineAgent() {
         return mainController.getEngineAgent();
     }
 

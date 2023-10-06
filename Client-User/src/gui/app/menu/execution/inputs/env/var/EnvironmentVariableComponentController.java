@@ -13,7 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import jaxb.event.FileLoadedEvent;
-import manager.UserEngineAgent;
+import manager.UserServerAgent;
 import simulation.properties.property.api.PropertyType;
 import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
 
@@ -188,7 +188,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
     }
 
     @Override
-    public UserEngineAgent getEngineAgent() {
+    public UserServerAgent getEngineAgent() {
         return mainController.getEngineAgent();
     }
 

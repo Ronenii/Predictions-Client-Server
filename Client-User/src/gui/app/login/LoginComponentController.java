@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import manager.UserServerAgent;
 
 public class LoginComponentController {
 
@@ -28,14 +29,21 @@ public class LoginComponentController {
     @FXML
     void loginButtonActionListener(ActionEvent event) {
         if(usernameTF.getText().isEmpty()) {
-            errorMessageLabel.setVisible(true);
-            errorMessageLabel.setText("Please insert a username");
+            setErrorMessage("Please insert a username (At least one character)");
         } else {
             //TODO: send request to the server
-
-            isLoggedIn = true;
-            loginStage.close();
+            UserServerAgent.connect(usernameTF.getText(), this);
         }
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        errorMessageLabel.setVisible(true);
+        errorMessageLabel.setText(errorMessage);
+    }
+
+    public void setLoggedIn() {
+        isLoggedIn = true;
+        loginStage.close();
     }
 
     public boolean isLoggedIn() {

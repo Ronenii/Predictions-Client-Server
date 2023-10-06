@@ -15,7 +15,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import manager.UserEngineAgent;
+import manager.UserServerAgent;
 import simulation.objects.world.status.SimulationStatus;
 
 import java.util.HashMap;
@@ -226,7 +226,7 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
     }
 
     @Override
-    public synchronized UserEngineAgent getEngineAgent() {
+    public synchronized UserServerAgent getEngineAgent() {
         return mainController.getEngineAgent();
     }
 

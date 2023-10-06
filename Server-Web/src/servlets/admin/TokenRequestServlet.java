@@ -1,4 +1,4 @@
-package servlets;
+package servlets.admin;
 
 public class TokenRequestServlet {
 }

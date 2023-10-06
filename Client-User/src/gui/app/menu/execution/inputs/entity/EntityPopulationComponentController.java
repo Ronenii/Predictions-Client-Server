@@ -14,7 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import jaxb.event.FileLoadedEvent;
-import manager.UserEngineAgent;
+import manager.UserServerAgent;
 import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 
 import java.util.ArrayList;
@@ -215,7 +215,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     }
 
     @Override
-    public UserEngineAgent getEngineAgent() {
+    public UserServerAgent getEngineAgent() {
         return mainController.getEngineAgent();
     }
 
