@@ -3,6 +3,7 @@ package gui.app.menu.execution.result.statistics;
 import engine2ui.simulation.genral.impl.objects.DTOEntity;
 import engine2ui.simulation.genral.impl.objects.DTOEntityInstance;
 import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
+import gui.app.api.Controller;
 import gui.app.menu.execution.result.ResultTabComponentController;
 import gui.app.menu.execution.result.data.HistogramData;
 import javafx.fxml.FXML;
@@ -14,8 +15,8 @@ import simulation.properties.property.api.PropertyType;
 
 import java.util.*;
 
-public class StatisticsComponentController {
-    private ResultTabComponentController mainController;
+public class StatisticsComponentController implements Controller {
+    private Controller mainController;
 
     @FXML
     private TreeView<String> entityTreeView;
@@ -40,9 +41,24 @@ public class StatisticsComponentController {
 
     private DTOEntity[] entities;
 
-    public void setMainController(ResultTabComponentController mainController) {
-        this.mainController = mainController;
+    @Override
+    public void showMessageInNotificationBar(String message) {
+
     }
+
+    @Override
+    public void showAlertAndWait(String message) {
+
+    }
+
+    @Override
+    public void setMainController(Controller controller) {
+        this.mainController = controller;
+    }
+
+//    public void setMainController(ResultTabComponentController mainController) {
+//        this.mainController = mainController;
+//    }
 
     /**
      * TODO: Load the result data entities and properties into the tree view.

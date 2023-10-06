@@ -29,7 +29,7 @@ import java.time.format.DateTimeFormatter;
 
 public class NotificationBarComponentController implements Controller {
 
-    private AdminAppController mainController;
+    private Controller mainController;
     @FXML
     private Label lblNotification;
 
@@ -46,8 +46,13 @@ public class NotificationBarComponentController implements Controller {
     @FXML
     private LogWindowController logWindowController;
 
-    public void setMainController(AdminAppController mainController) {
-        this.mainController = mainController;
+//    public void setMainController(AdminAppController mainController) {
+//        this.mainController = mainController;
+//    }
+
+    @Override
+    public void setMainController(Controller controller) {
+        this.mainController = controller;
     }
 
     @FXML
@@ -58,25 +63,6 @@ public class NotificationBarComponentController implements Controller {
 
     @FXML
     private Circle notificationCircle;
-
-
-    /**
-     * Displays the firs line of the notification on the screen. Adds the date and time this notification is displayed at.
-     * Also adds it to the program logs.
-     */
-    public void addNotification(String notification) {
-        playNotificationAnimation();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        addExpandHyperLinkToLabel(notification);
-        LocalDateTime ldt = LocalDateTime.now();
-        String toDisplay = ldt.format(dtf) + "- " + notification + "\n\n";
-        logs.insert(0, toDisplay);
-        setLblNotificationText(toDisplay);
-
-        if (logWindow != null && logWindowController != null) {
-            logWindowController.changeTextAreaText(logs.toString());
-        }
-    }
 
     private void playNotificationAnimation() {
             FillTransition fillTransition = new FillTransition(Duration.millis(700), notificationCircle);
@@ -153,11 +139,21 @@ public class NotificationBarComponentController implements Controller {
 
     @Override
     public void showMessageInNotificationBar(String message) {
+        playNotificationAnimation();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        addExpandHyperLinkToLabel(message);
+        LocalDateTime ldt = LocalDateTime.now();
+        String toDisplay = ldt.format(dtf) + "- " + message + "\n\n";
+        logs.insert(0, toDisplay);
+        setLblNotificationText(toDisplay);
 
+        if (logWindow != null && logWindowController != null) {
+            logWindowController.changeTextAreaText(logs.toString());
+        }
     }
 
     @Override
-    public void showAlert(String message) {
+    public void showAlertAndWait(String message) {
 
     }
 

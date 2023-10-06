@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class ThreadManagerComponentController implements Controller {
-    private ManagementComponentController mainController;
+    private Controller mainController;
 
     @FXML
     private TextField textFieldThreadCount;
@@ -29,8 +29,13 @@ public class ThreadManagerComponentController implements Controller {
 
     private int queueCount = 0;
 
-    public void setMainController(ManagementComponentController managementComponentController){
-        this.mainController = managementComponentController;
+//    public void setMainController(ManagementComponentController managementComponentController){
+//        this.mainController = managementComponentController;
+//    }
+
+    @Override
+    public void setMainController(Controller controller) {
+        this.mainController = controller;
     }
 
     @FXML
@@ -66,7 +71,7 @@ public class ThreadManagerComponentController implements Controller {
     }
 
     @Override
-    public void showAlert(String message) {
+    public void showAlertAndWait(String message) {
 
     }
 }

@@ -1,6 +1,5 @@
 package manager;
 
-import gui.app.AdminAppController;
 import gui.app.api.Controller;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -32,20 +31,20 @@ public class AdminServerAgent {
         HttpClientAgent.sendPostRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showAlert("Error: Could not reach server."));
+                Platform.runLater(() -> controller.showAlertAndWait("Error: Could not reach server."));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 // If connection is successful, open the admin client application.
                 if (response.code() == 200) {
-                    controller.showAlert("Connection successful. Welcome Admin!");
+                    controller.showAlertAndWait("Connection successful. Welcome Admin!");
                 }
 
                 // If an admin session is currently in progress, show an alert and close the app.
                 else if (response.code() == 409) {
                     Platform.runLater(() -> {
-                        controller.showAlert("An admin is already connected.");
+                        controller.showAlertAndWait("An admin is already connected.");
                         System.exit(0);
                     });
 
@@ -53,7 +52,7 @@ public class AdminServerAgent {
                 // If another error has occurred, show an alert and close the app.
                 else {
                     Platform.runLater(() -> {
-                        controller.showAlert("Encountered a problem while trying to connect.");
+                        controller.showAlertAndWait("Encountered a problem while trying to connect.");
                         System.exit(0);
                     });
                 }
@@ -93,7 +92,7 @@ public class AdminServerAgent {
     }
 
     private static void showDisconnectErrorAndExit(Controller controller) {
-        controller.showAlert("An error has occurred while closing the program.");
+        controller.showAlertAndWait("An error has occurred while closing the program.");
         System.exit(0);
     }
 

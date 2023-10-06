@@ -11,7 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.event.ActionEvent;
 public class AllocationComponentController implements Controller {
 
-    private MenuComponentController mainController;
+    private Controller mainController;
 
     @FXML
     private TableView<RequestData> allocationTableView;
@@ -25,8 +25,13 @@ public class AllocationComponentController implements Controller {
     @FXML
     private Button buttonAccept;
 
-    public void setMainController(MenuComponentController menuComponentController){
-        this.mainController = menuComponentController;
+//    public void setMainController(MenuComponentController menuComponentController){
+//        this.mainController = menuComponentController;
+//    }
+
+    @Override
+    public void setMainController(Controller controller) {
+        this.mainController = controller;
     }
 
     @FXML
@@ -50,7 +55,7 @@ public class AllocationComponentController implements Controller {
     }
 
     @Override
-    public void showAlert(String message) {
+    public void showAlertAndWait(String message) {
 
     }
 }

@@ -24,7 +24,12 @@ public class LogWindowController implements Controller {
     }
 
     @Override
-    public void showAlert(String message) {
+    public void showAlertAndWait(String message) {
+
+    }
+
+    @Override
+    public void setMainController(Controller controller) {
 
     }
 }

@@ -16,11 +16,15 @@ import java.util.List;
 
 public class AdminAppController implements Controller {
     @FXML private TabPane menuComponent;
-    @FXML private MenuComponentController menuComponentController;
+    @FXML private Controller menuComponentController;
     @FXML private GridPane notificationBarComponent;
     @FXML private NotificationBarComponentController notificationBarComponentController;
     @FXML private AnchorPane anchorNotification;
     public AdminServerAgent engineAgent;
+
+    @Override
+    public void setMainController(Controller controller) {
+    }
 
     @FXML
     public void initialize() {
@@ -44,19 +48,15 @@ public class AdminAppController implements Controller {
         return null;
     }
 
-    public void showNotification(String notificationText){
-        notificationBarComponentController.addNotification(notificationText);
-    }
-
     @Override
     public void showMessageInNotificationBar(String message) {
-
+        notificationBarComponentController.showMessageInNotificationBar(message);
     }
 
     /**
      * Displays an alert window for the user and pauses this JAT until the user closes the alert.
      */
-    public void showAlert(String message){
+    public void showAlertAndWait(String message){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setContentText(message);
         alert.showAndWait();

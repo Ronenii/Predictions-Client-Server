@@ -15,7 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
 public class ResultTabComponentController implements Controller {
-    private ExecutionComponentController mainController;
+    private Controller mainController;
 
     @FXML
     private GridPane statisticsComponent;
@@ -48,9 +48,14 @@ public class ResultTabComponentController implements Controller {
         this.isComponentDisabled = true;
     }
 
-    public void setMainController(ExecutionComponentController mainController) {
-        this.mainController = mainController;
+    @Override
+    public void setMainController(Controller controller) {
+        this.mainController = controller;
     }
+
+//    public void setMainController(ExecutionComponentController mainController) {
+//        this.mainController = mainController;
+//    }
 
     public void enableResultComponent() {
         enableComponent();
@@ -132,7 +137,7 @@ public class ResultTabComponentController implements Controller {
     }
 
     @Override
-    public void showAlert(String message) {
+    public void showAlertAndWait(String message) {
 
     }
 

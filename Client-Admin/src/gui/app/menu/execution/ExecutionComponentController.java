@@ -10,7 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 public class ExecutionComponentController implements Controller {
-    private MenuComponentController mainController;
+    private Controller mainController;
 
     @FXML
     private VBox resultTabComponent;
@@ -27,9 +27,14 @@ public class ExecutionComponentController implements Controller {
     @FXML
     private ExecutionDetailsComponentController executionDetailsComponentController;
 
-    public void setMainController(MenuComponentController mainController) {
-        this.mainController = mainController;
+    @Override
+    public void setMainController(Controller controller) {
+        this.mainController = controller;
     }
+
+//    public void setMainController(MenuComponentController mainController) {
+//        this.mainController = mainController;
+//    }
 
     @FXML
     public void initialize() {
@@ -46,7 +51,7 @@ public class ExecutionComponentController implements Controller {
     }
 
     @Override
-    public void showAlert(String message) {
+    public void showAlertAndWait(String message) {
 
     }
 

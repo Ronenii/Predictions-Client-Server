@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ExecutionQueueComponentController implements Controller {
-    private ExecutionComponentController mainController;
+    private Controller mainController;
     @FXML
     private Label exeListLabel;
 
@@ -37,10 +37,14 @@ public class ExecutionQueueComponentController implements Controller {
     private boolean isSimulationSkippedForward;
     private boolean oneUpdateAfterPauseFlag;
 
-
-    public void setMainController(ExecutionComponentController mainController) {
-        this.mainController = mainController;
+    @Override
+    public void setMainController(Controller controller) {
+        this.mainController = controller;
     }
+
+//    public void setMainController(ExecutionComponentController mainController) {
+//        this.mainController = mainController;
+//    }
 
 
     @FXML
@@ -271,7 +275,7 @@ public class ExecutionQueueComponentController implements Controller {
     }
 
     @Override
-    public void showAlert(String message) {
+    public void showAlertAndWait(String message) {
 
     }
 }

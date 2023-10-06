@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 
 public class ManagementComponentController implements Controller {
-    private MenuComponentController mainController;
+    private Controller mainController;
 
     @FXML
     private GridPane simulationManagerComponent;
@@ -22,8 +22,13 @@ public class ManagementComponentController implements Controller {
     @FXML
     private ThreadManagerComponentController threadManagerComponentController;
 
-    public void setMainController(MenuComponentController menuComponentController) {
-        this.mainController = menuComponentController;
+//    public void setMainController(MenuComponentController menuComponentController) {
+//        this.mainController = menuComponentController;
+//    }
+
+    @Override
+    public void setMainController(Controller controller) {
+        this.mainController = controller;
     }
 
     @FXML
@@ -40,7 +45,7 @@ public class ManagementComponentController implements Controller {
     }
 
     @Override
-    public void showAlert(String message) {
+    public void showAlertAndWait(String message) {
 
     }
 }

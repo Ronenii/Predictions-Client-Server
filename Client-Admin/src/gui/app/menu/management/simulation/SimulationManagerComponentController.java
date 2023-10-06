@@ -15,7 +15,7 @@ import java.io.File;
 
 public class SimulationManagerComponentController implements Controller {
 
-    private ManagementComponentController mainController;
+    private Controller mainController;
 
     @FXML
     private TextField textFieldPath;
@@ -29,8 +29,13 @@ public class SimulationManagerComponentController implements Controller {
     private String currentLoadedFilePath;
 
 
-    public void setMainController(ManagementComponentController managementComponentController) {
-        this.mainController = managementComponentController;
+//    public void setMainController(ManagementComponentController managementComponentController) {
+//        this.mainController = managementComponentController;
+//    }
+
+    @Override
+    public void setMainController(Controller controller) {
+        this.mainController = controller;
     }
 
     @FXML
@@ -76,7 +81,7 @@ public class SimulationManagerComponentController implements Controller {
     }
 
     @Override
-    public void showAlert(String message) {
+    public void showAlertAndWait(String message) {
 
     }
 }

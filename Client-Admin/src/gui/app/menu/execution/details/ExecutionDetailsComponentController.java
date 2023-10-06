@@ -22,7 +22,7 @@ import java.util.*;
 
 
 public class ExecutionDetailsComponentController implements Controller {
-    private ExecutionComponentController mainController;
+    private Controller mainController;
     @FXML
     private TableView<PopulationData> entitiesTV;
 
@@ -57,8 +57,13 @@ public class ExecutionDetailsComponentController implements Controller {
     private boolean isPlayButtonClicked;
     private boolean skipOne;
 
-    public void setMainController(ExecutionComponentController mainController) {
-        this.mainController = mainController;
+//    public void setMainController(ExecutionComponentController mainController) {
+//        this.mainController = mainController;
+//    }
+
+    @Override
+    public void setMainController(Controller controller) {
+        this.mainController = controller;
     }
 
     @FXML
@@ -153,7 +158,7 @@ public class ExecutionDetailsComponentController implements Controller {
     }
 
     @Override
-    public void showAlert(String message) {
+    public void showAlertAndWait(String message) {
 
     }
 
