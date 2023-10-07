@@ -117,6 +117,8 @@ public class UserServerAgent {
                 .build()
                 .toString();
 
+        System.out.println("New Request for: " + finalUrl);
+
         HttpClientAgent.sendPostRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {

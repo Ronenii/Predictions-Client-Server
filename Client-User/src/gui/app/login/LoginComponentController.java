@@ -31,9 +31,14 @@ public class LoginComponentController {
         if(usernameTF.getText().isEmpty()) {
             setErrorMessage("Please insert a username (At least one character)");
         } else {
-            //TODO: send request to the server
             UserServerAgent.connect(usernameTF.getText(), this);
         }
+    }
+
+
+    @FXML
+    void usernameTextFieldActionListener(ActionEvent event) {
+        loginButtonActionListener(event);
     }
 
     public void setErrorMessage(String errorMessage) {
