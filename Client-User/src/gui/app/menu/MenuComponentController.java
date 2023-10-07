@@ -14,7 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
-import manager.UserEngineAgent;
+import manager.UserServerAgent;
 
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -69,7 +69,7 @@ public class MenuComponentController implements HasFileLoadedListeners, BarNotif
         return mainController.getNotificationBar();
     }
     @Override
-    public UserEngineAgent getEngineAgent() {
+    public UserServerAgent getEngineAgent() {
         return mainController.getEngineAgent();
     }
 

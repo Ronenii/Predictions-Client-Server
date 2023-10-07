@@ -14,7 +14,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import jaxb.event.FileLoadedEvent;
-import manager.UserEngineAgent;
+import manager.UserServerAgent;
 
 public class ResultComponentController implements UserEngineCommunicator, BarNotifier, FileLoadedEvent {
     private MenuComponentController mainController;
@@ -53,7 +53,7 @@ public class ResultComponentController implements UserEngineCommunicator, BarNot
     }
 
     @Override
-    public UserEngineAgent getEngineAgent() {
+    public UserServerAgent getEngineAgent() {
         return mainController.getEngineAgent();
     }
 

@@ -7,10 +7,11 @@ import gui.app.mode.AppMode;
 import gui.app.notification.NotificationBarComponentController;
 import gui.app.menu.MenuComponentController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import manager.UserEngineAgent;
+import manager.UserServerAgent;
 
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -26,13 +27,15 @@ public class UserAppController implements HasFileLoadedListeners, BarNotifier, U
     @FXML private NotificationBarComponentController notificationBarComponentController;
 
     @FXML private AnchorPane anchorNotification;
-    public UserEngineAgent engineAgent;
+
+    @FXML private Label usernameLabel;
+    public UserServerAgent engineAgent;
 
     private AppMode appMode;
 
     @FXML
     public void initialize() {
-        engineAgent = new UserEngineAgent();
+        engineAgent = new UserServerAgent();
         if(subMenusController != null && notificationBarComponentController != null) {
             subMenusController.setMainController(this);
             notificationBarComponentController.setMainController(this);
@@ -70,8 +73,12 @@ public class UserAppController implements HasFileLoadedListeners, BarNotifier, U
     }
 
     @Override
-    public UserEngineAgent getEngineAgent() {
+    public UserServerAgent getEngineAgent() {
         return engineAgent;
+    }
+
+    public void setUsername(String username) {
+        usernameLabel.setText(String.format("Hello %s",username));
     }
 
 }

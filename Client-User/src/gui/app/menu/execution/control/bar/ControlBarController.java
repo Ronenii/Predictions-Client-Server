@@ -8,7 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-import manager.UserEngineAgent;
+import manager.UserServerAgent;
 
 public class ControlBarController implements BarNotifier, UserEngineCommunicator {
     private NewExecutionComponentController mainController;
@@ -51,7 +51,7 @@ public class ControlBarController implements BarNotifier, UserEngineCommunicator
     }
 
     @Override
-    public UserEngineAgent getEngineAgent() {
+    public UserServerAgent getEngineAgent() {
         return mainController.getEngineAgent();
     }
 }
