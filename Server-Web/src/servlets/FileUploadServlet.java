@@ -8,12 +8,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import manager.SimulationManager;
 import server2client.simulation.load.result.DTOLoadResult;
 import utils.ServletUtils;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 
 import java.io.IOException;
@@ -29,13 +32,14 @@ public class FileUploadServlet extends HttpServlet {
         // Uploading a file is multipart, in here we create a collection of all the given file parts.
         Collection<Part> partCollection = req.getParts();
 
-        // We create a temporary file to pass to the engine
-        Path tempFile = Files.createTempFile("temp", ".xml");
+        // Generate a unique name for the temporary file
+        String uniqueFileName = "temp_" + System.currentTimeMillis() + ".xml";
+        Path tempFile = Files.createTempFile(null, uniqueFileName);
 
         for (Part part : partCollection) {
             try (InputStream inputStream = part.getInputStream()) {
                 // TODO: Exception while trying to copy.
-                Files.copy(inputStream, tempFile);
+                Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 System.out.println(e.getMessage());
                 throw new RuntimeException(e);
@@ -43,7 +47,9 @@ public class FileUploadServlet extends HttpServlet {
         }
 
         // We try to convert the given file  to a simulation definition
-        DTOLoadResult dtoLoadResult = ServletUtils.getSimulationManager(getServletContext()).loadSimulationFromFile(tempFile.toFile());
+        SimulationManager manager = ServletUtils.getSimulationManager(getServletContext());
+        File file = tempFile.toFile();
+        DTOLoadResult dtoLoadResult = manager.loadSimulationFromFile(file);
 
         // If the simulation file wasn't loaded because of a problem with the content set the response as a bad request.
         if (!dtoLoadResult.isSucceed()) {

@@ -109,7 +109,7 @@ public class SimulationManager implements EngineInterface {
                     executionManager.shutdownThreadPool();
                 }
 
-                executionManager = new ExecutionManager(simulationDefinition.getThreadCount());
+                //executionManager = new ExecutionManager(simulationDefinition.getThreadCount());
             }
 
             isSimulationLoaded = true;

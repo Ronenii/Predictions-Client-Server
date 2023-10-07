@@ -120,7 +120,7 @@ public class AdminServerAgent {
 
         // Convert the file into a multipart request body
         RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("application/octet-stream"), file))
+                .addFormDataPart("file", file.getName(),  RequestBody.create(MediaType.parse("application/xml"), file))
                 .build();
 
         String finalUrl = HttpUrl
