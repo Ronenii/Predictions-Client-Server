@@ -40,6 +40,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     private ScrollPane displayComponent;
     @FXML
     private DisplayComponentController displayComponentController;
+    private TreeItem<String> simulationsItem;
     private TreeItem<String> envVarsItem;
     private TreeItem<String> entitiesItem;
     private TreeItem<String> rulesItem;
@@ -55,19 +56,23 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        TreeItem<String> world = new TreeItem<>("World");
-        simTreeView.setRoot(world);
-        envVarsItem = new TreeItem<>("Environment Variables");
-        entitiesItem = new TreeItem<>("Entities");
-        rulesItem = new TreeItem<>("Rules");
-        generalItem = new TreeItem<>("General");
-        world.getChildren().addAll(envVarsItem, entitiesItem, rulesItem, generalItem);
+        TreeItem<String> simulations = new TreeItem<>("Simulations");
+        simTreeView.setRoot(simulations);
+        this.simulationsItem = simulations;
     }
 
     /**
      * Update the tree view items with the loaded XML file's data.
      */
     public void updateSimTreeView() {
+        TreeItem<String> envVarsItem, entitiesItem, rulesItem, generalItem;
+
+        envVarsItem = new TreeItem<>("Environment Variables");
+        entitiesItem = new TreeItem<>("Entities");
+        rulesItem = new TreeItem<>("Rules");
+        generalItem = new TreeItem<>("General");
+        simulationsItem.getChildren().addAll(envVarsItem, entitiesItem, rulesItem, generalItem);
+
         updateEnvVarsInTreeView(previewData.getEnvVariables());
         updateEntitiesInTreeView(previewData.getEntities());
         updateRulesInTreeView(previewData.getRules());
