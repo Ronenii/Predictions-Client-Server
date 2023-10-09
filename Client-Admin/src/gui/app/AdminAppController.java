@@ -49,6 +49,7 @@ public class AdminAppController implements Controller {
 
     @Override
     public void showMessageInNotificationBar(String message) {
+        notificationBarComponentController.turnOnNotificationBar();
         notificationBarComponentController.showMessageInNotificationBar(message);
     }
 
