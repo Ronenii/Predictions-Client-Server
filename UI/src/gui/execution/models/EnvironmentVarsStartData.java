@@ -1,7 +1,5 @@
 package gui.execution.models;
 
-import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
-
 import java.util.Map;
 
 public class EnvironmentVarsStartData {

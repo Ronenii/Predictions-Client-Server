@@ -1,6 +1,6 @@
 package gui.app.menu.simulation.breakdown.details.rule.action.calculation;
 
-import engine2ui.simulation.genral.impl.properties.action.impl.DTOCalculation;
+import server2client.simulation.genral.impl.properties.action.impl.DTOCalculation;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

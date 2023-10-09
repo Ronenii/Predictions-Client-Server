@@ -11,7 +11,7 @@ import gui.execution.models.StartDetails;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import manager.EngineAgent;
-import ui2engine.simulation.execution.DTOExecutionData;
+import client2server.simulation.execution.DTOExecutionData;
 
 import java.util.ArrayList;
 import java.util.EventListener;

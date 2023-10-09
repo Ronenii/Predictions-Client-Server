@@ -1,6 +1,6 @@
 package gui.header.component;
 
-import engine2ui.simulation.prview.PreviewData;
+import server2client.simulation.prview.PreviewData;
 import gui.api.EngineCommunicator;
 import gui.app.AppController;
 import gui.app.mode.AppMode;
@@ -113,30 +113,30 @@ public class HeaderComponentController implements FileLoadedEvent, EngineCommuni
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if(selectedFile != null){
-            loadFile(selectedFile);
+            //loadFile(selectedFile);
         }
     }
 
-    /**
-     * Tries to load a simulation file. If successful sets it as the header text field text
-     * And notifies the user that the load succeeded. Otherwise, notifies that the load failed
-     * and displays the errors.
-     */
-    private void loadFile(File fileToLoad){
-        try {
-            currentLoadedFilePath = fileToLoad.getPath();
-            getEngineAgent().loadSimulationFromFile(fileToLoad,mainController.getAllFileLoadedListeners());
-        }catch (IllegalArgumentException e){
-            mainController.showNotification(e.getMessage());
-        }
-    }
+//    /**
+//     * Tries to load a simulation file. If successful sets it as the header text field text
+//     * And notifies the user that the load succeeded. Otherwise, notifies that the load failed
+//     * and displays the errors.
+//     */
+//    private void loadFile(File fileToLoad){
+//        try {
+//            currentLoadedFilePath = fileToLoad.getPath();
+//            getEngineAgent().loadSimulationFromFile(fileToLoad,mainController.getAllFileLoadedListeners());
+//        }catch (IllegalArgumentException e){
+//            mainController.showNotification(e.getMessage());
+//        }
+//    }
 
     @FXML
     void loadFileTextFieldListener(ActionEvent event) {
         if (!pathTF.getText().equals(currentLoadedFilePath)) {
             File file = new File(pathTF.getText());
 
-            loadFile(file);
+            //loadFile(file);
         }
     }
 

@@ -1,5 +1,7 @@
 package gui.app.menu.management.simulation;
 
+import gui.app.api.Controller;
+import gui.app.menu.MenuComponentController;
 import gui.app.menu.management.ManagementComponentController;
 import gui.app.menu.management.simulation.data.LoadedSimulationData;
 import javafx.fxml.FXML;
@@ -9,12 +11,13 @@ import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.stage.FileChooser;
+import manager.AdminServerAgent;
 
 import java.io.File;
 
-public class SimulationManagerComponentController {
+public class SimulationManagerComponentController implements Controller {
 
-    private ManagementComponentController mainController;
+    private Controller mainController;
 
     @FXML
     private TextField textFieldPath;
@@ -27,13 +30,12 @@ public class SimulationManagerComponentController {
 
     private String currentLoadedFilePath;
 
-
-    public void setMainController(ManagementComponentController managementComponentController) {
-        this.mainController = managementComponentController;
+    public void setMainController(ManagementComponentController controller){
+        this.mainController = controller;
     }
 
     @FXML
-    private void initialize(){
+    private void initialize() {
         currentLoadedFilePath = "";
     }
 
@@ -50,9 +52,9 @@ public class SimulationManagerComponentController {
 
         File selectedFile = fileChooser.showOpenDialog(null);
 
-//        if (selectedFile != null) {
-//            loadFile(selectedFile);
-//        }
+        if (selectedFile != null) {
+            AdminServerAgent.uploadFile(selectedFile, this);
+        }
     }
 
     @FXML
@@ -67,5 +69,10 @@ public class SimulationManagerComponentController {
     @FXML
     void onSimulationSelected(ContextMenuEvent event) {
 
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
     }
 }

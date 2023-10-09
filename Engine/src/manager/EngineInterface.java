@@ -1,18 +1,17 @@
 package manager;
 
-import engine2ui.simulation.execution.SetResponse;
-import engine2ui.simulation.execution.StartResponse;
-import engine2ui.simulation.load.success.DTOLoadSucceed;
-import engine2ui.simulation.result.ResultInfo;
-import engine2ui.simulation.genral.impl.properties.StartData;
-import engine2ui.simulation.runtime.SimulationRunData;
-import ui2engine.simulation.control.bar.DTOSimulationControlBar;
-import ui2engine.simulation.execution.DTOExecutionData;
+import server2client.simulation.execution.SetResponse;
+import server2client.simulation.execution.StartResponse;
+import server2client.simulation.load.result.DTOLoadResult;
+import server2client.simulation.genral.impl.properties.StartData;
+import server2client.simulation.runtime.SimulationRunData;
+import client2server.simulation.control.bar.DTOSimulationControlBar;
 
-import engine2ui.simulation.runtime.ResultData;
-import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
-import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
-import ui2engine.simulation.load.DTOLoadFile;
+import server2client.simulation.runtime.ResultData;
+import client2server.simulation.execution.user.input.EntityPopulationUserInput;
+import client2server.simulation.execution.user.input.EnvPropertyUserInput;
+
+import java.io.File;
 
 public interface EngineInterface {
 
@@ -20,7 +19,7 @@ public interface EngineInterface {
 
     ResultData[] getPastSimulationResultData();
 
-    DTOLoadSucceed loadSimulationFromFile(DTOLoadFile dto);
+    DTOLoadResult loadSimulationFromFile(File file);
 
     StartResponse startSimulation();
 

@@ -1,10 +1,10 @@
 package gui.simulation.breakdown;
-import engine2ui.simulation.genral.impl.objects.DTOEntity;
-import engine2ui.simulation.genral.impl.properties.DTORule;
-import engine2ui.simulation.genral.impl.properties.action.api.DTOAction;
-import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
-import engine2ui.simulation.prview.PreviewData;
-import engine2ui.simulation.genral.impl.properties.DTOEnvironmentVariable;
+import server2client.simulation.genral.impl.objects.DTOEntity;
+import server2client.simulation.genral.impl.properties.DTORule;
+import server2client.simulation.genral.impl.properties.action.api.DTOAction;
+import server2client.simulation.genral.impl.properties.property.api.DTOProperty;
+import server2client.simulation.prview.PreviewData;
+import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import gui.api.BarNotifier;
 import gui.api.HasFileLoadedListeners;
 import gui.app.mode.AppMode;

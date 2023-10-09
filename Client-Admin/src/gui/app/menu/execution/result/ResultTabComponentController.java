@@ -1,8 +1,9 @@
 package gui.app.menu.execution.result;
 
-import engine2ui.simulation.runtime.ResultData;
-import engine2ui.simulation.runtime.SimulationRunData;
 import gui.app.menu.execution.ExecutionComponentController;
+import server2client.simulation.runtime.ResultData;
+import server2client.simulation.runtime.SimulationRunData;
+import gui.app.api.Controller;
 import gui.app.menu.execution.result.chart.ChartComponentController;
 import gui.app.menu.execution.result.statistics.StatisticsComponentController;
 import javafx.animation.FadeTransition;
@@ -13,8 +14,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
-public class ResultTabComponentController {
-    private ExecutionComponentController mainController;
+public class ResultTabComponentController implements Controller {
+    private Controller mainController;
 
     @FXML
     private GridPane statisticsComponent;
@@ -47,8 +48,8 @@ public class ResultTabComponentController {
         this.isComponentDisabled = true;
     }
 
-    public void setMainController(ExecutionComponentController mainController) {
-        this.mainController = mainController;
+    public void setMainController(ExecutionComponentController controller) {
+        this.mainController = controller;
     }
 
     public void enableResultComponent() {
@@ -125,7 +126,8 @@ public class ResultTabComponentController {
         statisticsComponentController.clearComponent();
     }
 
-//    public int getSimulationCurrentTicks() {
-//       return mainController.getSimulationCurrentTicks();
-//    }
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
+    }
 }

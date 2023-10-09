@@ -1,5 +1,8 @@
 package manager;
 
+import server2client.simulation.execution.SetResponse;
+import server2client.simulation.execution.StartResponse;
+import server2client.simulation.runtime.SimulationRunData;
 import engine2ui.simulation.execution.SetResponse;
 import engine2ui.simulation.execution.StartResponse;
 import engine2ui.simulation.load.success.DTOLoadSucceed;
@@ -7,8 +10,10 @@ import engine2ui.simulation.runtime.SimulationRunData;
 import gui.app.login.LoginComponentController;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import manager.constants.Constants;
 import manager.exception.SimulationNotLoadedException;
+import client2server.simulation.control.bar.DTOSimulationControlBar;
+import client2server.simulation.execution.user.input.EntityPopulationUserInput;
+import client2server.simulation.execution.user.input.EnvPropertyUserInput;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -49,29 +54,29 @@ public class UserServerAgent {
         //Console.showSimulationDetails(engine.getCurrentSimulationDetails());
     }
 
-    /**
-     * prompts the user to input a path to a simulation XML config file and loads it
-     * into the system.
-     */
-    public void loadSimulationFromFile(File file, List<EventListener> listeners) {
-        Task<Void> task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                DTOLoadSucceed dtoLoadSucceed = engine.loadSimulationFromFile(new DTOLoadFile(file, listeners));
-
-                 /* If we succeeded in creating the simulation we want to reset the engine.
-                    If a simulation was loaded beforehand and the creation failed we don't want
-                    to delete past data until a new simulation is loaded successfully. */
-                if (dtoLoadSucceed.isSucceed()) {
-                    isFileLoaded = true;
-                    engine.resetEngine();
-                }
-                return null;
-            }
-        };
-
-        runTask(task);
-    }
+//    /**
+//     * prompts the user to input a path to a simulation XML config file and loads it
+//     * into the system.
+//     */
+//    public void loadSimulationFromFile(File file, List<EventListener> listeners) {
+//        Task<Void> task = new Task<Void>() {
+//            @Override
+//            protected Void call() throws Exception {
+//                DTOLoadResult dtoLoadSucceed = engine.loadSimulationFromFile(new DTOLoadFile(file, listeners));
+//
+//                 /* If we succeeded in creating the simulation we want to reset the engine.
+//                    If a simulation was loaded beforehand and the creation failed we don't want
+//                    to delete past data until a new simulation is loaded successfully. */
+//                if (dtoLoadSucceed.isSucceed()) {
+//                    isFileLoaded = true;
+//                    engine.resetEngine();
+//                }
+//                return null;
+//            }
+//        };
+//
+//        runTask(task);
+//    }
 
     private void runTask(Task<Void> task) {
         Thread thread = new Thread(task);

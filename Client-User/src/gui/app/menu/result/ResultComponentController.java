@@ -1,7 +1,7 @@
 package gui.app.menu.result;
 
-import engine2ui.simulation.prview.PreviewData;
-import engine2ui.simulation.runtime.SimulationRunData;
+import server2client.simulation.prview.PreviewData;
+import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.result.details.ExecutionDetailsComponentController;
 import gui.app.menu.result.models.StatusData;
 import gui.app.menu.result.queue.ExecutionQueueComponentController;

@@ -22,4 +22,5 @@ public class Constants {
 
     public final static String ADMIN_CONNECT_PATH = ADMIN_CONTEXT_PATH + "/connect";
     public final static String ADMIN_DISCONNECT_PATH = ADMIN_CONTEXT_PATH + "/disconnect";
+    public final static String FILE_UPLOAD_PATH = ADMIN_CONTEXT_PATH + "/file_upload";
 }

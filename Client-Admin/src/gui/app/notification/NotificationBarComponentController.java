@@ -1,7 +1,9 @@
 package gui.app.notification;
 
 import gui.app.AdminAppController;
-import gui.notification.window.LogWindowController;
+import gui.app.api.Controller;
+import gui.app.notification.window.LogWindowController;
+import gui.app.notification.window.LogWindowController;
 import javafx.animation.FillTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,9 +27,9 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class NotificationBarComponentController {
+public class NotificationBarComponentController implements Controller {
 
-    private AdminAppController mainController;
+    private Controller mainController;
     @FXML
     private Label lblNotification;
 
@@ -44,8 +46,8 @@ public class NotificationBarComponentController {
     @FXML
     private LogWindowController logWindowController;
 
-    public void setMainController(AdminAppController mainController) {
-        this.mainController = mainController;
+    public void setMainController(AdminAppController controller) {
+        this.mainController = controller;
     }
 
     @FXML
@@ -56,25 +58,6 @@ public class NotificationBarComponentController {
 
     @FXML
     private Circle notificationCircle;
-
-
-    /**
-     * Displays the firs line of the notification on the screen. Adds the date and time this notification is displayed at.
-     * Also adds it to the program logs.
-     */
-    public void addNotification(String notification) {
-        playNotificationAnimation();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        addExpandHyperLinkToLabel(notification);
-        LocalDateTime ldt = LocalDateTime.now();
-        String toDisplay = ldt.format(dtf) + "- " + notification + "\n\n";
-        logs.insert(0, toDisplay);
-        setLblNotificationText(toDisplay);
-
-        if (logWindow != null && logWindowController != null) {
-            logWindowController.changeTextAreaText(logs.toString());
-        }
-    }
 
     private void playNotificationAnimation() {
             FillTransition fillTransition = new FillTransition(Duration.millis(700), notificationCircle);
@@ -127,7 +110,7 @@ public class NotificationBarComponentController {
             FXMLLoader fxmlLoader = new FXMLLoader();
             URL url = getClass().getResource("window/LogWindow.fxml");
             Parent root = fxmlLoader.load(url.openStream());
-            logWindowController = fxmlLoader.getController();
+            logWindowController = (LogWindowController)fxmlLoader.getController();
             logWindowController.initialize(logs);
             Scene scene = new Scene(root);
             logWindow.setScene(scene);
@@ -147,6 +130,21 @@ public class NotificationBarComponentController {
 
     public void changeToLightMode() {
         grdParent.getStylesheets().add(getClass().getResource("themes/LightMode.css").toExternalForm());
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        playNotificationAnimation();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        addExpandHyperLinkToLabel(message);
+        LocalDateTime ldt = LocalDateTime.now();
+        String toDisplay = ldt.format(dtf) + "- " + message + "\n\n";
+        logs.insert(0, toDisplay);
+        setLblNotificationText(toDisplay);
+
+        if (logWindow != null && logWindowController != null) {
+            logWindowController.changeTextAreaText(logs.toString());
+        }
     }
 
 //    public void clearMode(AppMode appMode) {

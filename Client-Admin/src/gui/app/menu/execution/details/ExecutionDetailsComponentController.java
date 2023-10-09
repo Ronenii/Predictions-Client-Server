@@ -1,8 +1,9 @@
 package gui.app.menu.execution.details;
 
-import engine2ui.simulation.genral.impl.objects.DTOEntityPopulation;
-import engine2ui.simulation.runtime.SimulationRunData;
 import gui.app.menu.execution.ExecutionComponentController;
+import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
+import server2client.simulation.runtime.SimulationRunData;
+import gui.app.api.Controller;
 import gui.app.menu.execution.details.data.PopulationData;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -20,8 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-public class ExecutionDetailsComponentController {
-    private ExecutionComponentController mainController;
+public class ExecutionDetailsComponentController implements Controller {
+    private Controller mainController;
     @FXML
     private TableView<PopulationData> entitiesTV;
 
@@ -56,8 +57,8 @@ public class ExecutionDetailsComponentController {
     private boolean isPlayButtonClicked;
     private boolean skipOne;
 
-    public void setMainController(ExecutionComponentController mainController) {
-        this.mainController = mainController;
+    public void setMainController(ExecutionComponentController controller) {
+        this.mainController = controller;
     }
 
     @FXML
@@ -144,6 +145,11 @@ public class ExecutionDetailsComponentController {
         durationProperty.set("-");
         ticksProperty.set("-");
         rerunBTN.setDisable(true);
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
     }
 
 //    public void sendStopToTheEngine() {

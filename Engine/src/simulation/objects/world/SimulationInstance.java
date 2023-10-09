@@ -1,7 +1,7 @@
 package simulation.objects.world;
 
-import engine2ui.simulation.execution.SetResponse;
-import engine2ui.simulation.runtime.ResultData;
+import server2client.simulation.execution.SetResponse;
+import server2client.simulation.runtime.ResultData;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
@@ -23,7 +23,7 @@ import simulation.properties.ending.conditions.EndingConditionType;
 import simulation.properties.rule.Rule;
 import simulation.properties.ending.conditions.EndingCondition;
 import simulation.properties.property.api.Property;
-import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
+import client2server.simulation.execution.user.input.EntityPopulationUserInput;
 
 import java.io.Serializable;
 import java.util.*;

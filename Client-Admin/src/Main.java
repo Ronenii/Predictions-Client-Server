@@ -26,7 +26,7 @@ public class Main extends Application {
         AdminAppController appController = fxmlLoader.getController();
         appController.setPrimaryStageOnClose(primaryStage);
         setupOnCloseEventHandler(primaryStage, appController);
-        AdminServerAgent.connect(appController, primaryStage);
+        AdminServerAgent.connect(appController);
         showPrimaryStage(primaryStage, root);
     }
 

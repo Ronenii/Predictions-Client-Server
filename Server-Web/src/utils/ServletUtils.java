@@ -24,5 +24,5 @@ public class ServletUtils {
                 servletContext.setAttribute(SIMULATION_MANAGER_ATTRIBUTE_NAME, new SimulationManager());
             }
         }
-        return (SimulationManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
+        return (SimulationManager) servletContext.getAttribute(SIMULATION_MANAGER_ATTRIBUTE_NAME);
     }}

@@ -1,5 +1,6 @@
 package gui.app.menu.management.thread;
 
+import gui.app.api.Controller;
 import gui.app.menu.management.ManagementComponentController;
 import gui.app.menu.management.thread.data.ThreadData;
 import javafx.event.ActionEvent;
@@ -8,8 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class ThreadManagerComponentController {
-    private ManagementComponentController mainController;
+public class ThreadManagerComponentController implements Controller {
+    private Controller mainController;
 
     @FXML
     private TextField textFieldThreadCount;
@@ -57,5 +58,10 @@ public class ThreadManagerComponentController {
         lblQueue.setText("0");
         lblRunning.setText("0");
         lblEnded.setText("0");
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
     }
 }

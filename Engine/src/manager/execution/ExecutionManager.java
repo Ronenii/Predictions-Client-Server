@@ -1,11 +1,11 @@
 package manager.execution;
 
-import engine2ui.simulation.runtime.SimulationRunData;
+import server2client.simulation.runtime.SimulationRunData;
 import manager.DTO.creator.DTOCreator;
 import manager.execution.holder.SimulationsHolder;
 import simulation.objects.world.SimulationInstance;
 import simulation.objects.world.user.instructions.UserInstructions;
-import ui2engine.simulation.control.bar.DTOSimulationControlBar;
+import client2server.simulation.control.bar.DTOSimulationControlBar;
 
 import java.util.HashMap;
 import java.util.Map;

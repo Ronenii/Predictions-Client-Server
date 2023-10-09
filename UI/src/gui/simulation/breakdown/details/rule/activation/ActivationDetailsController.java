@@ -1,6 +1,6 @@
 package gui.simulation.breakdown.details.rule.activation;
 
-import engine2ui.simulation.genral.impl.properties.DTORule;
+import server2client.simulation.genral.impl.properties.DTORule;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

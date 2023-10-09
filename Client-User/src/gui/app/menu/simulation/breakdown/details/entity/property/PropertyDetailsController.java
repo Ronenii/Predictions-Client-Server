@@ -1,7 +1,7 @@
 package gui.app.menu.simulation.breakdown.details.entity.property;
 
-import engine2ui.simulation.genral.impl.properties.property.api.DTOProperty;
-import engine2ui.simulation.genral.impl.properties.property.impl.RangedDTOProperty;
+import server2client.simulation.genral.impl.properties.property.api.DTOProperty;
+import server2client.simulation.genral.impl.properties.property.impl.RangedDTOProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

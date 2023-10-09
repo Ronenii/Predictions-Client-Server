@@ -1,6 +1,6 @@
 package jaxb.event;
 
-import engine2ui.simulation.prview.PreviewData;
+import server2client.simulation.prview.PreviewData;
 
 import java.util.EventListener;
 

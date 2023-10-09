@@ -27,6 +27,7 @@ public class Reader {
      */
     public static SimulationDefinition readWorldFromXML(File file, Map<String, SimulationDefinition> simulationDefinitions) {
         PRDConverter prdConverter = new PRDConverter();
+
         try {
             InputStream inputStream = new FileInputStream(file);
             PRDWorld prdWorld = deserializeFrom(inputStream);

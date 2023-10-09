@@ -1,16 +1,18 @@
 package gui.app.menu.execution.result.chart;
 
+import gui.app.api.Controller;
 import gui.app.menu.execution.result.ResultTabComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class ChartComponentController {
-    private ResultTabComponentController mainController;
+public class ChartComponentController implements Controller {
+    private Controller mainController;
 
     @FXML
     private LineChart<Integer, Integer> chart;  // Specify the types for LineChart
@@ -21,8 +23,8 @@ public class ChartComponentController {
     @FXML
     private NumberAxis entityQuantityAxis;
 
-    public void setMainController(ResultTabComponentController mainController) {
-        this.mainController = mainController;
+    public void setMainController(ResultTabComponentController controller) {
+        this.mainController = controller;
     }
 
     /**
@@ -57,5 +59,10 @@ public class ChartComponentController {
 
     public void clearChart() {
         chart.getData().clear();
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
     }
 }

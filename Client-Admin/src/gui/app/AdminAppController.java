@@ -1,5 +1,6 @@
 package gui.app;
 
+import gui.app.api.Controller;
 import gui.app.menu.MenuComponentController;
 import gui.app.notification.NotificationBarComponentController;
 import javafx.fxml.FXML;
@@ -13,13 +14,16 @@ import manager.AdminServerAgent;
 import java.util.EventListener;
 import java.util.List;
 
-public class AdminAppController{
+public class AdminAppController implements Controller {
     @FXML private TabPane menuComponent;
     @FXML private MenuComponentController menuComponentController;
     @FXML private GridPane notificationBarComponent;
     @FXML private NotificationBarComponentController notificationBarComponentController;
     @FXML private AnchorPane anchorNotification;
     public AdminServerAgent engineAgent;
+
+    public void setMainController(Controller controller) {
+    }
 
     @FXML
     public void initialize() {
@@ -43,17 +47,10 @@ public class AdminAppController{
         return null;
     }
 
-    public void showNotification(String notificationText){
-        notificationBarComponentController.addNotification(notificationText);
-    }
-
-    /**
-     * Displays an alert window for the user and pauses this JAT until the user closes the alert.
-     */
-    public void showAlert(String message){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setContentText(message);
-        alert.showAndWait();
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        notificationBarComponentController.turnOnNotificationBar();
+        notificationBarComponentController.showMessageInNotificationBar(message);
     }
 
 //    /**
