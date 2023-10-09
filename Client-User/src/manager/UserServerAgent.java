@@ -1,12 +1,9 @@
 package manager;
 
+import manager.constants.Constants;
 import server2client.simulation.execution.SetResponse;
 import server2client.simulation.execution.StartResponse;
 import server2client.simulation.runtime.SimulationRunData;
-import engine2ui.simulation.execution.SetResponse;
-import engine2ui.simulation.execution.StartResponse;
-import engine2ui.simulation.load.success.DTOLoadSucceed;
-import engine2ui.simulation.runtime.SimulationRunData;
 import gui.app.login.LoginComponentController;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -19,10 +16,6 @@ import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
-import ui2engine.simulation.control.bar.DTOSimulationControlBar;
-import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
-import ui2engine.simulation.execution.user.input.EnvPropertyUserInput;
-import ui2engine.simulation.load.DTOLoadFile;
 
 import java.io.File;
 import java.io.IOException;
