@@ -15,7 +15,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import jaxb.event.FileLoadedEvent;
 import manager.UserServerAgent;
-import ui2engine.simulation.execution.user.input.EntityPopulationUserInput;
 import client2server.simulation.execution.user.input.EntityPopulationUserInput;
 
 import java.util.ArrayList;
