@@ -7,15 +7,13 @@ public class DTOSingleCondition extends DTOAction {
     private final int elseActionCount;
     private final String value;
     private final String operator;
-    private final String property;
 
-    public DTOSingleCondition(String type, String mainEntity, String secondaryEntity, String property, int thenActionCount, int elseActionCount, String value, String operator, String propety) {
+    public DTOSingleCondition(String type, String mainEntity, String secondaryEntity, String property, int thenActionCount, int elseActionCount, String value, String operator) {
         super(type, mainEntity, secondaryEntity, property);
         this.thenActionCount = thenActionCount;
         this.elseActionCount = elseActionCount;
         this.value = value;
         this.operator = operator;
-        this.property = propety;
     }
 
     public int getThenActionCount() {
@@ -34,7 +32,4 @@ public class DTOSingleCondition extends DTOAction {
         return operator;
     }
 
-    public String getProperty() {
-        return property;
-    }
 }

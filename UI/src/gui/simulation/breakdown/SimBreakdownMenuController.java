@@ -69,9 +69,9 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
      * Update the tree view items with the loaded XML file's data.
      */
     public void updateSimTreeView() {
-        updateEnvVarsInTreeView(previewData.getEnvVariables());
-        updateEntitiesInTreeView(previewData.getEntities());
-        updateRulesInTreeView(previewData.getRules());
+//        updateEnvVarsInTreeView(previewData.getEnvVariables());
+//        updateEntitiesInTreeView(previewData.getEntities());
+//        updateRulesInTreeView(previewData.getRules());
     }
 
     /**
@@ -238,7 +238,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     private void setGeneralComponent(TreeItem<String> selectedItem) throws IOException {
         GeneralDetailsController generalDetailsController = (GeneralDetailsController)displayComponentController.loadFXMLComponent("general/GeneralDetails.fxml");
         displayComponentController.setLblTitle(selectedItem.getValue());
-        generalDetailsController.setComponentDet(previewData.getEndingConditions(), previewData.getGridAndThread());
+        //generalDetailsController.setComponentDet(previewData.getEndingConditions(), previewData.getGridAndThread());
     }
 
     private void clearTreeView() {

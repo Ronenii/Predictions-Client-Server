@@ -81,7 +81,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     /**
      * 'updateSimTreeView' helper - add the environment vars to the tree view.
      */
-    private void updateEnvVarsInTreeView(List<DTOEnvironmentVariable> envVariables) {
+    private void updateEnvVarsInTreeView(DTOEnvironmentVariable[] envVariables) {
         TreeItem<String> envVarItem;
 
         for(DTOEnvironmentVariable envVar : envVariables) {
@@ -93,7 +93,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     /**
      * 'updateSimTreeView' helper - add the entities to the tree view.
      */
-    private void updateEntitiesInTreeView(List<DTOEntity> entities) {
+    private void updateEntitiesInTreeView(DTOEntity[] entities) {
         TreeItem<String> entityItem;
 
         for (DTOEntity entity : entities) {
@@ -118,7 +118,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     /**
      * 'updateSimTreeView' helper - add the rules to the tree view.
      */
-    private void updateRulesInTreeView(List<DTORule> rules) {
+    private void updateRulesInTreeView(DTORule[] rules) {
         TreeItem<String> ruleItem;
 
         for (DTORule rule : rules) {
@@ -133,7 +133,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     /**
      * 'updateSimTreeView' helper - add the rules actions to the tree view.
      */
-    private void updateRuleActionsInTreeView(TreeItem<String> ruleItem, List<DTOAction> actions) {
+    private void updateRuleActionsInTreeView(TreeItem<String> ruleItem, DTOAction[] actions) {
         TreeItem<String> actionsItem = new TreeItem<>("Actions");
 
         for (DTOAction action : actions) {

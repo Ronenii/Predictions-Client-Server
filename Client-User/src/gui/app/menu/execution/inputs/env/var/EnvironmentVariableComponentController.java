@@ -144,7 +144,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
     /**
      * Sets All environment variables by default to be random initialized.
      */
-    private void initEnvironmentVariables(List<DTOEnvironmentVariable> envVariables) {
+    private void initEnvironmentVariables(DTOEnvironmentVariable[] envVariables) {
         for (DTOEnvironmentVariable e : envVariables
         ) {
             getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(e.getName(), true, null));
@@ -161,7 +161,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
     }
 
 
-    private void addItemsToListView(List<DTOEnvironmentVariable> envVariables) {
+    private void addItemsToListView(DTOEnvironmentVariable[] envVariables) {
         envVarsLV.getItems().addAll(envVariables);
         for (DTOEnvironmentVariable environmentVariable : envVariables) {
             environmentVariableMap.put(environmentVariable,"");
@@ -211,7 +211,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
      */
     public void clearInputs(){
         environmentVariableMap.replaceAll((e, v) -> "");
-        initEnvironmentVariables(new ArrayList<>(environmentVariableMap.keySet()));
+        initEnvironmentVariables(environmentVariableMap.keySet().toArray(new DTOEnvironmentVariable[0]));
         resetListView();
     }
 

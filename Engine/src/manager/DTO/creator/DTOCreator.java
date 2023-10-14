@@ -54,7 +54,7 @@ public class DTOCreator {
         rulesList = getDTORulesList(rules);
         endingConditionsList = getDTOEndingConditionsList(endingConditions);
         gridAndThread = new DTOGridAndThread(grid.getRows(),grid.getColumns(),threadCount);
-        return new PreviewData(gridAndThread, envVariables, entitiesList, rulesList, endingConditionsList);
+        return new PreviewData(gridAndThread, envVariables.toArray(new DTOEnvironmentVariable[0]), entitiesList.toArray(new DTOEntity[0]), rulesList.toArray(new DTORule[0]), endingConditionsList.toArray(new DTOEndingCondition[0]));
     }
 
     public List<DTOEntityPopulation> getDTOEntityPopulationList(Map<String, Entity> entities) {
@@ -213,7 +213,7 @@ public class DTOCreator {
 
         actions.forEach((value) -> dtoActions.add(getDTOAction(value)));
         actionNumber = 1;
-        return new DTORule(rule.getName(), rule.getActivation().getTicks(), rule.getActivation().getProbability(), dtoActions);
+        return new DTORule(rule.getName(), rule.getActivation().getTicks(), rule.getActivation().getProbability(), dtoActions.toArray(new DTOAction[0]));
     }
 
     private DTOAction getDTOAction(Action action){
@@ -237,7 +237,7 @@ public class DTOCreator {
         } else if (action instanceof SingleCondition) {
             type = String.format("single condition #%d",actionNumber);
             SingleCondition singleCondition = (SingleCondition)action;
-            ret = new DTOSingleCondition(type, mainEntity, secondaryEntity, property,singleCondition.getThenActionsCount(), singleCondition.getElseActionsCount(), singleCondition.getValueExpression().toString(), singleCondition.getOperator().toString().toLowerCase(), property);
+            ret = new DTOSingleCondition(type, mainEntity, secondaryEntity, property, singleCondition.getThenActionsCount(), singleCondition.getElseActionsCount(), singleCondition.getValueExpression().toString(), singleCondition.getOperator().toString().toLowerCase());
         } else if (action instanceof MultipleCondition) {
             type = String.format("multiple condition #%d",actionNumber);
             MultipleCondition multipleCondition = (MultipleCondition)action;
@@ -260,7 +260,11 @@ public class DTOCreator {
     private List<DTOEndingCondition> getDTOEndingConditionsList(Map<EndingConditionType, EndingCondition> endingConditions) {
         List<DTOEndingCondition> endingConditionsList = new ArrayList<>();
 
-        endingConditions.forEach((key, value) -> endingConditionsList.add(getDTOEndingCondition(value)));
+        if(endingConditions != null){
+            endingConditions.forEach((key, value) -> endingConditionsList.add(getDTOEndingCondition(value)));
+
+        }
+
         return endingConditionsList;
     }
 

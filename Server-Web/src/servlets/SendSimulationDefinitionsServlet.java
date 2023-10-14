@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import manager.SimulationManager;
+import server2client.simulation.prview.SimulationsPreviewData;
 import utils.ServletUtils;
 import utils.SessionUtils;
 
@@ -27,7 +28,8 @@ public class SendSimulationDefinitionsServlet extends HttpServlet {
         resp.setContentType("application/json");
         if(sessionSimulationBreakdownVersionInt < simulationManager.getSimulationBreakdownVersion()) {
             // Convert the preview data to a json and write it to the response.
-            String responseJsonContent = gson.toJson(simulationManager.getCurrentSimulationsDetails());
+            SimulationsPreviewData simulationsPreviewData = simulationManager.getCurrentSimulationsDetails();
+            String responseJsonContent = gson.toJson(simulationsPreviewData);
 
             resp.getOutputStream().println(responseJsonContent);
         }

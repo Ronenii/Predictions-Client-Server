@@ -133,8 +133,8 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
         valueTF.clear();
         clearListView();
         enableComponent();
-        addItemsToListView(previewData.getEnvVariables());
-        initEnvironmentVariables(previewData.getEnvVariables());
+//        addItemsToListView(previewData.getEnvVariables());
+//        initEnvironmentVariables(previewData.getEnvVariables());
     }
 
     private void clearListView(){
