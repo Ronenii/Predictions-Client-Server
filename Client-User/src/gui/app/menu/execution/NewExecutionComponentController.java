@@ -1,5 +1,6 @@
 package gui.app.menu.execution;
 
+import gui.api.Controller;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.execution.control.bar.ControlBarController;
 import gui.app.menu.execution.inputs.InputsController;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NewExecutionComponentController implements HasFileLoadedListeners, BarNotifier, UserEngineCommunicator {
+public class NewExecutionComponentController implements HasFileLoadedListeners, Controller, UserEngineCommunicator {
     private MenuComponentController mainController;
     @FXML private GridPane inputs;
     @FXML private InputsController inputsController;
@@ -44,11 +45,6 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
     @Override
     public List<EventListener> getAllFileLoadedListeners() {
         return inputsController.getAllFileLoadedListeners();
-    }
-
-    @Override
-    public BarNotifier getNotificationBar() {
-        return mainController.getNotificationBar();
     }
 
     @Override
@@ -79,5 +75,10 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
     public void rerunSimulationById(String simId) {
         StartDetails rerunStartDetails = startDetailsMap.get(simId);
         inputsController.fetchStartDetails(rerunStartDetails);
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
     }
 }

@@ -1,4 +1,7 @@
 package gui.app.menu.simulation.breakdown;
+import gui.api.Controller;
+import gui.app.menu.simulation.breakdown.refresher.SimulationBreakdownRefresher;
+import manager.constants.Constants;
 import server2client.simulation.genral.impl.objects.DTOEntity;
 import server2client.simulation.genral.impl.properties.DTORule;
 import server2client.simulation.genral.impl.properties.action.api.DTOAction;
@@ -22,14 +25,13 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import jaxb.event.FileLoadedEvent;
+import server2client.simulation.prview.SimulationsPreviewData;
+
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
-public class SimBreakdownMenuController implements Initializable, HasFileLoadedListeners, FileLoadedEvent, BarNotifier {
+public class SimBreakdownMenuController implements Initializable, HasFileLoadedListeners, FileLoadedEvent, Controller {
     @FXML private GridPane currentMainComponent;
     @FXML private GridPane treeViewGridPane;
     private MenuComponentController mainController;
@@ -45,6 +47,8 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     private TreeItem<String> entitiesItem;
     private TreeItem<String> rulesItem;
     private TreeItem<String> generalItem;
+    private SimulationBreakdownRefresher simulationBreakdownRefresher;
+    private Timer timer;
 
     public void setMainController(MenuComponentController mainController) {
         this.mainController = mainController;
@@ -59,12 +63,13 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
         TreeItem<String> simulations = new TreeItem<>("Simulations");
         simTreeView.setRoot(simulations);
         this.simulationsItem = simulations;
+        startSimBreakdownRefresher();
     }
 
     /**
      * Update the tree view items with the loaded XML file's data.
      */
-    public void updateSimTreeView() {
+    public void updateSimTreeView(SimulationsPreviewData simulationsPreviewData) {
         TreeItem<String> envVarsItem, entitiesItem, rulesItem, generalItem;
 
         envVarsItem = new TreeItem<>("Environment Variables");
@@ -180,7 +185,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
                     }
                 }
             } catch (IOException e) {
-                getNotificationBar().showNotification(String.format("Error: %s", e.getMessage()));
+                mainController.showMessageInNotificationBar(String.format("Error: %s", e.getMessage()));
             }
         }
     }
@@ -271,11 +276,17 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
         clearTreeView();
         displayComponentController.clearGridPaneCell();
         this.previewData = previewData;
-        updateSimTreeView();
+        //updateSimTreeView();
     }
 
     @Override
-    public BarNotifier getNotificationBar() {
-        return mainController.getNotificationBar();
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
+    }
+
+    public void startSimBreakdownRefresher() {
+        simulationBreakdownRefresher = new SimulationBreakdownRefresher(this);
+        timer = new Timer();
+        timer.schedule(simulationBreakdownRefresher, Constants.REFRESH_RATE, Constants.REFRESH_RATE);
     }
 }

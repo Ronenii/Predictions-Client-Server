@@ -119,7 +119,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
 
         for (DTORule rule : rules) {
             ruleItem = new TreeItem<>(rule.getName());
-            updateRuleActionsInTreeView(ruleItem, rule.getActions());
+            // updateRuleActionsInTreeView(ruleItem, rule.getActions());
             TreeItem<String> activationItem = new TreeItem<>("Activation");
             ruleItem.getChildren().add(activationItem);
             rulesItem.getChildren().add(ruleItem);

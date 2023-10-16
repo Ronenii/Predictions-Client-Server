@@ -1,5 +1,6 @@
 package gui.app.menu.result.details;
 
+import gui.api.Controller;
 import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.result.details.control.bar.ExecutionDetailsControlBarController;
@@ -24,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-public class ExecutionDetailsComponentController {
+public class ExecutionDetailsComponentController implements Controller {
     private ResultComponentController mainController;
     @FXML
     private TableView<PopulationData> entitiesTV;
@@ -238,5 +239,10 @@ public class ExecutionDetailsComponentController {
 
     public void setOneUpdateAfterPauseFlag() {
         mainController.setOneUpdateAfterPauseFlag();
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
     }
 }

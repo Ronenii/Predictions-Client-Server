@@ -156,7 +156,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
      *
      * @param entities
      */
-    private void initEntityPopulations(List<DTOEntity> entities) {
+    private void initEntityPopulations(DTOEntity[] entities) {
         updateEntitiesLeft(gridSize);
         for (DTOEntity e : entities
         ) {
@@ -176,7 +176,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     }
 
 
-    private void addItemsToListView(List<DTOEntity> entities) {
+    private void addItemsToListView(DTOEntity[] entities) {
         entitiesLV.getItems().addAll(entities);
         entitiesLV.setCellFactory(new Callback<ListView<DTOEntity>, ListCell<DTOEntity>>() {
             @Override
@@ -202,7 +202,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
      */
     public void clearInputs() {
         entityPopulations.replaceAll((e, v) -> 0);
-        initEntityPopulations(new ArrayList<>(entityPopulations.keySet()));
+        initEntityPopulations(entityPopulations.keySet().toArray(new DTOEntity[0]));
         resetListView();
     }
 

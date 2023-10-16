@@ -1,5 +1,6 @@
 package gui.app.menu.execution.inputs.entity;
 
+import gui.api.Controller;
 import server2client.simulation.execution.SetResponse;
 import server2client.simulation.genral.impl.objects.DTOEntity;
 import server2client.simulation.genral.impl.properties.DTOGridAndThread;
@@ -22,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EntityPopulationComponentController implements FileLoadedEvent, BarNotifier, UserEngineCommunicator {
+public class EntityPopulationComponentController implements FileLoadedEvent, Controller, UserEngineCommunicator {
 
     private static final int POPULATION_ERROR = -1, NO_POPULATION = -1;
     public Label entitiesLeftLabel;
@@ -67,11 +68,6 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
         }
     }
 
-    @Override
-    public BarNotifier getNotificationBar() {
-        return mainController.getNotificationBar();
-    }
-
     @FXML
     void populationTextFieldActionListener(ActionEvent event) {
         setButtonActionListener(event);
@@ -90,14 +86,14 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
             if (population != POPULATION_ERROR) {
                 if (population != entityPopulations.get(selectedItem)) {
                     SetResponse response = getEngineAgent().sendPopulationData(new EntityPopulationUserInput(selectedItem.getName(), population));
-                    getNotificationBar().showNotification(response.getMessage());
+                    showMessageInNotificationBar(response.getMessage());
                     if (response.isSuccess()) {
                         updateEntityCounter(selectedItem, population);
                         entityPopulations.put(selectedItem, population);
                     }
                 }
             } else {
-                getNotificationBar().showNotification("ERROR: The population value may only be a non negative Integer.");
+                showMessageInNotificationBar("ERROR: The population value may only be a non negative Integer.");
             }
         }
     }
@@ -156,7 +152,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
      *
      * @param entities
      */
-    private void initEntityPopulations(List<DTOEntity> entities) {
+    private void initEntityPopulations(DTOEntity[] entities) {
         updateEntitiesLeft(gridSize);
         for (DTOEntity e : entities
         ) {
@@ -176,7 +172,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
     }
 
 
-    private void addItemsToListView(List<DTOEntity> entities) {
+    private void addItemsToListView(DTOEntity[] entities) {
         entitiesLV.getItems().addAll(entities);
         entitiesLV.setCellFactory(new Callback<ListView<DTOEntity>, ListCell<DTOEntity>>() {
             @Override
@@ -202,7 +198,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
      */
     public void clearInputs() {
         entityPopulations.replaceAll((e, v) -> 0);
-        initEntityPopulations(new ArrayList<>(entityPopulations.keySet()));
+        initEntityPopulations(entityPopulations.keySet().toArray(new DTOEntity[0]));
         resetListView();
     }
 
@@ -243,5 +239,10 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Bar
         for (DTOEntity entity : entityPopulations.keySet()) {
             getEngineAgent().sendPopulationData(new EntityPopulationUserInput(entity.getName(), entityPopulations.get(entity)));
         }
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
     }
 }

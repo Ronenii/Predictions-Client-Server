@@ -1,8 +1,11 @@
 package manager;
 
+import com.google.gson.Gson;
+import gui.app.menu.simulation.breakdown.SimBreakdownMenuController;
 import manager.constants.Constants;
 import server2client.simulation.execution.SetResponse;
 import server2client.simulation.execution.StartResponse;
+import server2client.simulation.prview.SimulationsPreviewData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.login.LoginComponentController;
 import javafx.application.Platform;
@@ -16,11 +19,8 @@ import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
 import java.io.IOException;
-import java.util.EventListener;
-import java.util.List;
+
 
 public class UserServerAgent {
 
@@ -137,6 +137,37 @@ public class UserServerAgent {
                 // If another error has occurred, show an alert and close the app.
                 else {
                     Platform.runLater(() -> loginComponentController.setErrorMessage("Please insert a username (At least one character)"));
+                }
+            }
+        });
+    }
+
+    public static void updateSimBreakdown(SimBreakdownMenuController simBreakdownMenuController) {
+        Gson gson = new Gson();
+        String finalUrl = HttpUrl
+                .parse(Constants.SIMULATIONS_DETAILS_CONTEXT_PATH)
+                .newBuilder()
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> simBreakdownMenuController.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                // If connection is successful, open the admin client application.
+                if (response.code() == 200) {
+                    SimulationsPreviewData simulationsPreviewData = gson.fromJson(response.body().toString(), SimulationsPreviewData.class);
+                    Platform.runLater(() -> simBreakdownMenuController.updateSimTreeView(simulationsPreviewData));
+                }
+                // If another error has occurred, show an alert and close the app.
+                else {
+                    Platform.runLater(() -> simBreakdownMenuController.showMessageInNotificationBar("An error occurred"));
                 }
             }
         });
