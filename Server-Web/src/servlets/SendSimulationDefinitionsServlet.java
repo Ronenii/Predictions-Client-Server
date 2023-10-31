@@ -1,6 +1,7 @@
 package servlets;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,7 +21,7 @@ import java.io.IOException;
 public class SendSimulationDefinitionsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String sessionSimulationBreakdownVersionStr = SessionUtils.getSimulationBreakdownVersion(req);
         int sessionSimulationBreakdownVersionInt = Integer.parseInt(sessionSimulationBreakdownVersionStr);
         SimulationManager simulationManager = ServletUtils.getSimulationManager(getServletContext());

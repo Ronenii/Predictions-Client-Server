@@ -1,6 +1,7 @@
 package manager;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import gui.app.menu.simulation.breakdown.SimBreakdownMenuController;
 import manager.constants.Constants;
 import server2client.simulation.execution.SetResponse;
@@ -143,7 +144,7 @@ public class UserServerAgent {
     }
 
     public static void updateSimBreakdown(SimBreakdownMenuController simBreakdownMenuController) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String finalUrl = HttpUrl
                 .parse(Constants.SIMULATIONS_DETAILS_CONTEXT_PATH)
                 .newBuilder()
@@ -159,10 +160,12 @@ public class UserServerAgent {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 // If connection is successful, open the admin client application.
                 if (response.code() == 200) {
-                    SimulationsPreviewData simulationsPreviewData = gson.fromJson(response.body().toString(), SimulationsPreviewData.class);
+                    String previewDataInJson = response.body().string();
+                    SimulationsPreviewData simulationsPreviewData = gson.fromJson(previewDataInJson, SimulationsPreviewData.class);
+                    String meow = "meow";
                     Platform.runLater(() -> simBreakdownMenuController.updateSimTreeView(simulationsPreviewData));
                 }
                 // If another error has occurred, show an alert and close the app.

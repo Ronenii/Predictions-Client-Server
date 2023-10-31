@@ -15,7 +15,6 @@ public class SimulationBreakdownRefresher extends TimerTask {
 
     @Override
     public void run() {
-
         UserServerAgent.updateSimBreakdown(simBreakdownMenuController);
     }
 }

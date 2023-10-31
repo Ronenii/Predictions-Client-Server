@@ -14,7 +14,7 @@ public class SessionUtils {
     }
 
     public static String getSimulationBreakdownVersion(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
 
         if(session.getAttribute(Constants.SIMULATION_BREAKDOWN_VERSION) == null) {
             session.setAttribute(Constants.SIMULATION_BREAKDOWN_VERSION, 0);
