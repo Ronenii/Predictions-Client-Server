@@ -1,5 +1,6 @@
 package gui.app.menu.result.queue;
 
+import gui.api.Controller;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.result.models.QueueManagementData;
 import gui.app.menu.result.models.StatusData;
@@ -21,7 +22,7 @@ import simulation.objects.world.status.SimulationStatus;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExecutionQueueComponentController implements UserEngineCommunicator, BarNotifier {
+public class ExecutionQueueComponentController implements UserEngineCommunicator, Controller {
     private ResultComponentController mainController;
     @FXML
     private Label exeListLabel;
@@ -157,7 +158,7 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
                 SimulationRunData selectedInThread = getEngineAgent().getRunDataById(s.getSimId());
                 if(selectedInThread.errorMessage != null){
                     Platform.runLater(() -> {
-                        getNotificationBar().showNotification(selectedInThread.errorMessage);
+                        showMessageInNotificationBar(selectedInThread.errorMessage);
                     });
                 }
 
@@ -194,7 +195,7 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
     private void showNotificationIfSimulationRunStarted(StatusData statusData, SimulationRunData simulationRunData) {
         if (isStartedSimulation(statusData, simulationRunData)) {
             Platform.runLater(() -> {
-                getNotificationBar().showNotification(String.format("Simulation %s has started it's run.", statusData.getSimId()));
+                showMessageInNotificationBar(String.format("Simulation %s has started it's run.", statusData.getSimId()));
             });
         }
     }
@@ -204,7 +205,7 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
      */
     private void showNotificationIfSimulationRunCompleted(SimulationRunData simulationRunData) {
         if (SimulationStatus.valueOf(simulationRunData.getStatus()) == SimulationStatus.COMPLETED) {
-            getNotificationBar().showNotification(String.format("Simulation %s has finished it's run.", simulationRunData.getSimId()));
+           showMessageInNotificationBar(String.format("Simulation %s has finished it's run.", simulationRunData.getSimId()));
         }
     }
 
@@ -230,11 +231,6 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
         return mainController.getEngineAgent();
     }
 
-    @Override
-    public BarNotifier getNotificationBar() {
-        return mainController.getNotificationBar();
-    }
-
     public void clearComponent() {
         executionsQueueTV.getItems().clear();
         simIdCol.setCellValueFactory(new PropertyValueFactory<>("simId"));
@@ -257,5 +253,10 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
 
     public void setOneUpdateAfterPauseFlag() {
         oneUpdateAfterPauseFlag = true;
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
     }
 }

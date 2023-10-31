@@ -1,5 +1,6 @@
 package gui.app.menu.result;
 
+import gui.api.Controller;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.result.details.ExecutionDetailsComponentController;
@@ -16,7 +17,7 @@ import javafx.scene.layout.VBox;
 import jaxb.event.FileLoadedEvent;
 import manager.UserServerAgent;
 
-public class ResultComponentController implements UserEngineCommunicator, BarNotifier, FileLoadedEvent {
+public class ResultComponentController implements UserEngineCommunicator, Controller, FileLoadedEvent {
     private MenuComponentController mainController;
 
     @FXML
@@ -45,11 +46,6 @@ public class ResultComponentController implements UserEngineCommunicator, BarNot
             resultTabComponentController.setMainController(this);
             executionQueueComponentController.setMainController(this);
         }
-    }
-
-    @Override
-    public BarNotifier getNotificationBar() {
-        return mainController.getNotificationBar();
     }
 
     @Override
@@ -120,6 +116,10 @@ public class ResultComponentController implements UserEngineCommunicator, BarNot
         executionQueueComponentController.setOneUpdateAfterPauseFlag();
     }
 
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
+    }
 }
 
 

@@ -13,6 +13,22 @@ public class SessionUtils {
         return sessionAttribute != null ? sessionAttribute.toString() : null;
     }
 
+    public static String getSimulationBreakdownVersion(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
+        if(session.getAttribute(Constants.SIMULATION_BREAKDOWN_VERSION) == null) {
+            session.setAttribute(Constants.SIMULATION_BREAKDOWN_VERSION, 0);
+        }
+
+        return session.getAttribute(Constants.SIMULATION_BREAKDOWN_VERSION).toString();
+    }
+
+    public static void setSimulationBreakdownVersion(HttpServletRequest request, int newVersion) {
+        HttpSession session = request.getSession(false);
+
+        session.setAttribute(Constants.SIMULATION_BREAKDOWN_VERSION, newVersion);
+    }
+
     public static void clearSession (HttpServletRequest request) {
         request.getSession().invalidate();
     }

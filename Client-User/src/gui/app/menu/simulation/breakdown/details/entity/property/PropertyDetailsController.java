@@ -1,7 +1,6 @@
 package gui.app.menu.simulation.breakdown.details.entity.property;
 
-import server2client.simulation.genral.impl.properties.property.api.DTOProperty;
-import server2client.simulation.genral.impl.properties.property.impl.RangedDTOProperty;
+import server2client.simulation.genral.impl.properties.DTOProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -18,9 +17,8 @@ public class PropertyDetailsController {
 
     public void setComponentDet(DTOProperty property) {
         lblType.setText(property.getType());
-        if(property.getClass() == RangedDTOProperty.class){
-            RangedDTOProperty rangedDTOProperty = (RangedDTOProperty)property;
-            String text = String.format("From %.2f to %.2f", rangedDTOProperty.getFrom(), rangedDTOProperty.getTo());
+        if(property.isHasRange()){
+            String text = String.format("From %.2f to %.2f", property.getFrom(), property.getTo());
             lblRange.setText(text);
         }
         else {

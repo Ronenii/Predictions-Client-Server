@@ -1,5 +1,6 @@
 package gui.app.menu.execution.inputs.env.var;
 
+import gui.api.Controller;
 import server2client.simulation.execution.SetResponse;
 import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import server2client.simulation.prview.PreviewData;
@@ -22,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EnvironmentVariableComponentController implements FileLoadedEvent, UserEngineCommunicator, BarNotifier {
+public class EnvironmentVariableComponentController implements FileLoadedEvent, UserEngineCommunicator, Controller {
 
     private InputsController mainController;
     @FXML
@@ -112,7 +113,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
                 response = getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(selectedItem.getName(), false, valueTF.getText()));
             }
 
-            getNotificationBar().showNotification(response.getMessage());
+            showMessageInNotificationBar(response.getMessage());
 
             if(response.isSuccess()){
                 environmentVariableMap.put(selectedItem, valueTF.getText());
@@ -144,7 +145,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
     /**
      * Sets All environment variables by default to be random initialized.
      */
-    private void initEnvironmentVariables(List<DTOEnvironmentVariable> envVariables) {
+    private void initEnvironmentVariables(DTOEnvironmentVariable[] envVariables) {
         for (DTOEnvironmentVariable e : envVariables
         ) {
             getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(e.getName(), true, null));
@@ -161,7 +162,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
     }
 
 
-    private void addItemsToListView(List<DTOEnvironmentVariable> envVariables) {
+    private void addItemsToListView(DTOEnvironmentVariable[] envVariables) {
         envVarsLV.getItems().addAll(envVariables);
         for (DTOEnvironmentVariable environmentVariable : envVariables) {
             environmentVariableMap.put(environmentVariable,"");
@@ -192,12 +193,6 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
         return mainController.getEngineAgent();
     }
 
-    @Override
-    public BarNotifier getNotificationBar() {
-        return mainController.getNotificationBar();
-    }
-
-
     /**
      * Deselects the listview and sets the valueTF to be empty.
      */
@@ -211,7 +206,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
      */
     public void clearInputs(){
         environmentVariableMap.replaceAll((e, v) -> "");
-        initEnvironmentVariables(new ArrayList<>(environmentVariableMap.keySet()));
+        initEnvironmentVariables(environmentVariableMap.keySet().toArray(new DTOEnvironmentVariable[0]));
         resetListView();
     }
 
@@ -234,5 +229,10 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
         if (selectedItem != null) {
             updateTextFieldToCurrentEnvVarValue(selectedItem);
         }
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
     }
 }

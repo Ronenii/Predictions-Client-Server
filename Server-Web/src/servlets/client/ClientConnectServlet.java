@@ -35,7 +35,7 @@ public class ClientConnectServlet extends HttpServlet {
                     } else {
                         userManager.addUser(usernameFromParameter);
                         // create session for this user.
-                        req.getSession().setAttribute(Constants.USERNAME, usernameFromParameter);
+                        req.getSession(true).setAttribute(Constants.USERNAME, usernameFromParameter);
                     }
                 }
             }

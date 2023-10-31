@@ -23,8 +23,8 @@ public class SingleConditionDetailsController {
     public void setComponentDet(DTOSingleCondition singleCondition){
         lblOperator.setText(singleCondition.getOperator());
         lblValue.setText(singleCondition.getValue());
-        lblProperty.setText(singleCondition.getProperty());
-        thenElseDetailsController.updateThenAndElse(singleCondition);
+       // lblProperty.setText(singleCondition.getProperty());
+        thenElseDetailsController.updateThenAndElse(null, singleCondition);
     }
 
 }

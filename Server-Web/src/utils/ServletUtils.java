@@ -18,6 +18,7 @@ public class ServletUtils {
         }
         return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
     }
+    // TODO: this implementation has problems! the SimulationManager supposed to be the same object to each user.
     public static SimulationManager getSimulationManager(ServletContext servletContext) {
         synchronized (simulationManagerLock) {
             if (servletContext.getAttribute(SIMULATION_MANAGER_ATTRIBUTE_NAME) == null) {

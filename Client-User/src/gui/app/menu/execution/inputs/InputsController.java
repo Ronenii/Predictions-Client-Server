@@ -1,4 +1,5 @@
 package gui.app.menu.execution.inputs;
+import gui.api.Controller;
 import gui.app.menu.execution.inputs.entity.EntityPopulationComponentController;
 import gui.app.menu.execution.inputs.env.var.EnvironmentVariableComponentController;
 import gui.app.menu.execution.models.EntitiesStartData;
@@ -18,7 +19,7 @@ import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
 
-public class InputsController implements HasFileLoadedListeners, BarNotifier, UserEngineCommunicator {
+public class InputsController implements HasFileLoadedListeners, Controller, UserEngineCommunicator {
     private NewExecutionComponentController mainController;
     @FXML private GridPane entityPopulationComponent;
     @FXML private EntityPopulationComponentController entityPopulationComponentController;
@@ -49,11 +50,6 @@ public class InputsController implements HasFileLoadedListeners, BarNotifier, Us
     }
 
     @Override
-    public BarNotifier getNotificationBar() {
-        return mainController.getNotificationBar();
-    }
-
-    @Override
     public UserServerAgent getEngineAgent() {
         return mainController.getEngineAgent();
     }
@@ -72,5 +68,10 @@ public class InputsController implements HasFileLoadedListeners, BarNotifier, Us
     public void fetchStartDetails(StartDetails startDetails) {
         entityPopulationComponentController.fetchEntitiesStartData(startDetails.getEntitiesStartData());
         environmentVariableComponentController.fetchEnvironmentVarsStartData(startDetails.getEnvironmentVarsStartData());
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
     }
 }

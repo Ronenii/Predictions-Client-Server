@@ -4,6 +4,7 @@ import server2client.simulation.execution.SetResponse;
 import server2client.simulation.execution.StartResponse;
 import server2client.simulation.load.result.DTOLoadResult;
 import server2client.simulation.prview.PreviewData;
+import server2client.simulation.prview.SimulationsPreviewData;
 import server2client.simulation.runtime.ResultData;
 import server2client.simulation.runtime.SimulationRunData;
 import server2client.simulation.runtime.generator.IdGenerator;
@@ -48,6 +49,7 @@ public class SimulationManager implements EngineInterface {
     private boolean isSimulationLoaded;
     private boolean isFirstSimulationLoaded;
     private ExecutionManager executionManager = null;
+    private int simulationBreakdownVersion;
 
     public SimulationManager() {
         simulationDefinition = null;
@@ -56,6 +58,7 @@ public class SimulationManager implements EngineInterface {
         isSimulationLoaded = false;
         keysToSerialize = new HashSet<>();
         isFirstSimulationLoaded = true;
+        simulationBreakdownVersion = 0;
     }
 
     public void loadValuesFromDeserialization(SimulationManager instance) {
@@ -70,9 +73,19 @@ public class SimulationManager implements EngineInterface {
         return isSimulationLoaded;
     }
 
-    private PreviewData getCurrentSimulationDetails() {
-        DTOCreator dtoCreator = new DTOCreator();
+    public SimulationsPreviewData getCurrentSimulationsDetails() {
+        PreviewData[] previewDataArray = new PreviewData[simulationDefinitions.size()];
+        int index = 0;
+        for(SimulationDefinition simulationDefinition : simulationDefinitions.values()) {
+            previewDataArray[index] = getDefinitionPreviewData(simulationDefinition.getSimulationAbstractInstance());
+            index++;
+        }
 
+        return new SimulationsPreviewData(previewDataArray);
+    }
+
+    private PreviewData getDefinitionPreviewData(SimulationInstance simulationDefinition) {
+        DTOCreator dtoCreator = new DTOCreator();
         return dtoCreator.createSimulationPreviewDataObject(simulationDefinition.getEnvironmentProperties(), simulationDefinition.getEntities(), simulationDefinition.getRules(), simulationDefinition.getEndingConditions(), simulationDefinition.getGrid(), simulationDefinition.getThreadCount());
     }
 
@@ -96,7 +109,7 @@ public class SimulationManager implements EngineInterface {
 
     @Override
     public DTOLoadResult loadSimulationFromFile(File file) {
-        SimulationDefinition newDefinition = null;
+        SimulationDefinition newDefinition;
         DTOLoadResult dtoLoadResult = null;
         try {
             newDefinition = Reader.readWorldFromXML(file, simulationDefinitions);
@@ -110,9 +123,10 @@ public class SimulationManager implements EngineInterface {
                 }
 
                 //executionManager = new ExecutionManager(simulationDefinition.getThreadCount());
-            }
 
-            isSimulationLoaded = true;
+                simulationBreakdownVersion++;
+                isSimulationLoaded = true;
+            }
         }catch (IllegalArgumentException e){
             dtoLoadResult = new DTOLoadResult(false, e.getMessage());
         }
@@ -149,18 +163,6 @@ public class SimulationManager implements EngineInterface {
         return envVarsValuesMap;
     }
 
-    /**
-     * Invokes all listeners for a successful load of a file.
-     */
-    private void invokeSuccessLoadListeners(List<EventListener> listeners) {
-        PreviewData previewData = getCurrentSimulationDetails();
-        Platform.runLater(() -> {
-            for (EventListener f : listeners) {
-                FileLoadedEvent fileLoadedEvent = (FileLoadedEvent) f;
-                fileLoadedEvent.onFileLoaded(previewData, isFirstSimulationLoaded);
-            }
-        });
-    }
 
     /**
      * Clears all data of past simulations and all generated IDs.
@@ -377,5 +379,9 @@ public class SimulationManager implements EngineInterface {
     @Override
     public void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
         executionManager.setStopPausePlayOrSkipFwdForSimById(simId, dtoSimulationControlBar);
+    }
+
+    public int getSimulationBreakdownVersion() {
+        return simulationBreakdownVersion;
     }
 }

@@ -1,5 +1,6 @@
 package gui.app.menu;
 
+import gui.api.Controller;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.api.BarNotifier;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
-public class MenuComponentController implements HasFileLoadedListeners, BarNotifier, UserEngineCommunicator {
+public class MenuComponentController implements HasFileLoadedListeners, UserEngineCommunicator, Controller {
     private UserAppController mainController;
     @FXML private GridPane currentMainComponent;
     @FXML private TabPane menusTabPane;
@@ -65,10 +66,6 @@ public class MenuComponentController implements HasFileLoadedListeners, BarNotif
     }
 
     @Override
-    public BarNotifier getNotificationBar() {
-        return mainController.getNotificationBar();
-    }
-    @Override
     public UserServerAgent getEngineAgent() {
         return mainController.getEngineAgent();
     }
@@ -85,5 +82,8 @@ public class MenuComponentController implements HasFileLoadedListeners, BarNotif
         newExecutionComponentController.rerunSimulationById(simId);
     }
 
-
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
+    }
 }

@@ -14,16 +14,14 @@ public class ThenElseDetailsController {
     @FXML
     private Label lblElseCount;
 
-    public void updateThenAndElse(DTOAction action){
-        if(action instanceof DTOSingleCondition){
-            DTOSingleCondition singleCondition = (DTOSingleCondition)action;
-            lblThenCount.setText(String.valueOf(singleCondition.getThenActionCount()));
-            lblElseCount.setText(String.valueOf(singleCondition.getElseActionCount()));
+    public void updateThenAndElse(DTOMultipleCondition multiple, DTOSingleCondition single){
+        if(single != null){
+            lblThenCount.setText(String.valueOf(single.getThenActionCount()));
+            lblElseCount.setText(String.valueOf(single.getElseActionCount()));
         }
         else {
-            DTOMultipleCondition multipleCondition = (DTOMultipleCondition)action;
-            lblThenCount.setText(String.valueOf(multipleCondition.getThenActionCount()));
-            lblElseCount.setText(String.valueOf(multipleCondition.getElseActionCount()));
+            lblThenCount.setText(String.valueOf(multiple.getThenActionCount()));
+            lblElseCount.setText(String.valueOf(multiple.getElseActionCount()));
         }
     }
 }

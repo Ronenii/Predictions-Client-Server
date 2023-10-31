@@ -1,6 +1,6 @@
 package server2client.simulation.genral.impl.objects;
 
-import server2client.simulation.genral.impl.properties.property.api.DTOProperty;
+import server2client.simulation.genral.impl.properties.DTOProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 import java.io.Serializable;

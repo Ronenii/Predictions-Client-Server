@@ -24,7 +24,7 @@ public class GeneralDetailsController {
     @FXML
     private Label lblThreadCount;
 
-    public void setComponentDet(List<DTOEndingCondition> endingConditions, DTOGridAndThread gridAndThread) {
+    public void setComponentDet(DTOEndingCondition[] endingConditions, DTOGridAndThread gridAndThread) {
         for (DTOEndingCondition endingCondition : endingConditions){
             if(endingCondition.getType().equals("ticks")){
                 lblEndingTicks.setText(String.valueOf(endingCondition.getCount()));

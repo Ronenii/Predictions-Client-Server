@@ -1,5 +1,6 @@
 package gui.app;
 
+import gui.api.Controller;
 import gui.api.UserEngineCommunicator;
 import gui.api.BarNotifier;
 import gui.api.HasFileLoadedListeners;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
-public class UserAppController implements HasFileLoadedListeners, BarNotifier, UserEngineCommunicator {
+public class UserAppController implements HasFileLoadedListeners, UserEngineCommunicator, Controller {
     @FXML private BorderPane currentMainComponent;
     @FXML private GridPane headerComponent;
     @FXML private GridPane subMenus;
@@ -58,20 +59,6 @@ public class UserAppController implements HasFileLoadedListeners, BarNotifier, U
         return listeners;
     }
 
-    /**
-     * Shows the given string on the notification bar.
-     */
-    @Override
-    public void showNotification(String notification){
-        notificationBarComponentController.turnOnNotificationBar();
-        notificationBarComponentController.addNotification(notification);
-    }
-
-    @Override
-    public BarNotifier getNotificationBar() {
-        return this;
-    }
-
     @Override
     public UserServerAgent getEngineAgent() {
         return engineAgent;
@@ -81,4 +68,12 @@ public class UserAppController implements HasFileLoadedListeners, BarNotifier, U
         usernameLabel.setText(String.format("Hello %s",username));
     }
 
+    /**
+     * Shows the given string on the notification bar.
+     */
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        notificationBarComponentController.turnOnNotificationBar();
+        notificationBarComponentController.addNotification(message);
+    }
 }
