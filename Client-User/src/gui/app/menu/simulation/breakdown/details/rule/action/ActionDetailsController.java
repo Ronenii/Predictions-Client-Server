@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import server2client.simulation.genral.impl.properties.action.api.DTOActionType;
 import server2client.simulation.genral.impl.properties.action.impl.*;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class ActionDetailsController {
 
     public void setComponentDet(DTOAction action) throws IOException {
         lblType.setText(extractActionType(action.getType()));
-        if(action instanceof DTOMultipleCondition){
+        if(action.getActionType() == DTOActionType.MULTIPLE){
             lblPrimeEntity.setText("-");
         }
         else {
@@ -56,34 +57,35 @@ public class ActionDetailsController {
 
     private void loadActionTypeComponent(DTOAction action) throws IOException {
         // DTOKill is not handled because this action does not contain any additional information besides what is held by the abstract DTOAction class.
-        if (action instanceof DTOIncreaseOrDecrease){
-            DTOIncreaseOrDecrease dtoIncreaseOrDecrease = (DTOIncreaseOrDecrease)action;
-            IncreaseOrDecreaseDetailsController increaseOrDecreaseDetailsController = (IncreaseOrDecreaseDetailsController)loadFXMLComponent("increase.decrease/IncreaseOrDecreaseDetails.fxml");
-            increaseOrDecreaseDetailsController.setComponentDet(dtoIncreaseOrDecrease);
-        } else if (action instanceof DTOCalculation) {
-            DTOCalculation dtoCalculation = (DTOCalculation)action;
-            CalculationDetailsController calculationDetailsController = (CalculationDetailsController)loadFXMLComponent("calculation/CalculationDetails.fxml");
-            calculationDetailsController.setComponentDet(dtoCalculation);
-        } else if (action instanceof DTOSingleCondition) {
-            DTOSingleCondition dtoSingleCondition = (DTOSingleCondition)action;
-            SingleConditionDetailsController singleConditionDetailsController = (SingleConditionDetailsController)loadFXMLComponent("condition/SingleConditionDetails.fxml");
-            singleConditionDetailsController.setComponentDet(dtoSingleCondition);
-        } else if (action instanceof DTOMultipleCondition) {
-            DTOMultipleCondition dtoMultipleCondition = (DTOMultipleCondition)action;
-            MultipleConditionDetailsController multipleConditionDetailsController = (MultipleConditionDetailsController)loadFXMLComponent("condition/MultipleConditionDetails.fxml");
-            multipleConditionDetailsController.setComponentDet(dtoMultipleCondition);
-        } else if (action instanceof DTOSet) {
-            DTOSet dtoSet = (DTOSet)action;
-            SetDetailsController setDetailsController = (SetDetailsController)loadFXMLComponent("set/SetDetails.fxml");
-            setDetailsController.setComponentDet(dtoSet);
-        } else if (action instanceof DTOReplace) {
-            DTOReplace dtoReplace = (DTOReplace)action;
-            ReplaceDetailsController replaceDetailsController = (ReplaceDetailsController)loadFXMLComponent("replace/ReplaceDetails.fxml");
-            replaceDetailsController.setComponentDet(dtoReplace);
-        } else if (action instanceof DTOProximity) {
-            DTOProximity dtoProximity = (DTOProximity)action;
-            ProximityDetailsController proximityDetailsController = (ProximityDetailsController)loadFXMLComponent("proximity/ProximityDetails.fxml");
-            proximityDetailsController.setComponentDet(dtoProximity);
+        switch (action.getActionType()){
+            case INCREASE_OR_DECREASE:
+                IncreaseOrDecreaseDetailsController increaseOrDecreaseDetailsController = (IncreaseOrDecreaseDetailsController)loadFXMLComponent("increase.decrease/IncreaseOrDecreaseDetails.fxml");
+                increaseOrDecreaseDetailsController.setComponentDet(action);
+                break;
+            case CALCULATION:
+                CalculationDetailsController calculationDetailsController = (CalculationDetailsController)loadFXMLComponent("calculation/CalculationDetails.fxml");
+                calculationDetailsController.setComponentDet(action.getDtoCalculation());
+                break;
+            case SINGLE:
+                SingleConditionDetailsController singleConditionDetailsController = (SingleConditionDetailsController)loadFXMLComponent("condition/SingleConditionDetails.fxml");
+                singleConditionDetailsController.setComponentDet(action.getDtoSingleCondition());
+                break;
+            case MULTIPLE:
+                MultipleConditionDetailsController multipleConditionDetailsController = (MultipleConditionDetailsController)loadFXMLComponent("condition/MultipleConditionDetails.fxml");
+                multipleConditionDetailsController.setComponentDet(action.getDtoMultipleCondition());
+                break;
+            case SET:
+                SetDetailsController setDetailsController = (SetDetailsController)loadFXMLComponent("set/SetDetails.fxml");
+                setDetailsController.setComponentDet(action);
+                break;
+            case REPLACE:
+                ReplaceDetailsController replaceDetailsController = (ReplaceDetailsController)loadFXMLComponent("replace/ReplaceDetails.fxml");
+                replaceDetailsController.setComponentDet(action.getDtoReplace());
+                break;
+            case PROXIMITY:
+                ProximityDetailsController proximityDetailsController = (ProximityDetailsController)loadFXMLComponent("proximity/ProximityDetails.fxml");
+                proximityDetailsController.setComponentDet(action.getDtoProximity());
+                break;
         }
     }
 

@@ -7,10 +7,9 @@ import server2client.simulation.genral.impl.properties.DTOEndingCondition;
 import server2client.simulation.genral.impl.properties.DTOGridAndThread;
 import server2client.simulation.genral.impl.properties.DTORule;
 import server2client.simulation.genral.impl.properties.action.api.DTOAction;
+import server2client.simulation.genral.impl.properties.action.api.DTOActionType;
 import server2client.simulation.genral.impl.properties.action.impl.*;
-import server2client.simulation.genral.impl.properties.property.api.DTOProperty;
-import server2client.simulation.genral.impl.properties.property.impl.NonRangedDTOProperty;
-import server2client.simulation.genral.impl.properties.property.impl.RangedDTOProperty;
+import server2client.simulation.genral.impl.properties.DTOProperty;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import simulation.objects.entity.Entity;
@@ -135,15 +134,15 @@ public class DTOCreator {
         switch (property.getType()) {
             case DECIMAL:
                 IntProperty intProperty = (IntProperty) property;
-                ret = new RangedDTOProperty(intProperty.getName(), intProperty.getType().toString(), intProperty.isRandInit(), property.getValue(), property.getChangeTickAmount(), intProperty.getFrom(), intProperty.getTo());
+                ret = new DTOProperty(intProperty.getName(), intProperty.getType().toString(), intProperty.isRandInit(), property.getValue(), intProperty.getFrom(), intProperty.getTo(), property.getChangeTickAmount(), true);
                 break;
             case FLOAT:
                 DoubleProperty doubleProperty = (DoubleProperty) property;
-                ret = new RangedDTOProperty(doubleProperty.getName(), doubleProperty.getType().toString(), doubleProperty.isRandInit(), property.getValue(),property.getChangeTickAmount(), doubleProperty.getFrom(), doubleProperty.getTo());
+                ret = new DTOProperty(doubleProperty.getName(), doubleProperty.getType().toString(), doubleProperty.isRandInit(), property.getValue(), doubleProperty.getFrom(), doubleProperty.getTo(), property.getChangeTickAmount(), true);
                 break;
             case BOOLEAN:
             case STRING:
-                ret = new NonRangedDTOProperty(property.getName(), property.getType().toString(), property.isRandInit(), property.getValue(), property.getChangeTickAmount());
+                ret = new DTOProperty(property.getName(), property.getType().toString(), property.isRandInit(), property.getValue(), property.getChangeTickAmount(), false);
                 break;
         }
         return ret;
@@ -230,28 +229,33 @@ public class DTOCreator {
         }
 
         if(action instanceof IncreaseAction || action instanceof DecreaseAction){
-            ret = new DTOIncreaseOrDecrease(type, mainEntity, secondaryEntity, property, action.getValueExpression().toString());
+            ret = new DTOAction(DTOActionType.INCREASE_OR_DECREASE, type, mainEntity, secondaryEntity, property, action.getValueExpression().toString());
         } else if (action instanceof CalculationAction) {
             CalculationAction calculationAction = (CalculationAction)action;
-            ret = new DTOCalculation(type, mainEntity, secondaryEntity, property, calculationAction.getArg1Expression().toString(), calculationAction.getArg2Expression().toString(), calculationAction.getCalculationType().toString().toLowerCase());
+            ret = new DTOAction(DTOActionType.CALCULATION,type, mainEntity, secondaryEntity, property, null);
+            ret.setDtoCalculation(new DTOCalculation(calculationAction.getArg1Expression().toString(), calculationAction.getArg2Expression().toString(), calculationAction.getCalculationType().toString().toLowerCase()));
         } else if (action instanceof SingleCondition) {
             type = String.format("single condition #%d",actionNumber);
             SingleCondition singleCondition = (SingleCondition)action;
-            ret = new DTOSingleCondition(type, mainEntity, secondaryEntity, property, singleCondition.getThenActionsCount(), singleCondition.getElseActionsCount(), singleCondition.getValueExpression().toString(), singleCondition.getOperator().toString().toLowerCase());
+            ret = new DTOAction(DTOActionType.SINGLE,type, mainEntity, secondaryEntity, property, null);
+            ret.setDtoSingleCondition(new DTOSingleCondition(singleCondition.getThenActionsCount(), singleCondition.getElseActionsCount(), singleCondition.getValueExpression().toString(), singleCondition.getOperator().toString().toLowerCase()));
         } else if (action instanceof MultipleCondition) {
             type = String.format("multiple condition #%d",actionNumber);
             MultipleCondition multipleCondition = (MultipleCondition)action;
-            ret = new DTOMultipleCondition(type, mainEntity, secondaryEntity, property, multipleCondition.getThenActionsCount(),multipleCondition.getElseActionsCount(), multipleCondition.getLogical().toString().toLowerCase(), multipleCondition.getSubConditions().size());
+            ret = new DTOAction(DTOActionType.MULTIPLE,type, mainEntity, secondaryEntity, property, null);
+            ret.setDtoMultipleCondition(new DTOMultipleCondition(multipleCondition.getThenActionsCount(),multipleCondition.getElseActionsCount(), multipleCondition.getLogical().toString().toLowerCase(), multipleCondition.getSubConditions().size()));
         } else if (action instanceof SetAction) {
-            ret = new DTOSet(type, mainEntity, secondaryEntity, property, action.getValueExpression().toString());
+            ret = new DTOAction(DTOActionType.SET, type, mainEntity, secondaryEntity, property, action.getValueExpression().toString());
         } else if (action instanceof KillAction) {
-            ret = new DTOKill(type, mainEntity, secondaryEntity, property);
+            ret = new DTOAction(DTOActionType.KILL, type, mainEntity, secondaryEntity, property, null);
         } else if (action instanceof ReplaceAction) {
             ReplaceAction replaceAction = (ReplaceAction)action;
-            ret = new DTOReplace(type,mainEntity, secondaryEntity, property, replaceAction.getNewEntityName(), replaceAction.getReplaceType().toString().toLowerCase());
+            ret = new DTOAction(DTOActionType.REPLACE,type, mainEntity, secondaryEntity, property, null);
+            ret.setDtoReplace(new DTOReplace(replaceAction.getNewEntityName(), replaceAction.getReplaceType().toString().toLowerCase()));
         } else if (action instanceof ProximityAction) {
             ProximityAction proximityAction = (ProximityAction)action;
-            ret = new DTOProximity(type, mainEntity, secondaryEntity, property, proximityAction.getTargetEntityName(), proximityAction.getDepthString(), proximityAction.getSubActionsCount());
+            ret = new DTOAction(DTOActionType.PROXIMITY,type, mainEntity, secondaryEntity, property, null);
+            ret.setDtoProximity(new DTOProximity(proximityAction.getTargetEntityName(), proximityAction.getDepthString(), proximityAction.getSubActionsCount()));
         }
 
         return ret;

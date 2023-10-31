@@ -3,7 +3,7 @@ package gui.app.menu.execution.result.statistics;
 import gui.app.menu.execution.result.ResultTabComponentController;
 import server2client.simulation.genral.impl.objects.DTOEntity;
 import server2client.simulation.genral.impl.objects.DTOEntityInstance;
-import server2client.simulation.genral.impl.properties.property.api.DTOProperty;
+import server2client.simulation.genral.impl.properties.DTOProperty;
 import gui.app.api.Controller;
 import gui.app.menu.execution.result.data.HistogramData;
 import javafx.fxml.FXML;

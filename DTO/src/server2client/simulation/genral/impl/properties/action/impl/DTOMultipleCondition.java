@@ -1,15 +1,12 @@
 package server2client.simulation.genral.impl.properties.action.impl;
 
-import server2client.simulation.genral.impl.properties.action.api.DTOAction;
-
-public class DTOMultipleCondition extends DTOAction {
+public class DTOMultipleCondition {
     private final int thenActionCount;
     private final int elseActionCount;
     private final String logic;
     private final int subConditionsCount;
 
-    public DTOMultipleCondition(String type, String mainEntity, String secondaryEntity, String property, int thenActionsCount, int elseActionCount, String logic, int subConditionsCount) {
-        super(type, mainEntity, secondaryEntity, property);
+    public DTOMultipleCondition(int thenActionsCount, int elseActionCount, String logic, int subConditionsCount) {
         this.thenActionCount = thenActionsCount;
         this.elseActionCount = elseActionCount;
         this.logic = logic;

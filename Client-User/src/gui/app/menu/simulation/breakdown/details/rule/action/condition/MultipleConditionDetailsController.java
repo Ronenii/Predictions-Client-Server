@@ -20,7 +20,7 @@ public class MultipleConditionDetailsController {
     public void setComponentDet(DTOMultipleCondition multipleCondition){
         lblLogic.setText(multipleCondition.getLogic());
         lblSubConditionCount.setText(String.valueOf(multipleCondition.getSubConditionsCount()));
-        thenElseDetailsController.updateThenAndElse(multipleCondition);
+        thenElseDetailsController.updateThenAndElse(multipleCondition, null);
     }
 
 }

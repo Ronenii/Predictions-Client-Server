@@ -2,7 +2,7 @@ package gui.app.menu.result.tab.statistics;
 
 import server2client.simulation.genral.impl.objects.DTOEntity;
 import server2client.simulation.genral.impl.objects.DTOEntityInstance;
-import server2client.simulation.genral.impl.properties.property.api.DTOProperty;
+import server2client.simulation.genral.impl.properties.DTOProperty;
 import gui.app.menu.result.models.HistogramData;
 import gui.app.menu.result.tab.ResultTabComponentController;
 import javafx.fxml.FXML;

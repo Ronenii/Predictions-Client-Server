@@ -24,7 +24,7 @@ public class SingleConditionDetailsController {
         lblOperator.setText(singleCondition.getOperator());
         lblValue.setText(singleCondition.getValue());
        // lblProperty.setText(singleCondition.getProperty());
-        thenElseDetailsController.updateThenAndElse(singleCondition);
+        thenElseDetailsController.updateThenAndElse(null, singleCondition);
     }
 
 }

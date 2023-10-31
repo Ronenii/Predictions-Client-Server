@@ -11,7 +11,6 @@ import server2client.simulation.runtime.SimulationRunData;
 import gui.app.login.LoginComponentController;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import manager.exception.SimulationNotLoadedException;
 import client2server.simulation.control.bar.DTOSimulationControlBar;
 import client2server.simulation.execution.user.input.EntityPopulationUserInput;
 import client2server.simulation.execution.user.input.EnvPropertyUserInput;
@@ -41,12 +40,12 @@ public class UserServerAgent {
     /**
      * Gets the current simulation details from the engine and prints it.
      */
-    public void showCurrentSimulationDetails() throws SimulationNotLoadedException {
-        if (!engine.getIsSimulationLoaded()) {
-            throw new SimulationNotLoadedException("There is no simulation loaded in the system.");
-        }
-        //Console.showSimulationDetails(engine.getCurrentSimulationDetails());
-    }
+//    public void showCurrentSimulationDetails() throws SimulationNotLoadedException {
+//        if (!engine.getIsSimulationLoaded()) {
+//            throw new SimulationNotLoadedException("There is no simulation loaded in the system.");
+//        }
+//        //Console.showSimulationDetails(engine.getCurrentSimulationDetails());
+//    }
 
 //    /**
 //     * prompts the user to input a path to a simulation XML config file and loads it
@@ -165,7 +164,6 @@ public class UserServerAgent {
                 if (response.code() == 200) {
                     String previewDataInJson = response.body().string();
                     SimulationsPreviewData simulationsPreviewData = gson.fromJson(previewDataInJson, SimulationsPreviewData.class);
-                    String meow = "meow";
                     Platform.runLater(() -> simBreakdownMenuController.updateSimTreeView(simulationsPreviewData));
                 }
                 // If another error has occurred, show an alert and close the app.

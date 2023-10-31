@@ -1,14 +1,11 @@
 package server2client.simulation.genral.impl.properties.action.impl;
 
-import server2client.simulation.genral.impl.properties.action.api.DTOAction;
-
-public class DTOCalculation extends DTOAction {
+public class DTOCalculation {
     private final String arg1;
     private final String arg2;
     private final String calculationType;
 
-    public DTOCalculation(String type, String mainEntity, String secondaryEntity, String property, String arg1, String arg2, String calculationType) {
-        super(type, mainEntity, secondaryEntity, property);
+    public DTOCalculation(String arg1, String arg2, String calculationType) {
         this.arg1 = arg1;
         this.arg2 = arg2;
         this.calculationType = calculationType;

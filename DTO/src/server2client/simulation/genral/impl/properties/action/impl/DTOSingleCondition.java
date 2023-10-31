@@ -1,15 +1,12 @@
 package server2client.simulation.genral.impl.properties.action.impl;
 
-import server2client.simulation.genral.impl.properties.action.api.DTOAction;
-
-public class DTOSingleCondition extends DTOAction {
+public class DTOSingleCondition {
     private final int thenActionCount;
     private final int elseActionCount;
     private final String value;
     private final String operator;
 
-    public DTOSingleCondition(String type, String mainEntity, String secondaryEntity, String property, int thenActionCount, int elseActionCount, String value, String operator) {
-        super(type, mainEntity, secondaryEntity, property);
+    public DTOSingleCondition(int thenActionCount, int elseActionCount, String value, String operator) {
         this.thenActionCount = thenActionCount;
         this.elseActionCount = elseActionCount;
         this.value = value;
