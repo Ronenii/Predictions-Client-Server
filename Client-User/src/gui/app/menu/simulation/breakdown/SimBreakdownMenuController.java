@@ -42,10 +42,6 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     @FXML
     private DisplayComponentController displayComponentController;
     private TreeItem<String> simulationsItem;
-    private TreeItem<String> envVarsItem;
-    private TreeItem<String> entitiesItem;
-    private TreeItem<String> rulesItem;
-    private TreeItem<String> generalItem;
     private SimulationBreakdownRefresher simulationBreakdownRefresher;
     private Timer timer;
 
@@ -69,23 +65,30 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
      * Update the tree view items with the loaded XML file's data.
      */
     public void updateSimTreeView(SimulationsPreviewData simulationsPreviewData) {
-        TreeItem<String> envVarsItem, entitiesItem, rulesItem, generalItem;
+        for(PreviewData simPreviewData : simulationsPreviewData.getPreviewDataArray()) {
+            updateSimulationInTreeView(simPreviewData);
+        }
+    }
 
+    private void updateSimulationInTreeView(PreviewData simPreviewData) {
+        TreeItem<String> simulationItem, envVarsItem, entitiesItem, rulesItem, generalItem;
+
+        simulationItem = new TreeItem<>(simPreviewData.getSimulationName());
         envVarsItem = new TreeItem<>("Environment Variables");
         entitiesItem = new TreeItem<>("Entities");
         rulesItem = new TreeItem<>("Rules");
         generalItem = new TreeItem<>("General");
-        simulationsItem.getChildren().addAll(envVarsItem, entitiesItem, rulesItem, generalItem);
-
-        updateEnvVarsInTreeView(previewData.getEnvVariables());
-        updateEntitiesInTreeView(previewData.getEntities());
-        updateRulesInTreeView(previewData.getRules());
+        simulationsItem.getChildren().add(simulationItem);
+        simulationItem.getChildren().addAll(envVarsItem, entitiesItem, rulesItem, generalItem);
+        updateEnvVarsInTreeView(previewData.getEnvVariables(), envVarsItem);
+        updateEntitiesInTreeView(previewData.getEntities(), entitiesItem);
+        updateRulesInTreeView(previewData.getRules(), rulesItem);
     }
 
     /**
      * 'updateSimTreeView' helper - add the environment vars to the tree view.
      */
-    private void updateEnvVarsInTreeView(DTOEnvironmentVariable[] envVariables) {
+    private void updateEnvVarsInTreeView(DTOEnvironmentVariable[] envVariables, TreeItem<String> envVarsItem) {
         TreeItem<String> envVarItem;
 
         for(DTOEnvironmentVariable envVar : envVariables) {
@@ -97,7 +100,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     /**
      * 'updateSimTreeView' helper - add the entities to the tree view.
      */
-    private void updateEntitiesInTreeView(DTOEntity[] entities) {
+    private void updateEntitiesInTreeView(DTOEntity[] entities, TreeItem<String> entitiesItem) {
         TreeItem<String> entityItem;
 
         for (DTOEntity entity : entities) {
@@ -122,7 +125,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     /**
      * 'updateSimTreeView' helper - add the rules to the tree view.
      */
-    private void updateRulesInTreeView(DTORule[] rules) {
+    private void updateRulesInTreeView(DTORule[] rules, TreeItem<String> rulesItem) {
         TreeItem<String> ruleItem;
 
         for (DTORule rule : rules) {
@@ -250,14 +253,8 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     }
 
     private void clearTreeView() {
-        if(!envVarsItem.isLeaf()) {
-            envVarsItem.getChildren().clear();
-        }
-        if(!entitiesItem.isLeaf()) {
-            entitiesItem.getChildren().clear();
-        }
-        if(!rulesItem.isLeaf()) {
-            rulesItem.getChildren().clear();
+        if(!simulationsItem.isLeaf()) {
+            simulationsItem.getChildren().clear();
         }
     }
 
