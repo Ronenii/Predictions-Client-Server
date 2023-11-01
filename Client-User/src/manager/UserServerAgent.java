@@ -163,6 +163,7 @@ public class UserServerAgent {
                 // If connection is successful, open the admin client application.
                 if (response.code() == 200) {
                     String previewDataInJson = response.body().string();
+                    // if the servlet returns empty string, the simulation breakdown is up-to-date.
                     if(!previewDataInJson.equals("")){
                         SimulationsPreviewData simulationsPreviewData = gson.fromJson(previewDataInJson, SimulationsPreviewData.class);
                         Platform.runLater(() -> simBreakdownMenuController.updateSimTreeView(simulationsPreviewData));
