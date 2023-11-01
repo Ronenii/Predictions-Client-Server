@@ -65,6 +65,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
      * Update the tree view items with the loaded XML file's data.
      */
     public void updateSimTreeView(SimulationsPreviewData simulationsPreviewData) {
+        clearTreeView();
         for(PreviewData simPreviewData : simulationsPreviewData.getPreviewDataArray()) {
             updateSimulationInTreeView(simPreviewData);
         }
