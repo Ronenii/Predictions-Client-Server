@@ -41,7 +41,7 @@ import java.util.*;
 public class DTOCreator {
     private static int actionNumber = 1;
 
-    public PreviewData createSimulationPreviewDataObject(Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, Grid grid, int threadCount) {
+    public PreviewData createSimulationPreviewDataObject(String simName, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, Grid grid, int threadCount) {
         List<DTOEntity> entitiesList;
         List<DTORule> rulesList;
         List<DTOEndingCondition> endingConditionsList;
@@ -53,7 +53,7 @@ public class DTOCreator {
         rulesList = getDTORulesList(rules);
         endingConditionsList = getDTOEndingConditionsList(endingConditions);
         gridAndThread = new DTOGridAndThread(grid.getRows(),grid.getColumns(),threadCount);
-        return new PreviewData(gridAndThread, envVariables.toArray(new DTOEnvironmentVariable[0]), entitiesList.toArray(new DTOEntity[0]), rulesList.toArray(new DTORule[0]), endingConditionsList.toArray(new DTOEndingCondition[0]));
+        return new PreviewData(simName, gridAndThread, envVariables.toArray(new DTOEnvironmentVariable[0]), entitiesList.toArray(new DTOEntity[0]), rulesList.toArray(new DTORule[0]), endingConditionsList.toArray(new DTOEndingCondition[0]));
     }
 
     public List<DTOEntityPopulation> getDTOEntityPopulationList(Map<String, Entity> entities) {

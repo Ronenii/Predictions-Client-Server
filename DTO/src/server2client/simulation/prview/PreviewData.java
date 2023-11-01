@@ -12,18 +12,24 @@ import java.util.List;
  * A class that holds the simulation's data required to present in menu option 2.
  */
 public class PreviewData{
+    private final String simulationName;
     private final DTOGridAndThread gridAndThread;
     private final DTOEnvironmentVariable[] envVariables;
     private final DTOEntity[] entities;
     private final DTORule[] rules;
     private final DTOEndingCondition[] endingConditions;
 
-    public PreviewData(DTOGridAndThread gridAndThread, DTOEnvironmentVariable[] envVariables, DTOEntity[] entities, DTORule[] rules, DTOEndingCondition[] endingConditions) {
+    public PreviewData(String simulationName, DTOGridAndThread gridAndThread, DTOEnvironmentVariable[] envVariables, DTOEntity[] entities, DTORule[] rules, DTOEndingCondition[] endingConditions) {
+        this.simulationName = simulationName;
         this.gridAndThread = gridAndThread;
         this.envVariables = envVariables;
         this.entities = entities;
         this.rules = rules;
         this.endingConditions = endingConditions;
+    }
+
+    public String getSimulationName() {
+        return simulationName;
     }
 
     public DTOGridAndThread getGridAndThread() {

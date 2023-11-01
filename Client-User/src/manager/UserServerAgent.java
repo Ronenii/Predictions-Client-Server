@@ -163,8 +163,10 @@ public class UserServerAgent {
                 // If connection is successful, open the admin client application.
                 if (response.code() == 200) {
                     String previewDataInJson = response.body().string();
-                    SimulationsPreviewData simulationsPreviewData = gson.fromJson(previewDataInJson, SimulationsPreviewData.class);
-                    Platform.runLater(() -> simBreakdownMenuController.updateSimTreeView(simulationsPreviewData));
+                    if(!previewDataInJson.equals("")){
+                        SimulationsPreviewData simulationsPreviewData = gson.fromJson(previewDataInJson, SimulationsPreviewData.class);
+                        Platform.runLater(() -> simBreakdownMenuController.updateSimTreeView(simulationsPreviewData));
+                    }
                 }
                 // If another error has occurred, show an alert and close the app.
                 else {
