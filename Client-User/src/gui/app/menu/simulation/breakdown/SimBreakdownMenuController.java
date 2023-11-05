@@ -70,6 +70,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
             updateSimulationInTreeView(simPreviewData);
         }
 
+        showMessageInNotificationBar("New simulations have been loaded");
         this.updatedSimulationsPreviewData = simulationsPreviewData;
     }
 
