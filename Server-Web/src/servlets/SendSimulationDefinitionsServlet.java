@@ -3,7 +3,6 @@ package servlets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import constant.Constants;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +11,6 @@ import manager.SimulationManager;
 import server2client.simulation.prview.SimulationsPreviewData;
 import utils.CookiesUtils;
 import utils.ServletUtils;
-import utils.SessionUtils;
 
 import java.io.IOException;
 
@@ -37,7 +35,13 @@ public class SendSimulationDefinitionsServlet extends HttpServlet {
             // Convert the preview data to a json and write it to the response.
             SimulationsPreviewData simulationsPreviewData = simulationManager.getCurrentSimulationsDetails();
             String responseJsonContent = gson.toJson(simulationsPreviewData);
-            CookiesUtils.saveValueOnCookie(resp, String.valueOf(simulationManager.getSimulationBreakdownVersion()), Constants.SIMULATION_BREAKDOWN_VERSION);
+            // if the sim breakdown version cookie does not exist, create a new one, otherwise, update the value of the exists cookie.
+            if(cookieSavedVersion == null){
+                CookiesUtils.createAndSaveNewCookie(resp, String.valueOf(simulationManager.getSimulationBreakdownVersion()), Constants.SIMULATION_BREAKDOWN_VERSION);
+
+            } else {
+                CookiesUtils.updateValueOnCookie(req, resp, String.valueOf(simulationManager.getSimulationBreakdownVersion()), Constants.SIMULATION_BREAKDOWN_VERSION);
+            }
 
             resp.getOutputStream().println(responseJsonContent);
         }

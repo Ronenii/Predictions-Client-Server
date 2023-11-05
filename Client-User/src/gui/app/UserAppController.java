@@ -66,6 +66,7 @@ public class UserAppController implements HasFileLoadedListeners, UserEngineComm
 
     public void setUsername(String username) {
         usernameLabel.setText(String.format("Hello %s",username));
+        showMessageInNotificationBar(String.format("%s has connected successfully", username));
     }
 
     /**

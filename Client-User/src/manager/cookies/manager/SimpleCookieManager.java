@@ -31,10 +31,9 @@ public class SimpleCookieManager implements CookieJar {
     public void saveFromResponse(@NotNull HttpUrl httpUrl, @NotNull List<Cookie> responseCookies) {
         String host = httpUrl.host();
         synchronized (this) {
+            // "computeIfAbsent" - if the cookie map does not exist, create a new one).
             Map<String, Cookie> cookiesMap = cookies.computeIfAbsent(host, key -> new HashMap<>());
             responseCookies
-                    .stream()
-                    .filter(cookie -> !cookiesMap.containsKey(cookie.name()))  // I have the freedom to choose not to accept changes in existing cookie
                     .forEach(cookie -> {
                         System.out.println(CACHE_MANAGER_PREFIX + "Storing cookie [" + cookie.name() + "] --> [" + cookie.value() + "]");
                         cookiesMap.put(cookie.name(), cookie);
