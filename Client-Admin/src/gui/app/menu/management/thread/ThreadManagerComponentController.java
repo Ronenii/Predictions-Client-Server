@@ -8,9 +8,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import manager.AdminServerAgent;
 
 public class ThreadManagerComponentController implements Controller {
-    private Controller mainController;
+    private ManagementComponentController mainController;
 
     @FXML
     private TextField textFieldThreadCount;
@@ -35,6 +36,15 @@ public class ThreadManagerComponentController implements Controller {
 
     @FXML
     void onButtonSetThreadCountClicked(ActionEvent event) {
+        try {
+            int threadCount = Integer.parseInt(textFieldThreadCount.getText());
+            String simName = mainController.getSelectedSimulationName();
+
+            AdminServerAgent.sendSimulationThreadCount(this, simName, threadCount);
+        } catch (NumberFormatException e) {
+            showMessageInNotificationBar("The thread count needs to be a number!");
+        }
+
 
     }
 

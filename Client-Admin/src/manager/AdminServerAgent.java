@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.sun.deploy.net.HttpResponse;
 import gui.app.api.Controller;
 import gui.app.menu.management.simulation.SimulationManagerComponentController;
+import gui.app.menu.management.thread.ThreadManagerComponentController;
 import javafx.application.Platform;
 import manager.constant.Constants;
 import okhttp3.*;
@@ -191,6 +192,37 @@ public class AdminServerAgent {
                 // If another error has occurred, show an alert and close the app.
                 else {
                     Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
+    }
+
+    public static void sendSimulationThreadCount(Controller controller, String simName, int threadCount) {
+        String finalUrl = HttpUrl
+                .parse(Constants.ADMIN_THREAD_COUNT)
+                .newBuilder()
+                .addQueryParameter("simName", simName)
+                .addQueryParameter("threadCount", String.valueOf(threadCount))
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendPostRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                // If connection is successful, open the admin client application.
+                if (response.code() == 200) {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(String.format("'%s' thread count updated", simName)));
+                }
+                // If another error has occurred, show an alert and close the app.
+                else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
                 }
             }
         });

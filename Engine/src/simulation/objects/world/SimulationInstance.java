@@ -147,6 +147,10 @@ public class SimulationInstance implements Serializable, Runnable {
         return userInstructions;
     }
 
+    public void setThreadCount(int threadCount) {
+        this.threadCount = threadCount;
+    }
+
     @Override
     public String toString() {
         StringBuilder worldToString = new StringBuilder("World{" +

@@ -87,9 +87,13 @@ public class SimulationManagerComponentController implements Controller {
         loadedSimulationsNamesMap.put(simName, 0);
     }
 
+    public String getSelectedSimulationName() {
+        return listViewSimulations.getSelectionModel().getSelectedItem();
+    }
+
     @FXML
     void onSimulationSelected(ContextMenuEvent event) {
-
+        //Todo: this method update the simulation queue manager.
     }
 
     @Override

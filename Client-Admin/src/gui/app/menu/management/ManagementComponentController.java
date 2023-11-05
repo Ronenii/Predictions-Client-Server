@@ -33,6 +33,10 @@ public class ManagementComponentController implements Controller {
         }
     }
 
+    public String getSelectedSimulationName() {
+        return simulationManagerComponentController.getSelectedSimulationName();
+    }
+
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);

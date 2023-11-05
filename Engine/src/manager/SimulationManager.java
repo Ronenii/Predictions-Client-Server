@@ -84,6 +84,13 @@ public class SimulationManager implements EngineInterface {
         return new SimulationsPreviewData(previewDataArray);
     }
 
+    public void updateSimulationThreadCount(String simName, int threadCount) {
+        SimulationDefinition simulation = simulationDefinitions.get(simName);
+
+        simulation.updateSimulationThreadCount(threadCount);
+        simulationBreakdownVersion++;
+    }
+
     private PreviewData getDefinitionPreviewData(SimulationInstance simulationDefinition) {
         DTOCreator dtoCreator = new DTOCreator();
         return dtoCreator.createSimulationPreviewDataObject(simulationDefinition.getSimulationName(), simulationDefinition.getEnvironmentProperties(), simulationDefinition.getEntities(), simulationDefinition.getRules(), simulationDefinition.getEndingConditions(), simulationDefinition.getGrid(), simulationDefinition.getThreadCount());
