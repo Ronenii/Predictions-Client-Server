@@ -12,8 +12,12 @@ import javafx.event.ActionEvent;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.stage.FileChooser;
 import manager.AdminServerAgent;
+import server2client.simulation.prview.SimulationsPreviewData;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SimulationManagerComponentController implements Controller {
 
@@ -26,7 +30,8 @@ public class SimulationManagerComponentController implements Controller {
     private Button buttonLoadFile;
 
     @FXML
-    private ListView<LoadedSimulationData> listViewSimulations;
+    private ListView<String> listViewSimulations;
+    private Map<String,Integer> loadedSimulationsNamesMap; // The purpose of 'loadedSimulationsNamesMap' is to hold the simulations names, the integer value is irrelevant.
 
     private String currentLoadedFilePath;
 
@@ -37,6 +42,7 @@ public class SimulationManagerComponentController implements Controller {
     @FXML
     private void initialize() {
         currentLoadedFilePath = "";
+        this.loadedSimulationsNamesMap = new HashMap<>();
     }
 
     @FXML
@@ -54,6 +60,7 @@ public class SimulationManagerComponentController implements Controller {
 
         if (selectedFile != null) {
             AdminServerAgent.uploadFile(selectedFile, this);
+            textFieldPath.setText(selectedFile.getPath());
         }
     }
 
@@ -66,9 +73,27 @@ public class SimulationManagerComponentController implements Controller {
         }
     }
 
+    public void loadSimulationsListView(SimulationsPreviewData simulationsPreviewData) {
+        Arrays.stream(simulationsPreviewData.getPreviewDataArray())
+                .filter(previewData -> !loadedSimulationsNamesMap.containsKey(previewData.getSimulationName()))
+                .forEach(previewData -> {
+                    updateSimulationsListView(previewData.getSimulationName());
+                });
+    }
+
+    private void updateSimulationsListView(String simName) {
+        listViewSimulations.getItems().add(simName);
+        // The purpose of 'loadedSimulationsNamesMap' is to hold the simulations names, the integer value is irrelevant.
+        loadedSimulationsNamesMap.put(simName, 0);
+    }
+
+    public String getSelectedSimulationName() {
+        return listViewSimulations.getSelectionModel().getSelectedItem();
+    }
+
     @FXML
     void onSimulationSelected(ContextMenuEvent event) {
-
+        //Todo: this method update the simulation queue manager.
     }
 
     @Override
