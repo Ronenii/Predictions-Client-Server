@@ -1,5 +1,7 @@
 package manager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.deploy.net.HttpResponse;
 import gui.app.api.Controller;
 import gui.app.menu.management.simulation.SimulationManagerComponentController;
@@ -7,6 +9,7 @@ import javafx.application.Platform;
 import manager.constant.Constants;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+import server2client.simulation.prview.SimulationsPreviewData;
 
 import java.io.File;
 import java.io.IOException;
@@ -143,8 +146,7 @@ public class AdminServerAgent {
                     System.out.println(fileNameString + "uploaded successfully.");
                     Platform.runLater(() -> {
                         simulationManagerComponentController.showMessageInNotificationBar(fileNameString + "successfully uploaded to server.");
-
-                        // TODO: Pull all loaded files from the servers and update the list view in "simulationManagerComponentController".
+                        updateSimBreakdownList(simulationManagerComponentController);
                     });
                 }
                 // If the configuration file is invalid (errors with trying to load the file as a simulation).
@@ -154,6 +156,41 @@ public class AdminServerAgent {
                 } else {
                     System.out.println(fileNameString + "encountered a problem while uploading a file.");
                     Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar("Error: a problem was encountered while trying to upload a file to the server."));
+                }
+            }
+        });
+    }
+
+    public static void updateSimBreakdownList(SimulationManagerComponentController simulationManagerComponentController) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.SIMULATIONS_DETAILS_CONTEXT_PATH)
+                .newBuilder()
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                // If connection is successful, open the admin client application.
+                if (response.code() == 200) {
+                    String previewDataInJson = response.body().string();
+                    // if the servlet returns empty string, the simulation breakdown is up-to-date.
+                    if(!previewDataInJson.equals("")){
+                        SimulationsPreviewData simulationsPreviewData = gson.fromJson(previewDataInJson, SimulationsPreviewData.class);
+                        Platform.runLater(() -> simulationManagerComponentController.loadSimulationsListView(simulationsPreviewData));
+                    }
+                }
+                // If another error has occurred, show an alert and close the app.
+                else {
+                    Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar("An error occurred"));
                 }
             }
         });
