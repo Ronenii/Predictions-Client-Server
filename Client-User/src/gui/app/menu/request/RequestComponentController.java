@@ -5,6 +5,7 @@ import gui.app.menu.request.create.request.NewRequestComponentController;
 import gui.app.menu.request.table.RequestTableComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
+import server2client.simulation.prview.SimulationsPreviewData;
 
 public class RequestComponentController {
     private MenuComponentController mainController;
@@ -24,5 +25,9 @@ public class RequestComponentController {
 
     public void setMainController(MenuComponentController mainController) {
         this.mainController = mainController;
+    }
+
+    public void updateNewRequestComponent(SimulationsPreviewData simulationsPreviewData) {
+        newRequestComponentController.updateNewRequestComponent(simulationsPreviewData);
     }
 }

@@ -7,6 +7,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import server2client.simulation.prview.PreviewData;
+import server2client.simulation.prview.SimulationsPreviewData;
+
+import java.util.Arrays;
 
 public class NewRequestComponentController {
     private RequestComponentController mainController;
@@ -32,7 +36,7 @@ public class NewRequestComponentController {
     private CheckBox userTerminationCB;
 
     @FXML
-    private ComboBox<?> simulationNameCB;
+    private ComboBox<String> simulationNameCB;
 
     public void setMainController(RequestComponentController requestComponentController) {
         this.mainController = requestComponentController;
@@ -46,6 +50,31 @@ public class NewRequestComponentController {
     @FXML
     void submitButtonActionListener(ActionEvent event) {
 
+    }
+
+    @FXML
+    void ticksTerminationCBActionListener(ActionEvent event) {
+        if(ticksTerminationCB.isSelected()){
+            ticksTerminationTF.setDisable(false);
+        } else {
+            ticksTerminationTF.setDisable(true);
+        }
+    }
+
+
+    @FXML
+    void secondsTerminationCBActionListener(ActionEvent event) {
+        if(secondsTerminationCB.isSelected()){
+            secondsTerminationTF.setDisable(false);
+        } else {
+            secondsTerminationTF.setDisable(true);
+        }
+    }
+
+    public void updateNewRequestComponent(SimulationsPreviewData simulationsPreviewData) {
+        for(PreviewData previewData : simulationsPreviewData.getPreviewDataArray()) {
+            simulationNameCB.getItems().add(previewData.getSimulationName());
+        }
     }
 
 }

@@ -21,7 +21,7 @@
    <children>
       <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <fx:include source="create/request/NewRequestComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <fx:include fx:id="newRequestComponent" source="create/request/NewRequestComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children></AnchorPane>
       <AnchorPane maxHeight="500.0" maxWidth="600.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
          <children>
