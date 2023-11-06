@@ -1,5 +1,6 @@
 package gui.app.menu.request;
 
+import gui.api.Controller;
 import gui.app.menu.MenuComponentController;
 import gui.app.menu.request.create.request.NewRequestComponentController;
 import gui.app.menu.request.table.RequestTableComponentController;
@@ -7,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import server2client.simulation.prview.SimulationsPreviewData;
 
-public class RequestComponentController {
+public class RequestComponentController implements Controller {
     private MenuComponentController mainController;
 
     @FXML private GridPane newRequestComponent;
@@ -29,5 +30,10 @@ public class RequestComponentController {
 
     public void updateNewRequestComponent(SimulationsPreviewData simulationsPreviewData) {
         newRequestComponentController.updateNewRequestComponent(simulationsPreviewData);
+    }
+
+    @Override
+    public void showMessageInNotificationBar(String message) {
+        mainController.showMessageInNotificationBar(message);
     }
 }
