@@ -1,5 +1,8 @@
 package manager;
 
+import client2server.simulation.request.DTORequest;
+import manager.requests.RequestsManager;
+import manager.requests.data.RequestData;
 import server2client.simulation.execution.SetResponse;
 import server2client.simulation.execution.StartResponse;
 import server2client.simulation.load.result.DTOLoadResult;
@@ -49,6 +52,7 @@ public class SimulationManager implements EngineInterface {
     private boolean isSimulationLoaded;
     private boolean isFirstSimulationLoaded;
     private ExecutionManager executionManager = null;
+    private RequestsManager requestsManager;
     private int simulationBreakdownVersion;
 
     public SimulationManager() {
@@ -58,6 +62,7 @@ public class SimulationManager implements EngineInterface {
         isSimulationLoaded = false;
         keysToSerialize = new HashSet<>();
         isFirstSimulationLoaded = true;
+        requestsManager = new RequestsManager();
         simulationBreakdownVersion = 0;
     }
 
@@ -390,5 +395,10 @@ public class SimulationManager implements EngineInterface {
 
     public int getSimulationBreakdownVersion() {
         return simulationBreakdownVersion;
+    }
+
+    public int addNewRequest(DTORequest dtoRequest, String username) {
+        return requestsManager.addNewRequest(new RequestData(username, dtoRequest.getSimulationName(), dtoRequest.getSimulationTokens(), requestsManager.convertDTOEndingConditions(dtoRequest.getEndingConditions())));
+
     }
 }
