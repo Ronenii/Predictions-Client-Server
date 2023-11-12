@@ -21,7 +21,9 @@ public class Constants {
 
     public final static String CLIENT_CONNECT_PATH = CLIENT_CONTEXT_PATH + "/connect";
 
-    public final static String SIMULATIONS_DETAILS_CONTEXT_PATH = FULL_SERVER_PATH + "/get_simulation_definitions";
+    public final static String SIMULATIONS_DETAILS_PATH = FULL_SERVER_PATH + "/get_simulation_definitions";
+
+    public final static String SIMULATION_REQUEST_PATH = CLIENT_CONTEXT_PATH + "/request";
 
 
 }

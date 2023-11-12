@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import manager.UserServerAgent;
 import server2client.simulation.genral.impl.properties.DTOEndingCondition;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
@@ -73,8 +74,7 @@ public class NewRequestComponentController implements Controller {
     private void createRequestDTOAndSendToTheServer() {
         // TODO: this method will send the request. Receive the requestID, update this ID, and the Request table.
         DTORequest dtoRequest = createDTORequest();
-
-
+        UserServerAgent.sendSimulationRequest(this, dtoRequest);
     }
 
     private DTORequest createDTORequest() {
@@ -128,6 +128,10 @@ public class NewRequestComponentController implements Controller {
         }
 
         return ret;
+    }
+
+    public void addNewRequestData(int requestId, DTORequest dtoRequest) {
+        mainController.addNewRequestData(requestId, dtoRequest);
     }
 
     @FXML
