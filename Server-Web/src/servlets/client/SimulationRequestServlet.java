@@ -37,7 +37,8 @@ public class SimulationRequestServlet extends HttpServlet {
         DTORequest dtoRequest = gson.fromJson(req.getReader(), DTORequest.class);
         synchronized (this){
             int reqId = simulationManager.addNewRequest(dtoRequest, usernameFromSession);
-            resp.getOutputStream().println(reqId);
+            resp.setContentType("text/plain");
+            resp.getWriter().print(reqId);
         }
 
 

@@ -201,10 +201,11 @@ public class UserServerAgent {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.code() == 200) {
-                    int requestId = Integer.parseInt(response.body().string());
+                    String meow = response.body().string();
+                    int requestId = Integer.parseInt(meow);
                     Platform.runLater(() -> {
                         controller.addNewRequestData(requestId, dtoRequest);
-                        controller.showMessageInNotificationBar("Request sent successfully.");
+                        controller.showMessageInNotificationBar("New request has been sent!");
                     });
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));

@@ -67,7 +67,6 @@ public class NewRequestComponentController implements Controller {
             showMessageInNotificationBar("Please enter a number for the ticks/seconds ending conditions");
         } else {
             createRequestDTOAndSendToTheServer();
-            showMessageInNotificationBar("New request has been sent!");
         }
     }
 
