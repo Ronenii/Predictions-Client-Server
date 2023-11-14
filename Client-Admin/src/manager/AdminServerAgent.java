@@ -12,6 +12,7 @@ import manager.constant.Constants;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import server2client.simulation.prview.SimulationsPreviewData;
+import server2client.simulation.request.DTORequests;
 
 import java.io.File;
 import java.io.IOException;
@@ -229,8 +230,36 @@ public class AdminServerAgent {
         });
     }
 
-    public static void updateRequestsTable(AllocationComponentController allocationComponentController) {
+    public static void updateRequestsTable(AllocationComponentController controller) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.ADMIN_THREAD_COUNT)
+                .newBuilder()
+                .build()
+                .toString();
 
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() == 200) {
+                    String dtoRequestsInJson = response.body().string();
+                    // check if the string json is empty.
+                    if(!dtoRequestsInJson.equals("")) {
+                        DTORequests dtoRequests = gson.fromJson(dtoRequestsInJson, DTORequests.class);
+                        // Todo: Platform run later for the controller with the DTO object.
+                    }
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
     }
 
 }
