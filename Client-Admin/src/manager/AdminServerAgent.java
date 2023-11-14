@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.deploy.net.HttpResponse;
 import gui.app.api.Controller;
+import gui.app.menu.allocation.AllocationComponentController;
 import gui.app.menu.management.simulation.SimulationManagerComponentController;
 import gui.app.menu.management.thread.ThreadManagerComponentController;
 import javafx.application.Platform;
@@ -226,6 +227,10 @@ public class AdminServerAgent {
                 }
             }
         });
+    }
+
+    public static void updateRequestsTable(AllocationComponentController allocationComponentController) {
+
     }
 
 }
