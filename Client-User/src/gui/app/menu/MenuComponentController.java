@@ -2,6 +2,7 @@ package gui.app.menu;
 
 import gui.api.Controller;
 import server2client.simulation.prview.PreviewData;
+import server2client.simulation.prview.SimulationsPreviewData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.api.BarNotifier;
 import gui.api.UserEngineCommunicator;
@@ -85,5 +86,9 @@ public class MenuComponentController implements HasFileLoadedListeners, UserEngi
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);
+    }
+
+    public void updateNewRequestComponent(SimulationsPreviewData simulationsPreviewData) {
+        requestComponentController.updateNewRequestComponent(simulationsPreviewData);
     }
 }
