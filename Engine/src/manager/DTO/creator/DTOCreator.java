@@ -294,7 +294,7 @@ public class DTOCreator {
 
         for (RequestData requestData : requestDataMap.values()) {
             DTOEndingCondition[] endingConditions = getDTOEndingConditionsListFromList(requestData.getEndingConditions()).toArray(new DTOEndingCondition[0]);
-            DTOSingleRequest tempSingleRequest = new DTOSingleRequest(requestData.getSimulationName(), requestData.getUsername(), requestData.getTokens(), endingConditions);
+            DTOSingleRequest tempSingleRequest = new DTOSingleRequest(requestData.requestId, requestData.getSimulationName(), requestData.getUsername(), requestData.getTokens(), endingConditions);
 
             singleRequestList.add(tempSingleRequest);
         }

@@ -233,7 +233,7 @@ public class AdminServerAgent {
     public static void updateRequestsTable(AllocationComponentController controller) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String finalUrl = HttpUrl
-                .parse(Constants.ADMIN_THREAD_COUNT)
+                .parse(Constants.ADMIN_REQUEST_REFRESHER)
                 .newBuilder()
                 .build()
                 .toString();
@@ -253,7 +253,7 @@ public class AdminServerAgent {
                     // check if the string json is empty.
                     if(!dtoRequestsInJson.equals("")) {
                         DTORequests dtoRequests = gson.fromJson(dtoRequestsInJson, DTORequests.class);
-                        // Todo: Platform run later for the controller with the DTO object.
+                        Platform.runLater(() -> controller.updateAllocationTableView(dtoRequests));
                     }
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
