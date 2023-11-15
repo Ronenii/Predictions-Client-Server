@@ -404,7 +404,6 @@ public class SimulationManager implements EngineInterface {
     }
 
     public DTORequests getDTORequests() {
-        // TODO: implement this.
-        return null;
+        return requestsManager.getDTORequests();
     }
 }

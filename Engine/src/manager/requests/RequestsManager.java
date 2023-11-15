@@ -1,7 +1,9 @@
 package manager.requests;
 
+import manager.DTO.creator.DTOCreator;
 import manager.requests.data.RequestData;
 import server2client.simulation.genral.impl.properties.DTOEndingCondition;
+import server2client.simulation.request.DTORequests;
 import simulation.properties.ending.conditions.EndingCondition;
 import simulation.properties.ending.conditions.EndingConditionType;
 
@@ -43,5 +45,15 @@ public class RequestsManager {
         }
 
         return ret;
+    }
+
+    public DTORequests getDTORequests() {
+        DTOCreator dtoCreator = new DTOCreator();
+
+       if (requestDataMap.isEmpty()) {
+           return null;
+       } else {
+           return dtoCreator.createDTORequests(requestDataMap);
+       }
     }
 }
