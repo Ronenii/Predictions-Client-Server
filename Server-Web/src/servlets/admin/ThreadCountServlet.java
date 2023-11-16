@@ -17,9 +17,8 @@ public class ThreadCountServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         SimulationManager manager = ServletUtils.getSimulationManager(getServletContext());
-        String simName = req.getParameter(Constants.SIMULATION_NAME);
         int threadCount = Integer.parseInt(req.getParameter(Constants.THREAD_COUNT));
 
-        manager.updateSimulationThreadCount(simName, threadCount);
+        manager.updateThreadCount(threadCount);
     }
 }

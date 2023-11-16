@@ -14,8 +14,6 @@ import server2client.simulation.runtime.SimulationRunData;
 import server2client.simulation.runtime.generator.IdGenerator;
 import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import server2client.simulation.genral.impl.properties.StartData;
-import javafx.application.Platform;
-import jaxb.event.FileLoadedEvent;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import manager.execution.ExecutionManager;
@@ -90,11 +88,12 @@ public class SimulationManager implements EngineInterface {
         return new SimulationsPreviewData(previewDataArray);
     }
 
-    public void updateSimulationThreadCount(String simName, int threadCount) {
-        SimulationDefinition simulation = simulationDefinitions.get(simName);
-
-        simulation.updateSimulationThreadCount(threadCount);
-        simulationBreakdownVersion++;
+    public void updateThreadCount(int threadCount) {
+        if(executionManager == null) {
+            executionManager = new ExecutionManager(threadCount);
+        } else {
+            executionManager.shutdownPreviousThreadPoolAndSetNewThreadPool(threadCount);
+        }
     }
 
     private PreviewData getDefinitionPreviewData(SimulationInstance simulationDefinition) {

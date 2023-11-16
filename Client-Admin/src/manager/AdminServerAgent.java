@@ -199,11 +199,10 @@ public class AdminServerAgent {
         });
     }
 
-    public static void sendSimulationThreadCount(Controller controller, String simName, int threadCount) {
+    public static void sendSimulationThreadCount(Controller controller, int threadCount) {
         String finalUrl = HttpUrl
                 .parse(Constants.ADMIN_THREAD_COUNT)
                 .newBuilder()
-                .addQueryParameter("simName", simName)
                 .addQueryParameter("threadCount", String.valueOf(threadCount))
                 .build()
                 .toString();
@@ -220,7 +219,7 @@ public class AdminServerAgent {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 // If connection is successful, open the admin client application.
                 if (response.code() == 200) {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar(String.format("'%s' thread count updated", simName)));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(String.format("Thread pool count updated to %d", threadCount)));
                 }
                 // If another error has occurred, show an alert and close the app.
                 else {
