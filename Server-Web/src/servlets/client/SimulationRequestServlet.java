@@ -24,17 +24,8 @@ public class SimulationRequestServlet extends HttpServlet {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         SimulationManager simulationManager = ServletUtils.getSimulationManager(getServletContext());
         String usernameFromSession = SessionUtils.getUsername(req);
-//        StringBuilder jsonBuffer = new StringBuilder();
-//        BufferedReader reader = req.getReader();
-//        String line;
-//
-//        while ((line = reader.readLine()) != null) {
-//            jsonBuffer.append(line);
-//        }
-//
-//        String jsonData = jsonBuffer.toString();
-
         DTORequest dtoRequest = gson.fromJson(req.getReader(), DTORequest.class);
+
         synchronized (this){
             int reqId = simulationManager.addNewRequest(dtoRequest, usernameFromSession);
             resp.setContentType("text/plain");

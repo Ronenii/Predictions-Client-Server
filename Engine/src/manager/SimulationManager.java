@@ -8,6 +8,7 @@ import server2client.simulation.execution.StartResponse;
 import server2client.simulation.load.result.DTOLoadResult;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
+import server2client.simulation.request.DTORequests;
 import server2client.simulation.runtime.ResultData;
 import server2client.simulation.runtime.SimulationRunData;
 import server2client.simulation.runtime.generator.IdGenerator;
@@ -400,5 +401,9 @@ public class SimulationManager implements EngineInterface {
     public int addNewRequest(DTORequest dtoRequest, String username) {
         return requestsManager.addNewRequest(new RequestData(username, dtoRequest.getSimulationName(), dtoRequest.getSimulationTokens(), requestsManager.convertDTOEndingConditions(dtoRequest.getEndingConditions())));
 
+    }
+
+    public DTORequests getDTORequests() {
+        return requestsManager.getDTORequests();
     }
 }

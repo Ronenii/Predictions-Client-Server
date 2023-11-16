@@ -61,7 +61,6 @@ public class RequestTableComponentController implements Controller {
     public void addNewRequestData(int requestId, DTORequest dtoRequest) {
         RequestData newRequestData = new RequestData(requestId, dtoRequest);
         requestDataMap.put(requestId, newRequestData);
-        //Todo : add the request to the table itself.
         requestsTV.getItems().add(newRequestData);
     }
 

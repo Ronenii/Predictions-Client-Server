@@ -1,5 +1,6 @@
 package manager.DTO.creator;
 
+import manager.requests.data.RequestData;
 import server2client.simulation.genral.impl.objects.DTOEntity;
 import server2client.simulation.genral.impl.objects.DTOEntityInstance;
 import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
@@ -12,6 +13,8 @@ import server2client.simulation.genral.impl.properties.action.impl.*;
 import server2client.simulation.genral.impl.properties.DTOProperty;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
+import server2client.simulation.request.DTORequests;
+import server2client.simulation.request.DTOSingleRequest;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
@@ -51,7 +54,7 @@ public class DTOCreator {
         envVariables = getDTOEnvironmentVariableList(environmentProperties);
         entitiesList = getDTOEntityList(entities);
         rulesList = getDTORulesList(rules);
-        endingConditionsList = getDTOEndingConditionsList(endingConditions);
+        endingConditionsList = getDTOEndingConditionsListFromMap(endingConditions);
         gridAndThread = new DTOGridAndThread(grid.getRows(),grid.getColumns(),threadCount);
         return new PreviewData(simName, gridAndThread, envVariables.toArray(new DTOEnvironmentVariable[0]), entitiesList.toArray(new DTOEntity[0]), rulesList.toArray(new DTORule[0]), endingConditionsList.toArray(new DTOEndingCondition[0]));
     }
@@ -261,7 +264,7 @@ public class DTOCreator {
         return ret;
     }
 
-    private List<DTOEndingCondition> getDTOEndingConditionsList(Map<EndingConditionType, EndingCondition> endingConditions) {
+    private List<DTOEndingCondition> getDTOEndingConditionsListFromMap(Map<EndingConditionType, EndingCondition> endingConditions) {
         List<DTOEndingCondition> endingConditionsList = new ArrayList<>();
 
         if(endingConditions != null){
@@ -272,7 +275,30 @@ public class DTOCreator {
         return endingConditionsList;
     }
 
+    private List<DTOEndingCondition> getDTOEndingConditionsListFromList(List<EndingCondition> endingConditions) {
+        List<DTOEndingCondition> endingConditionsList = new ArrayList<>();
+
+        if(endingConditions != null){
+            endingConditions.forEach((value) -> endingConditionsList.add(getDTOEndingCondition(value)));
+        }
+
+        return endingConditionsList;
+    }
+
     private DTOEndingCondition getDTOEndingCondition(EndingCondition endingCondition) {
         return new DTOEndingCondition(endingCondition.getType().toString(), endingCondition.getCount());
+    }
+
+    public DTORequests createDTORequests(Map<Integer, RequestData> requestDataMap) {
+        List<DTOSingleRequest> singleRequestList = new ArrayList<>();
+
+        for (RequestData requestData : requestDataMap.values()) {
+            DTOEndingCondition[] endingConditions = getDTOEndingConditionsListFromList(requestData.getEndingConditions()).toArray(new DTOEndingCondition[0]);
+            DTOSingleRequest tempSingleRequest = new DTOSingleRequest(requestData.requestId, requestData.getSimulationName(), requestData.getUsername(), requestData.getTokens(), endingConditions);
+
+            singleRequestList.add(tempSingleRequest);
+        }
+
+        return new DTORequests(singleRequestList.toArray(new DTOSingleRequest[0]));
     }
 }

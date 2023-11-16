@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.deploy.net.HttpResponse;
 import gui.app.api.Controller;
+import gui.app.menu.allocation.AllocationComponentController;
 import gui.app.menu.management.simulation.SimulationManagerComponentController;
 import gui.app.menu.management.thread.ThreadManagerComponentController;
 import javafx.application.Platform;
@@ -11,6 +12,7 @@ import manager.constant.Constants;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import server2client.simulation.prview.SimulationsPreviewData;
+import server2client.simulation.request.DTORequests;
 
 import java.io.File;
 import java.io.IOException;
@@ -222,6 +224,38 @@ public class AdminServerAgent {
                 }
                 // If another error has occurred, show an alert and close the app.
                 else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
+    }
+
+    public static void updateRequestsTable(AllocationComponentController controller) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.ADMIN_REQUEST_REFRESHER)
+                .newBuilder()
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() == 200) {
+                    String dtoRequestsInJson = response.body().string();
+                    // check if the string json is empty.
+                    if(!dtoRequestsInJson.equals("")) {
+                        DTORequests dtoRequests = gson.fromJson(dtoRequestsInJson, DTORequests.class);
+                        Platform.runLater(() -> controller.updateAllocationTableView(dtoRequests));
+                    }
+                } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
                 }
             }

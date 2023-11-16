@@ -15,7 +15,9 @@ import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class NewRequestComponentController implements Controller {
@@ -44,6 +46,8 @@ public class NewRequestComponentController implements Controller {
     @FXML
     private ComboBox<String> simulationNameCB;
 
+    private Set<String> simulationNameSet = new HashSet<>();
+
     public void setMainController(RequestComponentController requestComponentController) {
         this.mainController = requestComponentController;
     }
@@ -71,7 +75,6 @@ public class NewRequestComponentController implements Controller {
     }
 
     private void createRequestDTOAndSendToTheServer() {
-        // TODO: this method will send the request. Receive the requestID, update this ID, and the Request table.
         DTORequest dtoRequest = createDTORequest();
         UserServerAgent.sendSimulationRequest(this, dtoRequest);
     }
@@ -154,7 +157,10 @@ public class NewRequestComponentController implements Controller {
 
     public void updateNewRequestComponent(SimulationsPreviewData simulationsPreviewData) {
         for(PreviewData previewData : simulationsPreviewData.getPreviewDataArray()) {
-            simulationNameCB.getItems().add(previewData.getSimulationName());
+            if(!simulationNameSet.contains(previewData.getSimulationName())) {
+                simulationNameSet.add(previewData.getSimulationName());
+                simulationNameCB.getItems().add(previewData.getSimulationName());
+            }
         }
     }
 
