@@ -75,7 +75,6 @@ public class NewRequestComponentController implements Controller {
     }
 
     private void createRequestDTOAndSendToTheServer() {
-        // TODO: this method will send the request. Receive the requestID, update this ID, and the Request table.
         DTORequest dtoRequest = createDTORequest();
         UserServerAgent.sendSimulationRequest(this, dtoRequest);
     }
