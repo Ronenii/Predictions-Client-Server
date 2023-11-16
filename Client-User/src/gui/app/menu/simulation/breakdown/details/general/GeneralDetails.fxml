@@ -16,68 +16,31 @@
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
-      <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="NEVER" />
-      <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
       <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
-      <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
-    <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
-    <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
-      <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="NEVER" />
-      <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
-      <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="NEVER" />
-      <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
       <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Label text="Ticks:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+      <Label text="Grid" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label text="Seconds:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+      <Label text="Height:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label id="lbl-EndingConditionDetails-Ticks" fx:id="lblEndingTicks" text="-" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-      <Label id="lbl-EndingConditionDetails-Seconds" fx:id="lblEndingSeconds" text="-" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
-      <Label text="Ending By" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+      <Label text="Width:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label text="Grid" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="7">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <Label text="Height:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="9">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <Label text="Width:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="11">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblGridHeight" text="Placeholder" GridPane.columnIndex="3" GridPane.rowIndex="9" />
-      <Label fx:id="lblGridWidth" text="Placeholder" GridPane.columnIndex="3" GridPane.rowIndex="11" />
-      <Label text="Threads" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="13">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblThreadCount" text="Placeholder" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="15" />
-      <Label text="Count:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="15">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
+      <Label fx:id="lblGridHeight" text="Placeholder" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+      <Label fx:id="lblGridWidth" text="Placeholder" GridPane.columnIndex="3" GridPane.rowIndex="6" />
    </children>
 </GridPane>

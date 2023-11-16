@@ -10,33 +10,15 @@ import java.util.List;
 public class GeneralDetailsController {
 
     @FXML
-    private Label lblEndingTicks;
-
-    @FXML
-    private Label lblEndingSeconds;
-
-    @FXML
     private Label lblGridHeight;
 
     @FXML
     private Label lblGridWidth;
 
-    @FXML
-    private Label lblThreadCount;
 
-    public void setComponentDet(DTOEndingCondition[] endingConditions, DTOGridAndThread gridAndThread) {
-        for (DTOEndingCondition endingCondition : endingConditions){
-            if(endingCondition.getType().equals("ticks")){
-                lblEndingTicks.setText(String.valueOf(endingCondition.getCount()));
-            }
-            else {
-                lblEndingSeconds.setText(String.valueOf(endingCondition.getCount()));
-            }
-        }
-
+    public void setComponentDet(DTOGridAndThread gridAndThread) {
         lblGridHeight.setText(String.valueOf(gridAndThread.getGridRows()));
         lblGridWidth.setText(String.valueOf(gridAndThread.getGridColumns()));
-        lblThreadCount.setText(String.valueOf(gridAndThread.getThreadCount()));
     }
 
 }

@@ -40,7 +40,7 @@ public class ThreadManagerComponentController implements Controller {
             int threadCount = Integer.parseInt(textFieldThreadCount.getText());
             String simName = mainController.getSelectedSimulationName();
 
-            AdminServerAgent.sendSimulationThreadCount(this, simName, threadCount);
+            AdminServerAgent.sendSimulationThreadCount(this, threadCount);
         } catch (NumberFormatException e) {
             showMessageInNotificationBar("The thread count needs to be a number!");
         }
