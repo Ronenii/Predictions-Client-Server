@@ -21,7 +21,7 @@ public class RequestData {
         int endingConditionsCount = endingConditions.length, counter = 1;
 
         for (DTOEndingCondition endingCondition : endingConditions) {
-            if(endingCondition.getType().equals("User")) {
+            if(endingCondition.getType().equals("USER")) {
                 stringBuilder.append(endingCondition.getType());
             }else {
                 stringBuilder.append(endingCondition.getType()).append(" - ").append(endingCondition.getCount());
