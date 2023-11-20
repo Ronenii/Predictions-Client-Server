@@ -25,5 +25,7 @@ public class Constants {
 
     public final static String SIMULATION_REQUEST_PATH = CLIENT_CONTEXT_PATH + "/request";
 
+    public final static String REQUEST_STATUS_UPDATE_PATH = SIMULATION_REQUEST_PATH + "/status";
+
 
 }

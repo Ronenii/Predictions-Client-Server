@@ -12,7 +12,7 @@ import utils.ServletUtils;
 import java.io.IOException;
 
 @WebServlet(name = "ChangeRequestStatusServlet", urlPatterns = {"/admin/requests/status"})
-public class ChangeRequestStatusServlet extends HttpServlet {
+public class AdminChangeRequestStatusServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

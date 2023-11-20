@@ -15,7 +15,7 @@ import javafx.event.ActionEvent;
 import manager.AdminServerAgent;
 import manager.constant.Constants;
 import server2client.simulation.request.DTORequests;
-import server2client.simulation.request.DTOSingleRequest;
+import server2client.simulation.request.data.DTOSingleRequest;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package gui.app.menu.allocation.data;
 
 import server2client.simulation.genral.impl.properties.DTOEndingCondition;
-import server2client.simulation.request.DTOSingleRequest;
+import server2client.simulation.request.data.DTOSingleRequest;
 
 public class RequestData {
     private final int requestId;

@@ -4,15 +4,20 @@ import client2server.simulation.request.DTORequest;
 import gui.api.Controller;
 import gui.app.menu.request.RequestComponentController;
 import gui.app.menu.request.data.RequestData;
+import gui.app.menu.request.table.refresher.RequestsStatusRefresher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import manager.constants.Constants;
+import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
+import server2client.simulation.request.updated.status.data.DTORequestStatusData;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
 
 public class RequestTableComponentController implements Controller {
     private RequestComponentController mainController;
@@ -43,6 +48,9 @@ public class RequestTableComponentController implements Controller {
     @FXML
     private TableColumn<RequestData, Number> finishedColumn;
 
+    private RequestsStatusRefresher requestsStatusRefresher;
+    private Timer timer;
+
     @FXML
     public void initialize() {
         requestIdColumn.setCellValueFactory(new PropertyValueFactory<>("requestId"));
@@ -51,6 +59,7 @@ public class RequestTableComponentController implements Controller {
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         runningColumn.setCellValueFactory(new PropertyValueFactory<>("running"));
         finishedColumn.setCellValueFactory(new PropertyValueFactory<>("finished"));
+        requestsStatusRefresher = null;
     }
 
     @FXML
@@ -62,10 +71,29 @@ public class RequestTableComponentController implements Controller {
         RequestData newRequestData = new RequestData(requestId, dtoRequest);
         requestDataMap.put(requestId, newRequestData);
         requestsTV.getItems().add(newRequestData);
+        startRequestsStatusRefresher();
     }
 
     public void updateRequestsTableView(DTORequest dtoRequest) {
 
+    }
+
+    private void startRequestsStatusRefresher() {
+        // enable the timer task only once.
+        if(requestsStatusRefresher == null) {
+            requestsStatusRefresher = new RequestsStatusRefresher(this);
+            timer = new Timer();
+            timer.schedule(requestsStatusRefresher, Constants.REFRESH_RATE, Constants.REFRESH_RATE);
+        }
+    }
+
+    public void updateRequestsStatus(DTORequestStatusUpdate dtoRequestStatusUpdate) {
+        // TODO: it gets gere but not changing the status in the table.
+        for(DTORequestStatusData dtoRequestStatusData : dtoRequestStatusUpdate.getRequestStatusUpdates()) {
+            RequestData requestData = requestDataMap.get(dtoRequestStatusData.getReqId());
+            requestData.setStatus(dtoRequestStatusData.getReqStatus());
+            showMessageInNotificationBar(String.format("New response for request #%d from the admin", requestData.getRequestId()));
+        }
     }
 
     public void setMainController(RequestComponentController mainController) {

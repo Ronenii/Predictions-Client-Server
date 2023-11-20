@@ -8,7 +8,7 @@ public class RequestData {
     private final int requestId;
     private final String simulationName;
     private final int tokens;
-    private RequestStatus status;
+    private String status;
     private SimpleIntegerProperty running;
     private SimpleIntegerProperty finished;
 
@@ -16,12 +16,12 @@ public class RequestData {
         this.requestId = requestId;
         simulationName = dtoRequest.getSimulationName();
         tokens = dtoRequest.getSimulationTokens();
-        status = RequestStatus.PENDING;
+        status = "PENDING";
         running = new SimpleIntegerProperty();
         finished = new SimpleIntegerProperty();
     }
 
-    public void setStatus(RequestStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -45,7 +45,7 @@ public class RequestData {
         return tokens;
     }
 
-    public RequestStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 

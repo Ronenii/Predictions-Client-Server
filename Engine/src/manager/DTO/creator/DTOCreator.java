@@ -14,7 +14,9 @@ import server2client.simulation.genral.impl.properties.DTOProperty;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import server2client.simulation.request.DTORequests;
-import server2client.simulation.request.DTOSingleRequest;
+import server2client.simulation.request.data.DTOSingleRequest;
+import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
+import server2client.simulation.request.updated.status.data.DTORequestStatusData;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
@@ -300,5 +302,16 @@ public class DTOCreator {
         }
 
         return new DTORequests(singleRequestList.toArray(new DTOSingleRequest[0]));
+    }
+
+    public DTORequestStatusUpdate createDtoRequestStatusUpdate(List<RequestData> requestsData) {
+        List<DTORequestStatusData> requestStatusUpdates = new ArrayList<>();
+
+        for (RequestData requestData : requestsData) {
+            DTORequestStatusData dtoRequestStatusData = new DTORequestStatusData(requestData.requestId, requestData.getStatus().toString());
+            requestStatusUpdates.add(dtoRequestStatusData);
+        }
+
+        return new DTORequestStatusUpdate(requestStatusUpdates.toArray(new DTORequestStatusData[0]));
     }
 }

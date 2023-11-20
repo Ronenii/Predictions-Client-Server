@@ -1,4 +1,4 @@
-package server2client.simulation.request;
+package server2client.simulation.request.data;
 
 import server2client.simulation.genral.impl.properties.DTOEndingCondition;
 

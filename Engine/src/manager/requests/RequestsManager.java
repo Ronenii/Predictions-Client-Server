@@ -5,6 +5,7 @@ import manager.requests.data.RequestData;
 import manager.requests.data.RequestStatus;
 import server2client.simulation.genral.impl.properties.DTOEndingCondition;
 import server2client.simulation.request.DTORequests;
+import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
 import simulation.properties.ending.conditions.EndingCondition;
 import simulation.properties.ending.conditions.EndingConditionType;
 
@@ -60,5 +61,21 @@ public class RequestsManager {
 
     public void changeRequestStatus(int reqId, String reqStatus) {
         requestDataMap.get(reqId).setStatus(RequestStatus.valueOf(reqStatus));
+    }
+
+    public DTORequestStatusUpdate getDtoRequestStatusUpdate(String username) {
+        DTOCreator dtoCreator = new DTOCreator();
+        List<RequestData> updatedRequests = new ArrayList<>();
+
+        for(RequestData requestData : requestDataMap.values()) {
+            if(requestData.getUsername().equals(username)) {
+                if(requestData.getStatus() == RequestStatus.APPROVED || requestData.getStatus() == RequestStatus.DENIED) {
+                    updatedRequests.add(requestData);
+                    requestDataMap.remove(requestData.requestId);
+                }
+            }
+        }
+
+        return dtoCreator.createDtoRequestStatusUpdate(updatedRequests);
     }
 }
