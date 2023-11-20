@@ -89,6 +89,7 @@ public class AllocationComponentController implements Controller {
 
                 requestDataMap.put(dtoSingleRequest.getSimId(), requestData);
                 allocationTableView.getItems().add(requestData);
+                showMessageInNotificationBar("New request received from the server");
             }
         }
     }
