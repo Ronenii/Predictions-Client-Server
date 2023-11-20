@@ -261,4 +261,32 @@ public class AdminServerAgent {
         });
     }
 
+    public static void changeRequestStatus(Controller controller, int reqId, String reqStatus) {
+        String finalUrl = HttpUrl
+                .parse(Constants.ADMIN_CHANGE_REQUEST_STATUS)
+                .newBuilder()
+                .addQueryParameter("requestId", String.valueOf(reqId))
+                .addQueryParameter("requestStatus", reqStatus)
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendPostRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.code() == 200) {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("Request's status has been changed in the server"));
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("Request's status did not change in the server, please try again"));
+                }
+            }
+        });
+    }
+
 }

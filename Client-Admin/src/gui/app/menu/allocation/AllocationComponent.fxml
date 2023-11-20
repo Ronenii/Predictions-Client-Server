@@ -45,7 +45,7 @@
             </TableView>
          </children>
       </VBox>
-      <HBox fx:id="hboxControls" alignment="CENTER" disable="true" spacing="10.0" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="SOMETIMES">
+      <HBox fx:id="hBoxControls" alignment="CENTER" disable="true" spacing="10.0" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="SOMETIMES">
          <children>
             <Button fx:id="buttonDeny" mnemonicParsing="false" onAction="#onDenyClicked" text="Deny" />
             <Button fx:id="buttonAccept" mnemonicParsing="false" onAction="#onAcceptClicked" text="Accept" />

@@ -405,4 +405,8 @@ public class SimulationManager implements EngineInterface {
     public DTORequests getDTORequests() {
         return requestsManager.getDTORequests();
     }
+
+    public void changeRequestStatus(int reqId, String reqStatus) {
+        requestsManager.changeRequestStatus(reqId, reqStatus);
+    }
 }

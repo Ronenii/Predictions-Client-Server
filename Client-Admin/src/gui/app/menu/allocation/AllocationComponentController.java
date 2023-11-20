@@ -69,12 +69,24 @@ public class AllocationComponentController implements Controller {
 
     @FXML
     void onAcceptClicked(ActionEvent event) {
+        RequestData selectedRequest = allocationTableView.getSelectionModel().getSelectedItem();
 
+        if(selectedRequest != null) {
+            AdminServerAgent.changeRequestStatus(this, selectedRequest.getRequestId(), "APPROVED");
+            allocationTableView.getItems().remove(selectedRequest);
+            requestDataMap.remove(selectedRequest.getRequestId());
+        }
     }
 
     @FXML
     void onDenyClicked(ActionEvent event) {
+        RequestData selectedRequest = allocationTableView.getSelectionModel().getSelectedItem();
 
+        if(selectedRequest != null) {
+            AdminServerAgent.changeRequestStatus(this, selectedRequest.getRequestId(), "DENIED");
+            allocationTableView.getItems().remove(selectedRequest);
+            requestDataMap.remove(selectedRequest.getRequestId());
+        }
     }
 
     @FXML
@@ -84,14 +96,19 @@ public class AllocationComponentController implements Controller {
 
     public void updateAllocationTableView(DTORequests dtoRequests) {
         for(DTOSingleRequest dtoSingleRequest : dtoRequests.getRequests()) {
-            if(!requestDataMap.containsKey(dtoSingleRequest.getSimId())) {
+            if(!requestDataMap.containsKey(dtoSingleRequest.getReqId())) {
                 RequestData requestData = new RequestData(dtoSingleRequest);
 
-                requestDataMap.put(dtoSingleRequest.getSimId(), requestData);
+                requestDataMap.put(dtoSingleRequest.getReqId(), requestData);
                 allocationTableView.getItems().add(requestData);
                 showMessageInNotificationBar("New request received from the server");
+                removeDisable();
             }
         }
+    }
+
+    private void removeDisable() {
+        hBoxControls.setDisable(false);
     }
 
     public void startRequestTableRefresher() {

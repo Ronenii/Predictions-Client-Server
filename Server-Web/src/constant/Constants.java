@@ -7,5 +7,7 @@ public class Constants {
 
     public static final String THREAD_COUNT = "threadCount";
 
-    public static final String SIMULATION_NAME = "simName";
+    public static final String REQUEST_ID = "requestId";
+
+    public static final String REQUEST_STATUS = "requestStatus";
 }

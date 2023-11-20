@@ -2,6 +2,7 @@ package manager.requests;
 
 import manager.DTO.creator.DTOCreator;
 import manager.requests.data.RequestData;
+import manager.requests.data.RequestStatus;
 import server2client.simulation.genral.impl.properties.DTOEndingCondition;
 import server2client.simulation.request.DTORequests;
 import simulation.properties.ending.conditions.EndingCondition;
@@ -55,5 +56,9 @@ public class RequestsManager {
        } else {
            return dtoCreator.createDTORequests(requestDataMap);
        }
+    }
+
+    public void changeRequestStatus(int reqId, String reqStatus) {
+        requestDataMap.get(reqId).setStatus(RequestStatus.valueOf(reqStatus));
     }
 }
