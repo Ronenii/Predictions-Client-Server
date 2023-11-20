@@ -82,7 +82,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
         envVarsItem = new TreeItem<>("Environment Variables");
         entitiesItem = new TreeItem<>("Entities");
         rulesItem = new TreeItem<>("Rules");
-        generalItem = new TreeItem<>("General");
+        generalItem = new TreeItem<>("Grid");
         simulationsItem.getChildren().add(simulationItem);
         simulationItem.getChildren().addAll(envVarsItem, entitiesItem, rulesItem, generalItem);
         updateEnvVarsInTreeView(simPreviewData.getEnvVariables(), envVarsItem);
@@ -166,7 +166,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
             try {
                 // Check if preview data is not null to avoid nullptr exceptions.
                 if(selectedItem.isLeaf() && updatedSimulationsPreviewData != null){
-                    if(selectedItem.getValue().equals("General")) {
+                    if(selectedItem.getValue().equals("Grid")) {
                         selectedSimPreviewData = getSelectedSimPreviewDataByName(selectedItem.getParent().getValue());
                         setGeneralComponent(selectedItem, selectedSimPreviewData);
                     }
@@ -260,7 +260,7 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
     private void setGeneralComponent(TreeItem<String> selectedItem, PreviewData previewData) throws IOException {
         GeneralDetailsController generalDetailsController = (GeneralDetailsController)displayComponentController.loadFXMLComponent("general/GeneralDetails.fxml");
         displayComponentController.setLblTitle(selectedItem.getValue());
-        generalDetailsController.setComponentDet(previewData.getEndingConditions(), previewData.getGridAndThread());
+        generalDetailsController.setComponentDet(previewData.getGridAndThread());
     }
 
     private void clearTreeView() {

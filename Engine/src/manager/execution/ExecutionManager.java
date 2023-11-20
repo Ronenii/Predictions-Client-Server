@@ -52,6 +52,11 @@ public class ExecutionManager {
         threadExecutor.shutdown();
     }
 
+    public void shutdownPreviousThreadPoolAndSetNewThreadPool(int threadCount) {
+        threadExecutor.shutdown();
+        threadExecutor = Executors.newFixedThreadPool(threadCount);
+    }
+
     /**
      * Return a new SimulationDataObject when the simulation is ongoing, otherwise return the SimulationRunData from the map.
      */
