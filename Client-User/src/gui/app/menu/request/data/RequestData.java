@@ -2,13 +2,14 @@ package gui.app.menu.request.data;
 
 import client2server.simulation.request.DTORequest;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import simulation.properties.property.impl.IntProperty;
 
 public class RequestData {
     private final int requestId;
     private final String simulationName;
     private final int tokens;
-    private String status;
+    private SimpleStringProperty status;
     private SimpleIntegerProperty running;
     private SimpleIntegerProperty finished;
 
@@ -16,13 +17,13 @@ public class RequestData {
         this.requestId = requestId;
         simulationName = dtoRequest.getSimulationName();
         tokens = dtoRequest.getSimulationTokens();
-        status = "PENDING";
+        status = new SimpleStringProperty("PENDING");
         running = new SimpleIntegerProperty();
         finished = new SimpleIntegerProperty();
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status.set(status);
     }
 
     public void setRunning(int running) {
@@ -46,7 +47,7 @@ public class RequestData {
     }
 
     public String getStatus() {
-        return status;
+        return status.get();
     }
 
     public int getRunning() {

@@ -83,7 +83,7 @@ public class RequestTableComponentController implements Controller {
         if(requestsStatusRefresher == null) {
             requestsStatusRefresher = new RequestsStatusRefresher(this);
             timer = new Timer();
-            timer.schedule(requestsStatusRefresher, Constants.REFRESH_RATE, Constants.REFRESH_RATE);
+            timer.schedule(requestsStatusRefresher, Constants.REQUEST_TABLE_REFRESH_RATE, Constants.REQUEST_TABLE_REFRESH_RATE);
         }
     }
 

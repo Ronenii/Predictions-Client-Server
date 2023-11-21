@@ -71,8 +71,14 @@ public class RequestsManager {
             if(requestData.getUsername().equals(username)) {
                 if(requestData.getStatus() == RequestStatus.APPROVED || requestData.getStatus() == RequestStatus.DENIED) {
                     updatedRequests.add(requestData);
-                    requestDataMap.remove(requestData.requestId);
                 }
+            }
+        }
+
+        // Another loop to remove the approved/denied requests
+        for(RequestData requestData : updatedRequests) {
+            if(requestDataMap.containsKey(requestData.requestId)) {
+                requestDataMap.remove(requestData.requestId);
             }
         }
 

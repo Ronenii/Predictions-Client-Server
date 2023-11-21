@@ -1,6 +1,7 @@
 package manager.DTO.creator;
 
 import manager.requests.data.RequestData;
+import manager.requests.data.RequestStatus;
 import server2client.simulation.genral.impl.objects.DTOEntity;
 import server2client.simulation.genral.impl.objects.DTOEntityInstance;
 import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
@@ -291,14 +292,19 @@ public class DTOCreator {
         return new DTOEndingCondition(endingCondition.getType().toString(), endingCondition.getCount());
     }
 
+    /**
+     * This method creates a DTO object of the existing pending requests to send to the admin.
+     */
     public DTORequests createDTORequests(Map<Integer, RequestData> requestDataMap) {
         List<DTOSingleRequest> singleRequestList = new ArrayList<>();
 
         for (RequestData requestData : requestDataMap.values()) {
-            DTOEndingCondition[] endingConditions = getDTOEndingConditionsListFromList(requestData.getEndingConditions()).toArray(new DTOEndingCondition[0]);
-            DTOSingleRequest tempSingleRequest = new DTOSingleRequest(requestData.requestId, requestData.getSimulationName(), requestData.getUsername(), requestData.getTokens(), endingConditions);
+            if(requestData.getStatus() == RequestStatus.PENDING){
+                DTOEndingCondition[] endingConditions = getDTOEndingConditionsListFromList(requestData.getEndingConditions()).toArray(new DTOEndingCondition[0]);
+                DTOSingleRequest tempSingleRequest = new DTOSingleRequest(requestData.requestId, requestData.getSimulationName(), requestData.getUsername(), requestData.getTokens(), endingConditions);
 
-            singleRequestList.add(tempSingleRequest);
+                singleRequestList.add(tempSingleRequest);
+            }
         }
 
         return new DTORequests(singleRequestList.toArray(new DTOSingleRequest[0]));

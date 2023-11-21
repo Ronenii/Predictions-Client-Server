@@ -22,10 +22,11 @@ public class ClientUpdateRequestStatusServlet extends HttpServlet {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         SimulationManager simulationManager = ServletUtils.getSimulationManager(getServletContext());
         String usernameFromSession = SessionUtils.getUsername(req);
-        DTORequestStatusUpdate dtoRequestStatusUpdate = simulationManager.getDtoRequestStatusUpdate(usernameFromSession);
-
-        resp.setContentType("application/json");
-        String responseJsonContent = gson.toJson(dtoRequestStatusUpdate);
-        resp.getOutputStream().println(responseJsonContent);
+        synchronized (this){
+            DTORequestStatusUpdate dtoRequestStatusUpdate = simulationManager.getDtoRequestStatusUpdate(usernameFromSession);
+            resp.setContentType("application/json");
+            String responseJsonContent = gson.toJson(dtoRequestStatusUpdate);
+            resp.getOutputStream().println(responseJsonContent);
+        }
     }
 }
