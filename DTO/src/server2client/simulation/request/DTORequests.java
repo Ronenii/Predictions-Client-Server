@@ -1,5 +1,7 @@
 package server2client.simulation.request;
 
+import server2client.simulation.request.data.DTOSingleRequest;
+
 public class DTORequests {
     private DTOSingleRequest[] requests;
 

@@ -9,6 +9,7 @@ import server2client.simulation.load.result.DTOLoadResult;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
 import server2client.simulation.request.DTORequests;
+import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
 import server2client.simulation.runtime.ResultData;
 import server2client.simulation.runtime.SimulationRunData;
 import server2client.simulation.runtime.generator.IdGenerator;
@@ -404,5 +405,13 @@ public class SimulationManager implements EngineInterface {
 
     public DTORequests getDTORequests() {
         return requestsManager.getDTORequests();
+    }
+
+    public void changeRequestStatus(int reqId, String reqStatus) {
+        requestsManager.changeRequestStatus(reqId, reqStatus);
+    }
+
+    public DTORequestStatusUpdate getDtoRequestStatusUpdate(String username) {
+        return requestsManager.getDtoRequestStatusUpdate(username);
     }
 }

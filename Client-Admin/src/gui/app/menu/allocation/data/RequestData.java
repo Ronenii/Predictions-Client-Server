@@ -1,15 +1,17 @@
 package gui.app.menu.allocation.data;
 
 import server2client.simulation.genral.impl.properties.DTOEndingCondition;
-import server2client.simulation.request.DTOSingleRequest;
+import server2client.simulation.request.data.DTOSingleRequest;
 
 public class RequestData {
+    private final int requestId;
     private final String simulationName;
     private final String username;
     private final int tokens;
     private final String endingConditionsFormatted;
 
     public RequestData(DTOSingleRequest dtoSingleRequest) {
+       requestId = dtoSingleRequest.getReqId();
        simulationName = dtoSingleRequest.getSimName();
        username = dtoSingleRequest.getUsername();
        tokens = dtoSingleRequest.getTokens();
@@ -35,6 +37,10 @@ public class RequestData {
         }
 
         return stringBuilder.toString();
+    }
+
+    public int getRequestId() {
+        return requestId;
     }
 
     public String getSimulationName() {

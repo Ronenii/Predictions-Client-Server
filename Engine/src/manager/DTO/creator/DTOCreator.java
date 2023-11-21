@@ -1,6 +1,7 @@
 package manager.DTO.creator;
 
 import manager.requests.data.RequestData;
+import manager.requests.data.RequestStatus;
 import server2client.simulation.genral.impl.objects.DTOEntity;
 import server2client.simulation.genral.impl.objects.DTOEntityInstance;
 import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
@@ -14,7 +15,9 @@ import server2client.simulation.genral.impl.properties.DTOProperty;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import server2client.simulation.request.DTORequests;
-import server2client.simulation.request.DTOSingleRequest;
+import server2client.simulation.request.data.DTOSingleRequest;
+import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
+import server2client.simulation.request.updated.status.data.DTORequestStatusData;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;
@@ -289,16 +292,32 @@ public class DTOCreator {
         return new DTOEndingCondition(endingCondition.getType().toString(), endingCondition.getCount());
     }
 
+    /**
+     * This method creates a DTO object of the existing pending requests to send to the admin.
+     */
     public DTORequests createDTORequests(Map<Integer, RequestData> requestDataMap) {
         List<DTOSingleRequest> singleRequestList = new ArrayList<>();
 
         for (RequestData requestData : requestDataMap.values()) {
-            DTOEndingCondition[] endingConditions = getDTOEndingConditionsListFromList(requestData.getEndingConditions()).toArray(new DTOEndingCondition[0]);
-            DTOSingleRequest tempSingleRequest = new DTOSingleRequest(requestData.requestId, requestData.getSimulationName(), requestData.getUsername(), requestData.getTokens(), endingConditions);
+            if(requestData.getStatus() == RequestStatus.PENDING){
+                DTOEndingCondition[] endingConditions = getDTOEndingConditionsListFromList(requestData.getEndingConditions()).toArray(new DTOEndingCondition[0]);
+                DTOSingleRequest tempSingleRequest = new DTOSingleRequest(requestData.requestId, requestData.getSimulationName(), requestData.getUsername(), requestData.getTokens(), endingConditions);
 
-            singleRequestList.add(tempSingleRequest);
+                singleRequestList.add(tempSingleRequest);
+            }
         }
 
         return new DTORequests(singleRequestList.toArray(new DTOSingleRequest[0]));
+    }
+
+    public DTORequestStatusUpdate createDtoRequestStatusUpdate(List<RequestData> requestsData) {
+        List<DTORequestStatusData> requestStatusUpdates = new ArrayList<>();
+
+        for (RequestData requestData : requestsData) {
+            DTORequestStatusData dtoRequestStatusData = new DTORequestStatusData(requestData.requestId, requestData.getStatus().toString());
+            requestStatusUpdates.add(dtoRequestStatusData);
+        }
+
+        return new DTORequestStatusUpdate(requestStatusUpdates.toArray(new DTORequestStatusData[0]));
     }
 }

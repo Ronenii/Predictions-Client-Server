@@ -26,4 +26,5 @@ public class Constants {
     public final static String SIMULATIONS_DETAILS_CONTEXT_PATH = FULL_SERVER_PATH + "/get_simulation_definitions";
     public final static String ADMIN_THREAD_COUNT = ADMIN_CONTEXT_PATH + "/thread/count";
     public final static String ADMIN_REQUEST_REFRESHER = ADMIN_CONTEXT_PATH +"/requests";
+    public final static String ADMIN_CHANGE_REQUEST_STATUS = ADMIN_REQUEST_REFRESHER + "/status";
 }

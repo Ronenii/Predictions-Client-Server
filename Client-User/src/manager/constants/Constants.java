@@ -4,6 +4,7 @@ public class Constants {
     // global constants
 
     public final static int REFRESH_RATE = 2000;
+    public final static int REQUEST_TABLE_REFRESH_RATE = 4000;
 
     // Server resource locations
     private final static String BASE_DOMAIN = "localhost";
@@ -24,6 +25,8 @@ public class Constants {
     public final static String SIMULATIONS_DETAILS_PATH = FULL_SERVER_PATH + "/get_simulation_definitions";
 
     public final static String SIMULATION_REQUEST_PATH = CLIENT_CONTEXT_PATH + "/request";
+
+    public final static String REQUEST_STATUS_UPDATE_PATH = SIMULATION_REQUEST_PATH + "/status";
 
 
 }
