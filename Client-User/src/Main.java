@@ -25,6 +25,7 @@ public class Main extends Application {
             Scene scene = new Scene(root);
             UserAppController appController = fxmlLoader.getController();
             appController.setUsername(loginComponentController.getUsername());
+            setupOnCloseEventHandler(primaryStage);
             primaryStage.setScene(scene);
             primaryStage.show();
         }
@@ -49,6 +50,12 @@ public class Main extends Application {
         loginStage.showAndWait();
 
         return loginComponentController;
+    }
+
+    private void setupOnCloseEventHandler(Stage primaryStage) {
+        primaryStage.setOnCloseRequest(event -> {
+            System.exit(0);
+        });
     }
 
     public static void main(String[] args) {

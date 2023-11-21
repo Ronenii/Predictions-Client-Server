@@ -92,6 +92,7 @@ public class RequestTableComponentController implements Controller {
         for(DTORequestStatusData dtoRequestStatusData : dtoRequestStatusUpdate.getRequestStatusUpdates()) {
             RequestData requestData = requestDataMap.get(dtoRequestStatusData.getReqId());
             requestData.setStatus(dtoRequestStatusData.getReqStatus());
+            requestsTV.refresh();
             showMessageInNotificationBar(String.format("New response for request #%d from the admin", requestData.getRequestId()));
         }
     }
