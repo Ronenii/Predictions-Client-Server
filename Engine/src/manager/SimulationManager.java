@@ -46,13 +46,14 @@ import java.util.*;
 
 public class SimulationManager implements EngineInterface {
     private SimulationInstance simulationDefinition;
+    // Holds the loaded simulations definitions.
     private Map<String, SimulationDefinition> simulationDefinitions;
     private Map<String, ResultData> pastSimulations;
     private Set<String> keysToSerialize;
     private boolean isSimulationLoaded;
     private boolean isFirstSimulationLoaded;
     private ExecutionManager executionManager = null;
-    private RequestsManager requestsManager;
+    private final RequestsManager requestsManager;
     private int simulationBreakdownVersion;
 
     public SimulationManager() {
@@ -62,7 +63,7 @@ public class SimulationManager implements EngineInterface {
         isSimulationLoaded = false;
         keysToSerialize = new HashSet<>();
         isFirstSimulationLoaded = true;
-        requestsManager = new RequestsManager();
+        requestsManager = new RequestsManager(simulationDefinitions);
         simulationBreakdownVersion = 0;
     }
 
