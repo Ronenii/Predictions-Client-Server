@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EnvironmentVariableComponentController implements FileLoadedEvent, UserEngineCommunicator, Controller {
+public class EnvironmentVariableComponentController implements UserEngineCommunicator, Controller {
 
     private InputsController mainController;
     @FXML
@@ -129,13 +129,13 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
         setButtonActionListener(event);
     }
 
-    @Override
-    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
+    public void loadEnvVarsDetails(PreviewData previewData) {
         valueTF.clear();
         clearListView();
         enableComponent();
         addItemsToListView(previewData.getEnvVariables());
-        initEnvironmentVariables(previewData.getEnvVariables());
+        // TODO : check if the following method is needed.
+        //initEnvironmentVariables(previewData.getEnvVariables());
     }
 
     private void clearListView(){
@@ -146,8 +146,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
      * Sets All environment variables by default to be random initialized.
      */
     private void initEnvironmentVariables(DTOEnvironmentVariable[] envVariables) {
-        for (DTOEnvironmentVariable e : envVariables
-        ) {
+        for (DTOEnvironmentVariable e : envVariables) {
             getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(e.getName(), true, null));
         }
     }

@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EntityPopulationComponentController implements FileLoadedEvent, Controller, UserEngineCommunicator {
+public class EntityPopulationComponentController implements Controller, UserEngineCommunicator {
 
     private static final int POPULATION_ERROR = -1, NO_POPULATION = -1;
     public Label entitiesLeftLabel;
@@ -126,14 +126,14 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Con
         }
     }
 
-    @Override
-    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
+    public void loadEntitiesDet(PreviewData previewData) {
         populationTF.clear();
         clearListView();
         enableComponent();
         addItemsToListView(previewData.getEntities());
-        initEntityPopulations(previewData.getEntities());
         updateEntitiesLeft(calcGridCells(previewData.getGridAndThread()));
+        // TODO : check if the following method is needed.
+        //initEntityPopulations(previewData.getEntities());
     }
 
     private void updateEntitiesLeft(int entityCount){

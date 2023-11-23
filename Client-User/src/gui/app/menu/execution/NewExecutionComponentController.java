@@ -1,6 +1,7 @@
 package gui.app.menu.execution;
 
 import gui.api.Controller;
+import gui.app.menu.request.data.RequestData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.execution.control.bar.ControlBarController;
 import gui.app.menu.execution.inputs.InputsController;
@@ -75,6 +76,10 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
     public void rerunSimulationById(String simId) {
         StartDetails rerunStartDetails = startDetailsMap.get(simId);
         inputsController.fetchStartDetails(rerunStartDetails);
+    }
+
+    public void setUpExecutionWindow(RequestData requestData) {
+        UserServerAgent.getSimulationPreviewDataForExecutionWindow(inputsController, requestData);
     }
 
     @Override

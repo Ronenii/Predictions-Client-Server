@@ -1,6 +1,7 @@
 package gui.app.menu;
 
 import gui.api.Controller;
+import gui.app.menu.request.data.RequestData;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
 import server2client.simulation.runtime.SimulationRunData;
@@ -81,6 +82,10 @@ public class MenuComponentController implements HasFileLoadedListeners, UserEngi
 
     public void rerunSimulationById(String simId) {
         newExecutionComponentController.rerunSimulationById(simId);
+    }
+
+    public void moveToExecutionSetUp(RequestData requestData) {
+        newExecutionComponentController.setUpExecutionWindow(requestData);
     }
 
     @Override

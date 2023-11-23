@@ -4,13 +4,16 @@ import client2server.simulation.request.DTORequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gui.api.Controller;
+import gui.app.menu.execution.inputs.InputsController;
 import gui.app.menu.request.create.request.NewRequestComponentController;
+import gui.app.menu.request.data.RequestData;
 import gui.app.menu.request.table.RequestTableComponentController;
 import gui.app.menu.simulation.breakdown.SimBreakdownMenuController;
 import manager.constants.Constants;
 import okhttp3.*;
 import server2client.simulation.execution.SetResponse;
 import server2client.simulation.execution.StartResponse;
+import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
 import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
 import server2client.simulation.runtime.SimulationRunData;
@@ -238,6 +241,36 @@ public class UserServerAgent {
                     String requestStatusUpdateInJson = response.body().string();
                     DTORequestStatusUpdate dtoRequestStatusUpdate = gson.fromJson(requestStatusUpdateInJson, DTORequestStatusUpdate.class);
                     Platform.runLater(() -> controller.updateRequestsStatus(dtoRequestStatusUpdate));
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
+    }
+
+    public static void getSimulationPreviewDataForExecutionWindow(InputsController controller, RequestData requestData) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.SINGLE_SIMULATION_PREVIEW_DATA_PATH)
+                .newBuilder()
+                .addQueryParameter("simulationName", requestData.getSimulationName())
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.code() == 200) {
+                    String requestStatusUpdateInJson = response.body().string();
+                    PreviewData previewData = gson.fromJson(requestStatusUpdateInJson, PreviewData.class);
+                    Platform.runLater(() -> controller.setUpExecutionWindowWithPreviewData(previewData, requestData));
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
                 }

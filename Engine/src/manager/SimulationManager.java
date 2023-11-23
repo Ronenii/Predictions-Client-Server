@@ -97,6 +97,10 @@ public class SimulationManager implements EngineInterface {
         }
     }
 
+    public PreviewData getDefinitionPreviewDataByName(String defName) {
+        return getDefinitionPreviewData(simulationDefinitions.get(defName).getSimulationAbstractInstance());
+    }
+
     private PreviewData getDefinitionPreviewData(SimulationInstance simulationDefinition) {
         DTOCreator dtoCreator = new DTOCreator();
         return dtoCreator.createSimulationPreviewDataObject(simulationDefinition.getSimulationName(), simulationDefinition.getEnvironmentProperties(), simulationDefinition.getEntities(), simulationDefinition.getRules(), simulationDefinition.getEndingConditions(), simulationDefinition.getGrid(), simulationDefinition.getThreadCount());

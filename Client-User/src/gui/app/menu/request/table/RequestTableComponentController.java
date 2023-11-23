@@ -64,7 +64,17 @@ public class RequestTableComponentController implements Controller {
 
     @FXML
     void executeButtonActionListener(ActionEvent event) {
+        RequestData selectedRequest = requestsTV.getSelectionModel().getSelectedItem();
 
+        if(selectedRequest != null) {
+            if(selectedRequest.getStatus().equals("PENDING")) {
+                showMessageInNotificationBar(String.format("Request #%d has not been approved yet", selectedRequest.getRequestId()));
+            } else if(selectedRequest.getStatus().equals("DENIED")){
+                showMessageInNotificationBar(String.format("Request #%d was denied by the admin", selectedRequest.getRequestId()));
+            } else {
+                mainController.moveToExecutionSetUp(selectedRequest);
+            }
+        }
     }
 
     public void addNewRequestData(int requestId, DTORequest dtoRequest) {
@@ -88,7 +98,6 @@ public class RequestTableComponentController implements Controller {
     }
 
     public void updateRequestsStatus(DTORequestStatusUpdate dtoRequestStatusUpdate) {
-        // TODO: it gets gere but not changing the status in the table.
         for(DTORequestStatusData dtoRequestStatusData : dtoRequestStatusUpdate.getRequestStatusUpdates()) {
             RequestData requestData = requestDataMap.get(dtoRequestStatusData.getReqId());
             requestData.setStatus(dtoRequestStatusData.getReqStatus());
