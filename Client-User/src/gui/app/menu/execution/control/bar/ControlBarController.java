@@ -33,16 +33,19 @@ public class ControlBarController implements Controller, UserEngineCommunicator 
 
     @FXML
     void startButtonActionListener(ActionEvent event) {
-        if(getEngineAgent().isFileLoaded())
+        if(!mainController.isExecuted())
         {
             StartResponse response = getEngineAgent().startSimulation();
             if(response.isSuccess()){
                 mainController.updateStartDetailsMap(response.getSimulationRunData().getSimId(), response.getSimulationRunData().getEnvVarsValuesMap());
                 mainController.getMenusTabPane().getSelectionModel().selectLast();
                 mainController.addSimulationToQueue(response.getSimulationRunData());
+                mainController.setExecuted(true);
             }
             showMessageInNotificationBar(response.getMessage());
 
+        } else {
+            showMessageInNotificationBar("Request already started!");
         }
     }
 

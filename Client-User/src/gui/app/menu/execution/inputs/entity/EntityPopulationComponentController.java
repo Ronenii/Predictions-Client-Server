@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EntityPopulationComponentController implements FileLoadedEvent, Controller, UserEngineCommunicator {
+public class EntityPopulationComponentController implements Controller, UserEngineCommunicator {
 
     private static final int POPULATION_ERROR = -1, NO_POPULATION = -1;
     public Label entitiesLeftLabel;
@@ -85,16 +85,19 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Con
 
             if (population != POPULATION_ERROR) {
                 if (population != entityPopulations.get(selectedItem)) {
-                    SetResponse response = getEngineAgent().sendPopulationData(new EntityPopulationUserInput(selectedItem.getName(), population));
-                    showMessageInNotificationBar(response.getMessage());
-                    if (response.isSuccess()) {
-                        updateEntityCounter(selectedItem, population);
-                        entityPopulations.put(selectedItem, population);
-                    }
+                    UserServerAgent.sendPopulationData(this, new EntityPopulationUserInput(mainController.getCurrentReqId(), selectedItem.getName(), population), selectedItem, false);
                 }
             } else {
                 showMessageInNotificationBar("ERROR: The population value may only be a non negative Integer.");
             }
+        }
+    }
+
+    public void receiveSetResponse(SetResponse response, DTOEntity selectedItem, int population) {
+        showMessageInNotificationBar(response.getMessage());
+        if (response.isSuccess()) {
+            updateEntityCounter(selectedItem, population);
+            entityPopulations.put(selectedItem, population);
         }
     }
 
@@ -126,14 +129,13 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Con
         }
     }
 
-    @Override
-    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
+    public void loadEntitiesDet(PreviewData previewData) {
         populationTF.clear();
         clearListView();
         enableComponent();
         addItemsToListView(previewData.getEntities());
-        initEntityPopulations(previewData.getEntities());
         updateEntitiesLeft(calcGridCells(previewData.getGridAndThread()));
+        initEntityPopulations(previewData.getEntities());
     }
 
     private void updateEntitiesLeft(int entityCount){
@@ -154,9 +156,8 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Con
      */
     private void initEntityPopulations(DTOEntity[] entities) {
         updateEntitiesLeft(gridSize);
-        for (DTOEntity e : entities
-        ) {
-            getEngineAgent().sendPopulationData(new EntityPopulationUserInput(e.getName(), 0));
+        for (DTOEntity e : entities) {
+            UserServerAgent.sendPopulationData(this, new EntityPopulationUserInput(mainController.getCurrentReqId(), e.getName(), 0), null, true);
             entityPopulations.put(e, 0);
         }
     }
@@ -237,7 +238,7 @@ public class EntityPopulationComponentController implements FileLoadedEvent, Con
         entitiesLeftToAdd = entitiesStartData.getEntitiesLeft();
         entitiesLeftLabel.setText(String.valueOf(entitiesLeftToAdd));
         for (DTOEntity entity : entityPopulations.keySet()) {
-            getEngineAgent().sendPopulationData(new EntityPopulationUserInput(entity.getName(), entityPopulations.get(entity)));
+            //getEngineAgent().sendPopulationData(new EntityPopulationUserInput(entity.getName(), entityPopulations.get(entity)));
         }
     }
 

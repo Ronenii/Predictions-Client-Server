@@ -46,13 +46,14 @@ import java.util.*;
 
 public class SimulationManager implements EngineInterface {
     private SimulationInstance simulationDefinition;
+    // Holds the loaded simulations definitions.
     private Map<String, SimulationDefinition> simulationDefinitions;
     private Map<String, ResultData> pastSimulations;
     private Set<String> keysToSerialize;
     private boolean isSimulationLoaded;
     private boolean isFirstSimulationLoaded;
     private ExecutionManager executionManager = null;
-    private RequestsManager requestsManager;
+    private final RequestsManager requestsManager;
     private int simulationBreakdownVersion;
 
     public SimulationManager() {
@@ -62,7 +63,7 @@ public class SimulationManager implements EngineInterface {
         isSimulationLoaded = false;
         keysToSerialize = new HashSet<>();
         isFirstSimulationLoaded = true;
-        requestsManager = new RequestsManager();
+        requestsManager = new RequestsManager(simulationDefinitions);
         simulationBreakdownVersion = 0;
     }
 
@@ -95,6 +96,10 @@ public class SimulationManager implements EngineInterface {
         } else {
             executionManager.shutdownPreviousThreadPoolAndSetNewThreadPool(threadCount);
         }
+    }
+
+    public PreviewData getDefinitionPreviewDataByName(String defName) {
+        return getDefinitionPreviewData(simulationDefinitions.get(defName).getSimulationAbstractInstance());
     }
 
     private PreviewData getDefinitionPreviewData(SimulationInstance simulationDefinition) {
@@ -185,39 +190,6 @@ public class SimulationManager implements EngineInterface {
         IdGenerator.clearIds();
     }
 
-    /**
-     * This method generate a random object match to the environment variable's type.
-     *
-     * @param envProperty the environment variable
-     * @return a random object
-     */
-    private Object getRandomValueByType(Property envProperty) {
-        Object ret = null;
-
-
-        switch (envProperty.getType()) {
-            case DECIMAL:
-                IntProperty intProperty = (IntProperty) envProperty;
-                RandomValueGenerator<Integer> randomIntValueGenerator = new IntRndValueGen(intProperty.getFrom(), intProperty.getTo());
-                ret = randomIntValueGenerator.generateRandomValue();
-                break;
-            case FLOAT:
-                DoubleProperty doubleProperty = (DoubleProperty) envProperty;
-                RandomValueGenerator<Double> randomDoubleValueGenerator = new DoubleRndValueGen(doubleProperty.getFrom(), doubleProperty.getTo());
-                ret = randomDoubleValueGenerator.generateRandomValue();
-                break;
-            case BOOLEAN:
-                RandomValueGenerator<Boolean> randomBooleanValueGenerator = new BoolRndValueGen();
-                ret = randomBooleanValueGenerator.generateRandomValue();
-                break;
-            case STRING:
-                RandomValueGenerator<String> randomStringValueGenerator = new StringRndValueGen();
-                ret = randomStringValueGenerator.generateRandomValue();
-                break;
-        }
-
-        return ret;
-    }
 
 
     /**
@@ -296,28 +268,12 @@ public class SimulationManager implements EngineInterface {
 
     @Override
     public SetResponse setEntityPopulation(EntityPopulationUserInput input) {
-        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
-        return simulationDefinition.setEntityPopulation(input);
+        return requestsManager.setEntityPopulation(input);
     }
 
     @Override
     public SetResponse setEnvironmentVariable(EnvPropertyUserInput input) {
-        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
-        SetResponse response;
-        Map<String, Property> environmentProperties = this.simulationDefinition.getEnvironmentProperties();
-        Property envProperty = environmentProperties.get(input.getName());
-
-        if (input.isRandomInit()) {
-            envProperty.updateValueAndIsRandomInit(getRandomValueByType(envProperty), input.isRandomInit());
-            response = new SetResponse(true, String.format("%s's value was set to %s", input.getName(), input.getValue()), null);
-        } else {
-            response = validateEnvVarInitValue(envProperty, input.getValue());
-            if (response.isSuccess()) {
-                envProperty.updateValueAndIsRandomInit(response.getParsedValue(), input.isRandomInit());
-            }
-        }
-
-        return response;
+        return requestsManager.setEnvironmentVariable(input);
     }
 
 
@@ -326,53 +282,6 @@ public class SimulationManager implements EngineInterface {
         return executionManager.getRunDataById(simId);
     }
 
-    /**
-     * Validates the given user input for the environment variable and returns a set response accordingly.
-     * Validates range\regex matching\value compatibility based on the type of the property.
-     *
-     * @param property   The property we are comparing the value to
-     * @param inputValue The value we want to compare
-     * @return A Set response indicating if the set action has succeeded or failed with a custom message
-     */
-    private SetResponse validateEnvVarInitValue(Property property, Object inputValue) {
-        String successMessage = String.format("%s's value was successfully set to %s", property.getName(), inputValue.toString());
-        InputValidator inputValidator = new InputValidator();
-        try {
-            switch (property.getType()) {
-                case DECIMAL: {
-
-                    int value = Integer.parseInt(inputValue.toString());
-                    IntProperty intProperty = (IntProperty) property;
-                    inputValidator.isIntegerInRange(value, intProperty.getFrom(), intProperty.getTo());
-                    return new SetResponse(true, successMessage, value);
-                }
-                case FLOAT: {
-                    double value = Double.parseDouble(inputValue.toString());
-                    DoubleProperty doubleProperty = (DoubleProperty) property;
-                    inputValidator.isDoubleInRange(value, doubleProperty.getFrom(), doubleProperty.getTo());
-                    return new SetResponse(true, successMessage, value);
-                }
-                case BOOLEAN: {
-                    inputValidator.validateBoolean(inputValue.toString());
-                    if((inputValue.toString().equalsIgnoreCase("true"))) {
-                        return new SetResponse(true, successMessage, true);
-                    } else {
-                        return new SetResponse(true, successMessage, false);
-                    }
-                }
-                case STRING:
-                    inputValidator.validateStringValue(inputValue.toString());
-                    return new SetResponse(true, successMessage, inputValue);
-            }
-        } catch (NumberFormatException e) {
-            return new SetResponse(false, String.format("ERROR: Value provided is does not match %s's type (%s)", property.getName(), property.getType().toString()), null);
-        } catch (OutOfRangeException | IllegalBooleanValueException e) {
-            return new SetResponse(false, String.format("ERROR: Value given is not in %s's range.", property.getName()), null);
-        } catch (IllegalStringValueException e) {
-            return new SetResponse(false, "ERROR: String given does not meet the string guidelines.", null);
-        }
-        return null;
-    }
 
     private void addSimulationToQueue(SimulationRunData simulationRunData) {
         // TODO: adjust to the new construction -> this function needs to receive a simulation name first.

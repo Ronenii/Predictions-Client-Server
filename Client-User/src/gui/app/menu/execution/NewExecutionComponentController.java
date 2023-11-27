@@ -1,6 +1,7 @@
 package gui.app.menu.execution;
 
 import gui.api.Controller;
+import gui.app.menu.request.data.RequestData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.execution.control.bar.ControlBarController;
 import gui.app.menu.execution.inputs.InputsController;
@@ -25,6 +26,8 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
     @FXML private InputsController inputsController;
     @FXML private GridPane controlBar;
     @FXML private ControlBarController controlBarController;
+
+    private boolean isExecuted;
 
     private Map<String, StartDetails> startDetailsMap;
 
@@ -75,6 +78,18 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
     public void rerunSimulationById(String simId) {
         StartDetails rerunStartDetails = startDetailsMap.get(simId);
         inputsController.fetchStartDetails(rerunStartDetails);
+    }
+
+    public void setUpExecutionWindow(RequestData requestData) {
+        UserServerAgent.getSimulationPreviewDataForExecutionWindow(inputsController, requestData);
+    }
+
+    public boolean isExecuted() {
+        return isExecuted;
+    }
+
+    public void setExecuted(boolean value) {
+        isExecuted = value;
     }
 
     @Override

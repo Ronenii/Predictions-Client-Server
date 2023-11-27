@@ -9,10 +9,12 @@ import gui.api.BarNotifier;
 import gui.api.UserEngineCommunicator;
 import gui.api.HasFileLoadedListeners;
 import gui.app.menu.execution.NewExecutionComponentController;
+import gui.app.menu.request.data.RequestData;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import manager.UserServerAgent;
 import client2server.simulation.execution.DTOExecutionData;
+import server2client.simulation.prview.PreviewData;
 
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -25,6 +27,9 @@ public class InputsController implements HasFileLoadedListeners, Controller, Use
     @FXML private EntityPopulationComponentController entityPopulationComponentController;
     @FXML private GridPane environmentVariablesComponent;
     @FXML private EnvironmentVariableComponentController environmentVariableComponentController;
+
+
+    private int currentReqId;
 
     public DTOExecutionData executionData;
 
@@ -43,8 +48,6 @@ public class InputsController implements HasFileLoadedListeners, Controller, Use
     @Override
     public List<EventListener> getAllFileLoadedListeners() {
         List<EventListener> listeners = new ArrayList<>();
-        listeners.add(entityPopulationComponentController);
-        listeners.add(environmentVariableComponentController);
 
         return listeners;
     }
@@ -68,6 +71,17 @@ public class InputsController implements HasFileLoadedListeners, Controller, Use
     public void fetchStartDetails(StartDetails startDetails) {
         entityPopulationComponentController.fetchEntitiesStartData(startDetails.getEntitiesStartData());
         environmentVariableComponentController.fetchEnvironmentVarsStartData(startDetails.getEnvironmentVarsStartData());
+    }
+
+    public void setUpExecutionWindowWithPreviewData(PreviewData previewData, RequestData requestData) {
+        environmentVariableComponentController.loadEnvVarsDetails(previewData);
+        entityPopulationComponentController.loadEntitiesDet(previewData);
+        currentReqId = requestData.getRequestId();
+        mainController.setExecuted(false);
+    }
+
+    public int getCurrentReqId() {
+        return currentReqId;
     }
 
     @Override

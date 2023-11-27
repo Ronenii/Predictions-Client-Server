@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EnvironmentVariableComponentController implements FileLoadedEvent, UserEngineCommunicator, Controller {
+public class EnvironmentVariableComponentController implements UserEngineCommunicator, Controller {
 
     private InputsController mainController;
     @FXML
@@ -58,6 +58,13 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
         if (selectedItem != null) {
             changeExplanationPrompt(selectedItem);
             updateTextFieldToCurrentEnvVarValue(selectedItem);
+        }
+    }
+
+    public void receiveSetResponse(SetResponse response, DTOEnvironmentVariable selectedItem, String value) {
+        showMessageInNotificationBar(response.getMessage());
+        if(response.isSuccess()){
+            environmentVariableMap.put(selectedItem, value);
         }
     }
 
@@ -103,20 +110,12 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
 
         // If there is in fact, a selected item in the list view.
         if (selectedItem != null && !valueTF.getText().equals(environmentVariableMap.get(selectedItem))) {
-            SetResponse response;
-
             // If the text field is empty then the environment variable is randomly initialized
             // Else its user initialized.
             if (valueTF.getText().isEmpty()) {
-                response = getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(selectedItem.getName(), true, null));
+                UserServerAgent.sendEnvironmentVariableData(this, new EnvPropertyUserInput(mainController.getCurrentReqId(), selectedItem.getName(), true, null), selectedItem, null, false);
             } else {
-                response = getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(selectedItem.getName(), false, valueTF.getText()));
-            }
-
-            showMessageInNotificationBar(response.getMessage());
-
-            if(response.isSuccess()){
-                environmentVariableMap.put(selectedItem, valueTF.getText());
+                UserServerAgent.sendEnvironmentVariableData(this, new EnvPropertyUserInput(mainController.getCurrentReqId(), selectedItem.getName(), false, valueTF.getText()), selectedItem, valueTF.getText(), false);
             }
         }
     }
@@ -129,8 +128,7 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
         setButtonActionListener(event);
     }
 
-    @Override
-    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
+    public void loadEnvVarsDetails(PreviewData previewData) {
         valueTF.clear();
         clearListView();
         enableComponent();
@@ -146,9 +144,8 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
      * Sets All environment variables by default to be random initialized.
      */
     private void initEnvironmentVariables(DTOEnvironmentVariable[] envVariables) {
-        for (DTOEnvironmentVariable e : envVariables
-        ) {
-            getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(e.getName(), true, null));
+        for (DTOEnvironmentVariable e : envVariables) {
+            UserServerAgent.sendEnvironmentVariableData(this, new EnvPropertyUserInput(mainController.getCurrentReqId(), e.getName(), true, null), null, null, true);
         }
     }
 
@@ -217,13 +214,13 @@ public class EnvironmentVariableComponentController implements FileLoadedEvent, 
             environmentVariableMap.put(environmentVariable, envVarsValuesMap.get(environmentVariable.getName()).toString());
         }
 
-        for (DTOEnvironmentVariable environmentVariable : environmentVariableMap.keySet()) {
-            if (environmentVariableMap.get(environmentVariable) == null) {
-                getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(environmentVariable.getName(), true, null));
-            } else {
-                getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(environmentVariable.getName(), false, environmentVariableMap.get(environmentVariable)));
-            }
-        }
+//        for (DTOEnvironmentVariable environmentVariable : environmentVariableMap.keySet()) {
+//            if (environmentVariableMap.get(environmentVariable) == null) {
+//                getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(environmentVariable.getName(), true, null));
+//            } else {
+//                getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(environmentVariable.getName(), false, environmentVariableMap.get(environmentVariable)));
+//            }
+//        }
 
         DTOEnvironmentVariable selectedItem = envVarsLV.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {

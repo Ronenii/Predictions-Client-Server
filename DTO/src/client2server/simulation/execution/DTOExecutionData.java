@@ -23,9 +23,6 @@ public class DTOExecutionData {
         return entityPopulationUserInputs;
     }
 
-    public void updateEnvPropertyUserInputs(String name, boolean isRandomInit, Object value) {
-        envPropertyUserInputs.put(name, new EnvPropertyUserInput(name, isRandomInit, value));
-    }
 
     public void updateEntityPopulationUserInputs(String name, int population) {
         entityPopulationUserInputs.put(name, population);

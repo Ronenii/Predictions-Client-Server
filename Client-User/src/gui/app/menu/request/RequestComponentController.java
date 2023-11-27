@@ -4,8 +4,10 @@ import client2server.simulation.request.DTORequest;
 import gui.api.Controller;
 import gui.app.menu.MenuComponentController;
 import gui.app.menu.request.create.request.NewRequestComponentController;
+import gui.app.menu.request.data.RequestData;
 import gui.app.menu.request.table.RequestTableComponentController;
 import javafx.fxml.FXML;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import server2client.simulation.prview.SimulationsPreviewData;
 
@@ -35,6 +37,12 @@ public class RequestComponentController implements Controller {
 
     public void addNewRequestData(int requestId, DTORequest dtoRequest) {
         requestTableComponentController.addNewRequestData(requestId, dtoRequest);
+    }
+
+
+    public void moveToExecutionSetUp(RequestData requestData) {
+        mainController.moveToExecutionSetUp(requestData);
+        mainController.getMenusTabPane().getSelectionModel().selectNext();
     }
 
     @Override
