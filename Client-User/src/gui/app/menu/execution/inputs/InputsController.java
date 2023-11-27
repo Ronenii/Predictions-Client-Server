@@ -28,6 +28,9 @@ public class InputsController implements HasFileLoadedListeners, Controller, Use
     @FXML private GridPane environmentVariablesComponent;
     @FXML private EnvironmentVariableComponentController environmentVariableComponentController;
 
+
+    private int currentReqId;
+
     public DTOExecutionData executionData;
 
     public void setMainController(NewExecutionComponentController mainController) {
@@ -73,6 +76,12 @@ public class InputsController implements HasFileLoadedListeners, Controller, Use
     public void setUpExecutionWindowWithPreviewData(PreviewData previewData, RequestData requestData) {
         environmentVariableComponentController.loadEnvVarsDetails(previewData);
         entityPopulationComponentController.loadEntitiesDet(previewData);
+        currentReqId = requestData.getRequestId();
+        mainController.setExecuted(false);
+    }
+
+    public int getCurrentReqId() {
+        return currentReqId;
     }
 
     @Override

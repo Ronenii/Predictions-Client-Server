@@ -27,6 +27,8 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
     @FXML private GridPane controlBar;
     @FXML private ControlBarController controlBarController;
 
+    private boolean isExecuted;
+
     private Map<String, StartDetails> startDetailsMap;
 
     public void setMainController(MenuComponentController mainController) {
@@ -80,6 +82,14 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
 
     public void setUpExecutionWindow(RequestData requestData) {
         UserServerAgent.getSimulationPreviewDataForExecutionWindow(inputsController, requestData);
+    }
+
+    public boolean isExecuted() {
+        return isExecuted;
+    }
+
+    public void setExecuted(boolean value) {
+        isExecuted = value;
     }
 
     @Override

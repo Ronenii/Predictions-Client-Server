@@ -85,16 +85,19 @@ public class EntityPopulationComponentController implements Controller, UserEngi
 
             if (population != POPULATION_ERROR) {
                 if (population != entityPopulations.get(selectedItem)) {
-                    SetResponse response = getEngineAgent().sendPopulationData(new EntityPopulationUserInput(selectedItem.getName(), population));
-                    showMessageInNotificationBar(response.getMessage());
-                    if (response.isSuccess()) {
-                        updateEntityCounter(selectedItem, population);
-                        entityPopulations.put(selectedItem, population);
-                    }
+                    UserServerAgent.sendPopulationData(this, new EntityPopulationUserInput(mainController.getCurrentReqId(), selectedItem.getName(), population), selectedItem, false);
                 }
             } else {
                 showMessageInNotificationBar("ERROR: The population value may only be a non negative Integer.");
             }
+        }
+    }
+
+    public void receiveSetResponse(SetResponse response, DTOEntity selectedItem, int population) {
+        showMessageInNotificationBar(response.getMessage());
+        if (response.isSuccess()) {
+            updateEntityCounter(selectedItem, population);
+            entityPopulations.put(selectedItem, population);
         }
     }
 
@@ -132,8 +135,7 @@ public class EntityPopulationComponentController implements Controller, UserEngi
         enableComponent();
         addItemsToListView(previewData.getEntities());
         updateEntitiesLeft(calcGridCells(previewData.getGridAndThread()));
-        // TODO : check if the following method is needed.
-        //initEntityPopulations(previewData.getEntities());
+        initEntityPopulations(previewData.getEntities());
     }
 
     private void updateEntitiesLeft(int entityCount){
@@ -154,9 +156,8 @@ public class EntityPopulationComponentController implements Controller, UserEngi
      */
     private void initEntityPopulations(DTOEntity[] entities) {
         updateEntitiesLeft(gridSize);
-        for (DTOEntity e : entities
-        ) {
-            getEngineAgent().sendPopulationData(new EntityPopulationUserInput(e.getName(), 0));
+        for (DTOEntity e : entities) {
+            UserServerAgent.sendPopulationData(this, new EntityPopulationUserInput(mainController.getCurrentReqId(), e.getName(), 0), null, true);
             entityPopulations.put(e, 0);
         }
     }
@@ -237,7 +238,7 @@ public class EntityPopulationComponentController implements Controller, UserEngi
         entitiesLeftToAdd = entitiesStartData.getEntitiesLeft();
         entitiesLeftLabel.setText(String.valueOf(entitiesLeftToAdd));
         for (DTOEntity entity : entityPopulations.keySet()) {
-            getEngineAgent().sendPopulationData(new EntityPopulationUserInput(entity.getName(), entityPopulations.get(entity)));
+            //getEngineAgent().sendPopulationData(new EntityPopulationUserInput(entity.getName(), entityPopulations.get(entity)));
         }
     }
 

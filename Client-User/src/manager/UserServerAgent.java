@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gui.api.Controller;
 import gui.app.menu.execution.inputs.InputsController;
+import gui.app.menu.execution.inputs.entity.EntityPopulationComponentController;
+import gui.app.menu.execution.inputs.env.var.EnvironmentVariableComponentController;
 import gui.app.menu.request.create.request.NewRequestComponentController;
 import gui.app.menu.request.data.RequestData;
 import gui.app.menu.request.table.RequestTableComponentController;
@@ -13,6 +15,8 @@ import manager.constants.Constants;
 import okhttp3.*;
 import server2client.simulation.execution.SetResponse;
 import server2client.simulation.execution.StartResponse;
+import server2client.simulation.genral.impl.objects.DTOEntity;
+import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
 import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
@@ -82,14 +86,6 @@ public class UserServerAgent {
         thread.start();
     }
 
-
-    public SetResponse sendPopulationData(EntityPopulationUserInput input) {
-        return engine.setEntityPopulation(input);
-    }
-
-    public SetResponse sendEnvironmentVariableData(EnvPropertyUserInput input) {
-        return engine.setEnvironmentVariable(input);
-    }
 
     public StartResponse startSimulation() {
         return engine.startSimulation();
@@ -271,6 +267,72 @@ public class UserServerAgent {
                     String requestStatusUpdateInJson = response.body().string();
                     PreviewData previewData = gson.fromJson(requestStatusUpdateInJson, PreviewData.class);
                     Platform.runLater(() -> controller.setUpExecutionWindowWithPreviewData(previewData, requestData));
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
+    }
+
+    public static void sendPopulationData(EntityPopulationComponentController controller, EntityPopulationUserInput input, DTOEntity selectedItem, boolean isInit) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String requestJsonContent = gson.toJson(input);
+        RequestBody requestBody = RequestBody.create(requestJsonContent,MediaType.parse("application/json"));
+        String finalUrl = HttpUrl
+                .parse(Constants.SEND_POPULATION_DATA_PATH)
+                .newBuilder()
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.code() == 200) {
+                    if(!isInit) {
+                        String requestStatusUpdateInJson = response.body().string();
+                        SetResponse setResponse = gson.fromJson(requestStatusUpdateInJson, SetResponse.class);
+                        Platform.runLater(() -> controller.receiveSetResponse(setResponse, selectedItem, input.getPopulation()));
+                    }
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
+    }
+
+    public static void sendEnvironmentVariableData(EnvironmentVariableComponentController controller, EnvPropertyUserInput input, DTOEnvironmentVariable selectedItem, String value, boolean isInit) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String requestJsonContent = gson.toJson(input);
+        RequestBody requestBody = RequestBody.create(requestJsonContent,MediaType.parse("application/json"));
+        String finalUrl = HttpUrl
+                .parse(Constants.SEND_ENV_VARS_DATA_PATH)
+                .newBuilder()
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.code() == 200) {
+                    if(!isInit) {
+                        String requestStatusUpdateInJson = response.body().string();
+                        SetResponse setResponse = gson.fromJson(requestStatusUpdateInJson, SetResponse.class);
+                        Platform.runLater(() -> controller.receiveSetResponse(setResponse, selectedItem, value));
+                    }
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
                 }
