@@ -4,6 +4,7 @@ import client2server.simulation.request.DTORequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gui.api.Controller;
+import gui.app.menu.execution.control.bar.ControlBarController;
 import gui.app.menu.execution.inputs.InputsController;
 import gui.app.menu.execution.inputs.entity.EntityPopulationComponentController;
 import gui.app.menu.execution.inputs.env.var.EnvironmentVariableComponentController;
@@ -33,7 +34,7 @@ import java.io.IOException;
 
 public class UserServerAgent {
 
-    private final EngineInterface engine;
+    private final SimulationManager engine;
 
     private boolean isFileLoaded;
 
@@ -87,9 +88,6 @@ public class UserServerAgent {
     }
 
 
-    public StartResponse startSimulation() {
-        return engine.startSimulation();
-    }
 
     public synchronized SimulationRunData getRunDataById(String simId) {
         return engine.getRunDataById(simId);
@@ -333,6 +331,36 @@ public class UserServerAgent {
                         SetResponse setResponse = gson.fromJson(requestStatusUpdateInJson, SetResponse.class);
                         Platform.runLater(() -> controller.receiveSetResponse(setResponse, selectedItem, value));
                     }
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
+    }
+
+    public static void startSimulation(ControlBarController controller, int reqId) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.START_SIMULATION_PATH)
+                .newBuilder()
+                .addQueryParameter("requestId", String.valueOf(reqId))
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendPostRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() == 200) {
+                    String requestStartResponseInJson = response.body().string();
+                    StartResponse startResponse = gson.fromJson(requestStartResponseInJson, StartResponse.class);
+                    Platform.runLater(() -> controller.receiveStartResponse(startResponse));
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
                 }

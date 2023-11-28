@@ -45,6 +45,10 @@ public class RequestComponentController implements Controller {
         mainController.getMenusTabPane().getSelectionModel().selectNext();
     }
 
+    public RequestData getRequestDataById(int reqId){
+       return requestTableComponentController.getRequestDataById(reqId);
+    }
+
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);
