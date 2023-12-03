@@ -104,7 +104,6 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
     }
 
     public void receiveSimulationRunForRunningSimulation(SimulationRunData selectedInThread, String simId, Task<Void> task) {
-
         // Wrap UI updates in Platform.runLater to execute them on the FX application thread
 
         // isSimulationPaused - true when the simulation on pause
@@ -121,7 +120,7 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
             }
             oneUpdateAfterPauseFlag = false;
         }
-
+        //Check if the task loop to be canceled.
         if(selectedInThread == null || !selectedInThread.getSimId().equals(simId) || selectedInThread.isCompleted()) {
             task.cancel(true);
         }
