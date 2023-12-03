@@ -107,6 +107,10 @@ public class SimulationInstance implements Serializable, Runnable {
         return endingConditions;
     }
 
+    public void setEndingConditions(Map<EndingConditionType, EndingCondition> endingConditions) {
+        this.endingConditions = endingConditions;
+    }
+
     public EndingCondition getTerminateCondition() {
         return terminateCondition;
     }
