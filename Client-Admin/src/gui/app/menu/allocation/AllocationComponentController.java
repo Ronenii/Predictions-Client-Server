@@ -23,7 +23,7 @@ import java.util.Timer;
 
 public class AllocationComponentController implements Controller {
 
-    private Controller mainController;
+    private MenuComponentController mainController;
 
     @FXML
     private TableView<RequestData> allocationTableView;
@@ -72,9 +72,13 @@ public class AllocationComponentController implements Controller {
         RequestData selectedRequest = allocationTableView.getSelectionModel().getSelectedItem();
 
         if(selectedRequest != null) {
-            AdminServerAgent.changeRequestStatus(this, selectedRequest.getRequestId(), "APPROVED");
-            allocationTableView.getItems().remove(selectedRequest);
-            requestDataMap.remove(selectedRequest.getRequestId());
+            if(mainController.isThreadPoolSet()){
+                AdminServerAgent.changeRequestStatus(this, selectedRequest.getRequestId(), "APPROVED");
+                allocationTableView.getItems().remove(selectedRequest);
+                requestDataMap.remove(selectedRequest.getRequestId());
+            }else {
+                showMessageInNotificationBar("You must initialize the server thread pool before accepting requests!");
+            }
         }
     }
 

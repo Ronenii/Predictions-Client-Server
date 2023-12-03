@@ -199,7 +199,7 @@ public class AdminServerAgent {
         });
     }
 
-    public static void sendSimulationThreadCount(Controller controller, int threadCount) {
+    public static void sendSimulationThreadCount(ThreadManagerComponentController controller, int threadCount) {
         String finalUrl = HttpUrl
                 .parse(Constants.ADMIN_THREAD_COUNT)
                 .newBuilder()
@@ -219,9 +219,11 @@ public class AdminServerAgent {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 // If connection is successful, open the admin client application.
                 if (response.code() == 200) {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar(String.format("Thread pool count updated to %d", threadCount)));
+                    Platform.runLater(() -> {
+                        controller.showMessageInNotificationBar(String.format("Thread pool count updated to %d", threadCount));
+                        controller.setThreadPoolSet();
+                    });
                 }
-                // If another error has occurred, show an alert and close the app.
                 else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
                 }

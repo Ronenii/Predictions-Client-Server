@@ -28,6 +28,8 @@ public class ThreadManagerComponentController implements Controller {
     @FXML
     private Label lblEnded;
 
+    private boolean isThreadPoolSet = false;
+
     private int queueCount = 0;
 
     public void setMainController(ManagementComponentController managementComponentController){
@@ -43,6 +45,14 @@ public class ThreadManagerComponentController implements Controller {
         } catch (NumberFormatException e) {
             showMessageInNotificationBar("The thread count needs to be a number!");
         }
+    }
+
+    public void setThreadPoolSet() {
+        isThreadPoolSet = true;
+    }
+
+    public boolean isThreadPoolSet() {
+        return isThreadPoolSet;
     }
 
     @FXML
