@@ -34,5 +34,7 @@ public class Constants {
 
     public final static String SEND_ENV_VARS_DATA_PATH = CLIENT_CONTEXT_PATH + "/execution/env/vars";
 
+    public final static String START_SIMULATION_PATH = CLIENT_CONTEXT_PATH + "/simulation/start";
+
 
 }

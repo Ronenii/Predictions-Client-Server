@@ -8,7 +8,7 @@ import simulation.properties.property.impl.IntProperty;
 public class RequestData {
     private final int requestId;
     private final String simulationName;
-    private final int tokens;
+    private SimpleIntegerProperty tokens;
     private SimpleStringProperty status;
     private SimpleIntegerProperty running;
     private SimpleIntegerProperty finished;
@@ -16,7 +16,7 @@ public class RequestData {
     public RequestData(int requestId, DTORequest dtoRequest) {
         this.requestId = requestId;
         simulationName = dtoRequest.getSimulationName();
-        tokens = dtoRequest.getSimulationTokens();
+        tokens = new SimpleIntegerProperty(dtoRequest.getSimulationTokens());
         status = new SimpleStringProperty("PENDING");
         running = new SimpleIntegerProperty();
         finished = new SimpleIntegerProperty();
@@ -43,7 +43,11 @@ public class RequestData {
     }
 
     public int getTokens() {
-        return tokens;
+        return tokens.get();
+    }
+
+    public void decreaseTokens(){
+        tokens.set(tokens.getValue() - 1);
     }
 
     public String getStatus() {
@@ -65,4 +69,5 @@ public class RequestData {
     public SimpleIntegerProperty finishedProperty() {
         return finished;
     }
+
 }

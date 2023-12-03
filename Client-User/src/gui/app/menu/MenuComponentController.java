@@ -88,6 +88,10 @@ public class MenuComponentController implements HasFileLoadedListeners, UserEngi
         newExecutionComponentController.setUpExecutionWindow(requestData);
     }
 
+    public RequestData getRequestDataById(int reqId){
+        return requestComponentController.getRequestDataById(reqId);
+    }
+
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);

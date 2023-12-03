@@ -1,6 +1,12 @@
 package manager.requests.data;
 
 import simulation.objects.world.SimulationInstance;
+import simulation.properties.ending.conditions.EndingCondition;
+import simulation.properties.ending.conditions.EndingConditionType;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ApprovedRequest {
     private final int reqId;
@@ -29,5 +35,15 @@ public class ApprovedRequest {
 
     public SimulationInstance getDefinitionInstance() {
         return definitionInstance;
+    }
+
+    public void setDefinitionInstanceEndingConditions(List<EndingCondition> endingConditions) {
+        Map<EndingConditionType, EndingCondition> endingConditionsMap = new HashMap<>();
+
+        for (EndingCondition endingCondition : endingConditions) {
+            endingConditionsMap.put(endingCondition.getType(), endingCondition);
+        }
+
+        definitionInstance.setEndingConditions(endingConditionsMap);
     }
 }

@@ -44,8 +44,7 @@ import java.util.Map;
 
 import java.util.*;
 
-public class SimulationManager implements EngineInterface {
-    private SimulationInstance simulationDefinition;
+public class SimulationManager {
     // Holds the loaded simulations definitions.
     private Map<String, SimulationDefinition> simulationDefinitions;
     private Map<String, ResultData> pastSimulations;
@@ -57,7 +56,6 @@ public class SimulationManager implements EngineInterface {
     private int simulationBreakdownVersion;
 
     public SimulationManager() {
-        simulationDefinition = null;
         simulationDefinitions = new HashMap<>();
         pastSimulations = new HashMap<>();
         isSimulationLoaded = false;
@@ -68,13 +66,12 @@ public class SimulationManager implements EngineInterface {
     }
 
     public void loadValuesFromDeserialization(SimulationManager instance) {
-        simulationDefinition = instance.simulationDefinition;
         pastSimulations = instance.pastSimulations;
         keysToSerialize = instance.keysToSerialize;
         isSimulationLoaded = instance.isSimulationLoaded;
     }
 
-    @Override
+
     public boolean getIsSimulationLoaded() {
         return isSimulationLoaded;
     }
@@ -107,12 +104,11 @@ public class SimulationManager implements EngineInterface {
         return dtoCreator.createSimulationPreviewDataObject(simulationDefinition.getSimulationName(), simulationDefinition.getEnvironmentProperties(), simulationDefinition.getEntities(), simulationDefinition.getRules(), simulationDefinition.getEndingConditions(), simulationDefinition.getGrid(), simulationDefinition.getThreadCount());
     }
 
-    @Override
     public String getSimulationDetailsById(int simId) {
         return null;
     }
 
-    @Override
+
     public ResultData[] getPastSimulationResultData() {
         return pastSimulations.values().toArray(new ResultData[0]);
     }
@@ -125,7 +121,7 @@ public class SimulationManager implements EngineInterface {
         return pastSimulations.get(id);
     }
 
-    @Override
+
     public DTOLoadResult loadSimulationFromFile(File file) {
         SimulationDefinition newDefinition;
         DTOLoadResult dtoLoadResult = null;
@@ -153,15 +149,16 @@ public class SimulationManager implements EngineInterface {
         return dtoLoadResult;
     }
 
-    @Override
-    public StartResponse startSimulation() {
-        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
-        if(simulationDefinition.isStartable()) {
+
+    public StartResponse startSimulation(int reqId) {
+        SimulationInstance reqSimulationDefinition = requestsManager.getApprovedRequest(reqId).getDefinitionInstance();
+
+        if(reqSimulationDefinition.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
             String id = IdGenerator.generateID();
-            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationList(simulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(), false);
+            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationList(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false);
 
-            addSimulationToQueue(simulationRunData);
+            addSimulationToQueue(simulationRunData, reqSimulationDefinition);
             return new StartResponse(true, String.format("Simulation %s was added to the queue successfully.", id), simulationRunData);
         } else {
             return new StartResponse(false, "ERROR: Could not start simulation. You need to have at least one entity with a population larger than 0.");
@@ -169,10 +166,9 @@ public class SimulationManager implements EngineInterface {
 
     }
 
-    private Map<String, Object> getEnvVarsValuesMap() {
-        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
+    private Map<String, Object> getEnvVarsValuesMap(SimulationInstance reqSimulationDefinition) {
         Map<String, Object> envVarsValuesMap = new HashMap<>();
-        Map<String, Property> environmentProperties = simulationDefinition.getEnvironmentProperties();
+        Map<String, Property> environmentProperties = reqSimulationDefinition.getEnvironmentProperties();
 
         for (Property property : environmentProperties.values()) {
             envVarsValuesMap.put(property.getName(), property.getValue());
@@ -191,26 +187,25 @@ public class SimulationManager implements EngineInterface {
     }
 
 
-
     /**
      * Create and return the DTO start data which contains information about the simulation's environment variables.
      *
      * @return a StartData DTO
      */
-    @Override
-    public StartData getSimulationStartData() {
-        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
-        List<DTOEnvironmentVariable> environmentVariables = new ArrayList<>();
-        Map<String, Property> environmentProperties = this.simulationDefinition.getEnvironmentProperties();
-        Property valueFromTheMap;
 
-        for (Map.Entry<String, Property> entry : environmentProperties.entrySet()) {
-            valueFromTheMap = entry.getValue();
-            environmentVariables.add(getDTOEnvironmentVariable(valueFromTheMap));
-        }
-
-        return new StartData(environmentVariables);
-    }
+//    public StartData getSimulationStartData() {
+//        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
+//        List<DTOEnvironmentVariable> environmentVariables = new ArrayList<>();
+//        Map<String, Property> environmentProperties = this.simulationDefinition.getEnvironmentProperties();
+//        Property valueFromTheMap;
+//
+//        for (Map.Entry<String, Property> entry : environmentProperties.entrySet()) {
+//            valueFromTheMap = entry.getValue();
+//            environmentVariables.add(getDTOEnvironmentVariable(valueFromTheMap));
+//        }
+//
+//        return new StartData(environmentVariables);
+//    }
 
     /**
      * Create a 'DTOEnvironmentVariable' which contain the given environment variable's data and return it.
@@ -266,39 +261,37 @@ public class SimulationManager implements EngineInterface {
         }
     }
 
-    @Override
+
     public SetResponse setEntityPopulation(EntityPopulationUserInput input) {
         return requestsManager.setEntityPopulation(input);
     }
 
-    @Override
+
     public SetResponse setEnvironmentVariable(EnvPropertyUserInput input) {
         return requestsManager.setEnvironmentVariable(input);
     }
 
 
-    @Override
+
     public SimulationRunData getRunDataById(String simId) {
         return executionManager.getRunDataById(simId);
     }
 
 
-    private void addSimulationToQueue(SimulationRunData simulationRunData) {
-        // TODO: adjust to the new construction -> this function needs to receive a simulation name first.
-        SimulationInstance simulationInstance = new SimulationInstance(simulationDefinition);
+    private void addSimulationToQueue(SimulationRunData simulationRunData, SimulationInstance reqSimulationDefinition) {
+        SimulationInstance simulationInstance = new SimulationInstance(reqSimulationDefinition);
         simulationInstance.setSimulationId(simulationRunData.getSimId());
-        // TODO: send null to the executionManager temporarily until we fetch previous methods.
-        executionManager.addSimulationToQueue(null,simulationInstance, simulationRunData);
+        executionManager.addSimulationToQueue(simulationInstance, simulationRunData);
     }
 
-    @Override
+
     public void shutdownThreadPool() {
         if(executionManager != null){
             executionManager.shutdownThreadPool();
         }
     }
 
-    @Override
+
     public void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
         executionManager.setStopPausePlayOrSkipFwdForSimById(simId, dtoSimulationControlBar);
     }

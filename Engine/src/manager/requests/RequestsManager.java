@@ -117,6 +117,7 @@ public class RequestsManager {
                 requestData.getTokens(),
                 new SimulationInstance(simulationDefinitions.get(requestData.getSimulationName()).getSimulationAbstractInstance())));
 
+        approvedRequestMap.get(requestData.requestId).setDefinitionInstanceEndingConditions(requestData.getEndingConditions());
     }
 
     public SetResponse setEntityPopulation(EntityPopulationUserInput input) {

@@ -33,20 +33,22 @@ public class ControlBarController implements Controller, UserEngineCommunicator 
 
     @FXML
     void startButtonActionListener(ActionEvent event) {
-        if(!mainController.isExecuted())
-        {
-            StartResponse response = getEngineAgent().startSimulation();
-            if(response.isSuccess()){
-                mainController.updateStartDetailsMap(response.getSimulationRunData().getSimId(), response.getSimulationRunData().getEnvVarsValuesMap());
-                mainController.getMenusTabPane().getSelectionModel().selectLast();
-                mainController.addSimulationToQueue(response.getSimulationRunData());
-                mainController.setExecuted(true);
-            }
-            showMessageInNotificationBar(response.getMessage());
-
+        if(mainController.requestHasTokens(mainController.getCurrentReqId())) {
+            UserServerAgent.startSimulation(this, mainController.getCurrentReqId());
         } else {
-            showMessageInNotificationBar("Request already started!");
+            showMessageInNotificationBar("No more tokens left!");
         }
+    }
+
+    public void receiveStartResponse(StartResponse response){
+        if(response.isSuccess()){
+            mainController.updateStartDetailsMap(response.getSimulationRunData().getSimId(), response.getSimulationRunData().getEnvVarsValuesMap());
+            mainController.getMenusTabPane().getSelectionModel().selectLast();
+            mainController.addSimulationToQueue(response.getSimulationRunData());
+            mainController.decreaseTokensCount(mainController.getCurrentReqId());
+        }
+
+        showMessageInNotificationBar(response.getMessage());
     }
 
     @Override

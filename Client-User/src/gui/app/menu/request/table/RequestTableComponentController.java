@@ -110,6 +110,10 @@ public class RequestTableComponentController implements Controller {
         this.mainController = mainController;
     }
 
+    public RequestData getRequestDataById(int reqId){
+        return requestDataMap.get(reqId);
+    }
+
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);

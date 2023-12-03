@@ -27,8 +27,6 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
     @FXML private GridPane controlBar;
     @FXML private ControlBarController controlBarController;
 
-    private boolean isExecuted;
-
     private Map<String, StartDetails> startDetailsMap;
 
     public void setMainController(MenuComponentController mainController) {
@@ -84,13 +82,24 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
         UserServerAgent.getSimulationPreviewDataForExecutionWindow(inputsController, requestData);
     }
 
-    public boolean isExecuted() {
-        return isExecuted;
+
+    public int getCurrentReqId() {
+        return inputsController.getCurrentReqId();
     }
 
-    public void setExecuted(boolean value) {
-        isExecuted = value;
+    /**
+     * If the given request has tokens left to run the simulation - return true.
+     */
+    public boolean requestHasTokens(int reqId){
+        RequestData requestData = mainController.getRequestDataById(reqId);
+
+        return requestData.getTokens() != 0;
     }
+
+    public void decreaseTokensCount(int reqId) {
+        mainController.getRequestDataById(reqId).decreaseTokens();
+    }
+
 
     @Override
     public void showMessageInNotificationBar(String message) {
