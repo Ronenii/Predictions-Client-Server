@@ -126,7 +126,7 @@ public class ExecutionDetailsComponentController implements Controller {
      * @param dtoEntities The entities we want to display the quantities of in the
      *                    entitiesTV.
      */
-    private void updateEntitiesTV(List<DTOEntityPopulation> dtoEntities) {
+    private void updateEntitiesTV(DTOEntityPopulation[] dtoEntities) {
         for (DTOEntityPopulation entityPopulation : dtoEntities) {
             if (populationDataMap.containsKey(entityPopulation.getEntityName())) {
                 populationDataMap.get(entityPopulation.getEntityName()).populationProperty().set(entityPopulation.getPopulation());

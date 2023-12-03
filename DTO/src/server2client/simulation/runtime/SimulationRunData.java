@@ -6,18 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 public class SimulationRunData {
+    // Todo - convert this object to be more simple - without using lists/maps.
     private final String simId;
     public final String status;
     private final int tick;
     private final long time;
-    private final List<DTOEntityPopulation> entityPopulation;
+    private final DTOEntityPopulation[] entityPopulation;
     public ResultData resultData;
     private final boolean isCompleted;
     private final Map<String, Object> envVarsValuesMap;
     public String errorMessage = null;
     private final boolean isSimulationSkipped;
 
-    public SimulationRunData(String simId, int tick, long time, List<DTOEntityPopulation> entityPopulation, String status, boolean isCompleted, Map<String, Object> envVarsValuesMap, boolean isSimulationSkipped) {
+    public SimulationRunData(String simId, int tick, long time, DTOEntityPopulation[] entityPopulation, String status, boolean isCompleted, Map<String, Object> envVarsValuesMap, boolean isSimulationSkipped) {
         this.simId = simId;
         this.entityPopulation = entityPopulation;
         this.tick = tick;
@@ -40,7 +41,7 @@ public class SimulationRunData {
         return time;
     }
 
-    public List<DTOEntityPopulation> getEntityPopulation() {
+    public DTOEntityPopulation[] getEntityPopulation() {
         return entityPopulation;
     }
 

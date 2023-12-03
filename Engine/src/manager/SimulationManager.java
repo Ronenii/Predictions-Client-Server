@@ -14,14 +14,9 @@ import server2client.simulation.runtime.ResultData;
 import server2client.simulation.runtime.SimulationRunData;
 import server2client.simulation.runtime.generator.IdGenerator;
 import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
-import server2client.simulation.genral.impl.properties.StartData;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import manager.execution.ExecutionManager;
-import manager.validator.exceptions.IllegalBooleanValueException;
-import manager.validator.exceptions.IllegalStringValueException;
-import manager.validator.exceptions.OutOfRangeException;
-import manager.validator.validator.InputValidator;
 import simulation.objects.world.SimulationInstance;
 import simulation.objects.world.definition.SimulationDefinition;
 import simulation.objects.world.status.SimulationStatus;
@@ -32,11 +27,6 @@ import simulation.properties.property.api.Property;
 import simulation.properties.property.api.PropertyType;
 import simulation.properties.property.impl.DoubleProperty;
 import simulation.properties.property.impl.IntProperty;
-import simulation.properties.property.random.value.api.RandomValueGenerator;
-import simulation.properties.property.random.value.impl.BoolRndValueGen;
-import simulation.properties.property.random.value.impl.DoubleRndValueGen;
-import simulation.properties.property.random.value.impl.IntRndValueGen;
-import simulation.properties.property.random.value.impl.StringRndValueGen;
 
 import java.io.*;
 import java.util.HashMap;
@@ -156,7 +146,7 @@ public class SimulationManager {
         if(reqSimulationDefinition.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
             String id = IdGenerator.generateID();
-            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationList(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false);
+            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationArray(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false);
 
             addSimulationToQueue(simulationRunData, reqSimulationDefinition);
             return new StartResponse(true, String.format("Simulation %s was added to the queue successfully.", id), simulationRunData);
