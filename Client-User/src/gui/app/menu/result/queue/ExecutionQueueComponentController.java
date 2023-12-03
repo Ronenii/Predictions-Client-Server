@@ -84,33 +84,47 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                SimulationRunData selectedInThread;
                 do {
-                    selectedInThread = getEngineAgent().getRunDataById(getQueueSelectedItem().getSimId());// Get the most current run data from the engine
-                    // Wrap UI updates in Platform.runLater to execute them on the FX application thread
-
-                    // isSimulationPaused - true when the simulation on pause
-                    // isSimulationSkippedForward - the skip forward button set this flag to true, allowing the task run this loop once and then return to a hold state.
-                    // oneUpdateAfterPauseFlag - the pause button set this flag to true, allowing the task run this loop once (to fetch the details) and then return to a hold state.
-                    if(!isSimulationPaused || isSimulationSkippedForward || oneUpdateAfterPauseFlag) {
-                        // Check if we skipped forward and didn't get entities in the ResultData to load.
-                        if(!isSimulationSkippedForward || selectedInThread.resultData.getEntities() != null) {
-                            SimulationRunData finalSelectedInThread = selectedInThread;
-                            Platform.runLater(() -> {
-                                mainController.updateGuiToChosenSimulation(finalSelectedInThread); // Update the components displaying the simulation
-                            });
-                            isSimulationSkippedForward = false;
-                        }
-                        oneUpdateAfterPauseFlag = false;
-                    }
-
+                    callMethodGetSimRunDataForSimProgress(this, simId);
                     Thread.sleep(200); // Make the thread sleep for 200ms
-                } while (selectedInThread != null && selectedInThread.getSimId().equals(simId) && !selectedInThread.isCompleted());
-                return null;
+                } while (true);
             }
         };
 
+
+
         runTask(task);
+    }
+
+    /**
+     * This method is needed because in the task's lambda 'this' object do not refer to the 'ExecutionQueueComponentController'.
+     */
+    private void callMethodGetSimRunDataForSimProgress(Task<Void> task, String simId) {
+        UserServerAgent.getSimRunDataForSimProgress(this, getQueueSelectedItem().getSimId(), task, simId);// Get the most current run data from the engine
+    }
+
+    public void receiveSimulationRunForRunningSimulation(SimulationRunData selectedInThread, String simId, Task<Void> task) {
+
+        // Wrap UI updates in Platform.runLater to execute them on the FX application thread
+
+        // isSimulationPaused - true when the simulation on pause
+        // isSimulationSkippedForward - the skip forward button set this flag to true, allowing the task run this loop once and then return to a hold state.
+        // oneUpdateAfterPauseFlag - the pause button set this flag to true, allowing the task run this loop once (to fetch the details) and then return to a hold state.
+        if(!isSimulationPaused || isSimulationSkippedForward || oneUpdateAfterPauseFlag) {
+            // Check if we skipped forward and didn't get entities in the ResultData to load.
+            if(!isSimulationSkippedForward || selectedInThread.resultData.getEntities() != null) {
+                SimulationRunData finalSelectedInThread = selectedInThread;
+                Platform.runLater(() -> {
+                    mainController.updateGuiToChosenSimulation(finalSelectedInThread); // Update the components displaying the simulation
+                });
+                isSimulationSkippedForward = false;
+            }
+            oneUpdateAfterPauseFlag = false;
+        }
+
+        if(selectedInThread == null || !selectedInThread.getSimId().equals(simId) || selectedInThread.isCompleted()) {
+            task.cancel(true);
+        }
     }
 
     public void setMainController(ResultComponentController mainController) {
