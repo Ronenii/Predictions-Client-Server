@@ -39,6 +39,10 @@ public class MenuComponentController implements Controller {
         }
     }
 
+    public boolean isThreadPoolSet() {
+        return managementComponentController.isThreadPoolSet();
+    }
+
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);

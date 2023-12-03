@@ -37,6 +37,10 @@ public class ManagementComponentController implements Controller {
         return simulationManagerComponentController.getSelectedSimulationName();
     }
 
+    public boolean isThreadPoolSet() {
+        return threadManagerComponentController.isThreadPoolSet();
+    }
+
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);
