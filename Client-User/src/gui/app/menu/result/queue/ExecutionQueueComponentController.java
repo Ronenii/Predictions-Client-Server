@@ -155,21 +155,25 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
         for (StatusData s : simulationStatusMap.keySet()) {
             updateQueueManagementData(queueManagementData, s.getStatus());
             if (!s.getStatus().equals(SimulationStatus.COMPLETED.name())) {
-                SimulationRunData selectedInThread = getEngineAgent().getRunDataById(s.getSimId());
-                if(selectedInThread.errorMessage != null){
-                    Platform.runLater(() -> {
-                        showMessageInNotificationBar(selectedInThread.errorMessage);
-                    });
-                }
-
-                showNotificationIfSimulationRunStarted(s, selectedInThread);
-                Platform.runLater(() -> {
-                    s.statusProperty().set(selectedInThread.getStatus());
-                    showNotificationIfSimulationRunCompleted(selectedInThread);
-                });
+                UserServerAgent.getSimRunDataForSimStatus(this, s);
             }
         }
     }
+
+    public void statusUpdateForSingleRunningSimulation(SimulationRunData selectedInThread, StatusData statusData) {
+        if(selectedInThread.errorMessage != null){
+            Platform.runLater(() -> {
+                showMessageInNotificationBar(selectedInThread.errorMessage);
+            });
+        }
+
+        showNotificationIfSimulationRunStarted(statusData, selectedInThread);
+        Platform.runLater(() -> {
+            statusData.statusProperty().set(selectedInThread.getStatus());
+            showNotificationIfSimulationRunCompleted(selectedInThread);
+        });
+    }
+
 
     /**
      * Fetch the 'QueueManagementData' object according to the current simulations in the queue.
