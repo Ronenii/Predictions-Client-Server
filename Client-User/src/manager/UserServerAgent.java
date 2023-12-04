@@ -401,6 +401,37 @@ public class UserServerAgent {
         });
     }
 
+    public static void getSimRunDataForTvMouseClick(ExecutionQueueComponentController controller, String simId) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.GET_SIMULATION_RUN_DATA_PATH)
+                .newBuilder()
+                .addQueryParameter("simId", String.valueOf(simId))
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() == 200) {
+                    String requestStartResponseInJson = response.body().string();
+                    SimulationRunData runData = gson.fromJson(requestStartResponseInJson, SimulationRunData.class);
+                    Platform.runLater(() -> controller.onMouseClickedTvReceiveRunData(runData));
+
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
+    }
+
     public static void getSimRunDataForSimProgress(ExecutionQueueComponentController controller, String simId, Task<Void> task, String selectedSimId) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String finalUrl = HttpUrl

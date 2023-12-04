@@ -57,7 +57,10 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
      */
     @FXML
     void onMouseClickedTV(MouseEvent event) {
-        SimulationRunData selected = mainController.getCurrentSelectedSimulation();
+        mainController.getCurrentSelectedSimulation();
+    }
+
+    public void onMouseClickedTvReceiveRunData(SimulationRunData selected) {
         resetFlags();
         if (selected != null) {
             if (selected.isCompleted()) {
@@ -73,6 +76,7 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
         isSimulationSkippedForward = false;
         oneUpdateAfterPauseFlag = false;
     }
+
 
     /**
      * This task will fetch simulation run data from the gui and display it as long as the simulation is still selected in the TableView
@@ -91,8 +95,6 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
             }
         };
 
-
-
         runTask(task);
     }
 
@@ -104,6 +106,7 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
     }
 
     public void receiveSimulationRunForRunningSimulation(SimulationRunData selectedInThread, String simId, Task<Void> task) {
+
         // Wrap UI updates in Platform.runLater to execute them on the FX application thread
 
         // isSimulationPaused - true when the simulation on pause
@@ -112,14 +115,14 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
         if(!isSimulationPaused || isSimulationSkippedForward || oneUpdateAfterPauseFlag) {
             // Check if we skipped forward and didn't get entities in the ResultData to load.
             if(!isSimulationSkippedForward || selectedInThread.resultData.getEntities() != null) {
-                SimulationRunData finalSelectedInThread = selectedInThread;
                 Platform.runLater(() -> {
-                    mainController.updateGuiToChosenSimulation(finalSelectedInThread); // Update the components displaying the simulation
+                    mainController.updateGuiToChosenSimulation(selectedInThread); // Update the components displaying the simulation
                 });
                 isSimulationSkippedForward = false;
             }
             oneUpdateAfterPauseFlag = false;
         }
+
         //Check if the task loop to be canceled.
         if(selectedInThread == null || !selectedInThread.getSimId().equals(simId) || selectedInThread.isCompleted()) {
             task.cancel(true);
