@@ -16,7 +16,7 @@ public class SingleCondition extends AbstractConditionAction implements Serializ
     private final ConditionOperator operator;
 
     public SingleCondition(ActionType type, Expression property, String contextEntity, SecondaryEntity secondaryEntity, ThenOrElse thenActions, ThenOrElse elseActions, ConditionOperator operator, Expression value) {
-        super(type, property, contextEntity,secondaryEntity, value, elseActions, thenActions);
+        super(type, property, contextEntity,secondaryEntity, value, thenActions, elseActions);
         this.operator = operator;
     }
 
