@@ -1,6 +1,7 @@
 package gui.app.menu.result.details;
 
 import gui.api.Controller;
+import manager.UserServerAgent;
 import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.result.details.control.bar.ExecutionDetailsControlBarController;
@@ -158,17 +159,17 @@ public class ExecutionDetailsComponentController implements Controller {
 
     public void sendStopToTheEngine() {
         DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(true, false, false, false);
-        //mainController.getEngineAgent().setStopPausePlayOrSkipFwdForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+        UserServerAgent.setStopPausePlayOrSkipFwdForSimById(this, simulationIdDetLabel.getText(), dtoSimulationControlBar);
     }
 
     public void sendPauseToTheEngine() {
         DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, true, false, false);
-        //mainController.getEngineAgent().setStopPausePlayOrSkipFwdForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+        UserServerAgent.setStopPausePlayOrSkipFwdForSimById(this, simulationIdDetLabel.getText(), dtoSimulationControlBar);
     }
 
     public void sendPlayToTheEngine() {
         DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, false, true, false);
-        //mainController.getEngineAgent().setStopPausePlayOrSkipFwdForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+        UserServerAgent.setStopPausePlayOrSkipFwdForSimById(this, simulationIdDetLabel.getText(), dtoSimulationControlBar);
     }
 
     public void sendSkipForwardToTheEngine() {

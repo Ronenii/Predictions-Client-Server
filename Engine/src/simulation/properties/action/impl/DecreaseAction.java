@@ -9,6 +9,7 @@ import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.expression.impl.methods.EvaluateExpression;
 import simulation.properties.action.expression.impl.methods.PercentExpression;
+import simulation.properties.action.expression.impl.methods.RandomExpression;
 import simulation.properties.action.expression.impl.methods.TicksExpression;
 import simulation.properties.property.api.Property;
 
@@ -56,7 +57,13 @@ public class DecreaseAction extends OneEntAction implements Serializable {
                 toDecrease.setValue((int)toDecrease.getValue() - (int)value.evaluate(), lastChangeTickCount);
                 break;
             case FLOAT:
-                toDecrease.setValue((double)toDecrease.getValue() - (double)value.evaluate(), lastChangeTickCount);
+                if(value instanceof RandomExpression){
+                    double doubleValue = (int)value.evaluate();
+                    toDecrease.setValue((double)toDecrease.getValue() - doubleValue, lastChangeTickCount);
+                }else {
+                    toDecrease.setValue((double)toDecrease.getValue() - (double)value.evaluate(), lastChangeTickCount);
+                }
+
                 break;
         }
     }

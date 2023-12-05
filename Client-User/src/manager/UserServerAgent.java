@@ -99,9 +99,9 @@ public class UserServerAgent {
         engine.shutdownThreadPool();
     }
 
-    public void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
-        engine.setStopPausePlayOrSkipFwdForSimById(simId, dtoSimulationControlBar);
-    }
+//    public void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
+//        engine.setStopPausePlayOrSkipFwdForSimById(simId, dtoSimulationControlBar);
+//    }
 
 
 
@@ -457,6 +457,34 @@ public class UserServerAgent {
                     Platform.runLater(() -> controller.receiveSimulationRunForRunningSimulation(runData, selectedSimId, task));
 
                 } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
+    }
+
+    public static void setStopPausePlayOrSkipFwdForSimById(Controller controller, String simId, DTOSimulationControlBar dtoSimulationControlBar) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String requestJsonContent = gson.toJson(dtoSimulationControlBar);
+        RequestBody requestBody = RequestBody.create(requestJsonContent,MediaType.parse("application/json"));
+        String finalUrl = HttpUrl
+                .parse(Constants.SET_DTO_CONTROL_BAR_PATH)
+                .newBuilder()
+                .addQueryParameter("simId", String.valueOf(simId))
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
                 }
             }

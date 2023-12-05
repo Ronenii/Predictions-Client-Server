@@ -38,5 +38,7 @@ public class Constants {
 
     public final static String GET_SIMULATION_RUN_DATA_PATH = CLIENT_CONTEXT_PATH + "/simulation/run/data";
 
+    public final static String SET_DTO_CONTROL_BAR_PATH = CLIENT_CONTEXT_PATH + "/simulation/control/bar";
+
 
 }
