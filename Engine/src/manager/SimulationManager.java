@@ -139,7 +139,6 @@ public class SimulationManager {
         return dtoLoadResult;
     }
 
-
     public StartResponse startSimulation(int reqId) {
         SimulationInstance reqSimulationDefinition = requestsManager.getApprovedRequest(reqId).getDefinitionInstance();
 
