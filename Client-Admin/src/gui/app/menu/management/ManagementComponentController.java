@@ -37,6 +37,10 @@ public class ManagementComponentController implements Controller {
         return simulationManagerComponentController.getSelectedSimulationName();
     }
 
+    public void enableThreadComponent() {
+        threadManagerComponentController.enableThreadComponent();
+    }
+
     public boolean isThreadPoolSet() {
         return threadManagerComponentController.isThreadPoolSet();
     }

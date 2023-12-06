@@ -57,7 +57,12 @@ public class ThreadManagerComponentController implements Controller {
 
     @FXML
     void onTextFieldThreadCountAction(ActionEvent event) {
+        onButtonSetThreadCountClicked(event);
+    }
 
+    public void enableThreadComponent() {
+        textFieldThreadCount.setDisable(false);
+        buttonSetThreadCount.setDisable(false);
     }
 
     public void updateLabelsInQueueManagement(ThreadData queueManagementData) {

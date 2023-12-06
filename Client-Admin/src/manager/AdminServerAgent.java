@@ -222,6 +222,7 @@ public class AdminServerAgent {
                     Platform.runLater(() -> {
                         controller.showMessageInNotificationBar(String.format("Thread pool count updated to %d", threadCount));
                         controller.setThreadPoolSet();
+                        controller.clearComponent();
                     });
                 }
                 else {
