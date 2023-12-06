@@ -596,6 +596,11 @@ public class SimulationInstance implements Serializable, Runnable {
                     if (proximityAction.getProximityActions() != null) {
                         checkForEnvironmentInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
                     }
+
+                    if(proximityAction.getDepthExpression() instanceof EnvironmentExpression) {
+                        EnvironmentExpression environmentExpression = (EnvironmentExpression) proximityAction.getDepthExpression();
+                        environmentExpression.setEnvProperty(environmentProperties.get(environmentExpression.getPropertyName()));
+                    }
                 }
 
                 if (action.getContextProperty() != null && action.getContextProperty() instanceof EnvironmentExpression) {
@@ -642,6 +647,11 @@ public class SimulationInstance implements Serializable, Runnable {
                 if (proximityAction.getProximityActions() != null) {
                     checkForEnvironmentInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
                 }
+
+                if(proximityAction.getDepthExpression() instanceof EnvironmentExpression) {
+                    EnvironmentExpression environmentExpression = (EnvironmentExpression) proximityAction.getDepthExpression();
+                    environmentExpression.setEnvProperty(environmentProperties.get(environmentExpression.getPropertyName()));
+                }
             }
 
             if (action.getContextProperty() != null && action.getContextProperty() instanceof EnvironmentExpression) {
@@ -677,6 +687,11 @@ public class SimulationInstance implements Serializable, Runnable {
                     if (proximityAction.getProximityActions() != null) {
                         checkForTicksInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
                     }
+
+                    if(proximityAction.getDepthExpression() instanceof TicksExpression) {
+                        TicksExpression ticksExpression = (TicksExpression) proximityAction.getDepthExpression();
+                        ticksExpression.setSimulationTicks(ticksCounter);
+                    }
                 }
 
                 if (action.getContextProperty() != null && action.getContextProperty() instanceof TicksExpression) {
@@ -708,6 +723,11 @@ public class SimulationInstance implements Serializable, Runnable {
                 ProximityAction proximityAction = (ProximityAction) action;
                 if (proximityAction.getProximityActions() != null) {
                     checkForTicksInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
+                }
+
+                if(proximityAction.getDepthExpression() instanceof TicksExpression) {
+                    TicksExpression ticksExpression = (TicksExpression) proximityAction.getDepthExpression();
+                    ticksExpression.setSimulationTicks(ticksCounter);
                 }
             }
 
