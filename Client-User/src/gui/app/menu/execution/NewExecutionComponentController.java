@@ -65,7 +65,7 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
     }
 
     public void addSimulationToQueue(SimulationRunData simulationRunData){
-        mainController.addSimulationToQueue(simulationRunData);
+        mainController.addSimulationToQueue(simulationRunData, mainController.getRequestDataById(getCurrentReqId()));
     }
 
     public void updateStartDetailsMap(String simId, Map<String, Object> envVarsValuesMap) {
@@ -98,6 +98,7 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
 
     public void decreaseTokensCount(int reqId) {
         mainController.getRequestDataById(reqId).decreaseTokens();
+        mainController.refreshRequestsTv();
     }
 
 

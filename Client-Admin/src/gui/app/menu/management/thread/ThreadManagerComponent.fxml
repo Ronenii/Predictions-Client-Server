@@ -41,8 +41,8 @@
             </Label>
             <HBox alignment="TOP_CENTER" spacing="10.0">
                <children>
-                  <TextField fx:id="textFieldThreadCount" onAction="#onTextFieldThreadCountAction" />
-                  <Button fx:id="buttonSetThreadCount" mnemonicParsing="false" onAction="#onButtonSetThreadCountClicked" text="set" />
+                  <TextField fx:id="textFieldThreadCount" disable="true" onAction="#onTextFieldThreadCountAction" />
+                  <Button fx:id="buttonSetThreadCount" disable="true" mnemonicParsing="false" onAction="#onButtonSetThreadCountClicked" text="set" />
                </children>
             </HBox>
          </children>

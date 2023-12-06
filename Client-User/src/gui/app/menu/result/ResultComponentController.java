@@ -1,6 +1,7 @@
 package gui.app.menu.result;
 
 import gui.api.Controller;
+import gui.app.menu.request.data.RequestData;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.result.details.ExecutionDetailsComponentController;
@@ -56,8 +57,8 @@ public class ResultComponentController implements UserEngineCommunicator, Contro
     /**
      * Adds the given simulation to the execution queue
      */
-    public void addSimulationToQueue(SimulationRunData simulationRunData) {
-        executionQueueComponentController.addSimulationToQueue(simulationRunData);
+    public void addSimulationToQueue(SimulationRunData simulationRunData, RequestData requestData) {
+        executionQueueComponentController.addSimulationToQueue(simulationRunData, requestData);
     }
 
     /**
@@ -114,6 +115,10 @@ public class ResultComponentController implements UserEngineCommunicator, Contro
 
     public void setOneUpdateAfterPauseFlag() {
         executionQueueComponentController.setOneUpdateAfterPauseFlag();
+    }
+
+    public void refreshRequestsTv(){
+        mainController.refreshRequestsTv();
     }
 
     @Override

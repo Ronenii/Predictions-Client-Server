@@ -68,7 +68,6 @@ public class PRDConverter {
     public SimulationInstance PRDWorld2World(PRDWorld prdWorld, Map<String, SimulationDefinition> simulationDefinitions) {
 
         if (!isWorldGridAndWorldNameValid(prdWorld, simulationDefinitions)) {
-            validator.addEntitiesAndEnvPropCreationErrorMessage();
             throw new IllegalArgumentException(validator.getErrorList());
         }
 

@@ -76,8 +76,8 @@ public class MenuComponentController implements HasFileLoadedListeners, UserEngi
         return menusTabPane;
     }
 
-    public void addSimulationToQueue(SimulationRunData simulationRunData){
-        resultComponentController.addSimulationToQueue(simulationRunData);
+    public void addSimulationToQueue(SimulationRunData simulationRunData, RequestData requestData){
+        resultComponentController.addSimulationToQueue(simulationRunData, requestData);
     }
 
     public void rerunSimulationById(String simId) {
@@ -90,6 +90,10 @@ public class MenuComponentController implements HasFileLoadedListeners, UserEngi
 
     public RequestData getRequestDataById(int reqId){
         return requestComponentController.getRequestDataById(reqId);
+    }
+
+    public void refreshRequestsTv(){
+        requestComponentController.refreshRequestsTv();
     }
 
     @Override

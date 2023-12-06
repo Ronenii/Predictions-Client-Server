@@ -122,12 +122,6 @@ public class SimulationManager {
                 dtoLoadResult = new DTOLoadResult(true, "");
 
                 isFirstSimulationLoaded = false;
-                if (executionManager != null){
-                    executionManager.shutdownThreadPool();
-                }
-
-                //executionManager = new ExecutionManager(simulationDefinition.getThreadCount());
-
                 simulationBreakdownVersion++;
                 isSimulationLoaded = true;
             }

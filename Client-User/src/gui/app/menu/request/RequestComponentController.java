@@ -49,6 +49,10 @@ public class RequestComponentController implements Controller {
        return requestTableComponentController.getRequestDataById(reqId);
     }
 
+    public void refreshRequestsTv(){
+        requestTableComponentController.refreshRequestsTv();
+    }
+
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);

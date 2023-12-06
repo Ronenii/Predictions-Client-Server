@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import manager.constant.Constants;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+import server2client.simulation.load.result.DTOLoadResult;
 import server2client.simulation.prview.SimulationsPreviewData;
 import server2client.simulation.request.DTORequests;
 
@@ -121,7 +122,7 @@ public class AdminServerAgent {
      */
     public static void uploadFile(File file, SimulationManagerComponentController simulationManagerComponentController) {
         final String fileNameString = "File: \"" + file.getName() + "\", ";
-
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         // TODO: Validate file path and suffix (xml)
 
         // Convert the file into a multipart request body
@@ -154,8 +155,10 @@ public class AdminServerAgent {
                 }
                 // If the configuration file is invalid (errors with trying to load the file as a simulation).
                 else if (response.code() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                    String dtoLoadResultInJson = response.body().string();
+                    DTOLoadResult dtoLoadResult = gson.fromJson(dtoLoadResultInJson, DTOLoadResult.class);
                     System.out.println(fileNameString + "Invalid file configuration.");
-                    Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar(response.body().toString()));
+                    Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar(dtoLoadResult.getMessage()));
                 } else {
                     System.out.println(fileNameString + "encountered a problem while uploading a file.");
                     Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar("Error: a problem was encountered while trying to upload a file to the server."));
@@ -222,6 +225,7 @@ public class AdminServerAgent {
                     Platform.runLater(() -> {
                         controller.showMessageInNotificationBar(String.format("Thread pool count updated to %d", threadCount));
                         controller.setThreadPoolSet();
+                        controller.clearComponent();
                     });
                 }
                 else {

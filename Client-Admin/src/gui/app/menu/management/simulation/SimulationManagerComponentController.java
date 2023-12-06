@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class SimulationManagerComponentController implements Controller {
 
-    private Controller mainController;
+    private ManagementComponentController mainController;
 
     @FXML
     private TextField textFieldPath;
@@ -79,6 +79,8 @@ public class SimulationManagerComponentController implements Controller {
                 .forEach(previewData -> {
                     updateSimulationsListView(previewData.getSimulationName());
                 });
+
+        mainController.enableThreadComponent();
     }
 
     private void updateSimulationsListView(String simName) {

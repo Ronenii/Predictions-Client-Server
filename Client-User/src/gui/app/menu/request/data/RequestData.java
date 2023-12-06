@@ -18,20 +18,12 @@ public class RequestData {
         simulationName = dtoRequest.getSimulationName();
         tokens = new SimpleIntegerProperty(dtoRequest.getSimulationTokens());
         status = new SimpleStringProperty("PENDING");
-        running = new SimpleIntegerProperty();
-        finished = new SimpleIntegerProperty();
+        running = new SimpleIntegerProperty(0);
+        finished = new SimpleIntegerProperty(0);
     }
 
     public void setStatus(String status) {
         this.status.set(status);
-    }
-
-    public void setRunning(int running) {
-        this.running.set(running);
-    }
-
-    public void setFinished(int finished) {
-        this.finished.set(finished);
     }
 
     public int getRequestId() {
@@ -54,6 +46,18 @@ public class RequestData {
         return status.get();
     }
 
+    public void increaseRunning(){
+        running.set(running.getValue() + 1);
+    }
+
+    public void decreaseRunning() {
+        running.set(running.getValue() - 1);
+    }
+
+    public void increaseFinished() {
+        finished.set(finished.getValue() + 1);
+    }
+
     public int getRunning() {
         return running.get();
     }
@@ -69,5 +73,4 @@ public class RequestData {
     public SimpleIntegerProperty finishedProperty() {
         return finished;
     }
-
 }
