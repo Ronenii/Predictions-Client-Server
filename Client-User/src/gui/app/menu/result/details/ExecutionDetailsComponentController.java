@@ -60,7 +60,7 @@ public class ExecutionDetailsComponentController implements Controller {
     private SimpleStringProperty durationProperty;
     private SimpleStringProperty simIdProperty;
     private SimpleStringProperty statusProperty;
-
+    private String currentSimId = null;
     private boolean isPlayButtonClicked;
     private boolean skipOne;
 
@@ -112,6 +112,11 @@ public class ExecutionDetailsComponentController implements Controller {
      * Updates the components according to the given simulation run data.
      */
     public void updateToChosenSimulation(SimulationRunData runData) {
+        if(currentSimId == null || !currentSimId.equals(runData.getSimId())){
+            currentSimId = runData.getSimId();
+            entitiesTV.getItems().clear();
+        }
+
         ticksProperty.set(String.valueOf(runData.getTick()));
         durationProperty.set(formatTime(runData.getTime()));
         statusProperty.set(runData.getStatus());
@@ -139,6 +144,12 @@ public class ExecutionDetailsComponentController implements Controller {
     private void updateEntitiesTV(DTOEntityPopulation[] dtoEntities) {
         for (DTOEntityPopulation entityPopulation : dtoEntities) {
             if (populationDataMap.containsKey(entityPopulation.getEntityName())) {
+                // if the client switched to other simulation, the entities table view will be empty.
+                if(!isEntityInTv(entityPopulation.getEntityName())){
+                    PopulationData populationData = populationDataMap.get(entityPopulation.getEntityName());
+                    entitiesTV.getItems().add(populationData);
+                }
+
                 populationDataMap.get(entityPopulation.getEntityName()).populationProperty().set(entityPopulation.getPopulation());
             } else {
                 PopulationData populationData = new PopulationData(entityPopulation.getEntityName(), entityPopulation.getPopulation());
@@ -146,6 +157,16 @@ public class ExecutionDetailsComponentController implements Controller {
                 populationDataMap.put(entityPopulation.getEntityName(), populationData);
             }
         }
+    }
+
+    private boolean isEntityInTv(String entityName){
+        for(PopulationData populationData : entitiesTV.getItems()) {
+            if (populationData.getName().equals(entityName)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void clearComponent() {
