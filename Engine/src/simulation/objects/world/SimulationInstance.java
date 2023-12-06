@@ -38,10 +38,10 @@ public class SimulationInstance implements Serializable, Runnable {
     private Map<EndingConditionType, EndingCondition> endingConditions;
     private EndingCondition terminateCondition;
     private final TicksCounter ticksCounter;
+    private final int threadSleepDuration;
     private long timePassed;
     private long timePassedBeforePause;
     private long startingTime;
-    private int threadCount;
     private final Grid grid;
     private int totalPopulation;
     private final UserInstructions userInstructions;
@@ -50,7 +50,7 @@ public class SimulationInstance implements Serializable, Runnable {
     private ResultData resultData;
     private String errorMessage;
 
-    public SimulationInstance(String simulationName, String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, TicksCounter ticksCounter, Grid grid) {
+    public SimulationInstance(String simulationName, String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, TicksCounter ticksCounter, Grid grid, int threadSleepDuration) {
         this.simulationName = simulationName;
         this.simulationId = simulationId;
         this.environmentProperties = environmentProperties;
@@ -60,6 +60,7 @@ public class SimulationInstance implements Serializable, Runnable {
         this.timePassed = 0;
         this.grid = grid;
         totalPopulation = 0;
+        this.threadSleepDuration = threadSleepDuration;
         this.status = SimulationStatus.WAITING;
         userInstructions = new UserInstructions(false, false, false);
     }
@@ -73,10 +74,10 @@ public class SimulationInstance implements Serializable, Runnable {
         this.endingConditions = simulationInstance.getEndingConditions();
         this.ticksCounter = new TicksCounter();
         this.timePassed = 0;
-        this.threadCount = simulationInstance.threadCount;
         this.grid = new Grid(simulationInstance.grid);
         totalPopulation = 0;
         this.status = SimulationStatus.WAITING;
+        this.threadSleepDuration = simulationInstance.getThreadSleepDuration();
         userInstructions = new UserInstructions(false, false, false);
     }
 
@@ -124,10 +125,6 @@ public class SimulationInstance implements Serializable, Runnable {
         return grid;
     }
 
-    public int getThreadCount() {
-        return threadCount;
-    }
-
     public String getErrorMessage() {
         return errorMessage;
     }
@@ -152,8 +149,8 @@ public class SimulationInstance implements Serializable, Runnable {
         return userInstructions;
     }
 
-    public void setThreadCount(int threadCount) {
-        this.threadCount = threadCount;
+    public int getThreadSleepDuration() {
+        return threadSleepDuration;
     }
 
     @Override
@@ -257,7 +254,7 @@ public class SimulationInstance implements Serializable, Runnable {
         initSimulation();
         // Simulation main loop
         do {
-            //threadSleep();
+            threadSleep();
             if (!userInstructions.isSimulationPaused || userInstructions.isSimulationSkippedForward) {
                 try {
                     checkPopulation();
@@ -836,11 +833,12 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     private void threadSleep() {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        if(threadSleepDuration != 0){
+            try {
+                Thread.sleep(threadSleepDuration);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
-
 }
