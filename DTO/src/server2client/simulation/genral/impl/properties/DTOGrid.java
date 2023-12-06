@@ -1,14 +1,12 @@
 package server2client.simulation.genral.impl.properties;
 
-public class DTOGridAndThread {
+public class DTOGrid {
     private final int gridRows;
     private final int gridColumns;
-    private final int threadCount;
 
-    public DTOGridAndThread(int gridRows, int gridColumns, int threadCount) {
+    public DTOGrid(int gridRows, int gridColumns) {
         this.gridRows = gridRows;
         this.gridColumns = gridColumns;
-        this.threadCount = threadCount;
     }
 
     public int getGridRows() {
@@ -19,7 +17,4 @@ public class DTOGridAndThread {
         return gridColumns;
     }
 
-    public int getThreadCount() {
-        return threadCount;
-    }
 }

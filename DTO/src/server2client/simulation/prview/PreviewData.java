@@ -2,24 +2,22 @@ package server2client.simulation.prview;
 
 import server2client.simulation.genral.impl.objects.DTOEntity;
 import server2client.simulation.genral.impl.properties.DTOEndingCondition;
-import server2client.simulation.genral.impl.properties.DTOGridAndThread;
+import server2client.simulation.genral.impl.properties.DTOGrid;
 import server2client.simulation.genral.impl.properties.DTORule;
 import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
-
-import java.util.List;
 
 /**
  * A class that holds the simulation's data required to present in menu option 2.
  */
 public class PreviewData{
     private final String simulationName;
-    private final DTOGridAndThread gridAndThread;
+    private final DTOGrid gridAndThread;
     private final DTOEnvironmentVariable[] envVariables;
     private final DTOEntity[] entities;
     private final DTORule[] rules;
     private final DTOEndingCondition[] endingConditions;
 
-    public PreviewData(String simulationName, DTOGridAndThread gridAndThread, DTOEnvironmentVariable[] envVariables, DTOEntity[] entities, DTORule[] rules, DTOEndingCondition[] endingConditions) {
+    public PreviewData(String simulationName, DTOGrid gridAndThread, DTOEnvironmentVariable[] envVariables, DTOEntity[] entities, DTORule[] rules, DTOEndingCondition[] endingConditions) {
         this.simulationName = simulationName;
         this.gridAndThread = gridAndThread;
         this.envVariables = envVariables;
@@ -32,7 +30,7 @@ public class PreviewData{
         return simulationName;
     }
 
-    public DTOGridAndThread getGridAndThread() {
+    public DTOGrid getGridAndThread() {
         return gridAndThread;
     }
 

@@ -3,9 +3,8 @@ package gui.app.menu.execution.inputs.entity;
 import gui.api.Controller;
 import server2client.simulation.execution.SetResponse;
 import server2client.simulation.genral.impl.objects.DTOEntity;
-import server2client.simulation.genral.impl.properties.DTOGridAndThread;
+import server2client.simulation.genral.impl.properties.DTOGrid;
 import server2client.simulation.prview.PreviewData;
-import gui.api.BarNotifier;
 import gui.api.UserEngineCommunicator;
 import gui.app.menu.execution.inputs.InputsController;
 import gui.app.menu.execution.models.EntitiesStartData;
@@ -14,13 +13,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
-import jaxb.event.FileLoadedEvent;
 import manager.UserServerAgent;
 import client2server.simulation.execution.user.input.EntityPopulationUserInput;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class EntityPopulationComponentController implements Controller, UserEngineCommunicator {
@@ -143,7 +139,7 @@ public class EntityPopulationComponentController implements Controller, UserEngi
         entitiesLeftLabel.setText(String.valueOf(entityCount));
     }
 
-    private int calcGridCells(DTOGridAndThread grid){
+    private int calcGridCells(DTOGrid grid){
         gridSize = grid.getGridRows() * grid.getGridColumns();
         return gridSize;
     }

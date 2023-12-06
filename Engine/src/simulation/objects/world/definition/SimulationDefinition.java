@@ -19,7 +19,4 @@ public class SimulationDefinition {
         return simulationAbstractInstance;
     }
 
-    public void updateSimulationThreadCount(int threadCount) {
-        simulationAbstractInstance.setThreadCount(threadCount);
-    }
 }
