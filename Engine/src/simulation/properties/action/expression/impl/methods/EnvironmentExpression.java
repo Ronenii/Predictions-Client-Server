@@ -7,7 +7,7 @@ import simulation.properties.property.api.PropertyType;
 
 public class EnvironmentExpression extends AbstractExpression {
 
-    private final Property envProperty;
+    private Property envProperty;
 
     public EnvironmentExpression(PropertyType returnValueType, Property envProperty) {
         super(returnValueType);
@@ -29,9 +29,13 @@ public class EnvironmentExpression extends AbstractExpression {
         return envProperty.getValue();
     }
 
+    public void setEnvProperty(Property envProperty) {
+        this.envProperty = envProperty;
+    }
+
     @Override
     public String getPropertyName() {
-        return null;
+        return envProperty.getName();
     }
 
     @Override

@@ -1,11 +1,8 @@
 package gui.app.menu.simulation.breakdown.details.general;
 
-import server2client.simulation.genral.impl.properties.DTOEndingCondition;
-import server2client.simulation.genral.impl.properties.DTOGridAndThread;
+import server2client.simulation.genral.impl.properties.DTOGrid;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-
-import java.util.List;
 
 public class GeneralDetailsController {
 
@@ -16,7 +13,7 @@ public class GeneralDetailsController {
     private Label lblGridWidth;
 
 
-    public void setComponentDet(DTOGridAndThread gridAndThread) {
+    public void setComponentDet(DTOGrid gridAndThread) {
         lblGridHeight.setText(String.valueOf(gridAndThread.getGridRows()));
         lblGridWidth.setText(String.valueOf(gridAndThread.getGridColumns()));
     }

@@ -8,6 +8,7 @@ import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
 import simulation.properties.action.expression.impl.methods.PercentExpression;
+import simulation.properties.action.expression.impl.methods.RandomExpression;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
@@ -54,7 +55,13 @@ public class IncreaseAction extends OneEntAction implements Serializable {
                 toIncrease.setValue((int)toIncrease.getValue() + (int)value.evaluate(), lastChangeTickCount);
                 break;
             case FLOAT:
-                toIncrease.setValue((double)toIncrease.getValue() + (double)value.evaluate(), lastChangeTickCount);
+                if(value instanceof RandomExpression){
+                    double doubleValue = (int)value.evaluate();
+                    toIncrease.setValue((double)toIncrease.getValue() + doubleValue, lastChangeTickCount);
+                }else {
+                    toIncrease.setValue((double)toIncrease.getValue() + (double)value.evaluate(), lastChangeTickCount);
+                }
+
                 break;
         }
     }

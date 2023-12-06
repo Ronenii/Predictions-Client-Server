@@ -13,6 +13,7 @@ import simulation.objects.world.user.instructions.UserInstructions;
 import simulation.properties.action.api.AbstractAction;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
+import simulation.properties.action.expression.impl.methods.EnvironmentExpression;
 import simulation.properties.action.expression.impl.methods.TicksExpression;
 import simulation.properties.action.impl.calculation.CalculationAction;
 import simulation.properties.action.impl.condition.AbstractConditionAction;
@@ -37,10 +38,10 @@ public class SimulationInstance implements Serializable, Runnable {
     private Map<EndingConditionType, EndingCondition> endingConditions;
     private EndingCondition terminateCondition;
     private final TicksCounter ticksCounter;
+    private final int threadSleepDuration;
     private long timePassed;
     private long timePassedBeforePause;
     private long startingTime;
-    private int threadCount;
     private final Grid grid;
     private int totalPopulation;
     private final UserInstructions userInstructions;
@@ -49,7 +50,7 @@ public class SimulationInstance implements Serializable, Runnable {
     private ResultData resultData;
     private String errorMessage;
 
-    public SimulationInstance(String simulationName, String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, TicksCounter ticksCounter, Grid grid) {
+    public SimulationInstance(String simulationName, String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, TicksCounter ticksCounter, Grid grid, int threadSleepDuration) {
         this.simulationName = simulationName;
         this.simulationId = simulationId;
         this.environmentProperties = environmentProperties;
@@ -59,6 +60,7 @@ public class SimulationInstance implements Serializable, Runnable {
         this.timePassed = 0;
         this.grid = grid;
         totalPopulation = 0;
+        this.threadSleepDuration = threadSleepDuration;
         this.status = SimulationStatus.WAITING;
         userInstructions = new UserInstructions(false, false, false);
     }
@@ -72,10 +74,10 @@ public class SimulationInstance implements Serializable, Runnable {
         this.endingConditions = simulationInstance.getEndingConditions();
         this.ticksCounter = new TicksCounter();
         this.timePassed = 0;
-        this.threadCount = simulationInstance.threadCount;
         this.grid = new Grid(simulationInstance.grid);
         totalPopulation = 0;
         this.status = SimulationStatus.WAITING;
+        this.threadSleepDuration = simulationInstance.getThreadSleepDuration();
         userInstructions = new UserInstructions(false, false, false);
     }
 
@@ -123,10 +125,6 @@ public class SimulationInstance implements Serializable, Runnable {
         return grid;
     }
 
-    public int getThreadCount() {
-        return threadCount;
-    }
-
     public String getErrorMessage() {
         return errorMessage;
     }
@@ -151,8 +149,8 @@ public class SimulationInstance implements Serializable, Runnable {
         return userInstructions;
     }
 
-    public void setThreadCount(int threadCount) {
-        this.threadCount = threadCount;
+    public int getThreadSleepDuration() {
+        return threadSleepDuration;
     }
 
     @Override
@@ -256,7 +254,7 @@ public class SimulationInstance implements Serializable, Runnable {
         initSimulation();
         // Simulation main loop
         do {
-            //threadSleep();
+            threadSleep();
             if (!userInstructions.isSimulationPaused || userInstructions.isSimulationSkippedForward) {
                 try {
                     checkPopulation();
@@ -573,6 +571,98 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
 
+    //TODO - fetch env vars expressions.
+    private void fetchEnvironmentExpressions() {
+        for (Rule rule : rules.values()) {
+            for (Action action : rule.getActions()) {
+                if (action instanceof AbstractConditionAction) {
+                    AbstractConditionAction abstractConditionAction = (AbstractConditionAction) action;
+                    if (abstractConditionAction instanceof MultipleCondition) {
+                        checkForEnvironmentInSubMultipleConditions(((MultipleCondition) abstractConditionAction).getSubConditions());
+                    }
+                    if (abstractConditionAction.getThenActions() != null) {
+                        checkForEnvironmentInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
+                    }
+
+                    if (abstractConditionAction.getElseActions() != null) {
+                        checkForEnvironmentInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
+                    }
+
+                } else if (action instanceof ProximityAction) {
+                    ProximityAction proximityAction = (ProximityAction) action;
+                    if (proximityAction.getProximityActions() != null) {
+                        checkForEnvironmentInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
+                    }
+
+                    if(proximityAction.getDepthExpression() instanceof EnvironmentExpression) {
+                        EnvironmentExpression environmentExpression = (EnvironmentExpression) proximityAction.getDepthExpression();
+                        environmentExpression.setEnvProperty(environmentProperties.get(environmentExpression.getPropertyName()));
+                    }
+                }
+
+                if (action.getContextProperty() != null && action.getContextProperty() instanceof EnvironmentExpression) {
+                    EnvironmentExpression environmentExpression = (EnvironmentExpression) action.getContextProperty();
+                    environmentExpression.setEnvProperty(environmentProperties.get(environmentExpression.getPropertyName()));
+                }
+
+                if (action.getValueExpression() != null && action.getValueExpression() instanceof EnvironmentExpression) {
+                    EnvironmentExpression environmentExpression = (EnvironmentExpression) action.getValueExpression();
+                    environmentExpression.setEnvProperty(environmentProperties.get(environmentExpression.getPropertyName()));
+                }
+            }
+        }
+    }
+
+    private void checkForEnvironmentInSubMultipleConditions(List<AbstractConditionAction> subConditions) {
+        for (AbstractConditionAction action : subConditions) {
+            if (action.getContextProperty() != null && action.getContextProperty() instanceof EnvironmentExpression) {
+                EnvironmentExpression environmentExpression = (EnvironmentExpression) action.getContextProperty();
+                environmentExpression.setEnvProperty(environmentProperties.get(environmentExpression.getPropertyName()));
+            }
+
+            if (action.getValueExpression() != null && action.getValueExpression() instanceof EnvironmentExpression) {
+                EnvironmentExpression environmentExpression = (EnvironmentExpression) action.getValueExpression();
+                environmentExpression.setEnvProperty(environmentProperties.get(environmentExpression.getPropertyName()));
+            }
+        }
+    }
+
+    private void checkForEnvironmentInSubActions(List<Action> subActions) {
+        for (Action action : subActions) {
+            if (action instanceof AbstractConditionAction) {
+                AbstractConditionAction abstractConditionAction = (AbstractConditionAction) action;
+                if (abstractConditionAction.getThenActions() != null) {
+                    checkForEnvironmentInSubActions(abstractConditionAction.getThenActions().getActionsToInvoke());
+                }
+
+                if (abstractConditionAction.getElseActions() != null) {
+                    checkForEnvironmentInSubActions(abstractConditionAction.getElseActions().getActionsToInvoke());
+                }
+
+            } else if (action instanceof ProximityAction) {
+                ProximityAction proximityAction = (ProximityAction) action;
+                if (proximityAction.getProximityActions() != null) {
+                    checkForEnvironmentInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
+                }
+
+                if(proximityAction.getDepthExpression() instanceof EnvironmentExpression) {
+                    EnvironmentExpression environmentExpression = (EnvironmentExpression) proximityAction.getDepthExpression();
+                    environmentExpression.setEnvProperty(environmentProperties.get(environmentExpression.getPropertyName()));
+                }
+            }
+
+            if (action.getContextProperty() != null && action.getContextProperty() instanceof EnvironmentExpression) {
+                EnvironmentExpression environmentExpression = (EnvironmentExpression) action.getContextProperty();
+                environmentExpression.setEnvProperty(environmentProperties.get(environmentExpression.getPropertyName()));
+            }
+
+            if (action.getValueExpression() != null && action.getValueExpression() instanceof EnvironmentExpression) {
+                EnvironmentExpression environmentExpression = (EnvironmentExpression) action.getValueExpression();
+                environmentExpression.setEnvProperty(environmentProperties.get(environmentExpression.getPropertyName()));
+            }
+        }
+    }
+
     private void fetchTicksExpressions() {
         for (Rule rule : rules.values()) {
             for (Action action : rule.getActions()) {
@@ -593,6 +683,11 @@ public class SimulationInstance implements Serializable, Runnable {
                     ProximityAction proximityAction = (ProximityAction) action;
                     if (proximityAction.getProximityActions() != null) {
                         checkForTicksInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
+                    }
+
+                    if(proximityAction.getDepthExpression() instanceof TicksExpression) {
+                        TicksExpression ticksExpression = (TicksExpression) proximityAction.getDepthExpression();
+                        ticksExpression.setSimulationTicks(ticksCounter);
                     }
                 }
 
@@ -625,6 +720,11 @@ public class SimulationInstance implements Serializable, Runnable {
                 ProximityAction proximityAction = (ProximityAction) action;
                 if (proximityAction.getProximityActions() != null) {
                     checkForTicksInSubActions(proximityAction.getProximityActions().getActionsToInvoke());
+                }
+
+                if(proximityAction.getDepthExpression() instanceof TicksExpression) {
+                    TicksExpression ticksExpression = (TicksExpression) proximityAction.getDepthExpression();
+                    ticksExpression.setSimulationTicks(ticksCounter);
                 }
             }
 
@@ -715,6 +815,7 @@ public class SimulationInstance implements Serializable, Runnable {
         userInstructions.isSimulationRunning = true;
         initInstances();
         initGrid();
+        fetchEnvironmentExpressions();
         fetchTicksExpressions();
         fetchReplaceActions();
     }
@@ -732,11 +833,12 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     private void threadSleep() {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        if(threadSleepDuration != 0){
+            try {
+                Thread.sleep(threadSleepDuration);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
-
 }

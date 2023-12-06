@@ -72,6 +72,8 @@ public class PRDConverter {
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
+        int prdWorldSleep = getPrdWorldSleep(prdWorld);
+
         Grid grid = PRDGrid2Grid(prdWorld.getPRDGrid());
 
         getEnvironmentPropertiesFromPRDWorld(prdWorld);
@@ -92,7 +94,15 @@ public class PRDConverter {
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
-        return new SimulationInstance(prdWorld.getName(),null, environmentProperties, entities, rules, ticksCounter, grid);
+        return new SimulationInstance(prdWorld.getName(),null, environmentProperties, entities, rules, ticksCounter, grid, prdWorldSleep);
+    }
+
+    private int getPrdWorldSleep(PRDWorld prdWorld) {
+        if(prdWorld.getSleep() != null){
+            return prdWorld.getSleep();
+        } else {
+            return 0;
+        }
     }
 
     private Grid PRDGrid2Grid(PRDWorld.PRDGrid grid) {

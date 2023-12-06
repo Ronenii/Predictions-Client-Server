@@ -39,6 +39,10 @@ public class ProximityAction extends AbstractAction {
         return proximityActions;
     }
 
+    public Expression getDepthExpression() {
+        return depth;
+    }
+
     @Override
     public Expression getValueExpression() {
         return null;
@@ -55,7 +59,7 @@ public class ProximityAction extends AbstractAction {
     }
 
     public void invoke(EntityInstance entityInstance, Grid grid, int lastChangeTickCount) throws CrashException {
-        int depthValue = getDepth();
+        int depthValue = getDepthValue();
 
         for (int i = -depthValue; i <= depthValue; i++) {
             for (int j = -depthValue; j <= depthValue; j++) {
@@ -71,7 +75,7 @@ public class ProximityAction extends AbstractAction {
         }
     }
 
-    private int getDepth() throws CrashException {
+    private int getDepthValue() throws CrashException {
         Object depthObject = depth.evaluate();
         int ret = 0;
 

@@ -11,6 +11,8 @@ import gui.app.menu.execution.inputs.env.var.EnvironmentVariableComponentControl
 import gui.app.menu.request.create.request.NewRequestComponentController;
 import gui.app.menu.request.data.RequestData;
 import gui.app.menu.request.table.RequestTableComponentController;
+import gui.app.menu.result.models.StatusData;
+import gui.app.menu.result.queue.ExecutionQueueComponentController;
 import gui.app.menu.simulation.breakdown.SimBreakdownMenuController;
 import manager.constants.Constants;
 import okhttp3.*;
@@ -97,9 +99,9 @@ public class UserServerAgent {
         engine.shutdownThreadPool();
     }
 
-    public void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
-        engine.setStopPausePlayOrSkipFwdForSimById(simId, dtoSimulationControlBar);
-    }
+//    public void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
+//        engine.setStopPausePlayOrSkipFwdForSimById(simId, dtoSimulationControlBar);
+//    }
 
 
 
@@ -362,6 +364,127 @@ public class UserServerAgent {
                     StartResponse startResponse = gson.fromJson(requestStartResponseInJson, StartResponse.class);
                     Platform.runLater(() -> controller.receiveStartResponse(startResponse));
                 } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
+    }
+
+    public static void getSimRunDataForSimStatus(ExecutionQueueComponentController controller, StatusData statusData) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.GET_SIMULATION_RUN_DATA_PATH)
+                .newBuilder()
+                .addQueryParameter("simId", String.valueOf(statusData.getSimId()))
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() == 200) {
+                    String requestStartResponseInJson = response.body().string();
+                    SimulationRunData runData = gson.fromJson(requestStartResponseInJson, SimulationRunData.class);
+                    Platform.runLater(() -> controller.statusUpdateForSingleRunningSimulation(runData, statusData));
+
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
+    }
+
+    public static void getSimRunDataForTvMouseClick(ExecutionQueueComponentController controller, String simId) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.GET_SIMULATION_RUN_DATA_PATH)
+                .newBuilder()
+                .addQueryParameter("simId", String.valueOf(simId))
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() == 200) {
+                    String requestStartResponseInJson = response.body().string();
+                    SimulationRunData runData = gson.fromJson(requestStartResponseInJson, SimulationRunData.class);
+                    Platform.runLater(() -> controller.onMouseClickedTvReceiveRunData(runData));
+
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
+    }
+
+    public static void getSimRunDataForSimProgress(ExecutionQueueComponentController controller, String simId, Task<Void> task, String selectedSimId) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.GET_SIMULATION_RUN_DATA_PATH)
+                .newBuilder()
+                .addQueryParameter("simId", String.valueOf(simId))
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() == 200) {
+                    String requestStartResponseInJson = response.body().string();
+                    SimulationRunData runData = gson.fromJson(requestStartResponseInJson, SimulationRunData.class);
+                    Platform.runLater(() -> controller.receiveSimulationRunForRunningSimulation(runData, selectedSimId, task));
+
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                }
+            }
+        });
+    }
+
+    public static void setStopPausePlayOrSkipFwdForSimById(Controller controller, String simId, DTOSimulationControlBar dtoSimulationControlBar) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String requestJsonContent = gson.toJson(dtoSimulationControlBar);
+        RequestBody requestBody = RequestBody.create(requestJsonContent,MediaType.parse("application/json"));
+        String finalUrl = HttpUrl
+                .parse(Constants.SET_DTO_CONTROL_BAR_PATH)
+                .newBuilder()
+                .addQueryParameter("simId", String.valueOf(simId))
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
                 }
             }

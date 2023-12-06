@@ -63,12 +63,12 @@ public class ResultComponentController implements UserEngineCommunicator, Contro
     /**
      * Using the simulation ID of the current selected item in the table view, returns the simulationRunData.
      */
-    public SimulationRunData getCurrentSelectedSimulation() {
+    public void getCurrentSelectedSimulation() {
         StatusData selected = executionQueueComponentController.getQueueSelectedItem();
         if (selected != null) {
-            return null;//getEngineAgent().getRunDataById(selected.getSimId());
+            UserServerAgent.getSimRunDataForTvMouseClick(executionQueueComponentController, selected.getSimId());
         } else {
-            return null;
+            executionQueueComponentController.onMouseClickedTvReceiveRunData(null);
         }
     }
 

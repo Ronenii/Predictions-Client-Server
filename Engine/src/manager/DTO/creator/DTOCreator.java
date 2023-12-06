@@ -6,7 +6,7 @@ import server2client.simulation.genral.impl.objects.DTOEntity;
 import server2client.simulation.genral.impl.objects.DTOEntityInstance;
 import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
 import server2client.simulation.genral.impl.properties.DTOEndingCondition;
-import server2client.simulation.genral.impl.properties.DTOGridAndThread;
+import server2client.simulation.genral.impl.properties.DTOGrid;
 import server2client.simulation.genral.impl.properties.DTORule;
 import server2client.simulation.genral.impl.properties.action.api.DTOAction;
 import server2client.simulation.genral.impl.properties.action.api.DTOActionType;
@@ -47,29 +47,29 @@ import java.util.*;
 public class DTOCreator {
     private static int actionNumber = 1;
 
-    public PreviewData createSimulationPreviewDataObject(String simName, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, Grid grid, int threadCount) {
+    public PreviewData createSimulationPreviewDataObject(String simName, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, Map<EndingConditionType, EndingCondition> endingConditions, Grid grid) {
         List<DTOEntity> entitiesList;
         List<DTORule> rulesList;
         List<DTOEndingCondition> endingConditionsList;
         List<DTOEnvironmentVariable> envVariables;
-        DTOGridAndThread gridAndThread;
+        DTOGrid gridAndThread;
 
         envVariables = getDTOEnvironmentVariableList(environmentProperties);
         entitiesList = getDTOEntityList(entities);
         rulesList = getDTORulesList(rules);
         endingConditionsList = getDTOEndingConditionsListFromMap(endingConditions);
-        gridAndThread = new DTOGridAndThread(grid.getRows(),grid.getColumns(),threadCount);
+        gridAndThread = new DTOGrid(grid.getRows(),grid.getColumns());
         return new PreviewData(simName, gridAndThread, envVariables.toArray(new DTOEnvironmentVariable[0]), entitiesList.toArray(new DTOEntity[0]), rulesList.toArray(new DTORule[0]), endingConditionsList.toArray(new DTOEndingCondition[0]));
     }
 
-    public List<DTOEntityPopulation> getDTOEntityPopulationList(Map<String, Entity> entities) {
+    public DTOEntityPopulation[] getDTOEntityPopulationArray(Map<String, Entity> entities) {
         List<DTOEntityPopulation> entityPopulationList = new ArrayList<>();
 
         for (Entity entity : entities.values()) {
             entityPopulationList.add(new DTOEntityPopulation(entity.getName(), entity.getCurrentPopulation()));
         }
 
-        return entityPopulationList;
+        return entityPopulationList.toArray(new DTOEntityPopulation[0]);
     }
 
     private List<DTOEnvironmentVariable> getDTOEnvironmentVariableList(Map<String, Property> environmentProperties){
