@@ -22,6 +22,8 @@ public class LoginComponentController {
 
     private boolean isLoggedIn;
 
+    private String pattern = "^[A-Za-z0-9().\\-_,?! ]+$";
+
     public void setLoginStage(Stage loginStage) {
         this.loginStage = loginStage;
     }
@@ -30,11 +32,12 @@ public class LoginComponentController {
     void loginButtonActionListener(ActionEvent event) {
         if(usernameTF.getText().isEmpty()) {
             setErrorMessage("Please insert a username (At least one character)");
+        } else if(!usernameTF.getText().matches(pattern)) {
+            setErrorMessage("Please insert a username using only the characters A-Z, a-z,\n 0-9, and the following special characters: ().-_,?!");
         } else {
             UserServerAgent.connect(usernameTF.getText(), this);
         }
     }
-
 
     @FXML
     void usernameTextFieldActionListener(ActionEvent event) {
