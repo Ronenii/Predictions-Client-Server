@@ -74,9 +74,9 @@ public class InputsController implements HasFileLoadedListeners, Controller, Use
     }
 
     public void setUpExecutionWindowWithPreviewData(PreviewData previewData, RequestData requestData) {
+        currentReqId = requestData.getRequestId();
         environmentVariableComponentController.loadEnvVarsDetails(previewData);
         entityPopulationComponentController.loadEntitiesDet(previewData);
-        currentReqId = requestData.getRequestId();
     }
 
     public int getCurrentReqId() {
