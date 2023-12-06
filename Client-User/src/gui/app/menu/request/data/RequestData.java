@@ -58,4 +58,19 @@ public class RequestData {
         finished.set(finished.getValue() + 1);
     }
 
+    public int getRunning() {
+        return running.get();
+    }
+
+    public SimpleIntegerProperty runningProperty() {
+        return running;
+    }
+
+    public int getFinished() {
+        return finished.get();
+    }
+
+    public SimpleIntegerProperty finishedProperty() {
+        return finished;
+    }
 }

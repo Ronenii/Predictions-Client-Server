@@ -196,10 +196,12 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
     private void updateQueueManagementData(StatusData statusData) {
         if(statusData.getStatus().equals("ONGOING") && !statusData.isRunningUpdated()) {
             statusData.getRequestData().increaseRunning();
+            statusData.setRunningUpdated(true);
             mainController.refreshRequestsTv();
-        } else if (statusData.getStatus().equals("COMPLETED")) {
+        } else if (statusData.getStatus().equals("COMPLETED") && !statusData.isFinishedUpdated()) {
             statusData.getRequestData().decreaseRunning();
             statusData.getRequestData().increaseFinished();
+            statusData.setFinishedUpdated(true);
             mainController.refreshRequestsTv();
         }
     }
