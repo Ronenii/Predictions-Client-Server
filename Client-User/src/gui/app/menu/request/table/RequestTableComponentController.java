@@ -84,8 +84,8 @@ public class RequestTableComponentController implements Controller {
         startRequestsStatusRefresher();
     }
 
-    public void updateRequestsTableView(DTORequest dtoRequest) {
-
+    public void refreshRequestsTv(){
+        requestsTV.refresh();
     }
 
     private void startRequestsStatusRefresher() {

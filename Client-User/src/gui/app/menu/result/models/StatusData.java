@@ -1,5 +1,6 @@
 package gui.app.menu.result.models;
 
+import gui.app.menu.request.data.RequestData;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -8,10 +9,15 @@ import javafx.beans.property.SimpleStringProperty;
 public class StatusData {
     private final String simId;
     private final SimpleStringProperty status;
+    private final RequestData requestData;
 
-    public StatusData(String simId, SimpleStringProperty status) {
+    private boolean isRunningUpdated;
+
+    public StatusData(String simId, SimpleStringProperty status, RequestData requestData) {
         this.simId = simId;
         this.status = status;
+        this.requestData = requestData;
+        isRunningUpdated = false;
     }
 
     public String getSimId() {
@@ -24,5 +30,17 @@ public class StatusData {
 
     public SimpleStringProperty statusProperty() {
         return status;
+    }
+
+    public RequestData getRequestData() {
+        return requestData;
+    }
+
+    public void setRunningUpdated(boolean runningUpdated) {
+        isRunningUpdated = runningUpdated;
+    }
+
+    public boolean isRunningUpdated() {
+        return isRunningUpdated;
     }
 }

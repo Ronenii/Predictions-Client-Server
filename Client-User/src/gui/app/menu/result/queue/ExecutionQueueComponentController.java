@@ -1,6 +1,7 @@
 package gui.app.menu.result.queue;
 
 import gui.api.Controller;
+import gui.app.menu.request.data.RequestData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.result.models.QueueManagementData;
 import gui.app.menu.result.models.StatusData;
@@ -133,8 +134,8 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
         this.mainController = mainController;
     }
 
-    public void addSimulationToQueue(SimulationRunData simulationRunData) {
-        StatusData toAdd = new StatusData(simulationRunData.getSimId(), new SimpleStringProperty(simulationRunData.getStatus()));
+    public void addSimulationToQueue(SimulationRunData simulationRunData, RequestData requestData) {
+        StatusData toAdd = new StatusData(simulationRunData.getSimId(), new SimpleStringProperty(simulationRunData.getStatus()), requestData);
         simulationStatusMap.put(toAdd, SimulationStatus.valueOf(toAdd.getStatus()));
         executionsQueueTV.getItems().add(toAdd);
         executeSimStatusFetchingTask();
@@ -166,10 +167,8 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
      * Iterates on all waiting\ongoing simulations and queries the engine for updates.
      */
     private void getStatusUpdatesForRunningSimulations() {
-        QueueManagementData queueManagementData = new QueueManagementData();
-
         for (StatusData s : simulationStatusMap.keySet()) {
-            updateQueueManagementData(queueManagementData, s.getStatus());
+            updateQueueManagementData(s);
             if (!s.getStatus().equals(SimulationStatus.COMPLETED.name())) {
                 UserServerAgent.getSimRunDataForSimStatus(this, s);
             }
@@ -194,11 +193,14 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
     /**
      * Fetch the 'QueueManagementData' object according to the current simulations in the queue.
      */
-    private void updateQueueManagementData(QueueManagementData queueManagementData, String status) {
-        if(status.equals("ONGOING")) {
-            queueManagementData.runningCount++;
-        } else if (status.equals("COMPLETED")) {
-            queueManagementData.completedCount++;
+    private void updateQueueManagementData(StatusData statusData) {
+        if(statusData.getStatus().equals("ONGOING") && !statusData.isRunningUpdated()) {
+            statusData.getRequestData().increaseRunning();
+            mainController.refreshRequestsTv();
+        } else if (statusData.getStatus().equals("COMPLETED")) {
+            statusData.getRequestData().decreaseRunning();
+            statusData.getRequestData().increaseFinished();
+            mainController.refreshRequestsTv();
         }
     }
 
