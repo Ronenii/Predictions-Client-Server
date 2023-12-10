@@ -73,11 +73,6 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
         startDetailsMap.put(simId, startDetails);
     }
 
-    public void rerunSimulationById(String simId) {
-        StartDetails rerunStartDetails = startDetailsMap.get(simId);
-        inputsController.fetchStartDetails(rerunStartDetails);
-    }
-
     public void setUpExecutionWindow(RequestData requestData) {
         UserServerAgent.getSimulationPreviewDataForExecutionWindow(inputsController, requestData);
     }

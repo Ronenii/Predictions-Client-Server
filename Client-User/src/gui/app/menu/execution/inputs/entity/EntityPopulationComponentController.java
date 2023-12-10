@@ -222,22 +222,6 @@ public class EntityPopulationComponentController implements Controller, UserEngi
         return new EntitiesStartData(entityPopulationsDup, entitiesLeftToAdd);
     }
 
-    public void fetchEntitiesStartData(EntitiesStartData entitiesStartData) {
-        for (DTOEntity entity : entitiesStartData.getEntityPopulations().keySet()) {
-            entityPopulations.put(entity, entitiesStartData.getEntityPopulations().get(entity));
-        }
-
-        if (entitiesLV.getSelectionModel().getSelectedItem() != null) {
-            populationTF.setText(entityPopulations.get(entitiesLV.getSelectionModel().getSelectedItem()).toString());
-        }
-
-        entitiesLeftToAdd = entitiesStartData.getEntitiesLeft();
-        entitiesLeftLabel.setText(String.valueOf(entitiesLeftToAdd));
-        for (DTOEntity entity : entityPopulations.keySet()) {
-            //getEngineAgent().sendPopulationData(new EntityPopulationUserInput(entity.getName(), entityPopulations.get(entity)));
-        }
-    }
-
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);

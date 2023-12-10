@@ -53,8 +53,6 @@ public class ExecutionDetailsComponentController implements Controller {
     private ExecutionDetailsControlBarController executionDetailsControlBarController;
     @FXML
     private AnchorPane controlBarAnchorPane;
-    @FXML
-    private Button rerunBTN;
 
     private SimpleStringProperty ticksProperty;
     private SimpleStringProperty durationProperty;
@@ -122,12 +120,6 @@ public class ExecutionDetailsComponentController implements Controller {
         statusProperty.set(runData.getStatus());
         simIdProperty.set(String.valueOf(runData.getSimId()));
         updateEntitiesTV(runData.getEntityPopulation());
-        if(runData.isCompleted()) {
-            rerunBTN.setDisable(false);
-        }
-        else {
-            rerunBTN.setDisable(true);
-        }
     }
 
     private String formatTime(long time){
@@ -175,7 +167,6 @@ public class ExecutionDetailsComponentController implements Controller {
         simIdProperty.set("-");
         durationProperty.set("-");
         ticksProperty.set("-");
-        rerunBTN.setDisable(true);
     }
 
     public void sendStopToTheEngine() {
@@ -251,12 +242,6 @@ public class ExecutionDetailsComponentController implements Controller {
 
     public int getSimulationCurrentTicks() {
         return Integer.parseInt(currentTickDetLabel.getText());
-    }
-
-    @FXML
-    void rerunButtonActionListener(ActionEvent event) {
-        mainController.rerunSimulationById(simulationIdDetLabel.getText());
-        mainController.getMenusTabPane().getSelectionModel().selectPrevious();
     }
 
     public void setOneUpdateAfterPauseFlag() {
