@@ -68,11 +68,6 @@ public class InputsController implements HasFileLoadedListeners, Controller, Use
         return new StartDetails(entitiesStartData, environmentVarsStartData);
     }
 
-    public void fetchStartDetails(StartDetails startDetails) {
-        entityPopulationComponentController.fetchEntitiesStartData(startDetails.getEntitiesStartData());
-        environmentVariableComponentController.fetchEnvironmentVarsStartData(startDetails.getEnvironmentVarsStartData());
-    }
-
     public void setUpExecutionWindowWithPreviewData(PreviewData previewData, RequestData requestData) {
         currentReqId = requestData.getRequestId();
         environmentVariableComponentController.loadEnvVarsDetails(previewData);

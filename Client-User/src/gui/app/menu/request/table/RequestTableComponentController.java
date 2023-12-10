@@ -70,7 +70,7 @@ public class RequestTableComponentController implements Controller {
             if(selectedRequest.getStatus().equals("PENDING")) {
                 showMessageInNotificationBar(String.format("Request #%d has not been approved yet", selectedRequest.getRequestId()));
             } else if(selectedRequest.getStatus().equals("DENIED")){
-                showMessageInNotificationBar(String.format("Request #%d was denied by the admin", selectedRequest.getRequestId()));
+                showMessageInNotificationBar(String.format("Request #%d denied by the admin", selectedRequest.getRequestId()));
             } else {
                 mainController.moveToExecutionSetUp(selectedRequest);
             }

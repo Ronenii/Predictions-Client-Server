@@ -207,27 +207,6 @@ public class EnvironmentVariableComponentController implements UserEngineCommuni
         resetListView();
     }
 
-    public void fetchEnvironmentVarsStartData(EnvironmentVarsStartData environmentVarsStartData) {
-        Map<String, Object> envVarsValuesMap = environmentVarsStartData.getEnvVarsValuesMap();
-
-        for(DTOEnvironmentVariable environmentVariable : environmentVariableMap.keySet()) {
-            environmentVariableMap.put(environmentVariable, envVarsValuesMap.get(environmentVariable.getName()).toString());
-        }
-
-//        for (DTOEnvironmentVariable environmentVariable : environmentVariableMap.keySet()) {
-//            if (environmentVariableMap.get(environmentVariable) == null) {
-//                getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(environmentVariable.getName(), true, null));
-//            } else {
-//                getEngineAgent().sendEnvironmentVariableData(new EnvPropertyUserInput(environmentVariable.getName(), false, environmentVariableMap.get(environmentVariable)));
-//            }
-//        }
-
-        DTOEnvironmentVariable selectedItem = envVarsLV.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            updateTextFieldToCurrentEnvVarValue(selectedItem);
-        }
-    }
-
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);

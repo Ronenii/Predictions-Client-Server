@@ -93,9 +93,6 @@ public class ResultComponentController implements UserEngineCommunicator, Contro
         }
     }
 
-    public void rerunSimulationById(String simId) {
-        mainController.rerunSimulationById(simId);
-    }
 
     public TabPane getMenusTabPane() {
         return mainController.getMenusTabPane();

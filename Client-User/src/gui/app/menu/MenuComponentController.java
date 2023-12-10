@@ -80,9 +80,6 @@ public class MenuComponentController implements HasFileLoadedListeners, UserEngi
         resultComponentController.addSimulationToQueue(simulationRunData, requestData);
     }
 
-    public void rerunSimulationById(String simId) {
-        newExecutionComponentController.rerunSimulationById(simId);
-    }
 
     public void moveToExecutionSetUp(RequestData requestData) {
         newExecutionComponentController.setUpExecutionWindow(requestData);
