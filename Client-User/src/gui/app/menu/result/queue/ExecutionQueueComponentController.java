@@ -139,6 +139,9 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
         simulationStatusMap.put(toAdd, SimulationStatus.valueOf(toAdd.getStatus()));
         executionsQueueTV.getItems().add(toAdd);
         executeSimStatusFetchingTask();
+        // Selecting the new added simulation.
+        executionsQueueTV.getSelectionModel().select(toAdd);
+        mainController.getCurrentSelectedSimulation();
     }
 
     /**
