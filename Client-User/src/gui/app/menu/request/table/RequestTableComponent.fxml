@@ -30,7 +30,7 @@
             <Insets left="590.0" />
          </GridPane.margin>
       </Button>
-      <TableView fx:id="requestsTV" maxWidth="-Infinity" prefHeight="200.0" prefWidth="655.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <TableView fx:id="requestsTV" maxWidth="-Infinity" prefHeight="200.0" prefWidth="657.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
         <columns>
             <TableColumn fx:id="requestIdColumn" prefWidth="130.0" text="Request ID" />
           <TableColumn fx:id="simulationNameColumn" prefWidth="150.0" text="Simulation Name" />
@@ -39,6 +39,9 @@
             <TableColumn fx:id="runningColumn" prefWidth="100.0" text="Running" />
             <TableColumn fx:id="finishedColumn" prefWidth="100.0" text="Finished" />
         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
       <Label text="Requests Table" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <font>
