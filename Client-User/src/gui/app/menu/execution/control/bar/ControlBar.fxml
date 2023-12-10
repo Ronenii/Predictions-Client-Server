@@ -19,7 +19,7 @@
     <RowConstraints maxHeight="10.0" minHeight="0.0" prefHeight="10.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Button id="btn-NewExecution-Start" fx:id="startBTN" mnemonicParsing="false" onAction="#startButtonActionListener" styleClass="buttons" text="Start" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-      <Button id="btn-NewExecution-Clear" fx:id="clearBTN" mnemonicParsing="false" onAction="#clearButtonActionListener" text="Clear" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+      <Button id="btn-NewExecution-Start" fx:id="startBTN" disable="true" mnemonicParsing="false" onAction="#startButtonActionListener" styleClass="buttons" text="Start" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+      <Button id="btn-NewExecution-Clear" fx:id="clearBTN" disable="true" mnemonicParsing="false" onAction="#clearButtonActionListener" text="Clear" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

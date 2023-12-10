@@ -25,10 +25,8 @@ public class ControlBarController implements Controller, UserEngineCommunicator 
 
     @FXML
     void clearButtonActionListener(ActionEvent event) {
-        if(getEngineAgent().isFileLoaded()){
-            mainController.clearInputs();
-            showMessageInNotificationBar("Cleared all inputs from user.");
-        }
+        mainController.clearInputs();
+        showMessageInNotificationBar("Cleared all inputs from user.");
     }
 
     @FXML
@@ -49,6 +47,11 @@ public class ControlBarController implements Controller, UserEngineCommunicator 
         }
 
         showMessageInNotificationBar(response.getMessage());
+    }
+
+    public void setButtonsDisableOff() {
+        startBTN.setDisable(false);
+        clearBTN.setDisable(false);
     }
 
     @Override

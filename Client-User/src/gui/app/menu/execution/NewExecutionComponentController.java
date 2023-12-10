@@ -75,6 +75,7 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
 
     public void setUpExecutionWindow(RequestData requestData) {
         UserServerAgent.getSimulationPreviewDataForExecutionWindow(inputsController, requestData);
+        controlBarController.setButtonsDisableOff();
     }
 
 
