@@ -197,16 +197,16 @@ public class ExecutionDetailsComponentController implements Controller {
         DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(false, true, false, true);
         isPlayButtonClicked = false;
         skipOne = true;
-        skipForwardTask(dtoSimulationControlBar);
+        skipForwardTask(dtoSimulationControlBar, this);
     }
 
-    private void skipForwardTask(DTOSimulationControlBar dtoSimulationControlBar) {
+    private void skipForwardTask(DTOSimulationControlBar dtoSimulationControlBar, Controller controller) {
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 do {
                     if(skipOne){
-                        //mainController.getEngineAgent().setStopPausePlayOrSkipFwdForSimById(simulationIdDetLabel.getText(), dtoSimulationControlBar);
+                        UserServerAgent.setStopPausePlayOrSkipFwdForSimById(controller, simulationIdDetLabel.getText(), dtoSimulationControlBar);
                         setExecutionQueueTaskOnSkipForward();
                         skipOne = false;
                     }
