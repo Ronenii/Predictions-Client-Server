@@ -101,6 +101,7 @@ public class UserServerAgent {
                 // If another error has occurred, show an alert and close the app.
                 else {
                     Platform.runLater(() -> simBreakdownMenuController.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -130,14 +131,14 @@ public class UserServerAgent {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.code() == 200) {
-                    String meow = response.body().string();
-                    int requestId = Integer.parseInt(meow);
+                    int requestId = Integer.parseInt(response.body().string());
                     Platform.runLater(() -> {
                         controller.addNewRequestData(requestId, dtoRequest);
                         controller.showMessageInNotificationBar("New request has been sent!");
                     });
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -167,6 +168,7 @@ public class UserServerAgent {
                     Platform.runLater(() -> controller.updateRequestsStatus(dtoRequestStatusUpdate));
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -197,6 +199,7 @@ public class UserServerAgent {
                     Platform.runLater(() -> controller.setUpExecutionWindowWithPreviewData(previewData, requestData));
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -228,8 +231,12 @@ public class UserServerAgent {
                         SetResponse setResponse = gson.fromJson(requestStatusUpdateInJson, SetResponse.class);
                         Platform.runLater(() -> controller.receiveSetResponse(setResponse, selectedItem, input.getPopulation()));
                     }
+                    else {
+                        response.body().close();
+                    }
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -260,9 +267,14 @@ public class UserServerAgent {
                         String requestStatusUpdateInJson = response.body().string();
                         SetResponse setResponse = gson.fromJson(requestStatusUpdateInJson, SetResponse.class);
                         Platform.runLater(() -> controller.receiveSetResponse(setResponse, selectedItem, value));
+                        response.body().close();
+                    }
+                    else {
+                        response.body().close();
                     }
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -293,6 +305,7 @@ public class UserServerAgent {
                     Platform.runLater(() -> controller.receiveStartResponse(startResponse));
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -324,6 +337,7 @@ public class UserServerAgent {
 
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -355,6 +369,7 @@ public class UserServerAgent {
 
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -386,6 +401,7 @@ public class UserServerAgent {
 
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
