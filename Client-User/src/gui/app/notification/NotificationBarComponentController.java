@@ -1,7 +1,6 @@
 package gui.app.notification;
 
 import gui.app.UserAppController;
-import gui.app.mode.AppMode;
 import gui.app.notification.window.LogWindowController;
 import javafx.animation.FillTransition;
 import javafx.fxml.FXML;
@@ -149,17 +148,6 @@ public class NotificationBarComponentController {
 
     public void changeToLightMode() {
         grdParent.getStylesheets().add(getClass().getResource("themes/LightMode.css").toExternalForm());
-    }
-
-    public void clearMode(AppMode appMode) {
-        switch (appMode) {
-            case DARK:
-                grdParent.getStylesheets().remove(getClass().getResource("themes/DarkMode.css").toExternalForm());
-                break;
-            case LIGHT:
-                grdParent.getStylesheets().remove(getClass().getResource("themes/LightMode.css").toExternalForm());
-                break;
-        }
     }
 
 }

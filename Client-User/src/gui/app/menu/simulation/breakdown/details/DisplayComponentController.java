@@ -1,16 +1,13 @@
 package gui.app.menu.simulation.breakdown.details;
 
-import server2client.simulation.prview.PreviewData;
-import gui.app.mode.AppMode;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import jaxb.event.FileLoadedEvent;
 import java.io.IOException;
 
-public class DisplayComponentController implements FileLoadedEvent {
+public class DisplayComponentController {
 
     @FXML
     private GridPane grdDisplay;
@@ -37,30 +34,6 @@ public class DisplayComponentController implements FileLoadedEvent {
                 grdDisplay.getChildren().remove(node);
                 break;
             }
-        }
-    }
-
-    @Override
-    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
-        lblTitle.setText("The simulation creation has completed successfully");
-    }
-
-    public void changeToDarkMode() {
-        grdDisplay.getStylesheets().add(getClass().getResource("themes/DarkMode.css").toExternalForm());
-    }
-
-    public void changeToLightMode() {
-        grdDisplay.getStylesheets().add(getClass().getResource("themes/LightMode.css").toExternalForm());
-    }
-
-    public void clearMode(AppMode appMode) {
-        switch (appMode) {
-            case DARK:
-                grdDisplay.getStylesheets().remove(getClass().getResource("themes/DarkMode.css").toExternalForm());
-                break;
-            case LIGHT:
-                grdDisplay.getStylesheets().remove(getClass().getResource("themes/LightMode.css").toExternalForm());
-                break;
         }
     }
 }

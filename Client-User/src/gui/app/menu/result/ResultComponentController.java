@@ -2,23 +2,18 @@ package gui.app.menu.result;
 
 import gui.api.Controller;
 import gui.app.menu.request.data.RequestData;
-import server2client.simulation.prview.PreviewData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.result.details.ExecutionDetailsComponentController;
 import gui.app.menu.result.models.StatusData;
 import gui.app.menu.result.queue.ExecutionQueueComponentController;
 import gui.app.menu.result.tab.ResultTabComponentController;
-import gui.api.BarNotifier;
-import gui.api.UserEngineCommunicator;
 import gui.app.menu.MenuComponentController;
 import javafx.fxml.FXML;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import jaxb.event.FileLoadedEvent;
 import manager.UserServerAgent;
 
-public class ResultComponentController implements UserEngineCommunicator, Controller, FileLoadedEvent {
+public class ResultComponentController implements Controller {
     private MenuComponentController mainController;
 
     @FXML
@@ -49,11 +44,6 @@ public class ResultComponentController implements UserEngineCommunicator, Contro
         }
     }
 
-    @Override
-    public UserServerAgent getEngineAgent() {
-        return mainController.getEngineAgent();
-    }
-
     /**
      * Adds the given simulation to the execution queue
      */
@@ -80,22 +70,6 @@ public class ResultComponentController implements UserEngineCommunicator, Contro
 
     public int getSimulationCurrentTicks() {
         return executionDetailsComponentController.getSimulationCurrentTicks();
-    }
-
-    @Override
-    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
-        if(!isFirstSimulationLoaded){
-            resultTabComponentController.clearComponent();
-            resultTabComponentController.disableResultComponent();
-            executionQueueComponentController.clearComponent();
-            executionDetailsComponentController.clearComponent();
-
-        }
-    }
-
-
-    public TabPane getMenusTabPane() {
-        return mainController.getMenusTabPane();
     }
 
     public void setExecutionQueueTaskOnSkipForward() {

@@ -2,8 +2,6 @@ package gui.app.menu.execution.control.bar;
 
 import gui.api.Controller;
 import server2client.simulation.execution.StartResponse;
-import gui.api.BarNotifier;
-import gui.api.UserEngineCommunicator;
 import gui.app.menu.execution.NewExecutionComponentController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,7 +9,7 @@ import javafx.scene.control.Button;
 
 import manager.UserServerAgent;
 
-public class ControlBarController implements Controller, UserEngineCommunicator {
+public class ControlBarController implements Controller {
     private NewExecutionComponentController mainController;
     @FXML
     private Button startBTN;
@@ -52,11 +50,6 @@ public class ControlBarController implements Controller, UserEngineCommunicator 
     public void setButtonsDisableOff() {
         startBTN.setDisable(false);
         clearBTN.setDisable(false);
-    }
-
-    @Override
-    public UserServerAgent getEngineAgent() {
-        return mainController.getEngineAgent();
     }
 
     @Override

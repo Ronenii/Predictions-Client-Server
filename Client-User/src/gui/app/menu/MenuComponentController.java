@@ -2,12 +2,8 @@ package gui.app.menu;
 
 import gui.api.Controller;
 import gui.app.menu.request.data.RequestData;
-import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
 import server2client.simulation.runtime.SimulationRunData;
-import gui.api.BarNotifier;
-import gui.api.UserEngineCommunicator;
-import gui.api.HasFileLoadedListeners;
 import gui.app.UserAppController;
 import gui.app.menu.execution.NewExecutionComponentController;
 import gui.app.menu.request.RequestComponentController;
@@ -17,13 +13,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
-import manager.UserServerAgent;
 
-import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.List;
-
-public class MenuComponentController implements HasFileLoadedListeners, UserEngineCommunicator, Controller {
+public class MenuComponentController implements Controller {
     private UserAppController mainController;
     @FXML private GridPane currentMainComponent;
     @FXML private TabPane menusTabPane;
@@ -54,24 +45,6 @@ public class MenuComponentController implements HasFileLoadedListeners, UserEngi
         }
     }
 
-    public void setPreviewDataForSimBreakdown(PreviewData previewData){
-        simBreakdownMenuController.setPreviewData(previewData);
-    }
-
-    @Override
-    public List<EventListener> getAllFileLoadedListeners() {
-        List<EventListener> listeners = new ArrayList<>();
-        listeners.addAll(simBreakdownMenuController.getAllFileLoadedListeners());
-        listeners.addAll(newExecutionComponentController.getAllFileLoadedListeners());
-        listeners.add(resultComponentController);
-        return listeners;
-    }
-
-    @Override
-    public UserServerAgent getEngineAgent() {
-        return mainController.getEngineAgent();
-    }
-
     public TabPane getMenusTabPane(){
         return menusTabPane;
     }
@@ -79,7 +52,6 @@ public class MenuComponentController implements HasFileLoadedListeners, UserEngi
     public void addSimulationToQueue(SimulationRunData simulationRunData, RequestData requestData){
         resultComponentController.addSimulationToQueue(simulationRunData, requestData);
     }
-
 
     public void moveToExecutionSetUp(RequestData requestData) {
         newExecutionComponentController.setUpExecutionWindow(requestData);

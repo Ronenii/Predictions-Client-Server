@@ -5,7 +5,6 @@ import server2client.simulation.execution.SetResponse;
 import server2client.simulation.genral.impl.objects.DTOEntity;
 import server2client.simulation.genral.impl.properties.DTOGrid;
 import server2client.simulation.prview.PreviewData;
-import gui.api.UserEngineCommunicator;
 import gui.app.menu.execution.inputs.InputsController;
 import gui.app.menu.execution.models.EntitiesStartData;
 import javafx.event.ActionEvent;
@@ -19,7 +18,7 @@ import client2server.simulation.execution.user.input.EntityPopulationUserInput;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EntityPopulationComponentController implements Controller, UserEngineCommunicator {
+public class EntityPopulationComponentController implements Controller{
 
     private static final int POPULATION_ERROR = -1, NO_POPULATION = -1;
     public Label entitiesLeftLabel;
@@ -205,11 +204,6 @@ public class EntityPopulationComponentController implements Controller, UserEngi
     private void resetListView() {
         entitiesLV.getSelectionModel().clearSelection();
         populationTF.setText("");
-    }
-
-    @Override
-    public UserServerAgent getEngineAgent() {
-        return mainController.getEngineAgent();
     }
 
     public EntitiesStartData getEntitiesStartData() {

@@ -4,26 +4,19 @@ import gui.api.Controller;
 import server2client.simulation.execution.SetResponse;
 import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
 import server2client.simulation.prview.PreviewData;
-import gui.api.BarNotifier;
-import gui.api.UserEngineCommunicator;
 import gui.app.menu.execution.inputs.InputsController;
-import gui.app.menu.execution.models.EnvironmentVarsStartData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
-import jaxb.event.FileLoadedEvent;
 import manager.UserServerAgent;
 import simulation.properties.property.api.PropertyType;
 import client2server.simulation.execution.user.input.EnvPropertyUserInput;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class EnvironmentVariableComponentController implements UserEngineCommunicator, Controller {
+public class EnvironmentVariableComponentController implements Controller {
 
     private InputsController mainController;
     @FXML
@@ -183,11 +176,6 @@ public class EnvironmentVariableComponentController implements UserEngineCommuni
 
             }
         });
-    }
-
-    @Override
-    public UserServerAgent getEngineAgent() {
-        return mainController.getEngineAgent();
     }
 
     /**

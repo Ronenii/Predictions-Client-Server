@@ -53,11 +53,6 @@ public class NewRequestComponentController implements Controller {
     }
 
     @FXML
-    void simulationNameCbActionListener(ActionEvent event) {
-
-    }
-
-    @FXML
     void submitButtonActionListener(ActionEvent event) {
         if(simulationNameCB.getSelectionModel().getSelectedItem() == null) {
             showMessageInNotificationBar("Please choose a simulation from the list");

@@ -8,7 +8,6 @@ import server2client.simulation.genral.impl.properties.action.api.DTOAction;
 import server2client.simulation.genral.impl.properties.DTOProperty;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
-import gui.api.HasFileLoadedListeners;
 import gui.app.menu.simulation.breakdown.details.DisplayComponentController;
 import gui.app.menu.simulation.breakdown.details.entity.property.PropertyDetailsController;
 import gui.app.menu.simulation.breakdown.details.environment.EnvironmentVarDetailsController;
@@ -23,14 +22,13 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import jaxb.event.FileLoadedEvent;
 import server2client.simulation.prview.SimulationsPreviewData;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-public class SimBreakdownMenuController implements Initializable, HasFileLoadedListeners, FileLoadedEvent, Controller {
+public class SimBreakdownMenuController implements Initializable, Controller {
     @FXML private GridPane currentMainComponent;
     @FXML private GridPane treeViewGridPane;
     private MenuComponentController mainController;
@@ -47,9 +45,6 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
 
     public void setMainController(MenuComponentController mainController) {
         this.mainController = mainController;
-    }
-
-    public void setPreviewData(PreviewData previewData) {
     }
 
     @Override
@@ -267,23 +262,6 @@ public class SimBreakdownMenuController implements Initializable, HasFileLoadedL
         if(!simulationsItem.isLeaf()) {
             simulationsItem.getChildren().clear();
         }
-    }
-
-    @Override
-    public List<EventListener> getAllFileLoadedListeners() {
-        List<EventListener> listeners = new ArrayList<>();
-        listeners.add(this);
-        listeners.add(displayComponentController);
-
-        return listeners;
-    }
-
-    @Override
-    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
-        clearTreeView();
-        displayComponentController.clearGridPaneCell();
-        //this.previewData = previewData;
-        //updateSimTreeView();
     }
 
     @Override
