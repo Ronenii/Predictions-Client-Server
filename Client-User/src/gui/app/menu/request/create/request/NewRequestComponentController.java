@@ -61,7 +61,7 @@ public class NewRequestComponentController implements Controller {
         } else if(!ticksTerminationCB.isSelected() && !secondsTerminationCB.isSelected() && !userTerminationCB.isSelected()) {
             showMessageInNotificationBar("Please choose at least one ending condition");
         } else if(userTerminationCB.isSelected() && (ticksTerminationCB.isSelected() || secondsTerminationCB.isSelected())) {
-            showMessageInNotificationBar("You can not choose 'By user' ending condition and 'By ticks'/'By seconds' ending condition");
+            showMessageInNotificationBar("You can not choose 'By user' ending condition with 'By ticks'/'By seconds' ending condition");
         } else if(!isTicksOrSecondTextFieldValid()) {
             showMessageInNotificationBar("Please enter a number for the ticks/seconds ending conditions");
         } else {
