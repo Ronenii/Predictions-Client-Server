@@ -161,14 +161,6 @@ public class ExecutionDetailsComponentController implements Controller {
         return false;
     }
 
-    public void clearComponent() {
-        entitiesTV.getItems().clear();
-        populationDataMap.clear();
-        simIdProperty.set("-");
-        durationProperty.set("-");
-        ticksProperty.set("-");
-    }
-
     public void sendStopToTheEngine() {
         DTOSimulationControlBar dtoSimulationControlBar = new DTOSimulationControlBar(true, false, false, false);
         UserServerAgent.setStopPausePlayOrSkipFwdForSimById(this, simulationIdDetLabel.getText(), dtoSimulationControlBar);

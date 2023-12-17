@@ -2,8 +2,6 @@ package manager;
 
 import okhttp3.*;
 
-import java.io.File;
-
 public class HttpClientAgent {
     private final static OkHttpClient HTTP_CLIENT =
             new OkHttpClient.Builder().build();

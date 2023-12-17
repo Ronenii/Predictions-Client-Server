@@ -152,6 +152,7 @@ public class AdminServerAgent {
                         simulationManagerComponentController.showMessageInNotificationBar(fileNameString + "successfully uploaded to server.");
                         updateSimBreakdownList(simulationManagerComponentController);
                     });
+                    response.body().close();
                 }
                 // If the configuration file is invalid (errors with trying to load the file as a simulation).
                 else if (response.code() == HttpURLConnection.HTTP_BAD_REQUEST) {
@@ -162,6 +163,7 @@ public class AdminServerAgent {
                 } else {
                     System.out.println(fileNameString + "encountered a problem while uploading a file.");
                     Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar("Error: a problem was encountered while trying to upload a file to the server."));
+                    response.body().close();
                 }
             }
         });
@@ -197,6 +199,7 @@ public class AdminServerAgent {
                 // If another error has occurred, show an alert and close the app.
                 else {
                     Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -262,6 +265,7 @@ public class AdminServerAgent {
                     }
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });

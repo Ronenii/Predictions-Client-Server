@@ -1,10 +1,6 @@
 package gui.app;
 
 import gui.api.Controller;
-import gui.api.UserEngineCommunicator;
-import gui.api.BarNotifier;
-import gui.api.HasFileLoadedListeners;
-import gui.app.mode.AppMode;
 import gui.app.notification.NotificationBarComponentController;
 import gui.app.menu.MenuComponentController;
 import javafx.fxml.FXML;
@@ -14,11 +10,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import manager.UserServerAgent;
 
-import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.List;
 
-public class UserAppController implements HasFileLoadedListeners, UserEngineCommunicator, Controller {
+public class UserAppController implements Controller {
     @FXML private BorderPane currentMainComponent;
     @FXML private GridPane headerComponent;
     @FXML private GridPane subMenus;
@@ -30,38 +23,15 @@ public class UserAppController implements HasFileLoadedListeners, UserEngineComm
     @FXML private AnchorPane anchorNotification;
 
     @FXML private Label usernameLabel;
-    public UserServerAgent engineAgent;
-
-    private AppMode appMode;
 
     @FXML
     public void initialize() {
-        engineAgent = new UserServerAgent();
         if(subMenusController != null && notificationBarComponentController != null) {
             subMenusController.setMainController(this);
             notificationBarComponentController.setMainController(this);
         }
 
         anchorNotification.visibleProperty().set(true);
-        appMode = AppMode.DEFAULT;
-    }
-
-//    public void setPrimaryStageOnClose(Stage primaryStage) {
-//        primaryStage.setOnCloseRequest(event -> {
-//            engineAgent.shutdownThreadPool();
-//        });
-//    }
-
-
-    public List<EventListener> getAllFileLoadedListeners(){
-        List<EventListener> listeners = new ArrayList<>();
-        listeners.addAll(subMenusController.getAllFileLoadedListeners());
-        return listeners;
-    }
-
-    @Override
-    public UserServerAgent getEngineAgent() {
-        return engineAgent;
     }
 
     public void setUsername(String username) {

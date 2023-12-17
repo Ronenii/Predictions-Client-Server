@@ -6,21 +6,15 @@ import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.execution.control.bar.ControlBarController;
 import gui.app.menu.execution.inputs.InputsController;
 import gui.app.menu.execution.models.StartDetails;
-import gui.api.BarNotifier;
-import gui.api.UserEngineCommunicator;
-import gui.api.HasFileLoadedListeners;
 import gui.app.menu.MenuComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import manager.UserServerAgent;
-
-import java.util.EventListener;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class NewExecutionComponentController implements HasFileLoadedListeners, Controller, UserEngineCommunicator {
+public class NewExecutionComponentController implements Controller{
     private MenuComponentController mainController;
     @FXML private GridPane inputs;
     @FXML private InputsController inputsController;
@@ -41,16 +35,6 @@ public class NewExecutionComponentController implements HasFileLoadedListeners, 
         }
 
         startDetailsMap = new HashMap<>();
-    }
-
-    @Override
-    public List<EventListener> getAllFileLoadedListeners() {
-        return inputsController.getAllFileLoadedListeners();
-    }
-
-    @Override
-    public UserServerAgent getEngineAgent() {
-        return mainController.getEngineAgent();
     }
 
     public void clearInputs(){

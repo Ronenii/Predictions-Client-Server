@@ -3,10 +3,7 @@ package gui.app.menu.result.queue;
 import gui.api.Controller;
 import gui.app.menu.request.data.RequestData;
 import server2client.simulation.runtime.SimulationRunData;
-import gui.app.menu.result.models.QueueManagementData;
 import gui.app.menu.result.models.StatusData;
-import gui.api.BarNotifier;
-import gui.api.UserEngineCommunicator;
 import gui.app.menu.result.ResultComponentController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,7 +20,7 @@ import simulation.objects.world.status.SimulationStatus;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExecutionQueueComponentController implements UserEngineCommunicator, Controller {
+public class ExecutionQueueComponentController implements Controller {
     private ResultComponentController mainController;
     @FXML
     private Label exeListLabel;
@@ -107,9 +104,7 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
     }
 
     public void receiveSimulationRunForRunningSimulation(SimulationRunData selectedInThread, String simId, Task<Void> task) {
-
         // Wrap UI updates in Platform.runLater to execute them on the FX application thread
-
         // isSimulationPaused - true when the simulation on pause
         // isSimulationSkippedForward - the skip forward button set this flag to true, allowing the task run this loop once and then return to a hold state.
         // oneUpdateAfterPauseFlag - the pause button set this flag to true, allowing the task run this loop once (to fetch the details) and then return to a hold state.
@@ -251,19 +246,6 @@ public class ExecutionQueueComponentController implements UserEngineCommunicator
 
     public StatusData getQueueSelectedItem() {
         return executionsQueueTV.getSelectionModel().getSelectedItem();
-    }
-
-    @Override
-    public synchronized UserServerAgent getEngineAgent() {
-        return mainController.getEngineAgent();
-    }
-
-    public void clearComponent() {
-        executionsQueueTV.getItems().clear();
-        simIdCol.setCellValueFactory(new PropertyValueFactory<>("simId"));
-        simStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-        simulationStatusMap.clear();
-        isFetchStatusTaskRunning = false;
     }
 
     public void setExecutionQueueTaskOnSkipForward() {

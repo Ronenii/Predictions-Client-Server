@@ -36,78 +36,6 @@ import java.io.IOException;
 
 public class UserServerAgent {
 
-    private final SimulationManager engine;
-
-    private boolean isFileLoaded;
-
-    public UserServerAgent() {
-        isFileLoaded = false;
-        this.engine = new SimulationManager();
-    }
-
-    public boolean isFileLoaded() {
-        return isFileLoaded;
-    }
-
-    /**
-     * Gets the current simulation details from the engine and prints it.
-     */
-//    public void showCurrentSimulationDetails() throws SimulationNotLoadedException {
-//        if (!engine.getIsSimulationLoaded()) {
-//            throw new SimulationNotLoadedException("There is no simulation loaded in the system.");
-//        }
-//        //Console.showSimulationDetails(engine.getCurrentSimulationDetails());
-//    }
-
-//    /**
-//     * prompts the user to input a path to a simulation XML config file and loads it
-//     * into the system.
-//     */
-//    public void loadSimulationFromFile(File file, List<EventListener> listeners) {
-//        Task<Void> task = new Task<Void>() {
-//            @Override
-//            protected Void call() throws Exception {
-//                DTOLoadResult dtoLoadSucceed = engine.loadSimulationFromFile(new DTOLoadFile(file, listeners));
-//
-//                 /* If we succeeded in creating the simulation we want to reset the engine.
-//                    If a simulation was loaded beforehand and the creation failed we don't want
-//                    to delete past data until a new simulation is loaded successfully. */
-//                if (dtoLoadSucceed.isSucceed()) {
-//                    isFileLoaded = true;
-//                    engine.resetEngine();
-//                }
-//                return null;
-//            }
-//        };
-//
-//        runTask(task);
-//    }
-
-    private void runTask(Task<Void> task) {
-        Thread thread = new Thread(task);
-        thread.setDaemon(true); // Mark the thread as a daemon to allow application exit
-        thread.start();
-    }
-
-
-
-    public synchronized SimulationRunData getRunDataById(String simId) {
-        return engine.getRunDataById(simId);
-    }
-
-    public void shutdownThreadPool() {
-        engine.shutdownThreadPool();
-    }
-
-//    public void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {
-//        engine.setStopPausePlayOrSkipFwdForSimById(simId, dtoSimulationControlBar);
-//    }
-
-
-
-
-
-
     public static void connect(String username, LoginComponentController loginComponentController) {
         String finalUrl = HttpUrl
                 .parse(Constants.CLIENT_CONNECT_PATH)
@@ -173,6 +101,7 @@ public class UserServerAgent {
                 // If another error has occurred, show an alert and close the app.
                 else {
                     Platform.runLater(() -> simBreakdownMenuController.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -202,14 +131,14 @@ public class UserServerAgent {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.code() == 200) {
-                    String meow = response.body().string();
-                    int requestId = Integer.parseInt(meow);
+                    int requestId = Integer.parseInt(response.body().string());
                     Platform.runLater(() -> {
                         controller.addNewRequestData(requestId, dtoRequest);
                         controller.showMessageInNotificationBar("New request has been sent!");
                     });
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -239,6 +168,7 @@ public class UserServerAgent {
                     Platform.runLater(() -> controller.updateRequestsStatus(dtoRequestStatusUpdate));
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -269,6 +199,7 @@ public class UserServerAgent {
                     Platform.runLater(() -> controller.setUpExecutionWindowWithPreviewData(previewData, requestData));
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -300,8 +231,12 @@ public class UserServerAgent {
                         SetResponse setResponse = gson.fromJson(requestStatusUpdateInJson, SetResponse.class);
                         Platform.runLater(() -> controller.receiveSetResponse(setResponse, selectedItem, input.getPopulation()));
                     }
+                    else {
+                        response.body().close();
+                    }
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -332,9 +267,14 @@ public class UserServerAgent {
                         String requestStatusUpdateInJson = response.body().string();
                         SetResponse setResponse = gson.fromJson(requestStatusUpdateInJson, SetResponse.class);
                         Platform.runLater(() -> controller.receiveSetResponse(setResponse, selectedItem, value));
+                        response.body().close();
+                    }
+                    else {
+                        response.body().close();
                     }
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -365,6 +305,7 @@ public class UserServerAgent {
                     Platform.runLater(() -> controller.receiveStartResponse(startResponse));
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -396,6 +337,7 @@ public class UserServerAgent {
 
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -427,6 +369,7 @@ public class UserServerAgent {
 
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
@@ -458,6 +401,7 @@ public class UserServerAgent {
 
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
                 }
             }
         });
