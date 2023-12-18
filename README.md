@@ -7,16 +7,24 @@ Predictions is a generic simulation framework that allows users to define a worl
 * IDE: IntelliJ
 * Programming language: Java 8
 * GUI: JavaFX
+* Server: Apache Tomcat
 
 ## System overview
+The Predictions framework consists of two desktop applications:
 
-The Predictions framework consists of the following components:
+* **Administrator application:** This application allows the administrator to upload new simulations (formatted as XML files), approve or reject client requests for simulation runs, review all client simulation runs, and perform additional administrative tasks.
+* **Client application:** The client application enables users to view the simulations currently held by the server, submit simulation requests to the administrator, run accepted simulation requests, review the progress of simulations, and access other related features. 
+
+As mentioned, the Predictions framework is a versatile simulation framework that includes the following components:
 
 * **World:** The world is a container for entities and laws. It defines the initial state of the simulation, including the number of entities and their properties.
 * **Entity:** An entity is a single object in the world. It has a name, a type, and a set of properties.
 * **Rule:** A rule is a set of instructions that govern the behavior of entities. It can change the properties of entities, create new entities, or delete entities.
 * **Environment Properties:** The environment property is a set of global variables that can be accessed by entities and laws.
 * **Termination conditions:** Termination conditions define when the simulation will end.
+
+The system has the capability to run multiple simulations simultaneously for each user. The server maintains a thread pool to facilitate concurrent runs. 
+The administrator has the authority to configure the thread pool size and adjust it when no other simulations are currently running or awaiting execution.
 
 ## Simulation process
 
@@ -48,4 +56,3 @@ The Predictions framework also supports the following features:
 
 ## Comments
 * **Configuration files:** Two sample simulation configuration files are provided for your convenience. If you want to write your own configuration file, you can use the provided files or the provided XML schema as a reference
-* **Bonus check box:** There is a bonus check box in the top left corner of the program. It controls the options for both choosing a skin for the program and minor animations we added. 
