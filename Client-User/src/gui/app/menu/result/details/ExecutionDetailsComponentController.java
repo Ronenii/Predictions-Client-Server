@@ -1,7 +1,6 @@
 package gui.app.menu.result.details;
 
 import gui.api.Controller;
-import gui.app.menu.result.details.refresher.SkipForwardRefresher;
 import manager.UserServerAgent;
 import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
 import server2client.simulation.runtime.SimulationRunData;

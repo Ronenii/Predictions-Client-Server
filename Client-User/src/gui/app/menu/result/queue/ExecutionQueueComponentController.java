@@ -99,7 +99,7 @@ public class ExecutionQueueComponentController implements Controller {
     }
 
     /**
-     * This method is needed because in the task's lambda 'this' object do not refer to the 'ExecutionQueueComponentController'.
+     * This method is needed because in the task's lambda, 'this' object do not refer to the 'ExecutionQueueComponentController'.
      */
     private void callMethodGetSimRunDataForSimProgress(Task<Void> task, String simId) {
         UserServerAgent.getSimRunDataForSimProgress(this, getQueueSelectedItem().getSimId(), task, simId);// Get the most current run data from the engine
