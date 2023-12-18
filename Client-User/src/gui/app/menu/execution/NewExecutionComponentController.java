@@ -5,14 +5,12 @@ import gui.app.menu.request.data.RequestData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.menu.execution.control.bar.ControlBarController;
 import gui.app.menu.execution.inputs.InputsController;
-import gui.app.menu.execution.models.StartDetails;
 import gui.app.menu.MenuComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import manager.UserServerAgent;
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class NewExecutionComponentController implements Controller{
     private MenuComponentController mainController;
@@ -20,8 +18,6 @@ public class NewExecutionComponentController implements Controller{
     @FXML private InputsController inputsController;
     @FXML private GridPane controlBar;
     @FXML private ControlBarController controlBarController;
-
-    private Map<String, StartDetails> startDetailsMap;
 
     public void setMainController(MenuComponentController mainController) {
         this.mainController = mainController;
@@ -33,8 +29,6 @@ public class NewExecutionComponentController implements Controller{
             inputsController.setMainController(this);
             controlBarController.setMainController(this);
         }
-
-        startDetailsMap = new HashMap<>();
     }
 
     public void clearInputs(){
@@ -52,12 +46,8 @@ public class NewExecutionComponentController implements Controller{
         mainController.addSimulationToQueue(simulationRunData, mainController.getRequestDataById(getCurrentReqId()));
     }
 
-    public void updateStartDetailsMap(String simId, Map<String, Object> envVarsValuesMap) {
-        StartDetails startDetails = inputsController.getStartDetails(envVarsValuesMap);
-        startDetailsMap.put(simId, startDetails);
-    }
-
     public void setUpExecutionWindow(RequestData requestData) {
+        // Receiving from the server the preview data in order to update the execution window according to the chosen request's simulation.
         UserServerAgent.getSimulationPreviewDataForExecutionWindow(inputsController, requestData);
         controlBarController.setButtonsDisableOff();
     }
@@ -76,7 +66,7 @@ public class NewExecutionComponentController implements Controller{
         return requestData.getTokens() != 0;
     }
 
-    public void decreaseTokensCount(int reqId) {
+    public void decreaseGivenRequestsTokensCount(int reqId) {
         mainController.getRequestDataById(reqId).decreaseTokens();
         mainController.refreshRequestsTv();
     }

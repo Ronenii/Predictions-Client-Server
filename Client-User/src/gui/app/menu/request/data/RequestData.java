@@ -5,6 +5,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import simulation.properties.property.impl.IntProperty;
 
+/**
+ * This class created to hold the request data for the controllers that use this data, such as the request table component and the execution queue component.
+ */
 public class RequestData {
     private final int requestId;
     private final String simulationName;

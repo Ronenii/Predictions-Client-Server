@@ -69,11 +69,15 @@ public class NewRequestComponentController implements Controller {
         }
     }
 
+
     private void createRequestDTOAndSendToTheServer() {
         DTORequest dtoRequest = createDTORequest();
         UserServerAgent.sendSimulationRequest(this, dtoRequest);
     }
 
+    /**
+     * 'createRequestDTOAndSendToTheServer' helper, this method creates a DTORequest object from the JavaFX TextFields.
+     */
     private DTORequest createDTORequest() {
         String simulationName = simulationNameCB.getSelectionModel().getSelectedItem();
         int simulationTokens = Integer.parseInt(simulationsTokensTF.getText());
@@ -82,6 +86,9 @@ public class NewRequestComponentController implements Controller {
         return new DTORequest(simulationName, simulationTokens, endingConditions);
     }
 
+    /**
+     * 'createDTORequest' helper.
+     */
     private DTOEndingCondition[] createDTOEndingConditionArray() {
         List<DTOEndingCondition> tempList = new ArrayList<>();
 
@@ -98,6 +105,9 @@ public class NewRequestComponentController implements Controller {
         return tempList.toArray(new DTOEndingCondition[0]);
     }
 
+    /**
+     * Check if the ticks or second CB is checked, if yes, using 'isTextFieldValid' to validate their TextFields.
+     */
     private boolean isTicksOrSecondTextFieldValid() {
         boolean ret = true;
 
@@ -111,6 +121,9 @@ public class NewRequestComponentController implements Controller {
         return ret;
     }
 
+    /**
+     * Validate the given TextField's text to be a number.
+     */
     private boolean isTextFieldValid(TextField textField) {
         boolean ret = false;
         String textFieldText = textField.getText();
@@ -150,6 +163,10 @@ public class NewRequestComponentController implements Controller {
         }
     }
 
+    /**
+     * After receiving new SimulationsPreviewData from the server, this method receive the SimulationsPreviewData object
+     * and update the new request component.
+     */
     public void updateNewRequestComponent(SimulationsPreviewData simulationsPreviewData) {
         for(PreviewData previewData : simulationsPreviewData.getPreviewDataArray()) {
             if(!simulationNameSet.contains(previewData.getSimulationName())) {
