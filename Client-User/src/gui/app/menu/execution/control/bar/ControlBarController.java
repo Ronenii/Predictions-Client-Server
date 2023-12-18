@@ -38,7 +38,6 @@ public class ControlBarController implements Controller {
 
     public void receiveStartResponse(StartResponse response){
         if(response.isSuccess()){
-            mainController.updateStartDetailsMap(response.getSimulationRunData().getSimId(), response.getSimulationRunData().getEnvVarsValuesMap());
             mainController.getMenusTabPane().getSelectionModel().selectLast();
             mainController.addSimulationToQueue(response.getSimulationRunData());
             mainController.decreaseGivenRequestsTokensCount(mainController.getCurrentReqId());
