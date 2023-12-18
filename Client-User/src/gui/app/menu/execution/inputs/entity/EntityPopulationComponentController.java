@@ -6,7 +6,6 @@ import server2client.simulation.genral.impl.objects.DTOEntity;
 import server2client.simulation.genral.impl.properties.DTOGrid;
 import server2client.simulation.prview.PreviewData;
 import gui.app.menu.execution.inputs.InputsController;
-import gui.app.menu.execution.models.EntitiesStartData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -204,16 +203,6 @@ public class EntityPopulationComponentController implements Controller{
     private void resetListView() {
         entitiesLV.getSelectionModel().clearSelection();
         populationTF.setText("");
-    }
-
-    public EntitiesStartData getEntitiesStartData() {
-        Map<DTOEntity, Integer> entityPopulationsDup = new HashMap<>();
-
-        for (DTOEntity entity : entityPopulations.keySet()) {
-            entityPopulationsDup.put(entity, entityPopulations.get(entity));
-        }
-
-        return new EntitiesStartData(entityPopulationsDup, entitiesLeftToAdd);
     }
 
     @Override
