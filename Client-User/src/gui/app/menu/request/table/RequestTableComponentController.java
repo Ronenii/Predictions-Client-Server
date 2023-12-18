@@ -77,6 +77,9 @@ public class RequestTableComponentController implements Controller {
         }
     }
 
+    /**
+     * This method receive a new request's DTO from the new request component and the request ID from the server, create new RequestData and insert the request to the table.
+     */
     public void addNewRequestData(int requestId, DTORequest dtoRequest) {
         RequestData newRequestData = new RequestData(requestId, dtoRequest);
         requestDataMap.put(requestId, newRequestData);
@@ -88,6 +91,9 @@ public class RequestTableComponentController implements Controller {
         requestsTV.refresh();
     }
 
+    /**
+     * Initialize the RequestStatusRefresher if it has not been initialized yet.
+     */
     private void startRequestsStatusRefresher() {
         // enable the timer task only once.
         if(requestsStatusRefresher == null) {
@@ -97,6 +103,10 @@ public class RequestTableComponentController implements Controller {
         }
     }
 
+    /**
+     * This method called from the server's response to the 'requestsStatusRefresher' with a 'DTORequestStatusUpdate' object.
+     * If any request's status has been changed on the server, this method change this request status in the table as well.
+     */
     public void updateRequestsStatus(DTORequestStatusUpdate dtoRequestStatusUpdate) {
         for(DTORequestStatusData dtoRequestStatusData : dtoRequestStatusUpdate.getRequestStatusUpdates()) {
             RequestData requestData = requestDataMap.get(dtoRequestStatusData.getReqId());

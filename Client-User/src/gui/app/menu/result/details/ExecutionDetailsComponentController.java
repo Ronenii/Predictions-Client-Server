@@ -9,9 +9,7 @@ import gui.app.menu.result.ResultComponentController;
 import gui.app.menu.result.models.PopulationData;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -182,6 +180,7 @@ public class ExecutionDetailsComponentController implements Controller {
         skipOne = true;
         skipForwardTask(dtoSimulationControlBar, this);
     }
+
 
     private void skipForwardTask(DTOSimulationControlBar dtoSimulationControlBar, Controller controller) {
         Task<Void> task = new Task<Void>() {
