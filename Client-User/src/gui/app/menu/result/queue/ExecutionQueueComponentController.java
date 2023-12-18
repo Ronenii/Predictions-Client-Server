@@ -80,6 +80,8 @@ public class ExecutionQueueComponentController implements Controller {
      * This task will fetch simulation run data from the server and display it as long as the simulation is still selected in the TableView
      * and is ongoing.
      * Every 200ms the task will query the server for the run data, and will update the SimulationRunDataMap in the parent accordingly.
+     * Note: the implementation uses a task instead of a refresher,
+     * because the refresher relies on one thread, and in this case we may need multiple threads to run simultaneously.
      */
     public void executeSimDataFetchingTask(String simId) {
 

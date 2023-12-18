@@ -1,6 +1,7 @@
 package gui.app.menu.result.details;
 
 import gui.api.Controller;
+import gui.app.menu.result.details.refresher.SkipForwardRefresher;
 import manager.UserServerAgent;
 import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
 import server2client.simulation.runtime.SimulationRunData;
@@ -180,6 +181,7 @@ public class ExecutionDetailsComponentController implements Controller {
         skipOne = true;
         skipForwardTask(dtoSimulationControlBar, this);
     }
+
 
     private void skipForwardTask(DTOSimulationControlBar dtoSimulationControlBar, Controller controller) {
         Task<Void> task = new Task<Void>() {
