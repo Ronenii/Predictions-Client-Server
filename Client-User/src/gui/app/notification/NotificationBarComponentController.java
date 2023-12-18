@@ -142,13 +142,5 @@ public class NotificationBarComponentController {
         grdParent.visibleProperty().set(true);
     }
 
-    public void changeToDarkMode() {
-        grdParent.getStylesheets().add(getClass().getResource("themes/DarkMode.css").toExternalForm());
-    }
-
-    public void changeToLightMode() {
-        grdParent.getStylesheets().add(getClass().getResource("themes/LightMode.css").toExternalForm());
-    }
-
 }
 

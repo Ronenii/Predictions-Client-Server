@@ -7,7 +7,6 @@ import gui.app.menu.request.create.request.NewRequestComponentController;
 import gui.app.menu.request.data.RequestData;
 import gui.app.menu.request.table.RequestTableComponentController;
 import javafx.fxml.FXML;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import server2client.simulation.prview.SimulationsPreviewData;
 
