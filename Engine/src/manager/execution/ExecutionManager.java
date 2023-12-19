@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
  * This class possesses the program's thread pool and a map of simulations that have been added to the thread pool's queue.
  */
 public class ExecutionManager {
-    private ExecutorService threadExecutor = null;
+    private ExecutorService threadExecutor;
     private final Map<String, SimulationInstance> simulations;
     private final Map<String, SimulationRunData> simulationsRunData;
     private boolean isSkippingForward;
@@ -35,9 +35,6 @@ public class ExecutionManager {
         }
     }
 
-    public SimulationInstance getSimulationById(String simId) {
-        return simulations.get(simId);
-    }
 
     public void shutdownThreadPool() {
         threadExecutor.shutdown();

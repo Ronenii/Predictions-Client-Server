@@ -113,10 +113,6 @@ public class SimulationInstance implements Serializable, Runnable {
         this.endingConditions = endingConditions;
     }
 
-    public EndingCondition getTerminateCondition() {
-        return terminateCondition;
-    }
-
     public TicksCounter getTicksCounter() {
         return ticksCounter;
     }

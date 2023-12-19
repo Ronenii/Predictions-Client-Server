@@ -38,7 +38,6 @@ public class RequestsManager {
     private final Map<Integer, RequestData> requestDataMap;
     // approvedRequestMap holds only the approved requests, in order to receive the user last initialize for entity count etc.
     private final Map<Integer, ApprovedRequest> approvedRequestMap;
-
     private Map<String, SimulationDefinition> simulationDefinitions;
 
     public RequestsManager(Map<String, SimulationDefinition> simulationDefinitionMap) {
@@ -58,10 +57,6 @@ public class RequestsManager {
         requestDataMap.put(idCounter,requestData);
         idCounter++;
         return ret;
-    }
-
-    public RequestData getNonApprovedRequest(int id) {
-        return requestDataMap.get(id);
     }
 
     public ApprovedRequest getApprovedRequest(int id) {return approvedRequestMap.get(id);}
@@ -104,7 +99,10 @@ public class RequestsManager {
 
         // Another loop to remove the approved/denied requests from requestDataMap
         for(RequestData requestData : updatedRequests) {
-            addNewApprovedRequest(requestData);
+            if(requestData.getStatus() == RequestStatus.APPROVED){
+                addNewApprovedRequest(requestData);
+            }
+
             requestDataMap.remove(requestData.requestId);
         }
 
