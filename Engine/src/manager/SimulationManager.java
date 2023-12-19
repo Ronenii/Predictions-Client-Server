@@ -154,4 +154,8 @@ public class SimulationManager {
     public DTORequestStatusUpdate getDtoRequestStatusUpdate(String username) {
         return requestsManager.getDtoRequestStatusUpdate(username);
     }
+
+    public void shutdownThreadPool() {
+        executionManager.shutdownThreadPool();
+    }
 }
