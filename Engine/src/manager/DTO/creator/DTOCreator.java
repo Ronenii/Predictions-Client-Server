@@ -164,8 +164,6 @@ public class DTOCreator {
         }
 
         DTOEntityInstance[] dtoEntityInstances = new DTOEntityInstance[size];
-        Map<String, DTOProperty> properties = new HashMap<>();
-
         for (EntityInstance toAdd : entityInstances) {
             if (toAdd.isAlive()) {
                 dtoEntityInstances[entitiesAdded++] = new DTOEntityInstance(convertProperties2DTOPropertiesMap(toAdd.getProperties()));
@@ -209,7 +207,6 @@ public class DTOCreator {
 
         rules.forEach((key, value) -> rulesList.add(getDTORule(value)));
         return rulesList;
-
     }
 
     private DTORule getDTORule(Rule rule) {
@@ -272,7 +269,6 @@ public class DTOCreator {
 
         if(endingConditions != null){
             endingConditions.forEach((key, value) -> endingConditionsList.add(getDTOEndingCondition(value)));
-
         }
 
         return endingConditionsList;
