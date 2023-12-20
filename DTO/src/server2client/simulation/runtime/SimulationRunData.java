@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public class SimulationRunData {
-    // Todo - convert this object to be more simple - without using lists/maps.
     private final String simId;
     public final String status;
     private final int tick;
@@ -17,8 +16,9 @@ public class SimulationRunData {
     private final Map<String, Object> envVarsValuesMap;
     public String errorMessage = null;
     private final boolean isSimulationSkipped;
+    private final long threadSleepCount;
 
-    public SimulationRunData(String simId, int tick, long time, DTOEntityPopulation[] entityPopulation, String status, boolean isCompleted, Map<String, Object> envVarsValuesMap, boolean isSimulationSkipped) {
+    public SimulationRunData(String simId, int tick, long time, DTOEntityPopulation[] entityPopulation, String status, boolean isCompleted, Map<String, Object> envVarsValuesMap, boolean isSimulationSkipped, long threadSleepCount) {
         this.simId = simId;
         this.entityPopulation = entityPopulation;
         this.tick = tick;
@@ -27,6 +27,7 @@ public class SimulationRunData {
         this.isCompleted = isCompleted;
         this.envVarsValuesMap = envVarsValuesMap;
         this.isSimulationSkipped = isSimulationSkipped;
+        this.threadSleepCount = threadSleepCount;
     }
 
     public String getSimId() {
@@ -67,5 +68,9 @@ public class SimulationRunData {
 
     public boolean isSimulationSkipped() {
         return isSimulationSkipped;
+    }
+
+    public long getThreadSleepCount() {
+        return threadSleepCount;
     }
 }

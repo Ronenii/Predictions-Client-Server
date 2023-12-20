@@ -38,14 +38,13 @@ public class SimulationInstance implements Serializable, Runnable {
     private Map<EndingConditionType, EndingCondition> endingConditions;
     private EndingCondition terminateCondition;
     private final TicksCounter ticksCounter;
-    private final int threadSleepDuration;
+    private int threadSleepDuration;
     private long timePassed;
-    private long timePassedBeforePause;
-    private long startingTime;
     private final Grid grid;
     private int totalPopulation;
     private final UserInstructions userInstructions;
     private final int constAll = -1;
+    private final int defualtThreadSleepTime = 200;
     private SimulationStatus status;
     private ResultData resultData;
     private String errorMessage;
@@ -126,11 +125,7 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     public long getTimePassed() {
-        if (userInstructions.isSimulationPaused) {
-            return timePassedBeforePause;
-        } else {
-            return System.currentTimeMillis() - startingTime;
-        }
+        return timePassed;
     }
 
     public SimulationStatus getStatus() {
@@ -297,27 +292,10 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     private void updateTickAndTime() {
-        timePassed = System.currentTimeMillis() - startingTime;
+        timePassed += threadSleepDuration;
         ticksCounter.incrementTick();
     }
 
-    public void updateTimePassBeforePause() {
-        timePassedBeforePause = timePassed;
-    }
-
-    public void resumeSimClock() {
-        startingTime = System.currentTimeMillis() - timePassed;
-    }
-
-    private int calculateRemainingInstances() {
-        int remainingInstances = 0;
-
-        for (Entity e : entities.values()
-        ) {
-            remainingInstances += e.getCurrentPopulation();
-        }
-        return remainingInstances;
-    }
 
     /**
      * Invoke the given actions on each entity instance of a specific entity.
@@ -427,33 +405,6 @@ public class SimulationInstance implements Serializable, Runnable {
         }
 
         return entityInstances;
-    }
-
-
-    public void resetWorld() {
-        ticksCounter.resetTicks();
-        this.timePassed = -1;
-        for (Entity e : entities.values()
-        ) {
-            e.resetPopulation();
-        }
-        grid.populateGrid(getListOfAllInstances());
-    }
-
-    /**
-     * This function is only used to build a list in order to populate the grid.
-     *
-     * @return A list of all entity instances across all entities.
-     */
-    private List<EntityInstance> getListOfAllInstances() {
-        List<EntityInstance> instances = new ArrayList<>();
-
-        for (Entity e : entities.values()
-        ) {
-            instances.addAll(e.getEntityInstances());
-        }
-
-        return instances;
     }
 
     private boolean endingConditionsMet() {
@@ -566,8 +517,6 @@ public class SimulationInstance implements Serializable, Runnable {
         }
     }
 
-
-    //TODO - fetch env vars expressions.
     private void fetchEnvironmentExpressions() {
         for (Rule rule : rules.values()) {
             for (Action action : rule.getActions()) {
@@ -804,9 +753,7 @@ public class SimulationInstance implements Serializable, Runnable {
         }
     }
 
-
     private void initSimulation() {
-        this.startingTime = System.currentTimeMillis();
         this.status = SimulationStatus.ONGOING;
         userInstructions.isSimulationRunning = true;
         initInstances();
@@ -814,6 +761,9 @@ public class SimulationInstance implements Serializable, Runnable {
         fetchEnvironmentExpressions();
         fetchTicksExpressions();
         fetchReplaceActions();
+        if(threadSleepDuration == 0){
+            threadSleepDuration = defualtThreadSleepTime;
+        }
     }
 
     private void checkPopulation() throws CrashException {
