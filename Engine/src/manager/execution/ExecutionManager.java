@@ -56,10 +56,10 @@ public class ExecutionManager {
         switch (simulationInstance.getStatus()) {
             case ONGOING:
                 if(isSkippingForward){
-                    ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationArray(simulationInstance.getEntities()), "ONGOING", false, null, true);
+                    ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationArray(simulationInstance.getEntities()), "ONGOING", false, null, true, simulationInstance.getThreadSleepDuration());
                     ret.resultData = simulationInstance.getResultData();
                 } else {
-                    ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationArray(simulationInstance.getEntities()), "ONGOING", false, null, false);
+                    ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationArray(simulationInstance.getEntities()), "ONGOING", false, null, false, simulationInstance.getThreadSleepDuration());
                 }
                 break;
             case WAITING:
@@ -69,7 +69,7 @@ public class ExecutionManager {
                 if(simulationsRunData.get(simId).status.equals("COMPLETED")) {
                     ret = simulationsRunData.get(simId);
                 } else {
-                    ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationArray(simulationInstance.getEntities()), "COMPLETED", true, null,false);
+                    ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationArray(simulationInstance.getEntities()), "COMPLETED", true, null,false, simulationInstance.getThreadSleepDuration());
                     ret.resultData = simulationInstance.getResultData();
                     simulationsRunData.put(simId, ret);
                 }
@@ -80,7 +80,7 @@ public class ExecutionManager {
                     simulationsRunData.get(simId).errorMessage = null;
                     ret = simulationsRunData.get(simId);
                 } else {
-                    ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationArray(simulationInstance.getEntities()), "CRUSHED", false, null, false);
+                    ret = new SimulationRunData(simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationArray(simulationInstance.getEntities()), "CRUSHED", false, null, false, simulationInstance.getThreadSleepDuration());
                     ret.errorMessage = simulationInstance.getErrorMessage();
                     simulationsRunData.put(simId, ret);
                 }

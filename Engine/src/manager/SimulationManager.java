@@ -92,7 +92,7 @@ public class SimulationManager {
         if(reqSimulationDefinition.isStartable()) {
             DTOCreator dtoCreator = new DTOCreator();
             String id = IdGenerator.generateID();
-            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationArray(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false);
+            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationArray(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false, reqSimulationDefinition.getThreadSleepDuration());
 
             addSimulationToQueue(simulationRunData, reqSimulationDefinition);
             return new StartResponse(true, String.format("Simulation %s was added to the queue successfully.", id), simulationRunData);

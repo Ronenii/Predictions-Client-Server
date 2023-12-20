@@ -40,13 +40,11 @@ public class SimulationInstance implements Serializable, Runnable {
     private final TicksCounter ticksCounter;
     private int threadSleepDuration;
     private long timePassed;
-    private long timePassedBeforePause;
-    private long startingTime;
     private final Grid grid;
     private int totalPopulation;
     private final UserInstructions userInstructions;
     private final int constAll = -1;
-    private final int defualtThreadSleepTime = 300;
+    private final int defualtThreadSleepTime = 200;
     private SimulationStatus status;
     private ResultData resultData;
     private String errorMessage;
@@ -294,7 +292,7 @@ public class SimulationInstance implements Serializable, Runnable {
     }
 
     private void updateTickAndTime() {
-        timePassed = timePassed + threadSleepDuration;
+        timePassed += threadSleepDuration;
         ticksCounter.incrementTick();
     }
 
@@ -407,23 +405,6 @@ public class SimulationInstance implements Serializable, Runnable {
         }
 
         return entityInstances;
-    }
-
-
-    /**
-     * This function is only used to build a list in order to populate the grid.
-     *
-     * @return A list of all entity instances across all entities.
-     */
-    private List<EntityInstance> getListOfAllInstances() {
-        List<EntityInstance> instances = new ArrayList<>();
-
-        for (Entity e : entities.values()
-        ) {
-            instances.addAll(e.getEntityInstances());
-        }
-
-        return instances;
     }
 
     private boolean endingConditionsMet() {

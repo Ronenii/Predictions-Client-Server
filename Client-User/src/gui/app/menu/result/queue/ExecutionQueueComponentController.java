@@ -64,7 +64,12 @@ public class ExecutionQueueComponentController implements Controller {
             if (selected.isCompleted()) {
                 mainController.updateGuiToChosenSimulation(selected);
             } else {
-                executeSimDataFetchingTask(selected.getSimId());
+                long threadSleep = selected.getThreadSleepCount();
+                if(threadSleep == 0){
+                    threadSleep = 200;
+                }
+
+                executeSimDataFetchingTask(selected.getSimId(), threadSleep);
             }
         }
     }
@@ -83,14 +88,14 @@ public class ExecutionQueueComponentController implements Controller {
      * Note: the implementation uses a task instead of a refresher,
      * because the refresher relies on one thread, and in this case we may need multiple threads to run simultaneously.
      */
-    public void executeSimDataFetchingTask(String simId) {
+    public void executeSimDataFetchingTask(String simId, long threadSleep) {
 
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 do {
                     callMethodGetSimRunDataForSimProgress(this, simId);
-                    Thread.sleep(200); // Make the thread sleep for 200ms
+                    Thread.sleep(threadSleep + 50); // Make the thread sleep for the exact time the thread in the server sleeps + 50ms.
                 } while (true); // while true explanation on 'receiveSimulationRunForRunningSimulation' documentation.
             }
         };

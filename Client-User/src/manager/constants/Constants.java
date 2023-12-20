@@ -4,7 +4,7 @@ public class Constants {
     // global constants
 
     public final static int REFRESH_RATE = 2000;
-    public final static int REQUEST_TABLE_REFRESH_RATE = 4000;
+    public final static int REQUEST_TABLE_REFRESH_RATE = 2000;
 
     // Server resource locations
     private final static String BASE_DOMAIN = "localhost";
