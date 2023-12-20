@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
+import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
@@ -134,6 +135,8 @@ public class SimulationManagerComponentController implements Controller {
             simBreakdownWindow.setTitle(String.format("%s's details", previewData.getSimulationName()));
             SimBreakdownMenuController controller = (SimBreakdownMenuController)loader.getController();
             controller.updateSimTreeView(previewData);
+            Image icon = new Image(getClass().getResourceAsStream("icon/icon.png"));
+            simBreakdownWindow.getIcons().add(icon);
             Scene scene = new Scene(root);
             simBreakdownWindow.setScene(scene);
             simBreakdownWindow.show();
