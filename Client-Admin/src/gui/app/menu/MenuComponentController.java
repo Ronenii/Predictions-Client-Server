@@ -47,4 +47,6 @@ public class MenuComponentController implements Controller {
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);
     }
+
+
 }
