@@ -3,18 +3,29 @@ package gui.app.menu.management.simulation;
 import gui.app.api.Controller;
 import gui.app.menu.MenuComponentController;
 import gui.app.menu.management.ManagementComponentController;
+import gui.app.menu.management.simulation.breakdown.SimBreakdownMenuController;
+import gui.app.menu.management.simulation.breakdown.details.environment.EnvironmentVarDetailsController;
 import gui.app.menu.management.simulation.data.LoadedSimulationData;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import manager.AdminServerAgent;
+import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -111,8 +122,25 @@ public class SimulationManagerComponentController implements Controller {
     }
 
     @FXML
-    void onSimulationSelected(ContextMenuEvent event) {
-        //Todo: this method update the simulation queue manager.
+    void onSimulationSelected(MouseEvent event) {
+        AdminServerAgent.getSimulationPreviewData(this, listViewSimulations.getSelectionModel().getSelectedItem().toString());
+    }
+
+    public void loadSimBreakdownComponent(PreviewData previewData) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("breakdown/SimBreakdownMenu.fxml"));
+            Parent root = loader.load();
+            Stage simBreakdownWindow = new Stage();
+            simBreakdownWindow.setTitle(String.format("%s's details", previewData.getSimulationName()));
+            SimBreakdownMenuController controller = (SimBreakdownMenuController)loader.getController();
+            controller.updateSimTreeView(previewData);
+            Scene scene = new Scene(root);
+            simBreakdownWindow.setScene(scene);
+            simBreakdownWindow.show();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
