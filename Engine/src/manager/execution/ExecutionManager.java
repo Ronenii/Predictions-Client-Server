@@ -101,12 +101,10 @@ public class ExecutionManager {
 
         if(dtoSimulationControlBar.isToPause()) {
             userInstructions.isSimulationPaused = true;
-            simulationInstance.updateTimePassBeforePause();
             userInstructions.isSimulationRunning = false;
         } else if (dtoSimulationControlBar.isToPlay()) {
             userInstructions.isSimulationRunning = true;
             isSkippingForward = false;
-            simulationInstance.resumeSimClock();
             userInstructions.isSimulationPaused = false;
         } else if (dtoSimulationControlBar.isToStop()) {
             userInstructions.isSimulationStopped = true;
