@@ -6,7 +6,7 @@ import javafx.application.Platform;
 import manager.AdminServerAgent;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.api.Controller;
-import gui.app.menu.execution.data.StatusData;
+import server2client.simulation.status.StatusData;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -220,7 +220,6 @@ public class ExecutionQueueComponentController implements Controller {
             });
         }
     }
-
         /**
          * Given a task, this creates a thread for it and runs it.
          */

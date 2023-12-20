@@ -15,6 +15,8 @@ import server2client.simulation.runtime.generator.IdGenerator;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import manager.execution.ExecutionManager;
+import server2client.simulation.status.SimulationsStatusData;
+import server2client.simulation.status.StatusData;
 import simulation.objects.world.SimulationInstance;
 import simulation.objects.world.definition.SimulationDefinition;
 import simulation.objects.world.status.SimulationStatus;
@@ -24,20 +26,25 @@ import client2server.simulation.execution.user.input.EnvPropertyUserInput;
 import simulation.properties.property.api.Property;
 import java.io.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
 public class SimulationManager {
     // Holds the loaded simulations definitions.
     private Map<String, SimulationDefinition> simulationDefinitions;
+    private Map<String, StatusData> simulationInstances;
     private ExecutionManager executionManager = null;
     private final RequestsManager requestsManager;
     private int simulationBreakdownVersion;
+    private int simulationsAdded;
 
     public SimulationManager() {
         simulationDefinitions = new HashMap<>();
+        simulationInstances = new LinkedHashMap<>();
         requestsManager = new RequestsManager(simulationDefinitions);
         simulationBreakdownVersion = 0;
+        simulationsAdded = 0;
     }
 
     public SimulationsPreviewData getCurrentSimulationsDetails() {
@@ -49,6 +56,17 @@ public class SimulationManager {
         }
 
         return new SimulationsPreviewData(previewDataArray);
+    }
+
+    public SimulationsStatusData getSimulationsAddedArray(){
+        StatusData[] addedSimulations = new StatusData[simulationsAdded];
+        int index = 0;
+        for(SimulationDefinition s : simulationDefinitions.values()) {
+            addedSimulations[index] = getSimulationStatusData(s);
+            index++;
+        }
+
+        return new SimulationsStatusData(addedSimulations);
     }
 
     public void updateThreadCount(int threadCount) {
@@ -66,6 +84,10 @@ public class SimulationManager {
     private PreviewData getDefinitionPreviewData(SimulationInstance simulationDefinition) {
         DTOCreator dtoCreator = new DTOCreator();
         return dtoCreator.createSimulationPreviewDataObject(simulationDefinition.getSimulationName(), simulationDefinition.getEnvironmentProperties(), simulationDefinition.getEntities(), simulationDefinition.getRules(), simulationDefinition.getEndingConditions(), simulationDefinition.getGrid());
+    }
+
+    private StatusData getSimulationStatusData(SimulationInstance simulation){
+        return new StatusData(simulation.getSimulationId(), simulation.getStatus().toString());
     }
 
     public DTOLoadResult loadSimulationFromFile(File file) {
@@ -90,6 +112,7 @@ public class SimulationManager {
         SimulationInstance reqSimulationDefinition = requestsManager.getApprovedRequest(reqId).getDefinitionInstance();
 
         if(reqSimulationDefinition.isStartable()) {
+            simulationsAdded++;
             DTOCreator dtoCreator = new DTOCreator();
             String id = IdGenerator.generateID();
             SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationArray(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false, reqSimulationDefinition.getThreadSleepDuration());
@@ -137,6 +160,10 @@ public class SimulationManager {
 
     public int getSimulationBreakdownVersion() {
         return simulationBreakdownVersion;
+    }
+
+    public int getSimulationsAdded(){
+        return simulationsAdded;
     }
 
     public int addNewRequest(DTORequest dtoRequest, String username) {

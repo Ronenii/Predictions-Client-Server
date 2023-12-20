@@ -1,4 +1,4 @@
-package gui.app.menu.execution.data;
+package server2client.simulation.status;
 
 import javafx.beans.property.SimpleStringProperty;
 
@@ -12,6 +12,11 @@ public class StatusData {
     public StatusData(String simId, SimpleStringProperty status) {
         this.simId = simId;
         this.status = status;
+    }
+
+    public StatusData(String simId, String status) {
+        this.simId = simId;
+        this.status = new SimpleStringProperty(status);
     }
 
     public String getSimId() {
