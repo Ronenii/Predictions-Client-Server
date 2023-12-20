@@ -31,11 +31,11 @@ public class SimulationManagerComponentController implements Controller {
 
     @FXML
     private ListView<String> listViewSimulations;
-    private Map<String,Integer> loadedSimulationsNamesMap; // The purpose of 'loadedSimulationsNamesMap' is to hold the simulations names, the integer value is irrelevant.
+    private Map<String, Integer> loadedSimulationsNamesMap; // The purpose of 'loadedSimulationsNamesMap' is to hold the simulations names, the integer value is irrelevant.
 
     private String currentLoadedFilePath;
 
-    public void setMainController(ManagementComponentController controller){
+    public void setMainController(ManagementComponentController controller) {
         this.mainController = controller;
     }
 
@@ -47,6 +47,15 @@ public class SimulationManagerComponentController implements Controller {
 
     @FXML
     void loadFileButtonActionListener(ActionEvent event) {
+        File selectedFile = selectAndValidateTextFile();
+
+        if (selectedFile != null) {
+            AdminServerAgent.uploadFile(selectedFile, this);
+            textFieldPath.setText(selectedFile.getPath());
+        }
+    }
+
+    File selectAndValidateTextFile() {
         /// Initial FCD settings
         FileChooser fileChooser = new FileChooser();
 
@@ -58,18 +67,26 @@ public class SimulationManagerComponentController implements Controller {
 
         File selectedFile = fileChooser.showOpenDialog(null);
 
-        if (selectedFile != null) {
-            AdminServerAgent.uploadFile(selectedFile, this);
-            textFieldPath.setText(selectedFile.getPath());
+        if (isXmlFile(selectedFile.getName())){
+            return selectedFile;
         }
+        else{
+            mainController.showMessageInNotificationBar("ERROR: The selected file is not an XML file.");
+            return null;
+        }
+    }
+
+    boolean isXmlFile(String fileName) {
+        String extension = fileName.substring(fileName.lastIndexOf(".")+1);
+
+        return extension.equalsIgnoreCase("xml");
+
     }
 
     @FXML
     void loadFileTextFieldListener(ActionEvent event) {
         if (!textFieldPath.getText().equals(currentLoadedFilePath)) {
             File file = new File(textFieldPath.getText());
-
-//            loadFile(file);
         }
     }
 
