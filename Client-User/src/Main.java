@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -17,6 +18,8 @@ public class Main extends Application {
         LoginComponentController loginComponentController = setUpLoginPage();
 
         if(loginComponentController.isLoggedIn()){
+            Image icon = new Image(getClass().getResourceAsStream("icon/icon.png"));
+            primaryStage.getIcons().add(icon);
             primaryStage.setTitle("Predictions-User");
             FXMLLoader fxmlLoader = new FXMLLoader();
             URL url = getClass().getResource("gui/app/UserApp.fxml");
@@ -40,6 +43,8 @@ public class Main extends Application {
         Parent loginRoot = loginLoader.load();
         LoginComponentController loginComponentController = loginLoader.getController();
         Scene loginScene = new Scene(loginRoot);
+        Image icon = new Image(getClass().getResourceAsStream("icon/icon.png"));
+        loginStage.getIcons().add(icon);
 
         loginStage.setTitle("Predictions - Login");
         loginStage.setResizable(false);

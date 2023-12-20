@@ -40,6 +40,10 @@ public class SimulationManager {
         simulationBreakdownVersion = 0;
     }
 
+    public PreviewData getPreviewDataByName(String simName){
+        return getDefinitionPreviewData(simulationDefinitions.get(simName).getSimulationAbstractInstance());
+    }
+
     public SimulationsPreviewData getCurrentSimulationsDetails() {
         PreviewData[] previewDataArray = new PreviewData[simulationDefinitions.size()];
         int index = 0;

@@ -14,6 +14,7 @@ import manager.constant.Constants;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import server2client.simulation.load.result.DTOLoadResult;
+import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
 import server2client.simulation.request.DTORequests;
 import server2client.simulation.runtime.SimulationRunData;
@@ -202,6 +203,37 @@ public class AdminServerAgent {
                 // If another error has occurred, show an alert and close the app.
                 else {
                     Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
+                }
+            }
+        });
+    }
+
+    public static void getSimulationPreviewData(SimulationManagerComponentController controller, String simName) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.SIMULATIONS_PREVIEW_DATA_PATH)
+                .newBuilder()
+                .addQueryParameter("simulationName", simName)
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.code() == 200) {
+                    String previewDataInJson = response.body().string();
+                    PreviewData previewData = gson.fromJson(previewDataInJson, PreviewData.class);
+                    Platform.runLater(()-> controller.loadSimBreakdownComponent(previewData));
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
                     response.body().close();
                 }
             }
