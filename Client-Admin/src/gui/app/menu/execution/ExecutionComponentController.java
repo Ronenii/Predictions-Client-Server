@@ -2,7 +2,7 @@ package gui.app.menu.execution;
 
 import gui.app.api.Controller;
 import gui.app.menu.MenuComponentController;
-import server2client.simulation.status.StatusData;
+import gui.app.menu.execution.queue.data.StatusData;
 import gui.app.menu.execution.details.ExecutionDetailsComponentController;
 import gui.app.menu.execution.queue.ExecutionQueueComponentController;
 import gui.app.menu.execution.result.ResultTabComponentController;

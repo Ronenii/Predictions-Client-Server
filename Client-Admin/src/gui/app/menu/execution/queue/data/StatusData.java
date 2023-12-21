@@ -1,4 +1,4 @@
-package server2client.simulation.status;
+package gui.app.menu.execution.queue.data;
 
 import javafx.beans.property.SimpleStringProperty;
 

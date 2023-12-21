@@ -18,7 +18,6 @@ import server2client.simulation.request.DTORequests;
 import server2client.simulation.request.data.DTOSingleRequest;
 import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
 import server2client.simulation.request.updated.status.data.DTORequestStatusData;
-import server2client.simulation.status.StatusData;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.grid.Grid;

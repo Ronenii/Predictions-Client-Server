@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gui.app.api.Controller;
 import gui.app.menu.allocation.AllocationComponentController;
-import server2client.simulation.status.StatusData;
+import gui.app.menu.execution.queue.data.StatusData;
 import gui.app.menu.execution.queue.ExecutionQueueComponentController;
 import gui.app.menu.management.simulation.SimulationManagerComponentController;
 import gui.app.menu.management.thread.ThreadManagerComponentController;

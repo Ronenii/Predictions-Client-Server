@@ -8,6 +8,7 @@ import server2client.simulation.execution.StartResponse;
 import server2client.simulation.load.result.DTOLoadResult;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
+import server2client.simulation.queue.AddedSimulationsData;
 import server2client.simulation.request.DTORequests;
 import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
 import server2client.simulation.runtime.SimulationRunData;
@@ -15,8 +16,6 @@ import server2client.simulation.runtime.generator.IdGenerator;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import manager.execution.ExecutionManager;
-import server2client.simulation.status.SimulationsStatusData;
-import server2client.simulation.status.StatusData;
 import simulation.objects.world.SimulationInstance;
 import simulation.objects.world.definition.SimulationDefinition;
 import simulation.objects.world.status.SimulationStatus;
@@ -25,15 +24,13 @@ import client2server.simulation.execution.user.input.EntityPopulationUserInput;
 import client2server.simulation.execution.user.input.EnvPropertyUserInput;
 import simulation.properties.property.api.Property;
 import java.io.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class SimulationManager {
     // Holds the loaded simulations definitions.
     private Map<String, SimulationDefinition> simulationDefinitions;
-    private Map<String, StatusData> simulationInstances;
+    private List<String> addedSimulations;
     private ExecutionManager executionManager = null;
     private final RequestsManager requestsManager;
     private int simulationBreakdownVersion;
@@ -41,7 +38,7 @@ public class SimulationManager {
 
     public SimulationManager() {
         simulationDefinitions = new HashMap<>();
-        simulationInstances = new LinkedHashMap<>();
+        addedSimulations = new LinkedList<>();
         requestsManager = new RequestsManager(simulationDefinitions);
         simulationBreakdownVersion = 0;
         simulationsAdded = 0;
@@ -58,15 +55,8 @@ public class SimulationManager {
         return new SimulationsPreviewData(previewDataArray);
     }
 
-    public SimulationsStatusData getSimulationsAddedArray(){
-        StatusData[] addedSimulations = new StatusData[simulationsAdded];
-        int index = 0;
-        for(SimulationDefinition s : simulationDefinitions.values()) {
-            addedSimulations[index] = getSimulationStatusData(s);
-            index++;
-        }
-
-        return new SimulationsStatusData(addedSimulations);
+    public AddedSimulationsData getAddedSimulationsDTO(){
+        return new AddedSimulationsData(addedSimulations);
     }
 
     public void updateThreadCount(int threadCount) {
@@ -84,10 +74,6 @@ public class SimulationManager {
     private PreviewData getDefinitionPreviewData(SimulationInstance simulationDefinition) {
         DTOCreator dtoCreator = new DTOCreator();
         return dtoCreator.createSimulationPreviewDataObject(simulationDefinition.getSimulationName(), simulationDefinition.getEnvironmentProperties(), simulationDefinition.getEntities(), simulationDefinition.getRules(), simulationDefinition.getEndingConditions(), simulationDefinition.getGrid());
-    }
-
-    private StatusData getSimulationStatusData(SimulationInstance simulation){
-        return new StatusData(simulation.getSimulationId(), simulation.getStatus().toString());
     }
 
     public DTOLoadResult loadSimulationFromFile(File file) {
@@ -117,7 +103,7 @@ public class SimulationManager {
             String id = IdGenerator.generateID();
             SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationArray(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false, reqSimulationDefinition.getThreadSleepDuration());
 
-            addSimulationToQueue(simulationRunData, reqSimulationDefinition);
+            addedSimulations.add(addSimulationToQueue(simulationRunData, reqSimulationDefinition));
             return new StartResponse(true, String.format("Simulation %s was added to the queue successfully.", id), simulationRunData);
         } else {
             return new StartResponse(false, "ERROR: Could not start simulation. You need to have at least one entity with a population larger than 0.");
@@ -148,10 +134,16 @@ public class SimulationManager {
         return executionManager.getRunDataById(simId);
     }
 
-    private void addSimulationToQueue(SimulationRunData simulationRunData, SimulationInstance reqSimulationDefinition) {
+    /**
+     *
+     * Adds a new simulation instance to the simulations queue. Returns the ID iof the added simulation.
+     */
+    private String addSimulationToQueue(SimulationRunData simulationRunData, SimulationInstance reqSimulationDefinition) {
         SimulationInstance simulationInstance = new SimulationInstance(reqSimulationDefinition);
         simulationInstance.setSimulationId(simulationRunData.getSimId());
         executionManager.addSimulationToQueue(simulationInstance, simulationRunData);
+
+        return simulationInstance.getSimulationId();
     }
 
     public void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {

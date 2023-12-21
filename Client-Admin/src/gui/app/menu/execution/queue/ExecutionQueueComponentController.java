@@ -6,7 +6,7 @@ import javafx.application.Platform;
 import manager.AdminServerAgent;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.api.Controller;
-import server2client.simulation.status.StatusData;
+import gui.app.menu.execution.queue.data.StatusData;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

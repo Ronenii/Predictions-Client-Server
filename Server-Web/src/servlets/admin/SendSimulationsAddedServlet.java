@@ -5,13 +5,11 @@ import com.google.gson.GsonBuilder;
 import constant.Constants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import manager.SimulationManager;
-import server2client.simulation.status.SimulationsStatusData;
-import server2client.simulation.status.StatusData;
+import server2client.simulation.queue.AddedSimulationsData;
 import utils.CookiesUtils;
 import utils.ServletUtils;
 
@@ -32,8 +30,8 @@ public class SendSimulationsAddedServlet extends HttpServlet {
 
         resp.setContentType("application/json");
         if(simulationsAdded < simulationManager.getSimulationsAdded()){
-            SimulationsStatusData simulationsStatusData = simulationManager.getSimulationsAddedArray();
-            String responseJsonContent = gson.toJson(simulationsStatusData);
+            AddedSimulationsData addedSimulations = simulationManager.getAddedSimulationsDTO();
+            String responseJsonContent = gson.toJson(addedSimulations);
 
             if(cookieSavedVersion == null){
                 CookiesUtils.createAndSaveNewCookie(resp, String.valueOf(simulationManager.getSimulationsAdded()), Constants.SIMULATIONS_ADDED);
