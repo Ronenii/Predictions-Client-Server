@@ -55,9 +55,17 @@ public class SimulationManager {
         return new SimulationsPreviewData(previewDataArray);
     }
 
+    /**
+     * @return A DTO containing an array of all newly added simulations.
+     */
     public newSimulationsData getNewSimulationsDTO(){
         return new newSimulationsData(newSimulations);
     }
+
+
+    /**
+     * Clears the List of newly added simulations so that the server won't send to the client twice the same simulation.
+     */
     public void clearNewSimulations() {newSimulations.clear();}
 
     public void updateThreadCount(int threadCount) {
@@ -95,11 +103,16 @@ public class SimulationManager {
         return dtoLoadResult;
     }
 
+    /**
+     *
+     * Runs a new instance of the simulation definition if possible.
+     * @return The ID of the simulation that was started.
+     */
     public StartResponse startSimulation(int reqId) {
         SimulationInstance reqSimulationDefinition = requestsManager.getApprovedRequest(reqId).getDefinitionInstance();
 
         if(reqSimulationDefinition.isStartable()) {
-            addedSimulationsCount++;
+            addedSimulationsCount++; // Update the number of simulations that were started.
             DTOCreator dtoCreator = new DTOCreator();
             String id = IdGenerator.generateID();
             SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationArray(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false, reqSimulationDefinition.getThreadSleepDuration());
@@ -136,7 +149,6 @@ public class SimulationManager {
     }
 
     /**
-     *
      * Adds a new simulation instance to the simulations queue. Returns the ID iof the added simulation.
      */
     private String addSimulationToQueue(SimulationRunData simulationRunData, SimulationInstance reqSimulationDefinition) {

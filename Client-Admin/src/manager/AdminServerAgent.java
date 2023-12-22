@@ -120,13 +120,11 @@ public class AdminServerAgent {
      * BAD_REQUEST - Show the errors created from loading a bad simulation config file.
      * OTHER - Show a general error.
      *
-     * TODO: I have given it some thought and we actually do need to send the file name to the engine since that is how
-     *       we recognize that the client is trying to load a file that already exists.
      */
     public static void uploadFile(File file, SimulationManagerComponentController simulationManagerComponentController) {
         final String fileNameString = "File: \"" + file.getName() + "\", ";
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        // TODO: Validate file path and suffix (xml)
+
 
         // Convert the file into a multipart request body
         RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
@@ -398,6 +396,10 @@ public class AdminServerAgent {
         });
     }
 
+    /**
+     * Receives all newly added simulations to the engine and updates them in the admin's window.
+     * @param controller We update the components under this controller
+     */
     public static void getExecutionQueueAddedSimulations(ExecutionQueueComponentController controller) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String finalUrl = HttpUrl
