@@ -2,8 +2,10 @@ package gui.app.menu.execution.queue;
 
 
 import gui.app.menu.execution.ExecutionComponentController;
+import gui.app.menu.execution.queue.refresher.ExecutionQueueRefresher;
 import javafx.application.Platform;
 import manager.AdminServerAgent;
+import manager.constant.Constants;
 import server2client.simulation.queue.AddedSimulationsData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.api.Controller;
@@ -19,11 +21,14 @@ import simulation.objects.world.status.SimulationStatus;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
 
 public class ExecutionQueueComponentController implements Controller {
     private ExecutionComponentController mainController;
     @FXML
     private Label exeListLabel;
+
+    private ExecutionQueueRefresher executionQueueRefresher;
 
     @FXML
     private TableView<StatusData> executionsQueueTV;
@@ -39,6 +44,8 @@ public class ExecutionQueueComponentController implements Controller {
     private boolean isSimulationSkippedForward;
     private boolean oneUpdateAfterPauseFlag;
 
+    private Timer timer;
+
     public void setMainController(ExecutionComponentController controller) {
         this.mainController = controller;
     }
@@ -50,23 +57,29 @@ public class ExecutionQueueComponentController implements Controller {
         simStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         simulationStatusMap = new HashMap<>();
         isFetchStatusTaskRunning = false;
-        resetFlags();
+        //resetFlags();
+        startExecutionQueueRefresher();
     }
 
-    private void resetFlags() {
-        isSimulationPaused = false;
-        isSimulationSkippedForward = false;
-        oneUpdateAfterPauseFlag = false;
-    }
+//    private void resetFlags() {
+//        isSimulationPaused = false;
+//        isSimulationSkippedForward = false;
+//        oneUpdateAfterPauseFlag = false;
+//    }
 
     @FXML
     void onMouseClickedTV(MouseEvent event) {
         mainController.getCurrentSelectedSimulation();
     }
 
+    public void startExecutionQueueRefresher() {
+        executionQueueRefresher = new ExecutionQueueRefresher(this);
+        timer = new Timer();
+        timer.schedule(executionQueueRefresher, Constants.REFRESH_RATE, Constants.REFRESH_RATE);
+    }
 
     public void onMouseClickedTvReceiveRunData(SimulationRunData selected) {
-        resetFlags();
+        //resetFlags();
         if (selected != null) {
             if (selected.isCompleted()) {
                 mainController.updateGuiToChosenSimulation(selected);

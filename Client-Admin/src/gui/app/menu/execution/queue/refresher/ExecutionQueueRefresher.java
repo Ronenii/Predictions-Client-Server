@@ -14,6 +14,6 @@ public class ExecutionQueueRefresher extends TimerTask {
 
     @Override
     public void run() {
-
+        AdminServerAgent.getExecutionQueueAddedSimulations(executionQueueComponentController);
     }
 }
