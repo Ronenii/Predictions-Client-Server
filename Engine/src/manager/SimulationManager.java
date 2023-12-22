@@ -174,6 +174,10 @@ public class SimulationManager {
         return requestsManager.getDtoRequestStatusUpdate(username);
     }
 
+    public String getSimulationStatusById(String simulationId){
+        return executionManager.getRunDataById(simulationId).getStatus();
+    }
+
     public void shutdownThreadPool() {
         executionManager.shutdownThreadPool();
     }

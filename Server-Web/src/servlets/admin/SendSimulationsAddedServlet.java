@@ -15,7 +15,7 @@ import utils.ServletUtils;
 
 import java.io.IOException;
 
-@WebServlet(name = "SendSimulationsAddedServlet", urlPatterns = "/get_simulations_added")
+@WebServlet(name = "SendSimulationsAddedServlet", urlPatterns = "/admin/simulation/added")
 public class SendSimulationsAddedServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -4,6 +4,7 @@ package gui.app.menu.execution.queue;
 import gui.app.menu.execution.ExecutionComponentController;
 import javafx.application.Platform;
 import manager.AdminServerAgent;
+import server2client.simulation.queue.AddedSimulationsData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.api.Controller;
 import gui.app.menu.execution.queue.data.StatusData;
@@ -106,7 +107,7 @@ public class ExecutionQueueComponentController implements Controller {
      * This method is needed because in the task's lambda, 'this' object does not refer to the 'ExecutionQueueComponentController' but to the calling task.
      */
     private void callMethodGetSimRunDataForSimProgress(Task<Void> task, String simId) {
-        AdminServerAgent.getSimRunDataForSimProgress(this, getQueueSelectedItem().getSimId(), task, simId);// Get the most current run data from the engine
+        AdminServerAgent.getSimRunDataFromSimProgress(this, getQueueSelectedItem().getSimId(), task, simId);// Get the most current run data from the engine
     }
 
 
@@ -168,6 +169,15 @@ public class ExecutionQueueComponentController implements Controller {
             };
 
             runTask(task);
+        }
+    }
+
+    public void addSimulationsToQueue(AddedSimulationsData addedSimulationsData){
+        for (String id: addedSimulationsData.getAddedSimulations()
+             ) {
+            StatusData added = new StatusData(id, "WAITING");
+            executionsQueueTV.getItems().add(added);
+            executionsQueueTV.refresh();
         }
     }
 

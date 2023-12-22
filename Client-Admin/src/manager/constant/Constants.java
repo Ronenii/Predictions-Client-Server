@@ -33,4 +33,6 @@ public class Constants {
     private final static String CLIENT_CONTEXT_PATH = FULL_SERVER_PATH + CLIENT_CONTEXT;
 
     public final static String GET_SIMULATION_RUN_DATA_PATH = CLIENT_CONTEXT_PATH + "/simulation/run/data";
+
+    public final static String GET_SIMULATIONS_ADDED_PATH = ADMIN_CONTEXT_PATH + "/simulation/added";
 }

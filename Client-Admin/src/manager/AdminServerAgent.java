@@ -15,6 +15,7 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import server2client.simulation.load.result.DTOLoadResult;
 import server2client.simulation.prview.SimulationsPreviewData;
+import server2client.simulation.queue.AddedSimulationsData;
 import server2client.simulation.request.DTORequests;
 import server2client.simulation.runtime.SimulationRunData;
 
@@ -333,7 +334,7 @@ public class AdminServerAgent {
         });
     }
 
-    public static void getSimRunDataForSimProgress(ExecutionQueueComponentController controller, String simId, Task<Void> task, String selectedSimId) {
+    public static void getSimRunDataFromSimProgress(ExecutionQueueComponentController controller, String simId, Task<Void> task, String selectedSimId) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String finalUrl = HttpUrl
                 .parse(Constants.GET_SIMULATION_RUN_DATA_PATH)
@@ -389,6 +390,36 @@ public class AdminServerAgent {
                     SimulationRunData runData = gson.fromJson(requestStartResponseInJson, SimulationRunData.class);
                     Platform.runLater(() -> controller.statusUpdateForSingleRunningSimulation(runData, statusData));
 
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    response.body().close();
+                }
+            }
+        });
+    }
+
+    public static void getExecutionQueueAddedSimulations(ExecutionQueueComponentController controller) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.GET_SIMULATIONS_ADDED_PATH)
+                .newBuilder()
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.code() == 200) {
+                    String requestStatusUpdateInJson = response.body().string();
+                    AddedSimulationsData dtoAddedSimulationsData = gson.fromJson(requestStatusUpdateInJson, AddedSimulationsData.class);
+                    Platform.runLater(() -> controller.addSimulationsToQueue(dtoAddedSimulationsData));
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
                     response.body().close();
