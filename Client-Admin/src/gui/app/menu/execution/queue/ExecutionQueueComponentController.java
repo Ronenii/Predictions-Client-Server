@@ -186,10 +186,12 @@ public class ExecutionQueueComponentController implements Controller {
     }
 
     public void addSimulationsToQueue(newSimulationsData addedSimulationsData) {
+        executeSimStatusFetchingTask();
         if (addedSimulationsData.getAddedSimulations().length != 0) {
             for (String id : addedSimulationsData.getAddedSimulations()
             ) {
                 StatusData added = new StatusData(id, "WAITING");
+                simulationStatusMap.put(added, SimulationStatus.valueOf(added.getStatus()));
                 executionsQueueTV.getItems().add(added);
                 executionsQueueTV.refresh();
             }
@@ -243,6 +245,9 @@ public class ExecutionQueueComponentController implements Controller {
             Platform.runLater(() -> {
                 showMessageInNotificationBar(selectedInThread.errorMessage);
             });
+        }
+        else{
+            statusData.statusProperty().set(selectedInThread.status);
         }
     }
 

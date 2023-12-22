@@ -420,7 +420,9 @@ public class AdminServerAgent {
                     String requestStatusUpdateInJson = response.body().string();
                     if(!requestStatusUpdateInJson.isEmpty()){
                         newSimulationsData dtoAddedSimulationsData = gson.fromJson(requestStatusUpdateInJson, newSimulationsData.class);
-                        Platform.runLater(() -> controller.addSimulationsToQueue(dtoAddedSimulationsData));
+                        Platform.runLater(() -> {
+                            controller.addSimulationsToQueue(dtoAddedSimulationsData);
+                        });
                     }
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
