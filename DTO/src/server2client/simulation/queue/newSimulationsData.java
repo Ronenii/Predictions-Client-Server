@@ -2,15 +2,15 @@ package server2client.simulation.queue;
 
 import java.util.List;
 
-public class AddedSimulationsData {
+public class newSimulationsData {
 
     String[] addedSimulations;
 
-    public AddedSimulationsData(String[] addedSimulations) {
+    public newSimulationsData(String[] addedSimulations) {
         this.addedSimulations = addedSimulations;
     }
 
-    public AddedSimulationsData(List<String> addedSimulations){
+    public newSimulationsData(List<String> addedSimulations){
         this.addedSimulations = addedSimulations.toArray(new String[0]);
     }
 

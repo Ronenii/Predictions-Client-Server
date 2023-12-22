@@ -15,7 +15,7 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import server2client.simulation.load.result.DTOLoadResult;
 import server2client.simulation.prview.SimulationsPreviewData;
-import server2client.simulation.queue.AddedSimulationsData;
+import server2client.simulation.queue.newSimulationsData;
 import server2client.simulation.request.DTORequests;
 import server2client.simulation.runtime.SimulationRunData;
 
@@ -418,8 +418,10 @@ public class AdminServerAgent {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.code() == 200) {
                     String requestStatusUpdateInJson = response.body().string();
-                    AddedSimulationsData dtoAddedSimulationsData = gson.fromJson(requestStatusUpdateInJson, AddedSimulationsData.class);
-                    Platform.runLater(() -> controller.addSimulationsToQueue(dtoAddedSimulationsData));
+                    if(!requestStatusUpdateInJson.isEmpty()){
+                        newSimulationsData dtoAddedSimulationsData = gson.fromJson(requestStatusUpdateInJson, newSimulationsData.class);
+                        Platform.runLater(() -> controller.addSimulationsToQueue(dtoAddedSimulationsData));
+                    }
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
                     response.body().close();

@@ -5,8 +5,7 @@ import okhttp3.*;
 
 public class HttpClientAgent {
     private final static SimpleCookieManager cookieManager = new SimpleCookieManager();
-    private final static OkHttpClient HTTP_CLIENT =
-            new OkHttpClient.Builder().cookieJar(cookieManager).build();
+    private final static OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder().cookieJar(cookieManager).build();
 
     /**
      * Enqueues a http query to the server.

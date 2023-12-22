@@ -6,7 +6,7 @@ import gui.app.menu.execution.queue.refresher.ExecutionQueueRefresher;
 import javafx.application.Platform;
 import manager.AdminServerAgent;
 import manager.constant.Constants;
-import server2client.simulation.queue.AddedSimulationsData;
+import server2client.simulation.queue.newSimulationsData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.api.Controller;
 import gui.app.menu.execution.queue.data.StatusData;
@@ -85,7 +85,7 @@ public class ExecutionQueueComponentController implements Controller {
                 mainController.updateGuiToChosenSimulation(selected);
             } else {
                 long threadSleep = selected.getThreadSleepCount();
-                if(threadSleep == 0){
+                if (threadSleep == 0) {
                     threadSleep = 200;
                 }
 
@@ -185,12 +185,14 @@ public class ExecutionQueueComponentController implements Controller {
         }
     }
 
-    public void addSimulationsToQueue(AddedSimulationsData addedSimulationsData){
-        for (String id: addedSimulationsData.getAddedSimulations()
-             ) {
-            StatusData added = new StatusData(id, "WAITING");
-            executionsQueueTV.getItems().add(added);
-            executionsQueueTV.refresh();
+    public void addSimulationsToQueue(newSimulationsData addedSimulationsData) {
+        if (addedSimulationsData.getAddedSimulations().length != 0) {
+            for (String id : addedSimulationsData.getAddedSimulations()
+            ) {
+                StatusData added = new StatusData(id, "WAITING");
+                executionsQueueTV.getItems().add(added);
+                executionsQueueTV.refresh();
+            }
         }
     }
 
@@ -243,9 +245,10 @@ public class ExecutionQueueComponentController implements Controller {
             });
         }
     }
-        /**
-         * Given a task, this creates a thread for it and runs it.
-         */
+
+    /**
+     * Given a task, this creates a thread for it and runs it.
+     */
     private void runTask(Task<Void> task) {
         Thread thread = new Thread(task);
         thread.setDaemon(true); // Mark the thread as a daemon to allow application exit
@@ -270,9 +273,9 @@ public class ExecutionQueueComponentController implements Controller {
         // isSimulationPaused - true when the simulation on pause
         // isSimulationSkippedForward - the skip forward button set this flag to true, allowing the task run this loop once and then return to a hold state.
         // oneUpdateAfterPauseFlag - the pause button set this flag to true, allowing the task run this loop once (to fetch the details) and then return to a hold state.
-        if(!isSimulationPaused || isSimulationSkippedForward || oneUpdateAfterPauseFlag) {
+        if (!isSimulationPaused || isSimulationSkippedForward || oneUpdateAfterPauseFlag) {
             // Check if we skipped forward and didn't get entities in the ResultData to load.
-            if(!isSimulationSkippedForward || selectedInThread.resultData.getEntities() != null) {
+            if (!isSimulationSkippedForward || selectedInThread.resultData.getEntities() != null) {
                 Platform.runLater(() -> {
                     mainController.updateGuiToChosenSimulation(selectedInThread); // Update the components displaying the simulation
                 });
@@ -282,7 +285,7 @@ public class ExecutionQueueComponentController implements Controller {
         }
 
         //Check if the task loop to be canceled.
-        if(selectedInThread == null || !selectedInThread.getSimId().equals(simId) || selectedInThread.isCompleted()) {
+        if (selectedInThread == null || !selectedInThread.getSimId().equals(simId) || selectedInThread.isCompleted()) {
             task.cancel(true);
         }
     }

@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import manager.SimulationManager;
-import server2client.simulation.queue.AddedSimulationsData;
+import server2client.simulation.queue.newSimulationsData;
 import utils.CookiesUtils;
 import utils.ServletUtils;
 
@@ -29,14 +29,15 @@ public class SendSimulationsAddedServlet extends HttpServlet {
         }
 
         resp.setContentType("application/json");
-        if(simulationsAdded < simulationManager.getSimulationsAdded()){
-            AddedSimulationsData addedSimulations = simulationManager.getAddedSimulationsDTO();
+        if(simulationsAdded < simulationManager.getAddedSimulationsCount()){
+            newSimulationsData addedSimulations = simulationManager.getNewSimulationsDTO();
+            simulationManager.clearNewSimulations();
             String responseJsonContent = gson.toJson(addedSimulations);
 
             if(cookieSavedVersion == null){
-                CookiesUtils.createAndSaveNewCookie(resp, String.valueOf(simulationManager.getSimulationsAdded()), Constants.SIMULATIONS_ADDED);
+                CookiesUtils.createAndSaveNewCookie(resp, String.valueOf(simulationManager.getAddedSimulationsCount()), Constants.SIMULATIONS_ADDED);
             }else{
-                CookiesUtils.updateValueOnCookie(req, resp, String.valueOf(simulationManager.getSimulationsAdded()), Constants.SIMULATIONS_ADDED);
+                CookiesUtils.updateValueOnCookie(req, resp, String.valueOf(simulationManager.getAddedSimulationsCount()), Constants.SIMULATIONS_ADDED);
             }
 
             resp.getOutputStream().println(responseJsonContent);
