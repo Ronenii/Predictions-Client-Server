@@ -2,12 +2,15 @@ package gui.app.menu.execution;
 
 import gui.app.api.Controller;
 import gui.app.menu.MenuComponentController;
+import gui.app.menu.execution.queue.data.StatusData;
 import gui.app.menu.execution.details.ExecutionDetailsComponentController;
 import gui.app.menu.execution.queue.ExecutionQueueComponentController;
 import gui.app.menu.execution.result.ResultTabComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import manager.AdminServerAgent;
+import server2client.simulation.runtime.SimulationRunData;
 
 public class ExecutionComponentController implements Controller {
     private Controller mainController;
@@ -50,10 +53,6 @@ public class ExecutionComponentController implements Controller {
 //        return mainController.getNotificationBar();
 //    }
 //
-//    @Override
-//    public EngineAgent getEngineAgent() {
-//        return mainController.getEngineAgent();
-//    }
 //
 //    /**
 //     * Adds the given simulation to the execution queue
@@ -62,23 +61,24 @@ public class ExecutionComponentController implements Controller {
 //        executionQueueComponentController.addSimulationToQueue(simulationRunData);
 //    }
 //
-//    /**
-//     * Using the simulation ID of the current selected item in the table view, returns the simulationRunData.
-//     */
-//    public SimulationRunData getCurrentSelectedSimulation() {
-//        StatusData selected = executionQueueComponentController.getQueueSelectedItem();
-//        if (selected != null) {
-//            return getEngineAgent().getRunDataById(selected.getSimId());
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//    public void updateGuiToChosenSimulation(SimulationRunData simulationRunData){
-//        executionDetailsComponentController.updateToChosenSimulation(simulationRunData);
-//        resultTabComponentController.updateToChosenSimulation(simulationRunData);
-//    }
-//
+    /**
+     * Using the simulation ID of the current selected item in the table view, returns and displays the simulationRunData.
+     */
+    public void getCurrentSelectedSimulation() {
+        StatusData selected = executionQueueComponentController.getQueueSelectedItem();
+        if (selected != null) {
+            AdminServerAgent.getSimRunDataForTvMouseClick(executionQueueComponentController, selected.getSimId());
+        } else {
+            executionQueueComponentController.onMouseClickedTvReceiveRunData(null);
+        }
+    }
+
+    public void updateGuiToChosenSimulation(SimulationRunData simulationRunData){
+        executionDetailsComponentController.updateToChosenSimulation(simulationRunData);
+        resultTabComponentController.updateToChosenSimulation(simulationRunData);
+    }
+
+
 //    public void updateQueueLblInQueueManagement() {
 //        mainController.updateQueueLblInQueueManagement();
 //    }

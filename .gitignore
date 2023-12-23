@@ -30,3 +30,6 @@ bin/
 /.idea/uiDesigner.xml
 
 lib/
+Server-Web.iml
+Client-User.iml
+Client-Admin.iml

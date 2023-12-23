@@ -47,6 +47,12 @@
             </Label>
             <HBox spacing="13.0">
                <children>
+                  <Label text="Simulation Name:" />
+                  <Label id="lbl-ExecDetails-SimID" fx:id="simulationNameLabel" text="-" />
+               </children>
+            </HBox>
+            <HBox spacing="13.0">
+               <children>
                   <Label text="Simulation ID:" />
                   <Label id="lbl-ExecDetails-SimID" fx:id="simulationIdDetLabel" text="-" />
                </children>

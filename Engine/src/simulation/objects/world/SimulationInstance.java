@@ -32,6 +32,7 @@ import java.util.*;
 public class SimulationInstance implements Serializable, Runnable {
     private String simulationId;
     private final String simulationName;
+    private String requestedBy;
     private final Map<String, Property> environmentProperties;
     private final Map<String, Entity> entities;
     private final Map<String, Rule> rules;
@@ -49,13 +50,14 @@ public class SimulationInstance implements Serializable, Runnable {
     private ResultData resultData;
     private String errorMessage;
 
-    public SimulationInstance(String simulationName, String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, TicksCounter ticksCounter, Grid grid, int threadSleepDuration) {
+    public SimulationInstance(String simulationName, String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, TicksCounter ticksCounter, Grid grid, int threadSleepDuration, String requestedBy) {
         this.simulationName = simulationName;
         this.simulationId = simulationId;
         this.environmentProperties = environmentProperties;
         this.entities = entities;
         this.rules = rules;
         this.ticksCounter = ticksCounter;
+        this.requestedBy = requestedBy;
         this.timePassed = 0;
         this.grid = grid;
         totalPopulation = 0;
@@ -74,10 +76,19 @@ public class SimulationInstance implements Serializable, Runnable {
         this.ticksCounter = new TicksCounter();
         this.timePassed = 0;
         this.grid = new Grid(simulationInstance.grid);
+        this.requestedBy = simulationInstance.requestedBy;
         totalPopulation = 0;
         this.status = SimulationStatus.WAITING;
         this.threadSleepDuration = simulationInstance.getThreadSleepDuration();
         userInstructions = new UserInstructions(false, false, false);
+    }
+
+    public String getRequestedBy() {
+        return requestedBy;
+    }
+
+    public void setRequestedBy(String requestedBy) {
+        this.requestedBy = requestedBy;
     }
 
     public String getSimulationName() {

@@ -9,6 +9,8 @@ import server2client.simulation.execution.StartResponse;
 import server2client.simulation.load.result.DTOLoadResult;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
+import server2client.simulation.queue.SimulationData;
+import server2client.simulation.queue.NewSimulationsData;
 import server2client.simulation.request.DTORequests;
 import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
 import server2client.simulation.runtime.SimulationRunData;
@@ -24,21 +26,24 @@ import client2server.simulation.execution.user.input.EntityPopulationUserInput;
 import client2server.simulation.execution.user.input.EnvPropertyUserInput;
 import simulation.properties.property.api.Property;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class SimulationManager {
     // Holds the loaded simulations definitions.
     private Map<String, SimulationDefinition> simulationDefinitions;
+    private List<SimulationData> newSimulations;
     private ExecutionManager executionManager = null;
     private final RequestsManager requestsManager;
     private int simulationBreakdownVersion;
+    private int addedSimulationsCount;
 
     public SimulationManager() {
         simulationDefinitions = new HashMap<>();
+        newSimulations = new LinkedList<>();
         requestsManager = new RequestsManager(simulationDefinitions);
         simulationBreakdownVersion = 0;
+        addedSimulationsCount = 0;
     }
 
     public PreviewData getPreviewDataByName(String simName){
@@ -55,6 +60,19 @@ public class SimulationManager {
 
         return new SimulationsPreviewData(previewDataArray);
     }
+
+    /**
+     * @return A DTO containing an array of all newly added simulations.
+     */
+    public NewSimulationsData getNewSimulationsDTO(){
+        return new NewSimulationsData(newSimulations);
+    }
+
+
+    /**
+     * Clears the List of newly added simulations so that the server won't send to the client twice the same simulation.
+     */
+    public void clearNewSimulations() {newSimulations.clear();}
 
     public void updateThreadCount(int threadCount) {
         if(executionManager == null) {
@@ -91,15 +109,22 @@ public class SimulationManager {
         return dtoLoadResult;
     }
 
-    public StartResponse startSimulation(int reqId) {
+    /**
+     *
+     * Runs a new instance of the simulation definition if possible.
+     * @return The ID of the simulation that was started.
+     */
+    public StartResponse startSimulation(int reqId, String user) {
         SimulationInstance reqSimulationDefinition = requestsManager.getApprovedRequest(reqId).getDefinitionInstance();
 
         if(reqSimulationDefinition.isStartable()) {
+            addedSimulationsCount++; // Update the number of simulations that were started.
             DTOCreator dtoCreator = new DTOCreator();
             String id = IdGenerator.generateID();
-            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationArray(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false, reqSimulationDefinition.getThreadSleepDuration());
-
-            addSimulationToQueue(simulationRunData, reqSimulationDefinition);
+            SimulationRunData simulationRunData = new SimulationRunData(reqSimulationDefinition.getSimulationName(),id,0, 0, dtoCreator.getDTOEntityPopulationArray(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false, reqSimulationDefinition.getThreadSleepDuration());
+            reqSimulationDefinition.setRequestedBy(user);
+            addSimulationToQueue(simulationRunData,reqSimulationDefinition);
+            newSimulations.add(new SimulationData(user,id, SimulationStatus.WAITING.name()));
             return new StartResponse(true, String.format("Simulation %s was added to the queue successfully.", id), simulationRunData);
         } else {
             return new StartResponse(false, "ERROR: Could not start simulation. You need to have at least one entity with a population larger than 0.");
@@ -130,6 +155,9 @@ public class SimulationManager {
         return executionManager.getRunDataById(simId);
     }
 
+    /**
+     * Adds a new simulation instance to the simulations queue. Returns the ID iof the added simulation.
+     */
     private void addSimulationToQueue(SimulationRunData simulationRunData, SimulationInstance reqSimulationDefinition) {
         SimulationInstance simulationInstance = new SimulationInstance(reqSimulationDefinition);
         simulationInstance.setSimulationId(simulationRunData.getSimId());
@@ -144,6 +172,9 @@ public class SimulationManager {
         return simulationBreakdownVersion;
     }
 
+    public int getAddedSimulationsCount(){
+        return addedSimulationsCount;
+    }
     public int addNewRequest(DTORequest dtoRequest, String username) {
         return requestsManager.addNewRequest(new RequestData(username, dtoRequest.getSimulationName(), dtoRequest.getSimulationTokens(), requestsManager.convertDTOEndingConditions(dtoRequest.getEndingConditions())));
     }
@@ -158,6 +189,10 @@ public class SimulationManager {
 
     public DTORequestStatusUpdate getDtoRequestStatusUpdate(String username) {
         return requestsManager.getDtoRequestStatusUpdate(username);
+    }
+
+    public String getSimulationStatusById(String simulationId){
+        return executionManager.getRunDataById(simulationId).getStatus();
     }
 
     public void shutdownThreadPool() {

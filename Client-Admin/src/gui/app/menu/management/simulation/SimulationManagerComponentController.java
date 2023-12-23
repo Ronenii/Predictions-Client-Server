@@ -1,11 +1,8 @@
 package gui.app.menu.management.simulation;
 
 import gui.app.api.Controller;
-import gui.app.menu.MenuComponentController;
 import gui.app.menu.management.ManagementComponentController;
 import gui.app.menu.management.simulation.breakdown.SimBreakdownMenuController;
-import gui.app.menu.management.simulation.breakdown.details.environment.EnvironmentVarDetailsController;
-import gui.app.menu.management.simulation.data.LoadedSimulationData;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,12 +12,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.scene.image.Image;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import manager.AdminServerAgent;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
@@ -135,7 +129,7 @@ public class SimulationManagerComponentController implements Controller {
             simBreakdownWindow.setTitle(String.format("%s's details", previewData.getSimulationName()));
             SimBreakdownMenuController controller = (SimBreakdownMenuController)loader.getController();
             controller.updateSimTreeView(previewData);
-            Image icon = new Image(getClass().getResourceAsStream("icon/icon.png"));
+            Image icon = new Image(getClass().getResourceAsStream("../../../../../res/icon/icon.png"));
             simBreakdownWindow.getIcons().add(icon);
             Scene scene = new Scene(root);
             simBreakdownWindow.setScene(scene);

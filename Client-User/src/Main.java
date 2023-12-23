@@ -18,7 +18,7 @@ public class Main extends Application {
         LoginComponentController loginComponentController = setUpLoginPage();
 
         if(loginComponentController.isLoggedIn()){
-            Image icon = new Image(getClass().getResourceAsStream("icon/icon.png"));
+            Image icon = new Image(getClass().getResourceAsStream("res/icon/icon.png"));
             primaryStage.getIcons().add(icon);
             primaryStage.setTitle("Predictions-User");
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -43,7 +43,7 @@ public class Main extends Application {
         Parent loginRoot = loginLoader.load();
         LoginComponentController loginComponentController = loginLoader.getController();
         Scene loginScene = new Scene(loginRoot);
-        Image icon = new Image(getClass().getResourceAsStream("icon/icon.png"));
+        Image icon = new Image(getClass().getResourceAsStream("res/icon/icon.png"));
         loginStage.getIcons().add(icon);
 
         loginStage.setTitle("Predictions - Login");

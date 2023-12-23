@@ -26,4 +26,7 @@ public class ServletUtils {
             }
         }
         return (SimulationManager) servletContext.getAttribute(SIMULATION_MANAGER_ATTRIBUTE_NAME);
-    }}
+    }
+}
+
+

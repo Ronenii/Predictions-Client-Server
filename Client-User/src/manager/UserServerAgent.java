@@ -32,9 +32,12 @@ import client2server.simulation.execution.user.input.EntityPopulationUserInput;
 import client2server.simulation.execution.user.input.EnvPropertyUserInput;
 import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 
 public class UserServerAgent {
+
+    private final static String NO_RESPONSE_MESSAGE = "ERROR: no response from server.";
 
     public static void connect(String username, LoginComponentController loginComponentController) {
         String finalUrl = HttpUrl
@@ -55,12 +58,12 @@ public class UserServerAgent {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 // If connection is successful, open the admin client application.
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     Platform.runLater(loginComponentController::setLoggedIn);
                 }
 
                 // If an admin session is currently in progress, show an alert and close the app.
-                else if (response.code() == 409) {
+                else if (response.code() == HttpURLConnection.HTTP_CONFLICT) {
                     Platform.runLater(() -> loginComponentController.setErrorMessage("This username is already taken."));
                 }
                 // If another error has occurred, show an alert and close the app.
@@ -84,13 +87,13 @@ public class UserServerAgent {
         HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> simBreakdownMenuController.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> simBreakdownMenuController.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 // If connection is successful, open the admin client application.
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     String previewDataInJson = response.body().string();
                     // if the servlet returns empty string, the simulation breakdown is up-to-date.
                     if(!previewDataInJson.equals("")){
@@ -100,7 +103,7 @@ public class UserServerAgent {
                 }
                 // If another error has occurred, show an alert and close the app.
                 else {
-                    Platform.runLater(() -> simBreakdownMenuController.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> simBreakdownMenuController.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -125,19 +128,19 @@ public class UserServerAgent {
         HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.code() == 200) {
+                if(response.code() == HttpURLConnection.HTTP_OK) {
                     int requestId = Integer.parseInt(response.body().string());
                     Platform.runLater(() -> {
                         controller.addNewRequestData(requestId, dtoRequest);
                         controller.showMessageInNotificationBar("New request has been sent!");
                     });
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -157,17 +160,17 @@ public class UserServerAgent {
         HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.code() == 200) {
+                if(response.code() == HttpURLConnection.HTTP_OK) {
                     String requestStatusUpdateInJson = response.body().string();
                     DTORequestStatusUpdate dtoRequestStatusUpdate = gson.fromJson(requestStatusUpdateInJson, DTORequestStatusUpdate.class);
                     Platform.runLater(() -> controller.updateRequestsStatus(dtoRequestStatusUpdate));
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -188,17 +191,17 @@ public class UserServerAgent {
         HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.code() == 200) {
+                if(response.code() == HttpURLConnection.HTTP_OK) {
                     String requestStatusUpdateInJson = response.body().string();
                     PreviewData previewData = gson.fromJson(requestStatusUpdateInJson, PreviewData.class);
                     Platform.runLater(() -> controller.setUpExecutionWindowWithPreviewData(previewData, requestData));
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -220,12 +223,12 @@ public class UserServerAgent {
         HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.code() == 200) {
+                if(response.code() == HttpURLConnection.HTTP_OK) {
                     if(!isInit) {
                         String requestStatusUpdateInJson = response.body().string();
                         SetResponse setResponse = gson.fromJson(requestStatusUpdateInJson, SetResponse.class);
@@ -235,7 +238,7 @@ public class UserServerAgent {
                         response.body().close();
                     }
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -257,12 +260,12 @@ public class UserServerAgent {
         HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.code() == 200) {
+                if(response.code() == HttpURLConnection.HTTP_OK) {
                     if(!isInit) {
                         String requestStatusUpdateInJson = response.body().string();
                         SetResponse setResponse = gson.fromJson(requestStatusUpdateInJson, SetResponse.class);
@@ -273,7 +276,7 @@ public class UserServerAgent {
                         response.body().close();
                     }
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -294,17 +297,17 @@ public class UserServerAgent {
         HttpClientAgent.sendPostRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     String requestStartResponseInJson = response.body().string();
                     StartResponse startResponse = gson.fromJson(requestStartResponseInJson, StartResponse.class);
                     Platform.runLater(() -> controller.receiveStartResponse(startResponse));
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -325,18 +328,18 @@ public class UserServerAgent {
         HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     String requestStartResponseInJson = response.body().string();
                     SimulationRunData runData = gson.fromJson(requestStartResponseInJson, SimulationRunData.class);
                     Platform.runLater(() -> controller.statusUpdateForSingleRunningSimulation(runData, statusData));
 
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -357,18 +360,18 @@ public class UserServerAgent {
         HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     String requestStartResponseInJson = response.body().string();
                     SimulationRunData runData = gson.fromJson(requestStartResponseInJson, SimulationRunData.class);
                     Platform.runLater(() -> controller.onMouseClickedTvReceiveRunData(runData));
 
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -389,18 +392,18 @@ public class UserServerAgent {
         HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     String requestStartResponseInJson = response.body().string();
                     SimulationRunData runData = gson.fromJson(requestStartResponseInJson, SimulationRunData.class);
                     Platform.runLater(() -> controller.receiveSimulationRunForRunningSimulation(runData, selectedSimId, task));
 
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -423,15 +426,19 @@ public class UserServerAgent {
         HttpClientAgent.sendPostRequest(finalUrl, requestBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                if (response.code() != HttpURLConnection.HTTP_OK) {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                 }
             }
         });
     }
+    private static String createServerErrorMessage(int errorCode){
+        return "ERROR: Server response code " + errorCode;
+    }
+
 }
