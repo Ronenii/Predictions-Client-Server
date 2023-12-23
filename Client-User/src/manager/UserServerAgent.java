@@ -440,4 +440,5 @@ public class UserServerAgent {
     private static String createServerErrorMessage(int errorCode){
         return "ERROR: Server response code " + errorCode;
     }
+
 }
