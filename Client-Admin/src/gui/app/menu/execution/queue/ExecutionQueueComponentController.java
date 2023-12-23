@@ -33,6 +33,8 @@ public class ExecutionQueueComponentController implements Controller {
 
     @FXML
     private TableView<StatusData> executionsQueueTV;
+    @FXML
+    private TableColumn<StatusData, String> userCol;
 
     @FXML
     private TableColumn<StatusData, String> simIdCol;
@@ -55,6 +57,7 @@ public class ExecutionQueueComponentController implements Controller {
     public void initialize() {
         simIdCol.setCellValueFactory(new PropertyValueFactory<>("simId"));
         simStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        userCol.setCellValueFactory(new PropertyValueFactory<>("requestedBy"));
         simulationStatusMap = new HashMap<>();
         isFetchStatusTaskRunning = false;
         startExecutionQueueRefresher();
@@ -130,6 +133,7 @@ public class ExecutionQueueComponentController implements Controller {
                         getStatusUpdatesForRunningSimulations();
                         Thread.sleep(200); // Make the thread sleep for 200ms
                     } while (hasNonCompletedSimulations());
+                    isFetchStatusTaskRunning = false;
                     return null;
                 }
             };
@@ -148,7 +152,7 @@ public class ExecutionQueueComponentController implements Controller {
         executeSimStatusFetchingTask();
         for (SimulationData sim : addedSimulationsData.getAddedSimulations()
         ) {
-            StatusData added = new StatusData(sim.getSimId(), sim.getStatus(), sim.getRequestedBy());
+            StatusData added = new StatusData(sim.getRequestedBy(), sim.getSimId(), sim.getStatus());
             simulationStatusMap.put(added, SimulationStatus.valueOf(added.getStatus()));
             executionsQueueTV.getItems().add(added);
             executionsQueueTV.refresh();

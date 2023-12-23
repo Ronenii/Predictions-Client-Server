@@ -7,15 +7,10 @@ import gui.app.api.Controller;
 import gui.app.menu.execution.details.data.PopulationData;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import simulation.objects.world.status.SimulationStatus;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -42,20 +37,12 @@ public class ExecutionDetailsComponentController implements Controller {
 
     @FXML
     private Label durationDetLabel;
-    @FXML
-    private GridPane executionDetailsControlBar;
-    @FXML
-    private AnchorPane controlBarAnchorPane;
-    @FXML
-    private Button rerunBTN;
 
     private SimpleStringProperty ticksProperty;
     private SimpleStringProperty durationProperty;
     private SimpleStringProperty simIdProperty;
     private SimpleStringProperty statusProperty;
 
-    private boolean isPlayButtonClicked;
-    private boolean skipOne;
 
     public void setMainController(ExecutionComponentController controller) {
         this.mainController = controller;
@@ -65,7 +52,6 @@ public class ExecutionDetailsComponentController implements Controller {
     public void initialize() {
         entityColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("population"));
-        isPlayButtonClicked = true;
         populationDataMap = new HashMap<>();
         initProperties();
     }
@@ -86,15 +72,6 @@ public class ExecutionDetailsComponentController implements Controller {
 
         // Binds the enabling and disabling of the control bar to this property
         statusProperty.addListener(((observable, oldValue, newValue) -> {
-            switch (SimulationStatus.valueOf(newValue.toString().toUpperCase())) {
-                case COMPLETED:
-                    controlBarAnchorPane.disableProperty().set(true);
-                    break;
-                case WAITING:
-                case ONGOING:
-                    controlBarAnchorPane.disableProperty().set(false);
-                    break;
-            }
         }));
     }
 
@@ -107,12 +84,6 @@ public class ExecutionDetailsComponentController implements Controller {
         statusProperty.set(runData.getStatus());
         simIdProperty.set(String.valueOf(runData.getSimId()));
         updateEntitiesTV(runData.getEntityPopulation());
-        if(runData.isCompleted()) {
-            rerunBTN.setDisable(false);
-        }
-        else {
-            rerunBTN.setDisable(true);
-        }
     }
 
     private String formatTime(long time){
@@ -136,15 +107,6 @@ public class ExecutionDetailsComponentController implements Controller {
                 populationDataMap.put(entityPopulation.getEntityName(), populationData);
             }
         }
-    }
-
-    public void clearComponent() {
-        entitiesTV.getItems().clear();
-        populationDataMap.clear();
-        simIdProperty.set("-");
-        durationProperty.set("-");
-        ticksProperty.set("-");
-        rerunBTN.setDisable(true);
     }
 
     @Override

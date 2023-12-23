@@ -15,8 +15,9 @@
       </Label>
       <TableView fx:id="executionsQueueTV" maxWidth="250.0" onMouseClicked="#onMouseClickedTV" VBox.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="simIdCol" prefWidth="142.0" resizable="false" text="Simulation ID" />
-            <TableColumn fx:id="simStatusCol" prefWidth="106.0" resizable="false" text="Status" />
+            <TableColumn fx:id="userCol" prefWidth="70.0" resizable="false" text="User" />
+            <TableColumn fx:id="simIdCol" prefWidth="84.0" resizable="false" text="ID" />
+            <TableColumn fx:id="simStatusCol" prefWidth="95.0" resizable="false" text="Status" />
          </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
