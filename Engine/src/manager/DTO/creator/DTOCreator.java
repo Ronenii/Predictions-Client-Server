@@ -2,6 +2,7 @@ package manager.DTO.creator;
 
 import manager.requests.data.RequestData;
 import manager.requests.data.RequestStatus;
+import server2client.simulation.admin.load.details.AdminLoadDetails;
 import server2client.simulation.genral.impl.objects.DTOEntity;
 import server2client.simulation.genral.impl.objects.DTOEntityInstance;
 import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
@@ -20,6 +21,7 @@ import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
 import server2client.simulation.request.updated.status.data.DTORequestStatusData;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.definition.SimulationDefinition;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.impl.DecreaseAction;
@@ -315,5 +317,9 @@ public class DTOCreator {
         }
 
         return new DTORequestStatusUpdate(requestStatusUpdates.toArray(new DTORequestStatusData[0]));
+    }
+
+    public AdminLoadDetails createAdminLoadDetails(Set<String> simulationsNames, DTORequests dtoRequests, Set<String> simulationsIds) {
+        return new AdminLoadDetails(simulationsNames.toArray(new String[0]), dtoRequests, simulationsIds.toArray(new String[0]));
     }
 }

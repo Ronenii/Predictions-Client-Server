@@ -3,6 +3,7 @@ package manager;
 import client2server.simulation.request.DTORequest;
 import manager.requests.RequestsManager;
 import manager.requests.data.RequestData;
+import server2client.simulation.admin.load.details.AdminLoadDetails;
 import server2client.simulation.execution.SetResponse;
 import server2client.simulation.execution.StartResponse;
 import server2client.simulation.load.result.DTOLoadResult;
@@ -161,5 +162,10 @@ public class SimulationManager {
 
     public void shutdownThreadPool() {
         executionManager.shutdownThreadPool();
+    }
+
+    public AdminLoadDetails getAdminLoadDetails() {
+        DTOCreator dtoCreator = new DTOCreator();
+        return dtoCreator.createAdminLoadDetails(simulationDefinitions.keySet(), requestsManager.getDTORequests(), executionManager.getAllSimulationsIds());
     }
 }

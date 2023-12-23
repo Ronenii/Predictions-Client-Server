@@ -8,6 +8,7 @@ import client2server.simulation.control.bar.DTOSimulationControlBar;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,6 +34,10 @@ public class ExecutionManager {
             simulationsRunData.put(simulationRunData.getSimId(), simulationRunData);
             threadExecutor.execute(simulationInstance);
         }
+    }
+
+    public Set<String> getAllSimulationsIds() {
+        return simulations.keySet();
     }
 
 
