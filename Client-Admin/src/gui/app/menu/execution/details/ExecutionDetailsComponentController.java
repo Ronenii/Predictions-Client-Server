@@ -38,10 +38,16 @@ public class ExecutionDetailsComponentController implements Controller {
     @FXML
     private Label durationDetLabel;
 
+    @FXML
+    private Label simulationNameLabel;
+
     private SimpleStringProperty ticksProperty;
     private SimpleStringProperty durationProperty;
     private SimpleStringProperty simIdProperty;
     private SimpleStringProperty statusProperty;
+    private SimpleStringProperty simulationNameProperty;
+
+    private String currentSimId = null;
 
 
     public void setMainController(ExecutionComponentController controller) {
@@ -64,10 +70,12 @@ public class ExecutionDetailsComponentController implements Controller {
         durationProperty = new SimpleStringProperty();
         simIdProperty = new SimpleStringProperty();
         statusProperty = new SimpleStringProperty();
+        simulationNameProperty = new SimpleStringProperty();
 
         currentTickDetLabel.textProperty().bind(ticksProperty);
         durationDetLabel.textProperty().bind(durationProperty);
         simulationIdDetLabel.textProperty().bind(simIdProperty);
+        simulationNameLabel.textProperty().bind(simulationNameProperty);
 
 
         // Binds the enabling and disabling of the control bar to this property
@@ -79,10 +87,16 @@ public class ExecutionDetailsComponentController implements Controller {
      * Updates the components according to the given simulation run data.
      */
     public void updateToChosenSimulation(SimulationRunData runData) {
+        if(currentSimId == null || !currentSimId.equals(runData.getSimId())){
+            currentSimId = runData.getSimId();
+            entitiesTV.getItems().clear();
+        }
+
         ticksProperty.set(String.valueOf(runData.getTick()));
         durationProperty.set(formatTime(runData.getTime()));
         statusProperty.set(runData.getStatus());
         simIdProperty.set(String.valueOf(runData.getSimId()));
+        simulationNameProperty.set(runData.getName());
         updateEntitiesTV(runData.getEntityPopulation());
     }
 
@@ -100,6 +114,12 @@ public class ExecutionDetailsComponentController implements Controller {
     private void updateEntitiesTV(DTOEntityPopulation[] dtoEntities) {
         for (DTOEntityPopulation entityPopulation : dtoEntities) {
             if (populationDataMap.containsKey(entityPopulation.getEntityName())) {
+                // if the client switched to other simulation, the entities table view will be empty.
+                if(!isEntityInTv(entityPopulation.getEntityName())){
+                    PopulationData populationData = populationDataMap.get(entityPopulation.getEntityName());
+                    entitiesTV.getItems().add(populationData);
+                }
+
                 populationDataMap.get(entityPopulation.getEntityName()).populationProperty().set(entityPopulation.getPopulation());
             } else {
                 PopulationData populationData = new PopulationData(entityPopulation.getEntityName(), entityPopulation.getPopulation());
@@ -107,6 +127,16 @@ public class ExecutionDetailsComponentController implements Controller {
                 populationDataMap.put(entityPopulation.getEntityName(), populationData);
             }
         }
+    }
+
+    private boolean isEntityInTv(String entityName){
+        for(PopulationData populationData : entitiesTV.getItems()) {
+            if (populationData.getName().equals(entityName)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

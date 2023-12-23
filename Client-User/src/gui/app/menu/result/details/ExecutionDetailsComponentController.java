@@ -45,6 +45,9 @@ public class ExecutionDetailsComponentController implements Controller {
 
     @FXML
     private Label durationDetLabel;
+
+    @FXML
+    private Label simulationNameLabel;
     @FXML
     private GridPane executionDetailsControlBar;
     @FXML
@@ -56,6 +59,8 @@ public class ExecutionDetailsComponentController implements Controller {
     private SimpleStringProperty durationProperty;
     private SimpleStringProperty simIdProperty;
     private SimpleStringProperty statusProperty;
+
+    private SimpleStringProperty simNameProperty;
     private String currentSimId = null;
     private boolean isPlayButtonClicked;
     private boolean skipOne;
@@ -85,10 +90,12 @@ public class ExecutionDetailsComponentController implements Controller {
         durationProperty = new SimpleStringProperty();
         simIdProperty = new SimpleStringProperty();
         statusProperty = new SimpleStringProperty();
+        simNameProperty = new SimpleStringProperty();
 
         currentTickDetLabel.textProperty().bind(ticksProperty);
         durationDetLabel.textProperty().bind(durationProperty);
         simulationIdDetLabel.textProperty().bind(simIdProperty);
+        simulationNameLabel.textProperty().bind(simNameProperty);
 
         // Binds the enabling and disabling of the control bar to this property
         statusProperty.addListener(((observable, oldValue, newValue) -> {
@@ -114,6 +121,7 @@ public class ExecutionDetailsComponentController implements Controller {
         }
 
         ticksProperty.set(String.valueOf(runData.getTick()));
+        simNameProperty.set(runData.getName());
         durationProperty.set(formatTime(runData.getTime()));
         statusProperty.set(runData.getStatus());
         simIdProperty.set(String.valueOf(runData.getSimId()));

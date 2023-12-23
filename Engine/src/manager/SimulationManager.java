@@ -116,7 +116,7 @@ public class SimulationManager {
             addedSimulationsCount++; // Update the number of simulations that were started.
             DTOCreator dtoCreator = new DTOCreator();
             String id = IdGenerator.generateID();
-            SimulationRunData simulationRunData = new SimulationRunData(id,0, 0, dtoCreator.getDTOEntityPopulationArray(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false, reqSimulationDefinition.getThreadSleepDuration());
+            SimulationRunData simulationRunData = new SimulationRunData(reqSimulationDefinition.getSimulationName(),id,0, 0, dtoCreator.getDTOEntityPopulationArray(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false, reqSimulationDefinition.getThreadSleepDuration());
             reqSimulationDefinition.setRequestedBy(user);
             addSimulationToQueue(simulationRunData,reqSimulationDefinition);
             newSimulations.add(new SimulationData(user,id, SimulationStatus.WAITING.name()));
