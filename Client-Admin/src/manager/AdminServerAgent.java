@@ -21,6 +21,7 @@ import server2client.simulation.prview.SimulationsPreviewData;
 import server2client.simulation.queue.NewSimulationsData;
 import server2client.simulation.request.DTORequests;
 import server2client.simulation.runtime.SimulationRunData;
+import server2client.simulation.thread.data.ThreadData;
 
 import java.io.File;
 import java.io.IOException;
@@ -501,6 +502,42 @@ public class AdminServerAgent {
                         AdminLoadDetails adminLoadDetails = gson.fromJson(requestStatusUpdateInJson, AdminLoadDetails.class);
                         Platform.runLater(() -> {
                             controller.receiveAdminLoadDetails(adminLoadDetails);
+                        });
+                    } else {
+                        response.body().close();
+                    }
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
+                    response.body().close();
+                }
+            }
+        });
+    }
+
+    public static void getThreadData(ThreadManagerComponentController controller) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.ADMIN_THREAD_DATA_PATH)
+                .newBuilder()
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    String requestStatusUpdateInJson = response.body().string();
+                    if (!requestStatusUpdateInJson.isEmpty()) {
+                        ThreadData threadData = gson.fromJson(requestStatusUpdateInJson, ThreadData.class);
+                        Platform.runLater(() -> {
+                            controller.updateLabelsInQueueManagement(threadData);
                         });
                     } else {
                         response.body().close();

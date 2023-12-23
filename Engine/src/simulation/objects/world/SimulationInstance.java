@@ -49,6 +49,7 @@ public class SimulationInstance implements Serializable, Runnable {
     private SimulationStatus status;
     private ResultData resultData;
     private String errorMessage;
+    private boolean isAddedToRunningCount; // This data member created for the ThreadDataManager.
 
     public SimulationInstance(String simulationName, String simulationId, Map<String, Property> environmentProperties, Map<String, Entity> entities, Map<String, Rule> rules, TicksCounter ticksCounter, Grid grid, int threadSleepDuration, String requestedBy) {
         this.simulationName = simulationName;
@@ -63,6 +64,7 @@ public class SimulationInstance implements Serializable, Runnable {
         totalPopulation = 0;
         this.threadSleepDuration = threadSleepDuration;
         this.status = SimulationStatus.WAITING;
+        isAddedToRunningCount = false;
         userInstructions = new UserInstructions(false, false, false);
     }
 
@@ -80,6 +82,7 @@ public class SimulationInstance implements Serializable, Runnable {
         totalPopulation = 0;
         this.status = SimulationStatus.WAITING;
         this.threadSleepDuration = simulationInstance.getThreadSleepDuration();
+        this.isAddedToRunningCount = simulationInstance.isAddedToRunningCount;
         userInstructions = new UserInstructions(false, false, false);
     }
 
@@ -153,6 +156,14 @@ public class SimulationInstance implements Serializable, Runnable {
 
     public int getThreadSleepDuration() {
         return threadSleepDuration;
+    }
+
+    public boolean isAddedToRunningCount() {
+        return isAddedToRunningCount;
+    }
+
+    public void setFalseAddedToRunningCount() {
+        isAddedToRunningCount = true;
     }
 
     @Override

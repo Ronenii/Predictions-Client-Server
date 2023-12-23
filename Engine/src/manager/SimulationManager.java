@@ -18,6 +18,7 @@ import server2client.simulation.runtime.generator.IdGenerator;
 import jaxb.unmarshal.Reader;
 import manager.DTO.creator.DTOCreator;
 import manager.execution.ExecutionManager;
+import server2client.simulation.thread.data.ThreadData;
 import simulation.objects.world.SimulationInstance;
 import simulation.objects.world.definition.SimulationDefinition;
 import simulation.objects.world.status.SimulationStatus;
@@ -199,6 +200,14 @@ public class SimulationManager {
         executionManager.shutdownThreadPool();
     }
 
+    public int getThreadDataVersion() {
+        return executionManager.getThreadDataVersion();
+    }
+
+    public ThreadData getThreadData() {
+        return executionManager.getThreadData();
+    }
+
     public AdminLoadDetails getAdminLoadDetails() {
         DTOCreator dtoCreator = new DTOCreator();
         NewSimulationsData newSimulationsData;
@@ -209,6 +218,6 @@ public class SimulationManager {
             newSimulationsData = null;
         }
 
-        return dtoCreator.createAdminLoadDetails(simulationDefinitions.keySet(), requestsManager.getDTORequests(), newSimulationsData);
+        return dtoCreator.createAdminLoadDetails(simulationDefinitions.keySet(), requestsManager.getDTORequests(), newSimulationsData, executionManager.isThreadExecutorSet());
     }
 }
