@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import manager.SimulationManager;
-import server2client.simulation.queue.newSimulationsData;
+import server2client.simulation.queue.NewSimulationsData;
 import utils.CookiesUtils;
 import utils.ServletUtils;
 
@@ -30,7 +30,7 @@ public class SendSimulationsAddedServlet extends HttpServlet {
 
         resp.setContentType("application/json");
         if(simulationsAdded < simulationManager.getAddedSimulationsCount()){
-            newSimulationsData addedSimulations = simulationManager.getNewSimulationsDTO();
+            NewSimulationsData addedSimulations = simulationManager.getNewSimulationsDTO();
             simulationManager.clearNewSimulations();
             String responseJsonContent = gson.toJson(addedSimulations);
 

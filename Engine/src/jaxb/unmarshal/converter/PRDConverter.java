@@ -93,7 +93,7 @@ public class PRDConverter {
             throw new IllegalArgumentException(validator.getErrorList());
         }
 
-        return new SimulationInstance(prdWorld.getName(),null, environmentProperties, entities, rules, ticksCounter, grid, prdWorldSleep);
+        return new SimulationInstance(prdWorld.getName(),null, environmentProperties, entities, rules, ticksCounter, grid, prdWorldSleep, "");
     }
 
     private int getPrdWorldSleep(PRDWorld prdWorld) {
