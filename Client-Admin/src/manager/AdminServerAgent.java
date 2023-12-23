@@ -2,6 +2,7 @@ package manager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import gui.app.AdminAppController;
 import gui.app.api.Controller;
 import gui.app.menu.allocation.AllocationComponentController;
 import gui.app.menu.execution.queue.data.StatusData;
@@ -13,6 +14,7 @@ import javafx.concurrent.Task;
 import manager.constant.Constants;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+import server2client.simulation.admin.load.details.AdminLoadDetails;
 import server2client.simulation.load.result.DTOLoadResult;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
@@ -27,7 +29,6 @@ import java.net.HttpURLConnection;
 public class AdminServerAgent {
 
     private final static String NO_RESPONSE_MESSAGE = "ERROR: no response from server.";
-
     /**
      * Sends a http query that checks if an admin client is connected.
      * If an admin is not connected then allows this instance of the client to show and run.
@@ -464,6 +465,42 @@ public class AdminServerAgent {
                         NewSimulationsData dtoAddedSimulationsData = gson.fromJson(requestStatusUpdateInJson, NewSimulationsData.class);
                         Platform.runLater(() -> {
                             controller.addSimulationsToQueue(dtoAddedSimulationsData);
+                        });
+                    } else {
+                        response.body().close();
+                    }
+                } else {
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
+                    response.body().close();
+                }
+            }
+        });
+    }
+
+    public static void getAdminLoadDetails(AdminAppController controller) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String finalUrl = HttpUrl
+                .parse(Constants.ADMIN_LOAD_DETAILS_PATH)
+                .newBuilder()
+                .build()
+                .toString();
+
+        System.out.println("New Request for: " + finalUrl);
+
+        HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    String requestStatusUpdateInJson = response.body().string();
+                    if (!requestStatusUpdateInJson.isEmpty()) {
+                        AdminLoadDetails adminLoadDetails = gson.fromJson(requestStatusUpdateInJson, AdminLoadDetails.class);
+                        Platform.runLater(() -> {
+                            controller.receiveAdminLoadDetails(adminLoadDetails);
                         });
                     } else {
                         response.body().close();

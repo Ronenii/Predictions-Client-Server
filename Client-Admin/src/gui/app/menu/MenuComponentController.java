@@ -8,6 +8,7 @@ import gui.app.menu.execution.ExecutionComponentController;
 import gui.app.menu.management.ManagementComponentController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
+import server2client.simulation.admin.load.details.AdminLoadDetails;
 
 public class MenuComponentController implements Controller {
     private AdminAppController mainController;
@@ -41,6 +42,18 @@ public class MenuComponentController implements Controller {
 
     public boolean isThreadPoolSet() {
         return managementComponentController.isThreadPoolSet();
+    }
+
+    public void receiveAdminLoadDetails(AdminLoadDetails adminLoadDetails) {
+        if(adminLoadDetails.getSimulationsNames().length != 0){
+            managementComponentController.receiveAdminLoadSimulationNames(adminLoadDetails.getSimulationsNames());
+        }
+        if(adminLoadDetails.getUnansweredRequests() != null) {
+            allocationComponentController.updateAllocationTableView(adminLoadDetails.getUnansweredRequests());
+        }
+        if(adminLoadDetails.getLoadedSimulations() != null){
+            executionComponentController.fetchAdminLoadSimulations(adminLoadDetails.getLoadedSimulations());
+        }
     }
 
     @Override

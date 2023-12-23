@@ -1,4 +1,4 @@
-package servlets;
+package servlets.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,7 +13,7 @@ import utils.CookiesUtils;
 import utils.ServletUtils;
 
 import java.io.IOException;
-import java.util.logging.Logger;
+
 
 /**
  * Responsible for handling whenever a client tries to get all possible simulations.

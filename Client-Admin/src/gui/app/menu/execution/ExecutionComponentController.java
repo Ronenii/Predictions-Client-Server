@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import manager.AdminServerAgent;
+import server2client.simulation.queue.NewSimulationsData;
 import server2client.simulation.runtime.SimulationRunData;
 
 public class ExecutionComponentController implements Controller {
@@ -64,6 +65,11 @@ public class ExecutionComponentController implements Controller {
         executionDetailsComponentController.updateToChosenSimulation(simulationRunData);
         resultTabComponentController.updateToChosenSimulation(simulationRunData);
     }
+
+    public void fetchAdminLoadSimulations(NewSimulationsData newSimulationsData) {
+        executionQueueComponentController.addSimulationsToQueue(newSimulationsData);
+    }
+
 }
 
 

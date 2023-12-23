@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import manager.AdminServerAgent;
+import server2client.simulation.admin.load.details.AdminLoadDetails;
 
 import java.util.EventListener;
 import java.util.List;
@@ -34,6 +35,11 @@ public class AdminAppController implements Controller {
         }
 
         anchorNotification.visibleProperty().set(true);
+        AdminServerAgent.getAdminLoadDetails(this);
+    }
+
+    public void receiveAdminLoadDetails(AdminLoadDetails adminLoadDetails) {
+        menuComponentController.receiveAdminLoadDetails(adminLoadDetails);
     }
 
     public void setPrimaryStageOnClose(Stage primaryStage) {
@@ -42,67 +48,10 @@ public class AdminAppController implements Controller {
     }
 
 
-    public List<EventListener> getAllFileLoadedListeners(){
-        // TODO: PLACEHOLDER
-        return null;
-    }
-
     @Override
     public void showMessageInNotificationBar(String message) {
         notificationBarComponentController.turnOnNotificationBar();
         notificationBarComponentController.showMessageInNotificationBar(message);
     }
-
-//    /**
-//     * Shows the given string on the notification bar.
-//     */
-//    @Override
-//    public void showNotification(String notification){
-//        notificationBarComponentController.turnOnNotificationBar();
-//        notificationBarComponentController.addNotification(notification);
-//    }
-
-//    public void updateQueueLblInQueueManagement() {
-//        headerComponentController.updateQueueLblInQueueManagement();
-//    }
-//
-//    public void updateRunningAndCompletedLblsInQueueManagement(QueueManagementData queueManagementData) {
-//        headerComponentController.updateRunningAndCompletedLblsInQueueManagement(queueManagementData);
-//    }
-//
-//    public void changeToDarkMode() {
-//        clearMode();
-//        headerComponentController.changeToDarkMode();
-//        subMenusController.changeToDarkMode();
-//        notificationBarComponentController.changeToDarkMode();
-//        currentMainComponent.getStylesheets().add(getClass().getResource("themes/DarkMode.css").toExternalForm());
-//        appMode = AppMode.DARK;
-//    }
-//
-//    public void changeToLightMode() {
-//        clearMode();
-//        headerComponentController.changeToLightMode();
-//        subMenusController.changeToLightMode();
-//        notificationBarComponentController.changeToLightMode();
-//        currentMainComponent.getStylesheets().add(getClass().getResource("themes/LightMode.css").toExternalForm());
-//        appMode = AppMode.LIGHT;
-//    }
-//
-//    public void clearMode() {
-//        headerComponentController.clearMode(appMode);
-//        subMenusController.clearMode(appMode);
-//        notificationBarComponentController.clearMode(appMode);
-//
-//        switch (appMode) {
-//            case DARK:
-//                currentMainComponent.getStylesheets().remove(getClass().getResource("themes/DarkMode.css").toExternalForm());
-//                break;
-//            case LIGHT:
-//                currentMainComponent.getStylesheets().remove(getClass().getResource("themes/LightMode.css").toExternalForm());
-//                break;
-//        }
-//
-//        appMode = AppMode.DEFAULT;
-//    }
 
 }

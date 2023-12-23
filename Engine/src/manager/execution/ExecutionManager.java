@@ -1,13 +1,14 @@
 package manager.execution;
 
+import server2client.simulation.queue.NewSimulationsData;
+import server2client.simulation.queue.SimulationData;
 import server2client.simulation.runtime.SimulationRunData;
 import manager.DTO.creator.DTOCreator;
 import simulation.objects.world.SimulationInstance;
 import simulation.objects.world.user.instructions.UserInstructions;
 import client2server.simulation.control.bar.DTOSimulationControlBar;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -32,6 +33,16 @@ public class ExecutionManager {
             simulations.put(simulationInstance.getSimulationId(), simulationInstance);
             simulationsRunData.put(simulationRunData.getSimId(), simulationRunData);
             threadExecutor.execute(simulationInstance);
+        }
+    }
+
+    public NewSimulationsData getNewSimulationData() {
+        DTOCreator dtoCreator = new DTOCreator();
+
+        if(simulations.isEmpty()){
+            return null;
+        } else {
+            return dtoCreator.createNewSimulationData(simulations);
         }
     }
 

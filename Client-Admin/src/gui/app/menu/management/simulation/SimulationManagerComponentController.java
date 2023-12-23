@@ -140,6 +140,10 @@ public class SimulationManagerComponentController implements Controller {
 
     }
 
+    public void addAdminLoadSimulationNames(String[] simulationNames) {
+        Arrays.stream(simulationNames).forEach(this::updateSimulationsListView);
+    }
+
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);
