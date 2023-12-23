@@ -434,7 +434,8 @@ public class SimulationInstance implements Serializable, Runnable {
         boolean ret = false;
 
         if (endingConditions.containsKey(EndingConditionType.SECONDS)) {
-            if (timePassed >= endingConditions.get(EndingConditionType.SECONDS).getCount()) {
+            long timePassedInSeconds = timePassed/1000;
+            if (timePassedInSeconds >= endingConditions.get(EndingConditionType.SECONDS).getCount()) {
                 terminateCondition = endingConditions.get(EndingConditionType.SECONDS);
                 ret = true;
             }
