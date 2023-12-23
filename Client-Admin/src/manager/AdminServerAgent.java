@@ -27,6 +27,7 @@ import java.net.HttpURLConnection;
 public class AdminServerAgent {
 
     private final static String NO_RESPONSE_MESSAGE = "ERROR: no response from server.";
+
     /**
      * Sends a http query that checks if an admin client is connected.
      * If an admin is not connected then allows this instance of the client to show and run.
@@ -122,7 +123,6 @@ public class AdminServerAgent {
      * OK - Show file was loaded successfully and pull all loaded simulations to the listview in the SimulationManagerComponent.
      * BAD_REQUEST - Show the errors created from loading a bad simulation config file.
      * OTHER - Show a general error.
-     *
      */
     public static void uploadFile(File file, SimulationManagerComponentController simulationManagerComponentController) {
         final String fileNameString = "File: \"" + file.getName() + "\", ";
@@ -131,7 +131,7 @@ public class AdminServerAgent {
 
         // Convert the file into a multipart request body
         RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("file", file.getName(),  RequestBody.create(MediaType.parse("application/xml"), file))
+                .addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("application/xml"), file))
                 .build();
 
         String finalUrl = HttpUrl
@@ -195,9 +195,12 @@ public class AdminServerAgent {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     String previewDataInJson = response.body().string();
                     // if the servlet returns empty string, the simulation breakdown is up-to-date.
-                    if(!previewDataInJson.equals("")){
+                    if (!previewDataInJson.equals("")) {
                         SimulationsPreviewData simulationsPreviewData = gson.fromJson(previewDataInJson, SimulationsPreviewData.class);
                         Platform.runLater(() -> simulationManagerComponentController.loadSimulationsListView(simulationsPreviewData));
+                    }
+                    else{
+                        response.body().close();
                     }
                 }
                 // If another error has occurred, show an alert and close the app.
@@ -228,10 +231,10 @@ public class AdminServerAgent {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.code() == 200) {
+                if (response.code() == 200) {
                     String previewDataInJson = response.body().string();
                     PreviewData previewData = gson.fromJson(previewDataInJson, PreviewData.class);
-                    Platform.runLater(()-> controller.loadSimBreakdownComponent(previewData));
+                    Platform.runLater(() -> controller.loadSimBreakdownComponent(previewData));
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
                     response.body().close();
@@ -265,8 +268,7 @@ public class AdminServerAgent {
                         controller.setThreadPoolSet();
                         controller.clearComponent();
                     });
-                }
-                else {
+                } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                 }
             }
@@ -294,9 +296,12 @@ public class AdminServerAgent {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     String dtoRequestsInJson = response.body().string();
                     // check if the string json is empty.
-                    if(!dtoRequestsInJson.equals("")) {
+                    if (!dtoRequestsInJson.equals("")) {
                         DTORequests dtoRequests = gson.fromJson(dtoRequestsInJson, DTORequests.class);
                         Platform.runLater(() -> controller.updateAllocationTableView(dtoRequests));
+                    }
+                    else{
+                        response.body().close();
                     }
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
@@ -325,7 +330,7 @@ public class AdminServerAgent {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.code() == HttpURLConnection.HTTP_OK) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("Request's status has been changed in the server"));
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("Request's status did not change in the server, please try again"));
@@ -432,6 +437,7 @@ public class AdminServerAgent {
 
     /**
      * Receives all newly added simulations to the engine and updates them in the admin's window.
+     *
      * @param controller We update the components under this controller
      */
     public static void getExecutionQueueAddedSimulations(ExecutionQueueComponentController controller) {
@@ -452,13 +458,15 @@ public class AdminServerAgent {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.code() == HttpURLConnection.HTTP_OK) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     String requestStatusUpdateInJson = response.body().string();
-                    if(!requestStatusUpdateInJson.isEmpty()){
+                    if (!requestStatusUpdateInJson.isEmpty()) {
                         NewSimulationsData dtoAddedSimulationsData = gson.fromJson(requestStatusUpdateInJson, NewSimulationsData.class);
                         Platform.runLater(() -> {
                             controller.addSimulationsToQueue(dtoAddedSimulationsData);
                         });
+                    } else {
+                        response.body().close();
                     }
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
@@ -468,7 +476,7 @@ public class AdminServerAgent {
         });
     }
 
-    private static String createServerErrorMessage(int errorCode){
+    private static String createServerErrorMessage(int errorCode) {
         return "ERROR: Server response code " + errorCode;
     }
 }

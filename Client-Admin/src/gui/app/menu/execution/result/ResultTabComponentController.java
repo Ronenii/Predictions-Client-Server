@@ -15,6 +15,8 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
 public class ResultTabComponentController implements Controller {
+
+    private int prevTick = 0;
     private Controller mainController;
 
     @FXML
@@ -93,7 +95,10 @@ public class ResultTabComponentController implements Controller {
     public void updateToChosenSimulation(SimulationRunData simulationRunData){
         if (simulationRunData.isCompleted() || simulationRunData.isSimulationSkipped()) {
             enableResultComponent();
-            displayResults(simulationRunData.getResultData());
+            if(simulationRunData.getTick() != prevTick){
+                displayResults(simulationRunData.getResultData());
+            }
+            prevTick = simulationRunData.getTick();
         } else {
             disableResultComponent();
             clearComponent();

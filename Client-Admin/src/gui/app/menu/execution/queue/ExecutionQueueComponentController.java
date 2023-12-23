@@ -61,6 +61,7 @@ public class ExecutionQueueComponentController implements Controller {
         simulationStatusMap = new HashMap<>();
         isFetchStatusTaskRunning = false;
         startExecutionQueueRefresher();
+        resetFlags();
     }
 
     @FXML
@@ -75,7 +76,7 @@ public class ExecutionQueueComponentController implements Controller {
     }
 
     public void onMouseClickedTvReceiveRunData(SimulationRunData selected) {
-        //resetFlags();
+        resetFlags();
         if (selected != null) {
             if (selected.isCompleted()) {
                 mainController.updateGuiToChosenSimulation(selected);
@@ -110,6 +111,12 @@ public class ExecutionQueueComponentController implements Controller {
         };
 
         runTask(task);
+    }
+
+    private void resetFlags() {
+        isSimulationPaused = false;
+        isSimulationSkippedForward = false;
+        oneUpdateAfterPauseFlag = false;
     }
 
     /**

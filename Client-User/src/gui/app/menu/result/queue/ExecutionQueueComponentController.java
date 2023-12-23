@@ -165,6 +165,7 @@ public class ExecutionQueueComponentController implements Controller {
                         getStatusUpdatesForRunningSimulations();
                         Thread.sleep(200); // Make the thread sleep for 200ms
                     } while (hasNonCompletedSimulations());
+                    isFetchStatusTaskRunning = true;
                     return null;
                 }
             };
