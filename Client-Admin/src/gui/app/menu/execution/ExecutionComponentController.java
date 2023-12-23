@@ -48,19 +48,6 @@ public class ExecutionComponentController implements Controller {
         mainController.showMessageInNotificationBar(message);
     }
 
-//    @Override
-//    public BarNotifier getNotificationBar() {
-//        return mainController.getNotificationBar();
-//    }
-//
-//
-//    /**
-//     * Adds the given simulation to the execution queue
-//     */
-//    public void addSimulationToQueue(SimulationRunData simulationRunData) {
-//        executionQueueComponentController.addSimulationToQueue(simulationRunData);
-//    }
-//
     /**
      * Using the simulation ID of the current selected item in the table view, returns and displays the simulationRunData.
      */
@@ -77,59 +64,6 @@ public class ExecutionComponentController implements Controller {
         executionDetailsComponentController.updateToChosenSimulation(simulationRunData);
         resultTabComponentController.updateToChosenSimulation(simulationRunData);
     }
-
-
-//    public void updateQueueLblInQueueManagement() {
-//        mainController.updateQueueLblInQueueManagement();
-//    }
-//
-//    public void updateRunningAndCompletedLblsInQueueManagement(QueueManagementData queueManagementData) {
-//        mainController.updateRunningAndCompletedLblsInQueueManagement(queueManagementData);
-//    }
-//
-//    public int getSimulationCurrentTicks() {
-//        return executionDetailsComponentController.getSimulationCurrentTicks();
-//    }
-//
-//    @Override
-//    public void onFileLoaded(PreviewData previewData, boolean isFirstSimulationLoaded) {
-//        if(!isFirstSimulationLoaded){
-//            resultTabComponentController.clearComponent();
-//            resultTabComponentController.disableResultComponent();
-//            executionQueueComponentController.clearComponent();
-//            executionDetailsComponentController.clearComponent();
-//
-//        }
-//    }
-
-//    public boolean isBonusSelected(){
-//        return mainController.isBonusSelected();
-//    }
-//
-//    public void rerunSimulationById(String simId) {
-//        mainController.rerunSimulationById(simId);
-//    }
-//
-//    public TabPane getMenusTabPane() {
-//        return mainController.getMenusTabPane();
-//    }
-//
-//    public void setExecutionQueueTaskOnSkipForward() {
-//        executionQueueComponentController.setExecutionQueueTaskOnSkipForward();
-//    }
-//
-//    public void setExecutionQueueTaskOnPause() {
-//        executionQueueComponentController.setExecutionQueueTaskOnPause();
-//    }
-//
-//    public void disableExecutionQueueTaskOnPause() {
-//        executionQueueComponentController.disableExecutionQueueTaskOnPause();
-//    }
-//
-//    public void setOneUpdateAfterPauseFlag() {
-//        executionQueueComponentController.setOneUpdateAfterPauseFlag();
-//    }
-
 }
 
 
