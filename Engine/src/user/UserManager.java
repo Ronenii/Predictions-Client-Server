@@ -6,6 +6,7 @@ import java.util.Set;
 
 public class UserManager {
     public boolean isAdminConnected = false;
+    private boolean isFirstAdmin = true;
     private final Set<String> usersSet;
 
     public UserManager() {
@@ -26,5 +27,13 @@ public class UserManager {
 
     public boolean isUserExists(String username) {
         return usersSet.contains(username);
+    }
+
+    public void changeFirstAdmin(){
+        isFirstAdmin = false;
+    }
+
+    public boolean isFirstAdmin() {
+        return isFirstAdmin;
     }
 }

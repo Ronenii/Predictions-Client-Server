@@ -201,6 +201,14 @@ public class SimulationManager {
 
     public AdminLoadDetails getAdminLoadDetails() {
         DTOCreator dtoCreator = new DTOCreator();
-        return dtoCreator.createAdminLoadDetails(simulationDefinitions.keySet(), requestsManager.getDTORequests(), executionManager.getAllSimulationsIds());
+        NewSimulationsData newSimulationsData;
+
+        if(executionManager != null) {
+            newSimulationsData = executionManager.getNewSimulationData();
+        } else {
+            newSimulationsData = null;
+        }
+
+        return dtoCreator.createAdminLoadDetails(simulationDefinitions.keySet(), requestsManager.getDTORequests(), newSimulationsData);
     }
 }

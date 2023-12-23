@@ -15,12 +15,15 @@ import server2client.simulation.genral.impl.properties.action.impl.*;
 import server2client.simulation.genral.impl.properties.DTOProperty;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.genral.impl.properties.DTOEnvironmentVariable;
+import server2client.simulation.queue.NewSimulationsData;
+import server2client.simulation.queue.SimulationData;
 import server2client.simulation.request.DTORequests;
 import server2client.simulation.request.data.DTOSingleRequest;
 import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
 import server2client.simulation.request.updated.status.data.DTORequestStatusData;
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
+import simulation.objects.world.SimulationInstance;
 import simulation.objects.world.definition.SimulationDefinition;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
@@ -319,7 +322,22 @@ public class DTOCreator {
         return new DTORequestStatusUpdate(requestStatusUpdates.toArray(new DTORequestStatusData[0]));
     }
 
-    public AdminLoadDetails createAdminLoadDetails(Set<String> simulationsNames, DTORequests dtoRequests, Set<String> simulationsIds) {
-        return new AdminLoadDetails(simulationsNames.toArray(new String[0]), dtoRequests, simulationsIds.toArray(new String[0]));
+    public AdminLoadDetails createAdminLoadDetails(Set<String> simulationsNames, DTORequests dtoRequests, NewSimulationsData simulations) {
+        return new AdminLoadDetails(simulationsNames.toArray(new String[0]), dtoRequests, simulations);
+    }
+
+    public NewSimulationsData createNewSimulationData(Map<String, SimulationInstance> simulations) {
+        List<SimulationData> simulationDataList = new ArrayList<>();
+
+        for (SimulationInstance simulationInstance : simulations.values()) {
+            String requestedBy = simulationInstance.getRequestedBy();
+            String simId = simulationInstance.getSimulationId();
+            String status = simulationInstance.getStatus().toString();
+            SimulationData simulationData = new SimulationData(requestedBy, simId, status);
+
+            simulationDataList.add(simulationData);
+        }
+
+        return new NewSimulationsData(simulationDataList.toArray(new SimulationData[0]));
     }
 }

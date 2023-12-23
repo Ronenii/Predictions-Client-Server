@@ -1,16 +1,17 @@
 package server2client.simulation.admin.load.details;
 
+import server2client.simulation.queue.NewSimulationsData;
 import server2client.simulation.request.DTORequests;
 
 public class AdminLoadDetails {
     private final String[] simulationsNames;
     private final DTORequests unansweredRequests;
-    private final String[] loadedSimulationsId;
+    private final NewSimulationsData loadedSimulations;
 
-    public AdminLoadDetails(String[] simulationsNames, DTORequests unansweredRequests, String[] loadedSimulationsId) {
+    public AdminLoadDetails(String[] simulationsNames, DTORequests unansweredRequests, NewSimulationsData loadedSimulations) {
         this.simulationsNames = simulationsNames;
         this.unansweredRequests = unansweredRequests;
-        this.loadedSimulationsId = loadedSimulationsId;
+        this.loadedSimulations = loadedSimulations;
     }
 
     public String[] getSimulationsNames() {
@@ -21,7 +22,7 @@ public class AdminLoadDetails {
         return unansweredRequests;
     }
 
-    public String[] getLoadedSimulationsId() {
-        return loadedSimulationsId;
+    public NewSimulationsData getLoadedSimulations() {
+        return loadedSimulations;
     }
 }

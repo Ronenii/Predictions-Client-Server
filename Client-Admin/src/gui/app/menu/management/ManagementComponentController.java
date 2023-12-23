@@ -45,6 +45,10 @@ public class ManagementComponentController implements Controller {
         return threadManagerComponentController.isThreadPoolSet();
     }
 
+    public void receiveAdminLoadSimulationNames(String[] simulationNames) {
+        simulationManagerComponentController.addAdminLoadSimulationNames(simulationNames);
+    }
+
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);
