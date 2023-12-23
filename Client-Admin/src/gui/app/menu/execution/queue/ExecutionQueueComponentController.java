@@ -2,10 +2,14 @@ package gui.app.menu.execution.queue;
 
 
 import gui.app.menu.execution.ExecutionComponentController;
+import gui.app.menu.execution.queue.refresher.ExecutionQueueRefresher;
+import javafx.application.Platform;
+import manager.AdminServerAgent;
+import manager.constant.Constants;
+import server2client.simulation.queue.newSimulationsData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.api.Controller;
-import gui.app.menu.execution.queue.data.QueueData;
-import gui.app.menu.execution.data.StatusData;
+import gui.app.menu.execution.queue.data.StatusData;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -17,11 +21,14 @@ import simulation.objects.world.status.SimulationStatus;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
 
 public class ExecutionQueueComponentController implements Controller {
-    private Controller mainController;
+    private ExecutionComponentController mainController;
     @FXML
     private Label exeListLabel;
+
+    private ExecutionQueueRefresher executionQueueRefresher;
 
     @FXML
     private TableView<StatusData> executionsQueueTV;
@@ -37,10 +44,11 @@ public class ExecutionQueueComponentController implements Controller {
     private boolean isSimulationSkippedForward;
     private boolean oneUpdateAfterPauseFlag;
 
+    private Timer timer;
+
     public void setMainController(ExecutionComponentController controller) {
         this.mainController = controller;
     }
-
 
     @FXML
     public void initialize() {
@@ -48,168 +56,126 @@ public class ExecutionQueueComponentController implements Controller {
         simStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         simulationStatusMap = new HashMap<>();
         isFetchStatusTaskRunning = false;
-        resetFlags();
+        startExecutionQueueRefresher();
     }
 
-    private void resetFlags() {
-        isSimulationPaused = false;
-        isSimulationSkippedForward = false;
-        oneUpdateAfterPauseFlag = false;
-    }
-
-    /**
-     * If the selected simulation in the TableView is ongoing or waiting then will create a task that updates the chosen simulation every 200ms.
-     * Else will just display the selected simulation.
-     */
     @FXML
-    void onTableViewItemSelected(MouseEvent event) {
-//        SimulationRunData selected = mainController.getCurrentSelectedSimulation();
-//        resetFlags();
-//        if (selected != null) {
-//            if (selected.isCompleted()) {
-//                mainController.updateGuiToChosenSimulation(selected);
-//            } else {
-//                executeSimDataFetchingTask(selected.getSimId());
-//            }
-//        }
+    void onMouseClickedTV(MouseEvent event) {
+        mainController.getCurrentSelectedSimulation();
     }
 
+    public void startExecutionQueueRefresher() {
+        executionQueueRefresher = new ExecutionQueueRefresher(this);
+        timer = new Timer();
+        timer.schedule(executionQueueRefresher, Constants.REFRESH_RATE, Constants.REFRESH_RATE);
+    }
 
-//    /**
-//     * This task will fetch simulation run data from the gui and display it as long as the simulation is still selected in the TableView
-//     * and is ongoing.
-//     * Every 200ms the task will query the engine for the run data, and will update the SimulationRunDataMap in the parent accordingly.
-//     */
-//    public void executeSimDataFetchingTask(String simId) {
-//
-//        Task<Void> task = new Task<Void>() {
-//            @Override
-//            protected Void call() throws Exception {
-//                SimulationRunData selectedInThread;
-//                do {
-//                    selectedInThread = getEngineAgent().getRunDataById(getQueueSelectedItem().getSimId());// Get the most current run data from the engine
-//                    // Wrap UI updates in Platform.runLater to execute them on the FX application thread
-//
-//                    // isSimulationPaused - true when the simulation on pause
-//                    // isSimulationSkippedForward - the skip forward button set this flag to true, allowing the task run this loop once and then return to a hold state.
-//                    // oneUpdateAfterPauseFlag - the pause button set this flag to true, allowing the task run this loop once (to fetch the details) and then return to a hold state.
-//                    if(!isSimulationPaused || isSimulationSkippedForward || oneUpdateAfterPauseFlag) {
-//                        // Check if we skipped forward and didn't get entities in the ResultData to load.
-//                        if(!isSimulationSkippedForward || selectedInThread.resultData.getEntities() != null) {
-//                            SimulationRunData finalSelectedInThread = selectedInThread;
-//                            Platform.runLater(() -> {
-//                                mainController.updateGuiToChosenSimulation(finalSelectedInThread); // Update the components displaying the simulation
-//                            });
-//                            isSimulationSkippedForward = false;
-//                        }
-//                        oneUpdateAfterPauseFlag = false;
-//                    }
-//
-//                    Thread.sleep(200); // Make the thread sleep for 200ms
-//                } while (selectedInThread != null && selectedInThread.getSimId().equals(simId) && !selectedInThread.isCompleted());
-//                return null;
-//            }
-//        };
-//
-//        runTask(task);
-//    }
+    public void onMouseClickedTvReceiveRunData(SimulationRunData selected) {
+        //resetFlags();
+        if (selected != null) {
+            if (selected.isCompleted()) {
+                mainController.updateGuiToChosenSimulation(selected);
+            } else {
+                long threadSleep = selected.getThreadSleepCount();
+                if (threadSleep == 0) {
+                    threadSleep = 200;
+                }
 
-
-//    public void addSimulationToQueue(SimulationRunData simulationRunData) {
-//        StatusData toAdd = new StatusData(simulationRunData.getSimId(), new SimpleStringProperty(simulationRunData.getStatus()));
-//        simulationStatusMap.put(toAdd, SimulationStatus.valueOf(toAdd.getStatus()));
-//        executionsQueueTV.getItems().add(toAdd);
-//        mainController.updateQueueLblInQueueManagement();
-//        executeSimStatusFetchingTask();
-//    }
-
-//    /**
-//     * The task responsible for updating the status in the simulation execution queue.
-//     */
-//    private void executeSimStatusFetchingTask() {
-//        // Check that we don't have more than one instance of this task running.
-//        if (!isFetchStatusTaskRunning) {
-//            isFetchStatusTaskRunning = true;
-//            Task<Void> task = new Task<Void>() {
-//                @Override
-//                protected Void call() throws Exception {
-//                    do {
-//                        getStatusUpdatesForRunningSimulations();
-//                        Thread.sleep(200); // Make the thread sleep for 200ms
-//                    } while (hasNonCompletedSimulations());
-//                    return null;
-//                }
-//            };
-//
-//            runTask(task);
-//        }
-//    }
-
-//    /**
-//     * Iterates on all waiting\ongoing simulations and queries the engine for updates.
-//     */
-//    private void getStatusUpdatesForRunningSimulations() {
-//        QueueData queueManagementData = new QueueData();
-//
-//        for (StatusData s : simulationStatusMap.keySet()) {
-//            updateQueueManagementData(queueManagementData, s.getStatus());
-//            if (!s.getStatus().equals(SimulationStatus.COMPLETED.name())) {
-//                SimulationRunData selectedInThread = getEngineAgent().getRunDataById(s.getSimId());
-//                if(selectedInThread.errorMessage != null){
-//                    Platform.runLater(() -> {
-//                        getNotificationBar().showNotification(selectedInThread.errorMessage);
-//                    });
-//                }
-//
-//                showNotificationIfSimulationRunStarted(s, selectedInThread);
-//                Platform.runLater(() -> {
-//                    s.statusProperty().set(selectedInThread.getStatus());
-//                    showNotificationIfSimulationRunCompleted(selectedInThread);
-//                });
-//            }
-//        }
-//
-//        // JAT will update the Queue Manager's labels.
-//        Platform.runLater(() -> {mainController.updateRunningAndCompletedLblsInQueueManagement(queueManagementData);});
-//    }
-
-    /**
-     * Fetch the 'QueueManagementData' object according to the current simulations in the queue.
-     */
-    private void updateQueueManagementData(QueueData queueManagementData, String status) {
-        if (status.equals("ONGOING")) {
-            queueManagementData.runningCount++;
-        } else if (status.equals("COMPLETED")) {
-            queueManagementData.completedCount++;
+                executeSimDataFetchingTask(selected.getSimId(), threadSleep);
+            }
         }
     }
 
     /**
-     * Will return true if the simulation is about to be started.
+     * This task will fetch simulation run data from the server and display it as long as the simulation is still selected in the TableView
+     * and is ongoing.
+     * Every 200ms the task will query the server for the run data, and will update the SimulationRunDataMap in the parent accordingly.
+     * Note: the implementation uses a task instead of a refresher,
+     * because the refresher relies on one thread, and in this case we may need multiple threads to run simultaneously.
      */
-    private boolean isStartedSimulation(StatusData current, SimulationRunData next) {
-        return SimulationStatus.valueOf(current.getStatus()) == SimulationStatus.WAITING && SimulationStatus.valueOf(next.status) == SimulationStatus.ONGOING;
+    public void executeSimDataFetchingTask(String simId, long threadSleep) {
+
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                do {
+                    callMethodGetSimRunDataForSimProgress(this, simId);
+                    Thread.sleep(threadSleep + 50); // Make the thread sleep for the exact time the thread in the server sleeps + 50ms.
+                } while (true); // while true explanation on 'receiveSimulationRunForRunningSimulation' documentation.
+            }
+        };
+
+        runTask(task);
     }
 
-//    /**
-//     * Prints a notification if the simulation is about to start.
-//     */
-//    private void showNotificationIfSimulationRunStarted(StatusData statusData, SimulationRunData simulationRunData) {
-//        if (isStartedSimulation(statusData, simulationRunData)) {
-//            Platform.runLater(() -> {
-//                getNotificationBar().showNotification(String.format("Simulation %s has started it's run.", statusData.getSimId()));
-//            });
-//        }
-//    }
-//
-//    /**
-//     * Will only run inside platform run later since it happens only after a simulation's status has changed to COMPLETED.
-//     */
-//    private void showNotificationIfSimulationRunCompleted(SimulationRunData simulationRunData) {
-//        if (SimulationStatus.valueOf(simulationRunData.getStatus()) == SimulationStatus.COMPLETED) {
-//            getNotificationBar().showNotification(String.format("Simulation %s has finished it's run.", simulationRunData.getSimId()));
-//        }
-//    }
+    /**
+     * This method is needed because in the task's lambda, 'this' object does not refer to the 'ExecutionQueueComponentController' but to the calling task.
+     */
+    private void callMethodGetSimRunDataForSimProgress(Task<Void> task, String simId) {
+        AdminServerAgent.getSimRunDataFromSimProgress(this, getQueueSelectedItem().getSimId(), task, simId);// Get the most current run data from the engine
+    }
+
+    /**
+     * The task responsible for updating the status in the simulation execution queue.
+     */
+    private void executeSimStatusFetchingTask() {
+        // Check that we don't have more than one instance of this task running.
+        if (!isFetchStatusTaskRunning) {
+            isFetchStatusTaskRunning = true;
+            Task<Void> task = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    do {
+                        getStatusUpdatesForRunningSimulations();
+                        Thread.sleep(200); // Make the thread sleep for 200ms
+                    } while (hasNonCompletedSimulations());
+                    return null;
+                }
+            };
+
+            runTask(task);
+        }
+    }
+
+    /**
+     * Executes a status fetching task that updates all running simulation's statuses.
+     * Adds the simulation to the Table View and the map responsible for holding all added simulations.
+     * @param addedSimulationsData An array of all newly added simulations
+     */
+    public void addSimulationsToQueue(newSimulationsData addedSimulationsData) {
+        executeSimStatusFetchingTask();
+        if (addedSimulationsData.getAddedSimulations().length != 0) {
+            for (String id : addedSimulationsData.getAddedSimulations()
+            ) {
+                StatusData added = new StatusData(id, "WAITING");
+                simulationStatusMap.put(added, SimulationStatus.valueOf(added.getStatus()));
+                executionsQueueTV.getItems().add(added);
+                executionsQueueTV.refresh();
+            }
+        }
+    }
+
+    /**
+     * Iterates on all waiting\ongoing simulations and queries the engine for updates.
+     */
+    private void getStatusUpdatesForRunningSimulations() {
+        for (StatusData s : simulationStatusMap.keySet()) {
+            if (!s.getStatus().equals(SimulationStatus.COMPLETED.name())) {
+                AdminServerAgent.getSimRunDataFromSimStatus(this, s);
+            }
+        }
+    }
+
+    public void statusUpdateForSingleRunningSimulation(SimulationRunData selectedInThread, StatusData statusData) {
+        if (selectedInThread.errorMessage != null) {
+            Platform.runLater(() -> {
+                showMessageInNotificationBar(selectedInThread.errorMessage);
+            });
+        }
+        else{
+            statusData.statusProperty().set(selectedInThread.status);
+        }
+    }
 
     /**
      * Given a task, this creates a thread for it and runs it.
@@ -228,40 +194,31 @@ public class ExecutionQueueComponentController implements Controller {
         return executionsQueueTV.getSelectionModel().getSelectedItem();
     }
 
-//    @Override
-//    public synchronized EngineAgent getEngineAgent() {
-//        return mainController.getEngineAgent();
-//    }
-//
-//    @Override
-//    public BarNotifier getNotificationBar() {
-//        return mainController.getNotificationBar();
-//    }
-//
-//    public void clearComponent() {
-//        executionsQueueTV.getItems().clear();
-//        simIdCol.setCellValueFactory(new PropertyValueFactory<>("simId"));
-//        simStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-//        simulationStatusMap.clear();
-//        isFetchStatusTaskRunning = false;
-//        // JAT will clear the queue manager after its previous actions.
-//        Platform.runLater(() -> {mainController.updateRunningAndCompletedLblsInQueueManagement(new QueueData());});
-//    }
+    /**
+     * This method called from the server's response to the 'callMethodGetSimRunDataForSimProgress' method with a SimulationRunData object.
+     * This method fetch the simulation run data received from the server.
+     * The method receives a reference to the task that sends the requests to the server in order to cancel this task if needed.
+     */
+    public void receiveSimulationRunForRunningSimulation(SimulationRunData selectedInThread, String simId, Task<Void> task) {
+        // Wrap UI updates in Platform.runLater to execute them on the FX application thread
+        // isSimulationPaused - true when the simulation on pause
+        // isSimulationSkippedForward - the skip forward button set this flag to true, allowing the task run this loop once and then return to a hold state.
+        // oneUpdateAfterPauseFlag - the pause button set this flag to true, allowing the task run this loop once (to fetch the details) and then return to a hold state.
+        if (!isSimulationPaused || isSimulationSkippedForward || oneUpdateAfterPauseFlag) {
+            // Check if we skipped forward and didn't get entities in the ResultData to load.
+            if (!isSimulationSkippedForward || selectedInThread.resultData.getEntities() != null) {
+                Platform.runLater(() -> {
+                    mainController.updateGuiToChosenSimulation(selectedInThread); // Update the components displaying the simulation
+                });
+                isSimulationSkippedForward = false;
+            }
+            oneUpdateAfterPauseFlag = false;
+        }
 
-    public void setExecutionQueueTaskOnSkipForward() {
-        isSimulationSkippedForward = true;
-    }
-
-    public void setExecutionQueueTaskOnPause() {
-        isSimulationPaused = true;
-    }
-
-    public void disableExecutionQueueTaskOnPause() {
-        isSimulationPaused = false;
-    }
-
-    public void setOneUpdateAfterPauseFlag() {
-        oneUpdateAfterPauseFlag = true;
+        //Check if the task loop to be canceled.
+        if (selectedInThread == null || !selectedInThread.getSimId().equals(simId) || selectedInThread.isCompleted()) {
+            task.cancel(true);
+        }
     }
 
     @Override
