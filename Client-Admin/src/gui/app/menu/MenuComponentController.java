@@ -45,13 +45,16 @@ public class MenuComponentController implements Controller {
     }
 
     public void receiveAdminLoadDetails(AdminLoadDetails adminLoadDetails) {
-        if(adminLoadDetails.getSimulationsNames().length != 0){
+        if(adminLoadDetails.getSimulationsNames().length != 0) {
             managementComponentController.receiveAdminLoadSimulationNames(adminLoadDetails.getSimulationsNames());
+        }
+        if(adminLoadDetails.isThreadPoolInitialized()) {
+            managementComponentController.turnOnThreadDataRefresher();
         }
         if(adminLoadDetails.getUnansweredRequests() != null) {
             allocationComponentController.updateAllocationTableView(adminLoadDetails.getUnansweredRequests());
         }
-        if(adminLoadDetails.getLoadedSimulations() != null){
+        if(adminLoadDetails.getLoadedSimulations() != null) {
             executionComponentController.fetchAdminLoadSimulations(adminLoadDetails.getLoadedSimulations());
         }
     }

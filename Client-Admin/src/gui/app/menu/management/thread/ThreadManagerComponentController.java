@@ -38,8 +38,6 @@ public class ThreadManagerComponentController implements Controller {
 
     private Timer timer;
 
-    private int queueCount = 0;
-
     public void setMainController(ManagementComponentController managementComponentController){
         this.mainController = managementComponentController;
     }
@@ -88,8 +86,12 @@ public class ThreadManagerComponentController implements Controller {
         lblEnded.setText(String.valueOf(queueManagementData.getCompletedCount()));
     }
 
+    public void turnOnThreadDataRefresherFromAdminLoadDetails() {
+        startThreadDataRefresher();
+        isThreadPoolSet = true;
+    }
+
     public void clearComponent() {
-        queueCount = 0;
         lblQueue.setText("0");
         lblRunning.setText("0");
         lblEnded.setText("0");
