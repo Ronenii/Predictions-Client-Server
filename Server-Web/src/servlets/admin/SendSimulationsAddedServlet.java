@@ -24,6 +24,7 @@ public class SendSimulationsAddedServlet extends HttpServlet {
         String cookieSavedVersion = CookiesUtils.getSavedValueOnCookie(req, Constants.SIMULATIONS_ADDED);
         SimulationManager simulationManager = ServletUtils.getSimulationManager(getServletContext());
 
+
         if(cookieSavedVersion != null){
             simulationsAdded = Integer.parseInt(cookieSavedVersion);
         }
