@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import manager.SimulationManager;
 import server2client.simulation.execution.StartResponse;
 import utils.ServletUtils;
+import utils.SessionUtils;
 
 import java.io.IOException;
 
@@ -24,7 +25,7 @@ public class StartSimulationServlet extends HttpServlet {
         int reqId = Integer.parseInt(req.getParameter(Constants.REQUEST_ID));
 
         synchronized (this) {
-            StartResponse response = simulationManager.startSimulation(reqId);
+            StartResponse response = simulationManager.startSimulation(reqId, SessionUtils.getUsername(req));
 
             resp.setContentType("application/json");
             String responseJsonContent = gson.toJson(response);

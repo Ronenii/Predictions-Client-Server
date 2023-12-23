@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SimulationRunData {
+    private final String name;
     private final String simId;
     public final String status;
     private final int tick;
@@ -18,7 +19,8 @@ public class SimulationRunData {
     private final boolean isSimulationSkipped;
     private final long threadSleepCount;
 
-    public SimulationRunData(String simId, int tick, long time, DTOEntityPopulation[] entityPopulation, String status, boolean isCompleted, Map<String, Object> envVarsValuesMap, boolean isSimulationSkipped, long threadSleepCount) {
+    public SimulationRunData(String name, String simId, int tick, long time, DTOEntityPopulation[] entityPopulation, String status, boolean isCompleted, Map<String, Object> envVarsValuesMap, boolean isSimulationSkipped, long threadSleepCount) {
+        this.name = name;
         this.simId = simId;
         this.entityPopulation = entityPopulation;
         this.tick = tick;
@@ -32,6 +34,10 @@ public class SimulationRunData {
 
     public String getSimId() {
         return simId;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getTick() {

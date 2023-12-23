@@ -8,7 +8,8 @@ import server2client.simulation.execution.StartResponse;
 import server2client.simulation.load.result.DTOLoadResult;
 import server2client.simulation.prview.PreviewData;
 import server2client.simulation.prview.SimulationsPreviewData;
-import server2client.simulation.queue.newSimulationsData;
+import server2client.simulation.queue.SimulationData;
+import server2client.simulation.queue.NewSimulationsData;
 import server2client.simulation.request.DTORequests;
 import server2client.simulation.request.updated.status.DTORequestStatusUpdate;
 import server2client.simulation.runtime.SimulationRunData;
@@ -30,7 +31,7 @@ import java.util.*;
 public class SimulationManager {
     // Holds the loaded simulations definitions.
     private Map<String, SimulationDefinition> simulationDefinitions;
-    private List<String> newSimulations;
+    private List<SimulationData> newSimulations;
     private ExecutionManager executionManager = null;
     private final RequestsManager requestsManager;
     private int simulationBreakdownVersion;
@@ -62,8 +63,8 @@ public class SimulationManager {
     /**
      * @return A DTO containing an array of all newly added simulations.
      */
-    public newSimulationsData getNewSimulationsDTO(){
-        return new newSimulationsData(newSimulations);
+    public NewSimulationsData getNewSimulationsDTO(){
+        return new NewSimulationsData(newSimulations);
     }
 
 
@@ -112,16 +113,17 @@ public class SimulationManager {
      * Runs a new instance of the simulation definition if possible.
      * @return The ID of the simulation that was started.
      */
-    public StartResponse startSimulation(int reqId) {
+    public StartResponse startSimulation(int reqId, String user) {
         SimulationInstance reqSimulationDefinition = requestsManager.getApprovedRequest(reqId).getDefinitionInstance();
 
         if(reqSimulationDefinition.isStartable()) {
             addedSimulationsCount++; // Update the number of simulations that were started.
             DTOCreator dtoCreator = new DTOCreator();
             String id = IdGenerator.generateID();
-            SimulationRunData simulationRunData = new SimulationRunData(IdGenerator.generateID(),0, 0, dtoCreator.getDTOEntityPopulationArray(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false, reqSimulationDefinition.getThreadSleepDuration());
-
-            newSimulations.add(addSimulationToQueue(simulationRunData, reqSimulationDefinition));
+            SimulationRunData simulationRunData = new SimulationRunData(reqSimulationDefinition.getSimulationName(),id,0, 0, dtoCreator.getDTOEntityPopulationArray(reqSimulationDefinition.getEntities()), SimulationStatus.WAITING.name(), false, getEnvVarsValuesMap(reqSimulationDefinition), false, reqSimulationDefinition.getThreadSleepDuration());
+            reqSimulationDefinition.setRequestedBy(user);
+            addSimulationToQueue(simulationRunData,reqSimulationDefinition);
+            newSimulations.add(new SimulationData(user,id, SimulationStatus.WAITING.name()));
             return new StartResponse(true, String.format("Simulation %s was added to the queue successfully.", id), simulationRunData);
         } else {
             return new StartResponse(false, "ERROR: Could not start simulation. You need to have at least one entity with a population larger than 0.");
@@ -155,12 +157,10 @@ public class SimulationManager {
     /**
      * Adds a new simulation instance to the simulations queue. Returns the ID iof the added simulation.
      */
-    private String addSimulationToQueue(SimulationRunData simulationRunData, SimulationInstance reqSimulationDefinition) {
+    private void addSimulationToQueue(SimulationRunData simulationRunData, SimulationInstance reqSimulationDefinition) {
         SimulationInstance simulationInstance = new SimulationInstance(reqSimulationDefinition);
         simulationInstance.setSimulationId(simulationRunData.getSimId());
         executionManager.addSimulationToQueue(simulationInstance, simulationRunData);
-
-        return simulationInstance.getSimulationId();
     }
 
     public void setStopPausePlayOrSkipFwdForSimById(String simId, DTOSimulationControlBar dtoSimulationControlBar) {

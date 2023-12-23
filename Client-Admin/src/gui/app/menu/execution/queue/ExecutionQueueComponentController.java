@@ -6,7 +6,8 @@ import gui.app.menu.execution.queue.refresher.ExecutionQueueRefresher;
 import javafx.application.Platform;
 import manager.AdminServerAgent;
 import manager.constant.Constants;
-import server2client.simulation.queue.newSimulationsData;
+import server2client.simulation.queue.SimulationData;
+import server2client.simulation.queue.NewSimulationsData;
 import server2client.simulation.runtime.SimulationRunData;
 import gui.app.api.Controller;
 import gui.app.menu.execution.queue.data.StatusData;
@@ -32,6 +33,8 @@ public class ExecutionQueueComponentController implements Controller {
 
     @FXML
     private TableView<StatusData> executionsQueueTV;
+    @FXML
+    private TableColumn<StatusData, String> userCol;
 
     @FXML
     private TableColumn<StatusData, String> simIdCol;
@@ -54,6 +57,7 @@ public class ExecutionQueueComponentController implements Controller {
     public void initialize() {
         simIdCol.setCellValueFactory(new PropertyValueFactory<>("simId"));
         simStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        userCol.setCellValueFactory(new PropertyValueFactory<>("requestedBy"));
         simulationStatusMap = new HashMap<>();
         isFetchStatusTaskRunning = false;
         startExecutionQueueRefresher();
@@ -129,6 +133,7 @@ public class ExecutionQueueComponentController implements Controller {
                         getStatusUpdatesForRunningSimulations();
                         Thread.sleep(200); // Make the thread sleep for 200ms
                     } while (hasNonCompletedSimulations());
+                    isFetchStatusTaskRunning = false;
                     return null;
                 }
             };
@@ -140,18 +145,17 @@ public class ExecutionQueueComponentController implements Controller {
     /**
      * Executes a status fetching task that updates all running simulation's statuses.
      * Adds the simulation to the Table View and the map responsible for holding all added simulations.
+     *
      * @param addedSimulationsData An array of all newly added simulations
      */
-    public void addSimulationsToQueue(newSimulationsData addedSimulationsData) {
+    public void addSimulationsToQueue(NewSimulationsData addedSimulationsData) {
         executeSimStatusFetchingTask();
-        if (addedSimulationsData.getAddedSimulations().length != 0) {
-            for (String id : addedSimulationsData.getAddedSimulations()
-            ) {
-                StatusData added = new StatusData(id, "WAITING");
-                simulationStatusMap.put(added, SimulationStatus.valueOf(added.getStatus()));
-                executionsQueueTV.getItems().add(added);
-                executionsQueueTV.refresh();
-            }
+        for (SimulationData sim : addedSimulationsData.getAddedSimulations()
+        ) {
+            StatusData added = new StatusData(sim.getRequestedBy(), sim.getSimId(), sim.getStatus());
+            simulationStatusMap.put(added, SimulationStatus.valueOf(added.getStatus()));
+            executionsQueueTV.getItems().add(added);
+            executionsQueueTV.refresh();
         }
     }
 
@@ -171,8 +175,7 @@ public class ExecutionQueueComponentController implements Controller {
             Platform.runLater(() -> {
                 showMessageInNotificationBar(selectedInThread.errorMessage);
             });
-        }
-        else{
+        } else {
             statusData.statusProperty().set(selectedInThread.status);
         }
     }
