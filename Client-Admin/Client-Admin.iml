@@ -9,7 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="DTO" />
     <orderEntry type="module" module-name="Engine" />
-    <orderEntry type="library" name="gson" level="project" />
     <orderEntry type="library" name="okhttp" level="project" />
+    <orderEntry type="library" name="gson" level="project" />
   </component>
 </module>
