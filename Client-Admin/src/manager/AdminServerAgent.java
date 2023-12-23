@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 
 public class AdminServerAgent {
+
+    private final static String NO_RESPONSE_MESSAGE = "ERROR: no response from server.";
     /**
      * Sends a http query that checks if an admin client is connected.
      * If an admin is not connected then allows this instance of the client to show and run.
@@ -42,19 +44,19 @@ public class AdminServerAgent {
         HttpClientAgent.sendPostRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showAlertAndWait("Error: Could not reach server."));
+                Platform.runLater(() -> controller.showAlertAndWait(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 // If connection is successful, open the admin client application.
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("Connection successful. Welcome Admin!"));
                     System.out.println("Admin connection successful.");
                 }
 
                 // If an admin session is currently in progress, show an alert and close the app.
-                else if (response.code() == 409) {
+                else if (response.code() == HttpURLConnection.HTTP_CONFLICT) {
                     Platform.runLater(() -> {
                         Platform.runLater(() -> controller.showAlertAndWait("An admin is already connected."));
                         System.out.println("An admin is already connected.");
@@ -65,8 +67,8 @@ public class AdminServerAgent {
                 // If another error has occurred, show an alert and close the app.
                 else {
                     Platform.runLater(() -> {
-                        Platform.runLater(() -> controller.showAlertAndWait("Encountered a problem while trying to connect."));
-                        System.out.println("Encountered a problem while trying to connect.");
+                        Platform.runLater(() -> controller.showAlertAndWait(createServerErrorMessage(response.code())));
+                        System.out.println(createServerErrorMessage(response.code()));
                         System.exit(0);
                     });
                 }
@@ -96,9 +98,9 @@ public class AdminServerAgent {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
+                if (response.code() != HttpURLConnection.HTTP_OK) {
                     showDisconnectErrorAndExit(controller);
-                    System.out.println("Encountered a problem while admin tried to disconnect.");
+                    System.out.println(createServerErrorMessage(response.code()));
                 } else {
                     System.out.println("Admin successfully disconnected.");
                 }
@@ -183,13 +185,13 @@ public class AdminServerAgent {
         HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 // If connection is successful, open the admin client application.
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     String previewDataInJson = response.body().string();
                     // if the servlet returns empty string, the simulation breakdown is up-to-date.
                     if(!previewDataInJson.equals("")){
@@ -199,7 +201,7 @@ public class AdminServerAgent {
                 }
                 // If another error has occurred, show an alert and close the app.
                 else {
-                    Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> simulationManagerComponentController.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -219,13 +221,13 @@ public class AdminServerAgent {
         HttpClientAgent.sendPostRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 // If connection is successful, open the admin client application.
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     Platform.runLater(() -> {
                         controller.showMessageInNotificationBar(String.format("Thread pool count updated to %d", threadCount));
                         controller.setThreadPoolSet();
@@ -233,7 +235,7 @@ public class AdminServerAgent {
                     });
                 }
                 else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                 }
             }
         });
@@ -252,12 +254,12 @@ public class AdminServerAgent {
         HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     String dtoRequestsInJson = response.body().string();
                     // check if the string json is empty.
                     if(!dtoRequestsInJson.equals("")) {
@@ -265,7 +267,7 @@ public class AdminServerAgent {
                         Platform.runLater(() -> controller.updateAllocationTableView(dtoRequests));
                     }
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -286,12 +288,12 @@ public class AdminServerAgent {
         HttpClientAgent.sendPostRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.code() == 200) {
+                if(response.code() == HttpURLConnection.HTTP_OK) {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("Request's status has been changed in the server"));
                 } else {
                     Platform.runLater(() -> controller.showMessageInNotificationBar("Request's status did not change in the server, please try again"));
@@ -314,18 +316,18 @@ public class AdminServerAgent {
         HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     String requestStartResponseInJson = response.body().string();
                     SimulationRunData runData = gson.fromJson(requestStartResponseInJson, SimulationRunData.class);
                     Platform.runLater(() -> controller.onMouseClickedTvReceiveRunData(runData));
 
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -346,18 +348,18 @@ public class AdminServerAgent {
         HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     String requestStartResponseInJson = response.body().string();
                     SimulationRunData runData = gson.fromJson(requestStartResponseInJson, SimulationRunData.class);
                     Platform.runLater(() -> controller.receiveSimulationRunForRunningSimulation(runData, selectedSimId, task));
 
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
@@ -378,12 +380,12 @@ public class AdminServerAgent {
         HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() == 200) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     String requestStartResponseInJson = response.body().string();
                     SimulationRunData runData = gson.fromJson(requestStartResponseInJson, SimulationRunData.class);
                     Platform.runLater(() -> controller.statusUpdateForSingleRunningSimulation(runData, statusData));
@@ -413,12 +415,12 @@ public class AdminServerAgent {
         HttpClientAgent.sendGetRequest(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                Platform.runLater(() -> controller.showMessageInNotificationBar(NO_RESPONSE_MESSAGE));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.code() == 200) {
+                if(response.code() == HttpURLConnection.HTTP_OK) {
                     String requestStatusUpdateInJson = response.body().string();
                     if(!requestStatusUpdateInJson.isEmpty()){
                         NewSimulationsData dtoAddedSimulationsData = gson.fromJson(requestStatusUpdateInJson, NewSimulationsData.class);
@@ -427,10 +429,14 @@ public class AdminServerAgent {
                         });
                     }
                 } else {
-                    Platform.runLater(() -> controller.showMessageInNotificationBar("An error occurred"));
+                    Platform.runLater(() -> controller.showMessageInNotificationBar(createServerErrorMessage(response.code())));
                     response.body().close();
                 }
             }
         });
+    }
+
+    private static String createServerErrorMessage(int errorCode){
+        return "ERROR: Server response code " + errorCode;
     }
 }
