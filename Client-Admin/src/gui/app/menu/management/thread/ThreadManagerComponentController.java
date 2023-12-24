@@ -48,13 +48,13 @@ public class ThreadManagerComponentController implements Controller {
             int threadCount = Integer.parseInt(textFieldThreadCount.getText());
 
             AdminServerAgent.sendSimulationThreadCount(this, threadCount);
-            startThreadDataRefresher();
+
         } catch (NumberFormatException e) {
             showMessageInNotificationBar("The thread count needs to be a number!");
         }
     }
 
-    private void startThreadDataRefresher() {
+    public void startThreadDataRefresher() {
         if(threadDataRefresher == null) {
             threadDataRefresher = new ThreadDataRefresher(this);
             timer = new Timer();

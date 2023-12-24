@@ -21,26 +21,19 @@
       <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
       <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
-      <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="NEVER" />
-      <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Label text="Grid" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+      <Label text="Height:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label text="Height:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+      <Label text="Width:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label text="Width:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblGridHeight" text="Placeholder" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-      <Label fx:id="lblGridWidth" text="Placeholder" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+      <Label fx:id="lblGridHeight" text="Placeholder" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+      <Label fx:id="lblGridWidth" text="Placeholder" GridPane.columnIndex="3" GridPane.rowIndex="4" />
    </children>
 </GridPane>

@@ -1,8 +1,8 @@
 package gui.app.menu.management.simulation.breakdown.details.general;
 
-import server2client.simulation.genral.impl.properties.DTOGrid;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import server2client.simulation.genral.impl.properties.DTOGrid;
 
 public class GeneralDetailsController {
 
