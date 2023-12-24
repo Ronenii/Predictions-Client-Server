@@ -55,4 +55,5 @@ The Predictions framework also supports the following features:
 * **Simulation Control:**  Users can stop, pause, and resume running simulations. They can also advance simulations by one tick while paused.
 
 ## Comments
-* **Configuration files:** Two sample simulation configuration files are provided for your convenience. If you want to write your own configuration file, you can use the provided files or the provided XML schema as a reference
+* **README files:** Each release contains the app as well a readme file with detailed instructions about the app's features and its operation.
+* **Configuration files:** Two sample simulation configuration files are provided for your convenience. If you want to write your own configuration file, you can use the provided files or the provided XML schema as a reference.
