@@ -65,7 +65,7 @@ public class ExecutionQueueComponentController implements Controller {
                 mainController.updateGuiToChosenSimulation(selected);
             } else {
                 long threadSleep = selected.getThreadSleepCount();
-                if(threadSleep == 0){
+                if (threadSleep == 0) {
                     threadSleep = 200;
                 }
 
@@ -120,9 +120,9 @@ public class ExecutionQueueComponentController implements Controller {
         // isSimulationPaused - true when the simulation on pause
         // isSimulationSkippedForward - the skip forward button set this flag to true, allowing the task run this loop once and then return to a hold state.
         // oneUpdateAfterPauseFlag - the pause button set this flag to true, allowing the task run this loop once (to fetch the details) and then return to a hold state.
-        if(!isSimulationPaused || isSimulationSkippedForward || oneUpdateAfterPauseFlag) {
+        if (!isSimulationPaused || isSimulationSkippedForward || oneUpdateAfterPauseFlag) {
             // Check if we skipped forward and didn't get entities in the ResultData to load.
-            if(!isSimulationSkippedForward || selectedInThread.resultData.getEntities() != null) {
+            if (!isSimulationSkippedForward || selectedInThread.resultData.getEntities() != null) {
                 Platform.runLater(() -> {
                     mainController.updateGuiToChosenSimulation(selectedInThread); // Update the components displaying the simulation
                 });
@@ -132,7 +132,7 @@ public class ExecutionQueueComponentController implements Controller {
         }
 
         //Check if the task loop to be canceled.
-        if(selectedInThread == null || !selectedInThread.getSimId().equals(simId) || selectedInThread.isCompleted()) {
+        if (selectedInThread == null || !selectedInThread.getSimId().equals(simId) || selectedInThread.isCompleted()) {
             task.cancel(true);
         }
     }
@@ -187,7 +187,7 @@ public class ExecutionQueueComponentController implements Controller {
     }
 
     public void statusUpdateForSingleRunningSimulation(SimulationRunData selectedInThread, StatusData statusData) {
-        if(selectedInThread.errorMessage != null){
+        if (selectedInThread.errorMessage != null) {
             Platform.runLater(() -> {
                 showMessageInNotificationBar(selectedInThread.errorMessage);
             });
@@ -201,12 +201,11 @@ public class ExecutionQueueComponentController implements Controller {
     }
 
 
-
     /**
      * Fetch the 'QueueManagementData' object according to the current simulations in the queue.
      */
     private void updateQueueManagementData(StatusData statusData) {
-        if(statusData.getStatus().equals("ONGOING") && !statusData.isRunningUpdated()) {
+        if (statusData.getStatus().equals("ONGOING") && !statusData.isRunningUpdated()) {
             statusData.getRequestData().increaseRunning();
             statusData.setRunningUpdated(true);
             mainController.refreshRequestsTv();
@@ -241,7 +240,7 @@ public class ExecutionQueueComponentController implements Controller {
      */
     private void showNotificationIfSimulationRunCompleted(SimulationRunData simulationRunData) {
         if (SimulationStatus.valueOf(simulationRunData.getStatus()) == SimulationStatus.COMPLETED) {
-           showMessageInNotificationBar(String.format("Simulation %s has finished it's run.", simulationRunData.getSimId()));
+            showMessageInNotificationBar(String.format("Simulation %s has finished it's run.", simulationRunData.getSimId()));
         }
     }
 

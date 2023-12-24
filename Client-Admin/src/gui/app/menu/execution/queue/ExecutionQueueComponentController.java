@@ -182,9 +182,30 @@ public class ExecutionQueueComponentController implements Controller {
             Platform.runLater(() -> {
                 showMessageInNotificationBar(selectedInThread.errorMessage);
             });
-        } else {
-            statusData.statusProperty().set(selectedInThread.status);
         }
+        showNotificationIfSimulationRunStarted(statusData, selectedInThread);
+        Platform.runLater(() -> {
+            statusData.statusProperty().set(selectedInThread.getStatus());
+            showNotificationIfSimulationRunCompleted(selectedInThread);
+        });
+    }
+
+    /**
+     * Prints a notification if the simulation is about to start.
+     */
+    private void showNotificationIfSimulationRunStarted(StatusData statusData, SimulationRunData simulationRunData) {
+        if (isStartedSimulation(statusData, simulationRunData)) {
+            Platform.runLater(() -> {
+                showMessageInNotificationBar(String.format("%s's simulation %s has started it's run.",statusData.getRequestedBy(), statusData.getSimId()));
+            });
+        }
+    }
+
+    /**
+     * Will return true if the simulation is about to be started.
+     */
+    private boolean isStartedSimulation(StatusData current, SimulationRunData next) {
+        return SimulationStatus.valueOf(current.getStatus()) == SimulationStatus.WAITING && SimulationStatus.valueOf(next.status) == SimulationStatus.ONGOING;
     }
 
     /**
@@ -194,6 +215,15 @@ public class ExecutionQueueComponentController implements Controller {
         Thread thread = new Thread(task);
         thread.setDaemon(true); // Mark the thread as a daemon to allow application exit
         thread.start();
+    }
+
+    /**
+     * Will only run inside platform run later since it happens only after a simulation's status has changed to COMPLETED.
+     */
+    private void showNotificationIfSimulationRunCompleted(SimulationRunData simulationRunData) {
+        if (SimulationStatus.valueOf(simulationRunData.getStatus()) == SimulationStatus.COMPLETED) {
+            showMessageInNotificationBar(String.format("simulation %s has finished it's run.", simulationRunData.getSimId()));
+        }
     }
 
     private boolean hasNonCompletedSimulations() {
