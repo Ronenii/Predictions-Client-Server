@@ -24,7 +24,6 @@ import server2client.simulation.request.updated.status.data.DTORequestStatusData
 import simulation.objects.entity.Entity;
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.SimulationInstance;
-import simulation.objects.world.definition.SimulationDefinition;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.impl.DecreaseAction;

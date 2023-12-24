@@ -13,7 +13,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import server2client.simulation.genral.impl.properties.action.api.DTOActionType;
-import server2client.simulation.genral.impl.properties.action.impl.*;
 
 import java.io.IOException;
 

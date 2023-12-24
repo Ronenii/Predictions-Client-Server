@@ -4,16 +4,12 @@ import gui.app.api.Controller;
 import gui.app.menu.MenuComponentController;
 import gui.app.notification.NotificationBarComponentController;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import manager.AdminServerAgent;
 import server2client.simulation.admin.load.details.AdminLoadDetails;
-
-import java.util.EventListener;
-import java.util.List;
 
 public class AdminAppController implements Controller {
     @FXML private TabPane menuComponent;

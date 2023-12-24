@@ -12,8 +12,6 @@ import manager.SimulationManager;
 import utils.ServletUtils;
 import utils.SessionUtils;
 
-import java.io.BufferedReader;
-
 import java.io.IOException;
 
 @WebServlet(name = "SimulationRequestServlet", urlPatterns = {"/client/request"})

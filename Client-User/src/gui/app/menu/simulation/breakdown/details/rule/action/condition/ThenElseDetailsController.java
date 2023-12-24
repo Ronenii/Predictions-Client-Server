@@ -1,6 +1,5 @@
 package gui.app.menu.simulation.breakdown.details.rule.action.condition;
 
-import server2client.simulation.genral.impl.properties.action.api.DTOAction;
 import server2client.simulation.genral.impl.properties.action.impl.DTOMultipleCondition;
 import server2client.simulation.genral.impl.properties.action.impl.DTOSingleCondition;
 import javafx.fxml.FXML;

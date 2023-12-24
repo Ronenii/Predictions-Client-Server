@@ -1,7 +1,6 @@
 package servlets.client;
 
 import client2server.simulation.control.bar.DTOSimulationControlBar;
-import client2server.simulation.request.DTORequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import constant.Constants;

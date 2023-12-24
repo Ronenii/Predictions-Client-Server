@@ -12,7 +12,6 @@ import manager.SimulationManager;
 import server2client.simulation.prview.PreviewData;
 import utils.ServletUtils;
 
-import javax.naming.ldap.Control;
 import java.io.IOException;
 
 @WebServlet(name = "SingleSimulationPreviewDataServlet", urlPatterns = "/client/execution/details")

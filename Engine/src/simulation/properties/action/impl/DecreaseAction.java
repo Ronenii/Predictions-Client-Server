@@ -2,15 +2,11 @@ package simulation.properties.action.impl;
 
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.exception.CrashException;
-import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
-import simulation.properties.action.expression.impl.methods.EvaluateExpression;
-import simulation.properties.action.expression.impl.methods.PercentExpression;
 import simulation.properties.action.expression.impl.methods.RandomExpression;
-import simulation.properties.action.expression.impl.methods.TicksExpression;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
