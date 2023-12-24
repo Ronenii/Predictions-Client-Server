@@ -1,7 +1,6 @@
 package simulation.properties.action.impl;
 
 import simulation.objects.entity.EntityInstance;
-import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.api.ActionType;

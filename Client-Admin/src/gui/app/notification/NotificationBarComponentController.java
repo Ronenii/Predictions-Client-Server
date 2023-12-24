@@ -3,7 +3,6 @@ package gui.app.notification;
 import gui.app.AdminAppController;
 import gui.app.api.Controller;
 import gui.app.notification.window.LogWindowController;
-import gui.app.notification.window.LogWindowController;
 import javafx.animation.FillTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

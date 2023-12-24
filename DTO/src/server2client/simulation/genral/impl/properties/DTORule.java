@@ -2,8 +2,6 @@ package server2client.simulation.genral.impl.properties;
 
 import server2client.simulation.genral.impl.properties.action.api.DTOAction;
 
-import java.util.List;
-
 public class DTORule {
     private final String name;
     private final int ticks;

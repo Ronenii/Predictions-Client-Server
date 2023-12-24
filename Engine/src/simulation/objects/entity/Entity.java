@@ -1,7 +1,5 @@
 package simulation.objects.entity;
 
-import simulation.properties.action.api.Action;
-import simulation.properties.action.api.OneEntAction;
 import simulation.properties.property.api.Property;
 
 import java.io.Serializable;

@@ -6,9 +6,6 @@ import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.Action;
 import simulation.properties.action.api.ActionType;
 import simulation.properties.action.expression.api.Expression;
-import simulation.properties.action.expression.impl.PropertyValueExpression;
-import simulation.properties.action.expression.impl.methods.PercentExpression;
-import simulation.properties.property.api.Property;
 
 import java.io.Serializable;
 

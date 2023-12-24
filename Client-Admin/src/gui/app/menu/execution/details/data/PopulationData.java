@@ -1,7 +1,6 @@
 package gui.app.menu.execution.details.data;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 
 /**
  * Used for the entity count component.

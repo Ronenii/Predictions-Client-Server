@@ -1,8 +1,6 @@
 package simulation.properties.rule;
 
-import simulation.objects.entity.Entity;
 import simulation.properties.action.api.Action;
-import simulation.properties.action.impl.condition.MultipleCondition;
 import simulation.properties.activition.Activation;
 
 import java.io.Serializable;

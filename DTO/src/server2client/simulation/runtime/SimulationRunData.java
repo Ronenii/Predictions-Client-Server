@@ -2,7 +2,6 @@ package server2client.simulation.runtime;
 
 import server2client.simulation.genral.impl.objects.DTOEntityPopulation;
 
-import java.util.List;
 import java.util.Map;
 
 public class SimulationRunData {

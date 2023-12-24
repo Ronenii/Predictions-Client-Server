@@ -1,11 +1,9 @@
 package simulation.properties.action.impl.condition;
 
-import jaxb.schema.generated.PRDAction;
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.exception.CrashException;
 import simulation.objects.world.grid.Grid;
 import simulation.properties.action.api.*;
-import simulation.properties.action.api.OneEntAction;
 import simulation.properties.action.expression.api.Expression;
 
 import java.io.Serializable;

@@ -2,7 +2,6 @@ package simulation.properties.action.api;
 
 import simulation.objects.entity.EntityInstance;
 import simulation.objects.world.exception.CrashException;
-import simulation.objects.world.grid.Grid;
 import simulation.properties.action.expression.api.Expression;
 
 import java.io.Serializable;
