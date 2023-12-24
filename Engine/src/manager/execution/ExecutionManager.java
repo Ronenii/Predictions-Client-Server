@@ -1,9 +1,10 @@
 package manager.execution;
 
+import manager.execution.thread.data.ThreadDataManager;
 import server2client.simulation.queue.NewSimulationsData;
-import server2client.simulation.queue.SimulationData;
 import server2client.simulation.runtime.SimulationRunData;
 import manager.DTO.creator.DTOCreator;
+import server2client.simulation.thread.data.ThreadData;
 import simulation.objects.world.SimulationInstance;
 import simulation.objects.world.user.instructions.UserInstructions;
 import client2server.simulation.control.bar.DTOSimulationControlBar;
@@ -19,6 +20,7 @@ public class ExecutionManager {
     private ExecutorService threadExecutor;
     private final Map<String, SimulationInstance> simulations;
     private final Map<String, SimulationRunData> simulationsRunData;
+    private final ThreadDataManager threadDataManager;
     private boolean isSkippingForward;
 
     public ExecutionManager(int threadCount) {
@@ -26,12 +28,14 @@ public class ExecutionManager {
         simulations = new HashMap<>();
         simulationsRunData = new HashMap<>();
         isSkippingForward = false;
+        threadDataManager = new ThreadDataManager();
     }
 
     public void addSimulationToQueue(SimulationInstance simulationInstance, SimulationRunData simulationRunData) {
         if(simulationInstance != null) {
             simulations.put(simulationInstance.getSimulationId(), simulationInstance);
             simulationsRunData.put(simulationRunData.getSimId(), simulationRunData);
+            threadDataManager.queueCountIncrement();
             threadExecutor.execute(simulationInstance);
         }
     }
@@ -46,6 +50,17 @@ public class ExecutionManager {
         }
     }
 
+    public boolean isThreadExecutorSet() {
+        return threadExecutor != null;
+    }
+
+    public int getThreadDataVersion() {
+        return threadDataManager.getUpdateVersion();
+    }
+
+    public ThreadData getThreadData() {
+        return threadDataManager.getThreadData();
+    }
 
     public void shutdownThreadPool() {
         threadExecutor.shutdown();
@@ -66,6 +81,13 @@ public class ExecutionManager {
 
         switch (simulationInstance.getStatus()) {
             case ONGOING:
+                // This if statement is for the ThreadDataManager.
+                if(!simulationInstance.isAddedToRunningCount()){
+                    threadDataManager.runningCountIncrement();
+                    threadDataManager.queueCountDecrement();
+                    simulationInstance.setFalseAddedToRunningCount();
+                }
+
                 if(isSkippingForward){
                     ret = new SimulationRunData(simulationInstance.getSimulationName(),simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationArray(simulationInstance.getEntities()), "ONGOING", false, null, true, simulationInstance.getThreadSleepDuration());
                     ret.resultData = simulationInstance.getResultData();
@@ -79,10 +101,12 @@ public class ExecutionManager {
             case COMPLETED:
                 if(simulationsRunData.get(simId).status.equals("COMPLETED")) {
                     ret = simulationsRunData.get(simId);
-                } else {
+                } else { // Enter here - just finished
                     ret = new SimulationRunData(simulationInstance.getSimulationName(), simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationArray(simulationInstance.getEntities()), "COMPLETED", true, null,false, simulationInstance.getThreadSleepDuration());
                     ret.resultData = simulationInstance.getResultData();
                     simulationsRunData.put(simId, ret);
+                    threadDataManager.finishedCountIncrement();
+                    threadDataManager.runningCountDecrement();
                 }
 
                 break;
@@ -90,10 +114,12 @@ public class ExecutionManager {
                 if(simulationsRunData.get(simId).status.equals("CRUSHED")) {
                     simulationsRunData.get(simId).errorMessage = null;
                     ret = simulationsRunData.get(simId);
-                } else {
+                } else {// Enter here - just crushed
                     ret = new SimulationRunData(simulationInstance.getSimulationName(), simId, simulationInstance.getTicksCounter().getTicks(), simulationInstance.getTimePassed(), dtoCreator.getDTOEntityPopulationArray(simulationInstance.getEntities()), "CRUSHED", false, null, false, simulationInstance.getThreadSleepDuration());
                     ret.errorMessage = simulationInstance.getErrorMessage();
                     simulationsRunData.put(simId, ret);
+                    threadDataManager.finishedCountIncrement();
+                    threadDataManager.runningCountDecrement();
                 }
 
                 break;

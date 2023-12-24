@@ -49,6 +49,10 @@ public class ManagementComponentController implements Controller {
         simulationManagerComponentController.addAdminLoadSimulationNames(simulationNames);
     }
 
+    public void turnOnThreadDataRefresher() {
+        threadManagerComponentController.turnOnThreadDataRefresherFromAdminLoadDetails();
+    }
+
     @Override
     public void showMessageInNotificationBar(String message) {
         mainController.showMessageInNotificationBar(message);

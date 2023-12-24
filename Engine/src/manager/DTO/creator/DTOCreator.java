@@ -322,8 +322,8 @@ public class DTOCreator {
         return new DTORequestStatusUpdate(requestStatusUpdates.toArray(new DTORequestStatusData[0]));
     }
 
-    public AdminLoadDetails createAdminLoadDetails(Set<String> simulationsNames, DTORequests dtoRequests, NewSimulationsData simulations) {
-        return new AdminLoadDetails(simulationsNames.toArray(new String[0]), dtoRequests, simulations);
+    public AdminLoadDetails createAdminLoadDetails(Set<String> simulationsNames, DTORequests dtoRequests, NewSimulationsData simulations, boolean isThreadPoolSet) {
+        return new AdminLoadDetails(simulationsNames.toArray(new String[0]), dtoRequests, simulations, isThreadPoolSet);
     }
 
     public NewSimulationsData createNewSimulationData(Map<String, SimulationInstance> simulations) {
