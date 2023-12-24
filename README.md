@@ -7,13 +7,16 @@ Predictions is a generic simulation framework that allows users to define a worl
 * IDE: IntelliJ
 * Programming language: Java 8
 * GUI: JavaFX
-* Server: Apache Tomcat
+* Server: Apache Tomcat 10.0.11
 
 ## System overview
-The Predictions framework consists of two desktop applications:
+The Predictions framework consists of two types of desktop applications and a server.
 
-* **Administrator application:** This application allows the administrator to upload new simulations (formatted as XML files), approve or reject client requests for simulation runs, review all client simulation runs, and perform additional administrative tasks.
-* **Client application:** The client application enables users to view the simulations currently held by the server, submit simulation requests to the administrator, run accepted simulation requests, review the progress of simulations, and access other related features. 
+The 2 desktops applications are:
+* **Administrator application:** This application allows the administrator to upload new simulations (formatted as XML files), approve or reject client requests for simulation runs, review all client simulation runs, and perform additional administrative tasks. There can only be one administrator app running at a time, any attempt to run and connect another admin app to the server will result with its immediate closure.
+* **User application:** The user application enables users to view the simulations currently held by the server, submit simulation requests to the administrator, run accepted simulation requests, review the progress of simulations, and access other related features.  There can be multiple users connected to the server. A user cannot connect if it chooses a username of an existing connected user.
+
+All communication to and from the server is done using HTTP. The entirety of the “Predictions” system is configured to work only with the domain http://localhost:8080. Therefore, the server and the different clients must be operating from within the same host.
 
 As mentioned, the Predictions framework is a versatile simulation framework that includes the following components:
 

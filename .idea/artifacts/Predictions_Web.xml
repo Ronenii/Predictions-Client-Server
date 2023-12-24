@@ -6,6 +6,8 @@
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="Server-Web" />
+          <element id="module-output" name="DTO" />
+          <element id="module-output" name="Engine" />
         </element>
         <element id="directory" name="lib">
           <element id="artifact" artifact-name="Engine" />
