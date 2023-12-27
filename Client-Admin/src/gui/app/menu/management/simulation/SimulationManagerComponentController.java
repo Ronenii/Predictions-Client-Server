@@ -129,7 +129,7 @@ public class SimulationManagerComponentController implements Controller {
             simBreakdownWindow.setTitle(String.format("%s's details", previewData.getSimulationName()));
             SimBreakdownMenuController controller = (SimBreakdownMenuController)loader.getController();
             controller.updateSimTreeView(previewData);
-            Image icon = new Image(getClass().getResourceAsStream("../../../../../res/icon/icon.png"));
+            Image icon = new Image(getClass().getResourceAsStream("/res/icon/icon.png"));
             simBreakdownWindow.getIcons().add(icon);
             Scene scene = new Scene(root);
             simBreakdownWindow.setScene(scene);

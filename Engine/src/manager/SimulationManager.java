@@ -211,13 +211,16 @@ public class SimulationManager {
     public AdminLoadDetails getAdminLoadDetails() {
         DTOCreator dtoCreator = new DTOCreator();
         NewSimulationsData newSimulationsData;
+        boolean isThreadExecutorSet;
 
         if(executionManager != null) {
             newSimulationsData = executionManager.getNewSimulationData();
+            isThreadExecutorSet = executionManager.isThreadExecutorSet();
         } else {
             newSimulationsData = null;
+            isThreadExecutorSet = false;
         }
 
-        return dtoCreator.createAdminLoadDetails(simulationDefinitions.keySet(), requestsManager.getDTORequests(), newSimulationsData, executionManager.isThreadExecutorSet());
+        return dtoCreator.createAdminLoadDetails(simulationDefinitions.keySet(), requestsManager.getDTORequests(), newSimulationsData, isThreadExecutorSet);
     }
 }
